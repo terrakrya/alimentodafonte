@@ -31,12 +31,12 @@ export default {
           this.error = true
         } else {
           this.$store.dispatch('login', localStorage.token)
-          this.$router.replace(this.$route.query.redirect || '/')
+          this.$router.replace(this.$route.query.redirect || '/dashboard')
         }
       })
     }
   }
-}
+};
 </script>
 
 <style>
