@@ -7,7 +7,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    token: window.localStorage.getItem('token')
+    currentUser: window.localStorage.getItem('currentUser')
   },
   actions,
   mutations

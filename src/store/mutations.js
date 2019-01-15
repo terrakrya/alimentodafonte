@@ -6,11 +6,11 @@ if (navigator.userAgent.indexOf('PhantomJS') > -1) {
 }
 
 export const mutations = {
-  login (state, token) {
-    state.token = token
+  login (state, currentUser) {
+    state.currentUser = currentUser
   },
   logout (state) {
-    state.token = undefined
+    state.currentUser = undefined
   },
 
   addTodo (state, todo) {

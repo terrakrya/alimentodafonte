@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-default navbar-fixed-top">
     <div class="brand">
-      <a href="index.html"><img src="../assets/img/logo-pesca.png" alt="Logo Pesca Mais Brasil" class="img-responsive logo"></a>
+      <h1><router-link to="/about">Rede de Sementes</router-link></h1>
     </div>
     <div class="container-fluid">
       <div class="navbar-btn">
@@ -14,10 +14,10 @@
       </div>
       <div id="navbar-menu">
         <ul class="nav navbar-nav navbar-right">
-          <li class="dropdown open">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="../assets/img/user.png" class="img-circle img-prof" alt="Avatar"> <span>Paulo Oliveira</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
+          <li class="dropdown" v-bind:class="{open: userDropdown }">
+            <a v-on:click="toggleUserDropdown()" href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="../assets/img/user.png" class="img-circle img-prof" alt="Avatar"><span>{{currentUser}}</span> <i class="icon-submenu fa fa-chevron-down"></i></a>
             <ul class="dropdown-menu">
-              <li><a href="#"><i class="lnr lnr-exit"></i> <span>Sair</span></a></li>
+              <li><router-link v-if="currentUser" to="/logout"><i class="lnr lnr-exit"></i> <span>Sair</span></router-link></li>
             </ul>
           </li>
 
@@ -30,8 +30,23 @@
 <script>
 export default {
   name: 'Navbar',
+  data () {
+    return { userDropdown: false }
+  },
   props: {
-    token: String
+    currentUser: String
+  }, 
+  methods: {
+    toggleUserDropdown: function (event) {
+      this.userDropdown = !this.userDropdown
+    }
   }
 };
 </script>
+
+<style lang="sass">
+  .brand h1 
+    margin-top: 5px
+    a 
+      color: #fff
+</style>
