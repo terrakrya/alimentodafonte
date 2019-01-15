@@ -1,6 +1,6 @@
 export default {
-  login ({ commit }, token) {
-    commit('login', token)
+  login ({ commit }, currentUser) {
+    commit('login', currentUser)
   },
   logout ({ commit }) {
     commit('logout')
