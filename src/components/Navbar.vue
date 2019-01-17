@@ -1,7 +1,7 @@
 <template>
-  <nav class="navbar navbar-default navbar-fixed-top">
+  <nav class="navbar navbar-default navbar-fixed-top" v-if="currentUser">
     <div class="brand">
-      <h1><router-link to="/about">Rede de Sementes</router-link></h1>
+      <h1 class="logo"><router-link to="/about"><span>REDE</span> de <strong>sementes</strong></router-link></h1>
     </div>
     <div class="container-fluid">
       <div class="navbar-btn">
@@ -15,7 +15,7 @@
       <div id="navbar-menu">
         <ul class="nav navbar-nav navbar-right">
           <li class="dropdown" v-bind:class="{open: userDropdown }">
-            <a v-on:click="toggleUserDropdown()" href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="../assets/img/user.png" class="img-circle img-prof" alt="Avatar"><span>{{currentUser}}</span> <i class="icon-submenu fa fa-chevron-down"></i></a>
+            <a v-on:click="toggleUserDropdown()" href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="../assets/img/user.png" class="img-circle img-prof" alt="Avatar"><span>{{currentUser.current_user.name}}</span> &nbsp;<i class="icon-submenu fa fa-chevron-down"></i></a>
             <ul class="dropdown-menu">
               <li><router-link v-if="currentUser" to="/logout"><i class="lnr lnr-exit"></i> <span>Sair</span></router-link></li>
             </ul>
@@ -33,9 +33,12 @@ export default {
   data () {
     return { userDropdown: false }
   },
-  props: {
-    currentUser: String
-  }, 
+  computed: {
+    currentUser () {
+      return this.$store.state.currentUser
+    }
+  },
+
   methods: {
     toggleUserDropdown: function (event) {
       this.userDropdown = !this.userDropdown
@@ -46,7 +49,12 @@ export default {
 
 <style lang="sass">
   .brand h1 
-    margin-top: 5px
+    margin-top: 10px
+    font-size: 31px
     a 
       color: #fff
+      span
+        font-weight: 300
+      strong
+        font-weight: 900
 </style>

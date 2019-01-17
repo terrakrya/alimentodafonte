@@ -66,10 +66,10 @@ footer {
   -o-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
   width: 260px;
-  height: 100%;
+  min-height: 100%;
   float: left;
   background-color: #2B333E;
-  position: fixed;
+  position: /*fixed*/;
   left: 0; }
 
 #wrapper .main {
@@ -137,7 +137,7 @@ footer {
 html.fullscreen-bg,
 html.fullscreen-bg body,
 html.fullscreen-bg #wrapper {
-  height: 100%; }
+  min-height: 100%; }
 
 .vertical-align-wrap {
   position: absolute;
@@ -369,9 +369,6 @@ ul.notifications > li {
       background-color: transparent; }
       .sidebar .nav > li > a:hover i, .sidebar .nav > li > a:focus i, .sidebar .nav > li > a.active i {
         color: #00AAFF; }
-    .sidebar .nav > li > a:focus, .sidebar .nav > li > a.active {
-      background-color: #252c35;
-      border-left-color: #00AAFF; }
     .sidebar .nav > li > a[data-toggle="collapse"] .icon-submenu {
       display: inline-block;
       vertical-align: middle;
