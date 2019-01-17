@@ -10,13 +10,14 @@
       <form @submit.prevent="login" class="form-auth-small">
         <div class="form-group">
           <label for="signin-email" class="control-label sr-only">Email</label>
-          <input v-model="email" type="email" class="form-control" id="signin-email" placeholder="Email">            
+          <input v-model="email" type="text" class="form-control" id="signin-email" placeholder="Email">            
         </div>
         <div class="form-group">
           <label for="signin-password" class="control-label sr-only">Senha</label>
           <input v-model="pass" type="password" class="form-control" id="signin-password" placeholder="Senha">
         </div>
-        <p v-if="error" class="error">{{error}}</p>
+        <b-alert variant="danger" show v-if="error">{{error}}</b-alert>
+        <button v-if="loading" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Fazendo login...</button>
         <button type="submit" class="btn btn-primary btn-lg btn-block">ENTRAR</button>
       </form>
     </div>
@@ -29,26 +30,28 @@ import auth from '../auth'
 export default {
   created () {
     if (this.$store.state.currentUser) {
-      this.$router.replace('/dashboard')
+      this.$router.replace('/painel')
     }
   },
   data () {
     return {
-      email: 'joe@example.com',
-      pass: 'password1',
-      error: false
+      email: 'terra krya',
+      pass: 'eusou',
+      error: false,
+      loading: false
     }
   },
   methods: {
     login () {
-      auth.login(this.email, this.pass, loggedIn => {
-        // this.error = loggedIn
-        // if (!loggedIn) {
-        //   this.error = true
-        // } else {
-          this.$store.dispatch('login', localStorage.currentUser)
-          this.$router.replace(this.$route.query.redirect || '/dashboard')
-        // }
+      this.error = false
+      this.loading = true
+      auth.login(this.email, this.pass, response => {
+        if (response.authenticated) {
+          this.$router.replace(this.$route.query.redirect || '/painel')
+        } else {
+          this.error = response.error
+        }
+        this.loading = false
       })
     }
   }

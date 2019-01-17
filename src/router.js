@@ -6,6 +6,7 @@ import store from '@/store/'
 import About from '@/views/About.vue'
 import Login from '@/views/Login.vue'
 import Dashboard from '@/views/Dashboard.vue'
+import Seeds from '@/views/Seeds.vue'
 
 Vue.use(Router)
 
@@ -33,6 +34,7 @@ export default new Router({
         })      
       }
     },
-    { path: '/dashboard', component: Dashboard, beforeEnter: requireAuth }
+    { path: '/painel', component: Dashboard, beforeEnter: requireAuth },
+    { path: '/sementes', component: Seeds, beforeEnter: requireAuth }
   ]
 })

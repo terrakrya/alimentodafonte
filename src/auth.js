@@ -1,4 +1,5 @@
 import axios from 'axios'
+import store from '@/store/'
 
 export default {
   login (email, pass, cb) {
@@ -11,47 +12,32 @@ export default {
         }
     })
     .then(function (response) {
-      localStorage.currentUser = response
+      localStorage.setItem('currentUser', JSON.stringify(response.data))
+      store.dispatch('login', response.data)
       cb({
         authenticated: true,
-        currentUser: response
+        currentUser: response.data
       })
     })
     .catch(function (error) {
-      localStorage.currentUser = error
-      cb({ authenticated: false, error: error })
+      cb({ authenticated: false, error: 'Usuário ou senha inválidos', errorObject: error })
     });
 
-    // cb = arguments[arguments.length - 1]
-    // if (localStorage.currentUser) {
-    //   if (cb) cb(true)
-    //   this.onChange(true)
-    //   return
-    // }
-    // pretendRequest(email, pass, (res) => {
-    //   if (res.authenticated) {
-    //     localStorage.currentUser = res.currentUser
-    //     if (cb) cb(true)
-    //     this.onChange(true)
-    //   } else {
-    //     if (cb) cb(false)
-    //     this.onChange(false)
-    //   }
-    // })
   },
 
   getToken () {
-    return localStorage.currentUser
+    return localStorage.getItem('currentUser')
   },
 
   logout (cb) {
-    delete localStorage.currentUser
+    localStorage.removeItem('currentUser')
+    store.dispatch('login', null)
     if (cb) cb()
     this.onChange(false)
   },
 
   loggedIn () {
-    return !!localStorage.currentUser
+    return store.state.currentUser
   },
 
   onChange () {}
