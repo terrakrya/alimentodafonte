@@ -861,3 +861,49 @@ body
 
 th.actions 
   width: 10%
+
+.pointer 
+  cursor: pointer
+
+.breadcrumb 
+  a
+    color: $colorOrange
+form 
+  .row
+    border: 1px solid #DCCFBA
+    color: #111
+    padding: 0
+    margin: 0
+    border-bottom: 0
+    &:last-child
+      border: 1px solid #DCCFBA
+    > div
+      border-left: 1px solid #DCCFBA
+      padding: 20px
+      &:first-child
+        border-left: 0
+    &.gray 
+      background: #F1ECE4
+  legend 
+    color: #111
+    border: 0
+    font-weight: bold
+    font-size: 16px
+  .custom-file-label 
+    display: none
+  .custom-checkbox
+    display: inline-block
+    width: 200px
+    cursor: pointer
+    label
+      font-weight: normal
+      margin-left: 5px
+      cursor: pointer
+  .form-control
+    font-size: 16px
+  .btn-primary
+    background: $colorOrange
+    border-color: $colorOrange
+  .btn-primary:hover
+      border-color: $colorLightBrown
+      background: $colorBrown
