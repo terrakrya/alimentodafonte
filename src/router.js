@@ -7,6 +7,8 @@ import About from '@/views/About.vue'
 import Login from '@/views/Login.vue'
 import Dashboard from '@/views/Dashboard.vue'
 import Seeds from '@/views/Seeds.vue'
+import SeedForm from '@/views/SeedForm.vue'
+import Seed from '@/views/Seed.vue'
 
 Vue.use(Router)
 
@@ -35,6 +37,8 @@ export default new Router({
       }
     },
     { path: '/painel', component: Dashboard, beforeEnter: requireAuth },
-    { path: '/sementes', component: Seeds, beforeEnter: requireAuth }
+    { path: '/sementes', component: Seeds, beforeEnter: requireAuth },
+    { path: '/formulario-de-sementes', component: SeedForm, beforeEnter: requireAuth },
+    { path: '/semente/:id', component: Seed, beforeEnter: requireAuth }
   ]
 })
