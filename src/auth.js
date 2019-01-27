@@ -8,7 +8,7 @@ export default {
       pass: pass
     }, {
         headers: {
-            'Content-Type': 'application/json',
+            'Authorization': null,
         }
     })
     .then(function (response) {

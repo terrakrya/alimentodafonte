@@ -1,4 +1,5 @@
 @import "./assets/css/bootstrap.min.css"
+@import "./assets/css/font-awesome/css/font-awesome.min.css"
 @import "./assets/css/main.css"
 $colorBrown: #4b5637
 $colorLightBrown: #444c37
@@ -6,6 +7,7 @@ $colorOrange: #d56606
 $colorGray: #59604d
 $colorLightGray: #f5f5f5
 $colorWhite: #ffffff
+$colorRed: #dc3545
 
 body 
   background: $colorLightBrown
@@ -868,8 +870,9 @@ th.actions
 .breadcrumb 
   a
     color: $colorOrange
+
 form 
-  .row
+  > .row
     border: 1px solid #DCCFBA
     color: #111
     padding: 0
@@ -884,6 +887,7 @@ form
         border-left: 0
     &.gray 
       background: #F1ECE4
+    
   legend 
     color: #111
     border: 0
@@ -907,3 +911,10 @@ form
   .btn-primary:hover
       border-color: $colorLightBrown
       background: $colorBrown
+  .text-danger
+    display: block
+
+.images_preview
+  img 
+    width: 100%
+

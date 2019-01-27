@@ -10,7 +10,7 @@
 					<div class="col-md-8">
 						<h1>
 							Sementes 
-							<router-link to="/formulario-de-sementes">+ Nova semente</router-link>
+							<router-link to="/cadastrar-semente">+ Nova semente</router-link>
 						</h1>
 					</div>
 				</div>
@@ -25,10 +25,15 @@
 										<b-form-input v-model="filter" placeholder="Buscar" />
 										<br>
 										<b-table :fields="tableFields" :items="seeds" :sort-by="'title'" :filter="filter">
-											<template slot="title" slot-scope="data">
-												<router-link v-bind:to="'/semente/'+ data.item.product_id">{{data.item.title}}</router-link>
+											<template slot="title[0].value" slot-scope="data">
+												<router-link v-bind:to="'/semente/'+ data.item.product_id[0].value">{{data.item.title[0].value}}</router-link>
+											</template>
+											<template slot="field_compensation_collect[0].number" slot-scope="data">
+												{{data.item.field_compensation_collect[0].number | currency('R$ ', 2, { decimalSeparator: ',' })}}
 											</template>
 											<template slot="actions" slot-scope="data">
+
+												<router-link v-bind:to="'/editar-semente/'+ data.item.product_id[0].value" class="btn btn-primary btn-xs">Editar</router-link>
 												<a @click="edit(data.item)" class="btn btn-primary btn-xs">Editar</a>
 											</template>
 										</b-table>
@@ -72,9 +77,9 @@ export default {
 			showModal: false,
 			filter: null,
 			tableFields: [
-			{ key: 'title', label: 'Semente', sortable: true },
-			{ key: 'field_compensation_collect', label: 'Remuneração', sortable: true },
-			{ key: 'field_seeds_kg', label: 'Sementes / Kg', sortable: true },
+			{ key: 'title[0].value', label: 'Semente', sortable: true },
+			{ key: 'field_compensation_collect[0].number', label: 'Remuneração', sortable: true },
+			{ key: 'field_seeds_kg[0].value', label: 'Sementes / Kg', sortable: true },
 			{ key: 'actions', label: 'Ações', 'class': 'actions' },
 			],
 			seeds: null
@@ -82,7 +87,7 @@ export default {
 	},
 	
 	created () {
-		axios.get('rest/seeds?_format=json').then(response => {
+		axios.get('rest/seeds-list?_format=json').then(response => {
 			this.seeds = response.data 
 		}).catch(error => {
 			this.error = error

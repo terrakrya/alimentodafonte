@@ -38,7 +38,8 @@ export default new Router({
     },
     { path: '/painel', component: Dashboard, beforeEnter: requireAuth },
     { path: '/sementes', component: Seeds, beforeEnter: requireAuth },
-    { path: '/formulario-de-sementes', component: SeedForm, beforeEnter: requireAuth },
+    { path: '/cadastrar-semente', component: SeedForm, beforeEnter: requireAuth },
+    { path: '/editar-semente/:id', component: SeedForm, beforeEnter: requireAuth },
     { path: '/semente/:id', component: Seed, beforeEnter: requireAuth }
   ]
 })
