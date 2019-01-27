@@ -3,18 +3,19 @@
 		<ol class="breadcrumb">
 			<li><router-link to="/painel">Painel do Gestor</router-link></li>
 			<li><router-link to="/sementes">Sementes</router-link></li>
-			<li class="active">Cadastrar semente</li>
+			<li class="active">{{ isEditing() ? 'Editar' : 'Cadastrar' }} semente: {{form.title[0].value}}</li>
 		</ol>
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<div class="row">
 					<div class="col-md-8">
 						<h1>
-							Cadastrar semente
+							{{ isEditing() ? 'Editar' : 'Cadastrar' }} semente
 						</h1>
 					</div>
 				</div>
-				<b-form @submit.prevent="save">
+				<button v-if="loading" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Carregando dados do formulário...</button>
+				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-md-6">
 							<b-form-group label="Nome da espécie *">
@@ -119,7 +120,8 @@
 							<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
 							<b-alert variant="danger" show v-if="errors && errors.items.length">Verifique os erros acima para continuar</b-alert>
 							<div class="btn-group">
-								<button role="button" class="btn btn-primary btn-lg fa fa-save"> Salvar</button>
+								<button v-if="sending" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Enviando dados...</button>
+								<button v-if="!sending" role="button" class="btn btn-primary btn-lg fa fa-save"> Salvar</button>
 							</div>
 						</div>
 						<pre>{{variations_form}}</pre>
@@ -170,30 +172,30 @@ export default {
 			ecosystem_options: null,
 			fruiting_season_options: null,
 			images_preview: [],
+			loading: false,
+			sending: false,
 		}
 	},
 	
 	created () {
 
-		axios.get('entity/field_storage_config/commerce_product.field_ecosystem?_format=json').then(response => {
+		axios.get('entity/field_storage_config/commerce_product.field_ecosystem?_format=json')
+		.then(response => {
 			let values = response.data.settings.allowed_values
 			this.ecosystem_options = Object.keys(values).map(function(key) {
 				return { text: values[key], value: { value: key } }
 			});
-		}).catch(error => {
-			this.error = error
-		});
+		}).catch(error => { this.error = error });
 
-		axios.get('entity/field_storage_config/commerce_product.field_fruiting_season?_format=json').then(response => {
+		axios.get('entity/field_storage_config/commerce_product.field_fruiting_season?_format=json')
+		.then(response => {
 			let values = response.data.settings.allowed_values
 			this.fruiting_season_options = Object.keys(values).map(function(key) {
 				return { text: values[key], value: { value: key } }
 			});
-		}).catch(error => {
-			this.error = error
-		});
+		}).catch(error => { this.error = error });
 
-		if (this.$route.params.id) {
+		if (this.isEditing()) {
 			this.edit(this.$route.params.id)
 		}
 
@@ -202,42 +204,51 @@ export default {
 	
 	methods: {
 		edit(id) {
+			this.loading = true
 			axios.get('product/' + id + '?_format=json').then(response => {
 				var data = response.data
 				this.apiDataToForm(this.form, data)
+
 				if (data && data.variations) {
 					axios.get('entity/commerce_product_variation/' + data.variations[0].target_id + '?_format=json').then(resp => {
 						this.apiDataToForm(this.variations_form, resp.data)
 						this.images_preview = data.field_images
-
-					}).catch(error => {
-						this.error = error
-					});
+						this.loading = false
+					}).catch(error => { this.error = error; this.loading = false });
 				}
-			}).catch(error => {
-				this.error = error
-			});
+			}).catch(error => { this.error = error; this.loading = false });
 		},
 		save() {
-			this.$validator.validate().then(result => {
-        if (result) {
+			this.$validator.validate().then(isValid => {
+        if (isValid) {
+        	this.sending = true
 					this.error = false
-					this.variations_form.uid = [{ target_id: this.currentUser.current_user.uid }]
-					this.variations_form.sku[0].value = slugify(this.form.title[0].value.toLowerCase()) + "-" + Date.now()
+					if (this.isEditing()) {
+						this.variations_form.sku = undefined
+					} else {
+						this.variations_form.sku[0].value = slugify(this.form.title[0].value.toLowerCase()) + "-" + Date.now()
+					}
+					
 					this.form.uid = [{ target_id: this.currentUser.current_user.uid }]
-					axios.post('entity/commerce_product_variation?_format=json', this.variations_form).then(response => {
+					this.variations_form.uid = [{ target_id: this.currentUser.current_user.uid }]
+					axios({
+						method: (this.isEditing() ? 'PATCH' : 'POST'),
+						url: 'entity/commerce_product_variation'+(this.isEditing() ? '/'+ this.form.variations[0].target_id : '')+'?_format=json',
+						data: this.variations_form
+					}).then(response => {
 						this.form.variations = [{ target_id: response.data.variation_id[0].value }]
-						axios.post('entity/commerce_product?_format=json', this.form).then(response => {
-							var product = response.data
+						axios({
+							method: (this.isEditing() ? 'PATCH' : 'POST'),
+							url: (this.isEditing() ? 'product/'+ this.$route.params.id : 'entity/commerce_product')+'?_format=json', 
+							data: this.form
+						}).then(resp => {
+							var product = resp.data
 							if (product && product.product_id) {
 								this.$router.replace('/semente/'+product.product_id[0].value)
 							}
-						}).catch(error => {
-							this.error = error.response.data.message
-						})
-					}).catch(error => {
-						this.error = error
-					})				
+							this.sending = false
+						}).catch(error => { this.error = error.response.data.message; this.sending = false })
+					}).catch(error => { this.error = error; this.sending = false })				
         }
       })
 		},
@@ -260,15 +271,10 @@ export default {
 							'X-CSRF-Token': this.currentUser.csrf_token
 						},
 						data    : reader.result,
-					})
-					.then(response => {
+					}).then(response => {
 						this.images_preview.push(response.data)
 						this.form.field_images.push({ target_id: response.data.fid[0].value })
-					})
-					.catch(() => {
-						this.error ="Ocorreu um erro ao enviar: "+ file.name
-					});	
-
+					}).catch(() => { this.error ="Ocorreu um erro ao enviar: "+ file.name });	
 				}
 
 				reader.readAsArrayBuffer(files[i]);
@@ -284,6 +290,9 @@ export default {
 		baseURL() {
 			return axios.defaults.baseURL
 		},
+		isEditing() {
+			return !!this.$route.params.id
+		},
 		apiDataToForm(form, data) {
 			Object.keys(form).map((key) => {
 				var field = data[key]
@@ -292,7 +301,7 @@ export default {
 						if (f.value) {
 							return { value: f.value }
 						}	else if (f.number) {
-							return { number: Number(f.number) }
+							return { number: Number(f.number), currency_code:	'BRL' }
 						}	else if (f.target_id) {
 							return { target_id: f.target_id }
 						}

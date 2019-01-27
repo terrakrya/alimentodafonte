@@ -3,12 +3,13 @@
 		<ol class="breadcrumb">
 			<li><router-link to="/painel">Painel do Gestor</router-link></li>
 			<li><router-link to="/sementes">Sementes</router-link></li>
-			<li class="active">{{seed.title[0].value}}</li>
+			<li class="active" v-if="seed">{{seed.title[0].value}}</li>
 		</ol>
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
-				<pre>{{seed}}</pre>
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
+				<pre>{{seed}}</pre>
+				
 			</div>
 		</div>
 	</div>
@@ -22,7 +23,8 @@ export default {
 	
 	data () {
 		return { 
-			seed: null
+			seed: null,
+			error: false
 		}
 	},
 	
