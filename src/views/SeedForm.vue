@@ -65,7 +65,7 @@
 								<b-form-input v-model="variations_form.field_stock[0].value" type="number"></b-form-input>
 							</b-form-group>
 						</div>
-					</div>						
+					</div>				
 					<div class="row">
 						<div class="col-md-4">
 							<b-form-group label="Qtd. de sementes / Kg *" v-bind:description="form.field_seeds_kg[0].value > 0 ? form.field_seeds_kg[0].value + ' sementes / Kg' : ''">
@@ -100,13 +100,13 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-12">
 							<b-form-group label="Fotos" description="Tipos permetidos: PNG, GIF, JPG e JPEG. Tamanho máximo 32 MB.">
 								<b-form-file ref="files" id="files" multiple accept="image/*" v-on:change="uploadImages"></b-form-file>
 							</b-form-group>
 							<div class="row images_preview" v-if="images_preview.length > 0">
 								<div class="col-md-4" v-for="(image, index) in images_preview" v-bind:key="index">
-									<img v-bind:src="baseURL() + image.uri[0].url">
+									<img v-bind:src="(image.uri ? baseURL() + image.uri[0].url : image.url)">
 									<br>
 									<br>
 									<p class="text-center"><a class="btn btn-default btn-small" @click="deleteImage(index)"><i class="fa fa-trash"></i></a></p>
@@ -118,18 +118,14 @@
 						<div class="col-md-12 text-center">
 							<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
 							<b-alert variant="danger" show v-if="errors && errors.items.length">Verifique os erros acima para continuar</b-alert>
-							{{form}}
 							<div class="btn-group">
 								<button role="button" class="btn btn-primary btn-lg fa fa-save"> Salvar</button>
 							</div>
 						</div>
+						<pre>{{variations_form}}</pre>
+						<pre>{{form}}</pre>
 					</div>	
 				</b-form>
-				<!-- <pre>{{variations_form}}</pre> -->
-				<pre>{{form.field_images}}</pre>
-				<pre>{{form}}</pre>
-				<!-- <pre>{{ecosystem_options}}</pre> -->
-				<!-- <pre>{{fruiting_season_options}}</pre> -->
 			</div>				
 		</div>
 	</div>
@@ -173,7 +169,7 @@ export default {
 			showSkuInput: false,
 			ecosystem_options: null,
 			fruiting_season_options: null,
-			images_preview: []
+			images_preview: [],
 		}
 	},
 	
@@ -207,19 +203,17 @@ export default {
 	methods: {
 		edit(id) {
 			axios.get('product/' + id + '?_format=json').then(response => {
-				Object.keys(this.form).map((key) => {
-					var field = response.data[key]
-					if (field && field.length) {
-						this.form[key] = field.map((f) => {
-							if (f.value) {
-								return { value: f.value }
-							}	else if (f.number) {
-								return { number: f.number }
-							}
+				var data = response.data
+				this.apiDataToForm(this.form, data)
+				if (data && data.variations) {
+					axios.get('entity/commerce_product_variation/' + data.variations[0].target_id + '?_format=json').then(resp => {
+						this.apiDataToForm(this.variations_form, resp.data)
+						this.images_preview = data.field_images
 
-						})
-					}
-				})
+					}).catch(error => {
+						this.error = error
+					});
+				}
 			}).catch(error => {
 				this.error = error
 			});
@@ -289,6 +283,23 @@ export default {
 		},
 		baseURL() {
 			return axios.defaults.baseURL
+		},
+		apiDataToForm(form, data) {
+			Object.keys(form).map((key) => {
+				var field = data[key]
+				if (field && field.length) {
+					form[key] = field.map((f) => {
+						if (f.value) {
+							return { value: f.value }
+						}	else if (f.number) {
+							return { number: Number(f.number) }
+						}	else if (f.target_id) {
+							return { target_id: f.target_id }
+						}
+
+					})
+				}
+			})
 		}
 	},
 	computed: {

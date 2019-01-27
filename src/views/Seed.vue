@@ -7,7 +7,7 @@
 		</ol>
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
-				{{seed}}
+				<pre>{{seed}}</pre>
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
 			</div>
 		</div>
