@@ -14,106 +14,122 @@
 						</h1>
 					</div>
 				</div>
-				<b-form @submit="save" enctype="multipart/form-data">
+				<b-form @submit.prevent="save">
 					<div class="row">
 						<div class="col-md-6">
 							<b-form-group label="Nome da espécie *">
-								<b-form-input v-model="form.title.value" required></b-form-input>
-								<b-form-text v-if="variations_form.sku[0].value">{{'Código: '+ variations_form.sku[0].value}}</b-form-text>
+								<b-form-input v-model="form.title[0].value" v-validate="'required'" name="title"></b-form-input>
+								<span class="text-danger" v-show="errors.has('title')">{{ errors.first('title') }}</span>
 							</b-form-group>							
 						</div>
 						<div class="col-md-6">
-							<b-form-group label="Fotos" description="Tipos permetidos: PNG, GIF, JPG e JPEG. Tamanho máximo 32 MB.">
-								<b-form-file ref="files" id="files" multiple accept="image/*" v-on:change="handleFileUploads"></b-form-file>
+							<b-form-group label="Nome científico *">
+								<b-form-input v-model="form.field_scientific_name[0].value" v-validate="'required'" name="field_scientific_name" ></b-form-input>
+								<span class="text-danger" v-show="errors.has('field_scientific_name')">{{ errors.first('field_scientific_name') }}</span>
 							</b-form-group>
 						</div>
 					</div>						
 					<div class="row gray">
-						<div class="col-md-6">
-							<b-form-group label="Nome científico *">
-								<b-form-input v-model="form.field_scientific_name[0].value" required></b-form-input>
-							</b-form-group>
-						</div>
-						<div class="col-md-6">
+						<div class="col-md-12">
 							<b-form-group label="Nome(s) regional(is) *" description="Escreva todos os nome regionais que essa semente possa ter separado por virgula.">
-								<b-form-input v-model="form.field_local_name[0].value" required></b-form-input>
+								<b-form-input v-model="form.field_local_name[0].value" v-validate="'required'" name="field_local_name"></b-form-input>
+								<span class="text-danger" v-show="errors.has('field_local_name')">{{ errors.first('field_local_name') }}</span>
 							</b-form-group>
 						</div>
 					</div>						
 					<div class="row">
 						<div class="col-md-12">
 							<b-form-group label="Descrição da semente">
-								<b-form-textarea v-model="form.body" :rows="3"></b-form-textarea>
+								<b-form-textarea v-model="form.body[0].value" :rows="3"></b-form-textarea>
 							</b-form-group>							
 						</div>
 					</div>						
 					<div class="row gray">
 						<div class="col-md-3"> 
 							<b-form-group label="Preço *">
-								<b-form-input v-model="variations_form.price[0].number" v-money="{}" required></b-form-input>
+								<money v-model="variations_form.price[0].number"></money>
 							</b-form-group>
 						</div>
 						<div class="col-md-3">
 							<b-form-group label="Preço no atacado *">
-								<b-form-input v-model="variations_form.field_wholesale_price[0].number" v-money="{}" required></b-form-input>
+								<money v-model="variations_form.field_wholesale_price[0].number"></money>
 							</b-form-group>
 						</div>
 						<div class="col-md-3">
 							<b-form-group label="Remuneração do coletor *"> 
-								<b-form-input v-model="form.field_compensation_collect[0].number" v-money="{}" required></b-form-input> 
+								<money v-model="form.field_compensation_collect[0].number"></money>
 							</b-form-group>
 						</div>
 						<div class="col-md-3">
 							<b-form-group label="Quantidade em estoque"> 
-								<b-form-input v-model="variations_form.field_stock[0].value" type="number" required></b-form-input>
+								<b-form-input v-model="variations_form.field_stock[0].value" type="number"></b-form-input>
 							</b-form-group>
 						</div>
 					</div>						
 					<div class="row">
 						<div class="col-md-4">
 							<b-form-group label="Qtd. de sementes / Kg *" v-bind:description="form.field_seeds_kg[0].value > 0 ? form.field_seeds_kg[0].value + ' sementes / Kg' : ''">
-								<b-form-input v-model="form.field_seeds_kg[0].value" type="number" required></b-form-input>
+								<b-form-input v-model="form.field_seeds_kg[0].value" type="number"></b-form-input>
 							</b-form-group>
 						</div>
 						<div class="col-md-4">
 							<b-form-group label="Taxa de viabilidade *" v-bind:description="(form.field_viability_rate[0].value || 0) + '% de viabilidade'">
-								<b-form-input v-model="form.field_viability_rate[0].value" type="range" required></b-form-input>
+								<b-form-input v-model="form.field_viability_rate[0].value" type="range"></b-form-input>
 							</b-form-group>
 						</div>
 						<div class="col-md-4">
 							<b-form-group label="Limite de peso por lote (g)" v-bind:description="form.field_lot_limit[0].value > 0 ? 'Limite de '+ form.field_lot_limit[0].value + ' gramas por lote' : ''"> 
-								<b-form-input type="number" v-model="form.field_lot_limit[0].value" required></b-form-input>
+								<b-form-input type="number" v-model="form.field_lot_limit[0].value"></b-form-input>
 							</b-form-group>
 						</div>
 					</div>						
-					<div class="row">
+					<div class="row gray">
 						<div class="col-md-6">
 							<button v-if="!ecosystem_options" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Carregando lista de ecossistemas...</button>
 							<b-form-group label="Ecossistema *" v-if="ecosystem_options">
-								<b-form-checkbox-group v-model="form.field_ecosystem" :options="ecosystem_options" />
+								<b-form-checkbox-group v-model="form.field_ecosystem" :options="ecosystem_options"  v-validate="'required'" name="field_ecosystem" />
+								<span class="text-danger" v-show="errors.has('field_ecosystem')">{{ errors.first('field_ecosystem') }}</span>
 							</b-form-group>
 						</div>
 						<div class="col-md-6">
 							<button v-if="!fruiting_season_options" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Carregando lista de meses...</button>
 							<b-form-group label="Época da frutificação *" v-if="fruiting_season_options">
-								<b-form-checkbox-group  v-model="form.field_fruiting_season" :options="fruiting_season_options" />
+								<b-form-checkbox-group  v-model="form.field_fruiting_season" :options="fruiting_season_options" v-validate="'required'" name="field_fruiting_season" />
+								<span class="text-danger" v-show="errors.has('field_fruiting_season')">{{ errors.first('field_fruiting_season') }}</span>
 							</b-form-group>								
 						</div>
 					</div>
 					<div class="row">
+						<div class="col-md-6">
+							<b-form-group label="Fotos" description="Tipos permetidos: PNG, GIF, JPG e JPEG. Tamanho máximo 32 MB.">
+								<b-form-file ref="files" id="files" multiple accept="image/*" v-on:change="uploadImages"></b-form-file>
+							</b-form-group>
+							<div class="row images_preview" v-if="images_preview.length > 0">
+								<div class="col-md-4" v-for="(image, index) in images_preview" v-bind:key="index">
+									<img v-bind:src="baseURL() + image.uri[0].url">
+									<br>
+									<br>
+									<p class="text-center"><a class="btn btn-default btn-small" @click="deleteImage(index)"><i class="fa fa-trash"></i></a></p>
+								</div>
+							</div>
+						</div>					
+					</div>					
+					<div class="row">
 						<div class="col-md-12 text-center">
 							<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-
+							<b-alert variant="danger" show v-if="errors && errors.items.length">Verifique os erros acima para continuar</b-alert>
+							{{form}}
 							<div class="btn-group">
-								<a @click="save" role="button" class="btn btn-primary btn-lg"><i class="fa fa-save" aria-hidden="true"></i> Salvar</a>
+								<button role="button" class="btn btn-primary btn-lg fa fa-save"> Salvar</button>
 							</div>
 						</div>
-					</div>						
+					</div>	
 				</b-form>
-				<pre>{{variations_form}}</pre>
+				<!-- <pre>{{variations_form}}</pre> -->
+				<pre>{{form.field_images}}</pre>
 				<pre>{{form}}</pre>
-				<pre>{{ecosystem_options}}</pre>
-				<pre>{{fruiting_season_options}}</pre>
+				<!-- <pre>{{ecosystem_options}}</pre> -->
+				<!-- <pre>{{fruiting_season_options}}</pre> -->
 			</div>				
 		</div>
 	</div>
@@ -127,46 +143,42 @@ export default {
 	name: 'SeedForm', 
 	
 	data () {
+
 		return { 
 			error: false,
-			form: null,
-			variations_form: null,
+			form: {
+				type:[{ target_id: "seed" }],
+				title: [{ value: '' }],
+				field_scientific_name: [{ value: '' }],
+				field_local_name: [{ value: '' }],
+				body: [{ value: '' }],
+				field_seeds_kg: [{ value: 0 }],
+				field_viability_rate: [{ value: 50 }],
+				field_lot_limit: [{ value: 0 }],
+				field_compensation_collect: [{ number: 0, currency_code:	'BRL' }],
+				field_ecosystem: [],
+				field_fruiting_season: [],
+				stores:[{ target_id: 1 }],
+				variations: [{target_id: null}],
+				field_images: [],
+			},
+			variations_form: {
+				type:[{ target_id: "default" }],
+				price: [{ number: 0, currency_code:	'BRL' }],				
+				field_wholesale_price: [{ number: 0, currency_code:	'BRL' }],				
+				field_stock: [{ value: 0 }],
+				sku: [{ value: 0 }],
+				product_id: [{ target_id: 0 }]
+			},
 			showSkuInput: false,
 			ecosystem_options: null,
-			fruiting_season_options: null
+			fruiting_season_options: null,
+			images_preview: []
 		}
 	},
 	
 	created () {
-		this.form = {
-			type:[{ target_id: "seed" }],
-			title: { value: '' },
-			field_scientific_name: [{ value: '' }],
-			field_local_name: [{ value: '' }],
-			field_seeds_kg: [{ value: 0 }],
-			field_viability_rate: [{ value: 50 }],
-			field_lot_limit: [{ value: 0 }],
-			field_compensation_collect: [{ number: 0, currency_code:	'BRL' }],
-			field_ecosystem: [],
-			field_fruiting_season: [],
-			stores:[{ target_id: 1 }],
-			variations: [{target_id: null}],
-		}
 
-		this.variations_form = {
-			type:[{ target_id: "default" }],
-			price: [{ number: 0, currency_code:	'BRL' }],				
-			field_wholesale_price: [{ number: 0, currency_code:	'BRL' }],				
-			field_stock: [{ value: 0 }],
-			sku: [{ value: 0 }]
-		}
-
-		axios.get('entity/commerce_product_variation/1?_format=json').then(response => {
-			this.variations = response.data
-		}).catch(error => {
-			this.error = error
-		});
-		
 		axios.get('entity/field_storage_config/commerce_product.field_ecosystem?_format=json').then(response => {
 			let values = response.data.settings.allowed_values
 			this.ecosystem_options = Object.keys(values).map(function(key) {
@@ -185,29 +197,58 @@ export default {
 			this.error = error
 		});
 
+		if (this.$route.params.id) {
+			this.edit(this.$route.params.id)
+		}
+
+
 	},
 	
 	methods: {
-		save() {
-			this.error = false
-			this.variations_form.uid = [{ target_id: this.currentUser.current_user.uid }]
-			this.form.uid = [{ target_id: this.currentUser.current_user.uid }]
-			axios.post('entity/commerce_product_variation?_format=json', this.variations_form).then(response => {
-				this.form.variations = [{ target_id: response.data.variation_id[0].value }]
-				axios.post('entity/commerce_product?_format=json', this.form).then(response => {
-					var product = response.data
-					if (product && product.product_id) {
-						this.$router.replace('/semente/'+product.product_id[0].value)
-					}
-				}).catch(error => {
-					this.error = error.response.data.message
-				})
+		edit(id) {
+			axios.get('product/' + id + '?_format=json').then(response => {
+				Object.keys(this.form).map((key) => {
+					var field = response.data[key]
+					if (field && field.length) {
+						this.form[key] = field.map((f) => {
+							if (f.value) {
+								return { value: f.value }
+							}	else if (f.number) {
+								return { number: f.number }
+							}
 
+						})
+					}
+				})
 			}).catch(error => {
-				this.error = error.response.data.message
-			})
+				this.error = error
+			});
 		},
-		handleFileUploads (e) {
+		save() {
+			this.$validator.validate().then(result => {
+        if (result) {
+					this.error = false
+					this.variations_form.uid = [{ target_id: this.currentUser.current_user.uid }]
+					this.variations_form.sku[0].value = slugify(this.form.title[0].value.toLowerCase()) + "-" + Date.now()
+					this.form.uid = [{ target_id: this.currentUser.current_user.uid }]
+					axios.post('entity/commerce_product_variation?_format=json', this.variations_form).then(response => {
+						this.form.variations = [{ target_id: response.data.variation_id[0].value }]
+						axios.post('entity/commerce_product?_format=json', this.form).then(response => {
+							var product = response.data
+							if (product && product.product_id) {
+								this.$router.replace('/semente/'+product.product_id[0].value)
+							}
+						}).catch(error => {
+							this.error = error.response.data.message
+						})
+					}).catch(error => {
+						this.error = error
+					})				
+        }
+      })
+		},
+
+		uploadImages(e) {
 			let files = e.target.files || e.dataTransfer.files;
 			
 			for (var i = 0; i < files.length; i++) {
@@ -215,58 +256,46 @@ export default {
 				var reader  = new FileReader();
 				var file = files[i]
 				reader.onloadend = () => {
-					axios.post('entity/file?_format=hal_json', {
-						"_links": {
-							"type": {
-								"href": axios.defaults.baseURL + "rest/type/file/image"
-							}
-						},
-						"filename": [
-						{
-							"value": file.name
-						}
-						],
-						"data": [
-						{
-							"value": reader.result
-						}
-						]
-					}, 
-					{
-						headers: {
-							'Content-Type': 'application/hal+json',
+					axios({
+						method  : 'POST',
+						url     : "file/upload/commerce_product/seed/field_images?_format=json",
+						headers : {
+							'Content-Type' : 'application/octet-stream',
+							'Content-Disposition': 'file; filename="' + file.name + '"',
 							'Authorization': 'Basic c2VtZW50ZXMtYWRtaW46bjNqdWtqZjk4NG4=',
 							'X-CSRF-Token': this.currentUser.csrf_token
-						}
+						},
+						data    : reader.result,
 					})
 					.then(response => {
-						this.images = response.data 
+						this.images_preview.push(response.data)
+						this.form.field_images.push({ target_id: response.data.fid[0].value })
 					})
-					.catch(error => {
-						this.error = error
+					.catch(() => {
+						this.error ="Ocorreu um erro ao enviar: "+ file.name
 					});	
 
 				}
 
-				reader.readAsDataURL(files[i]);
+				reader.readAsArrayBuffer(files[i]);
 
 			}
 
 
+		},
+		deleteImage(index) {
+			this.$delete(this.images_preview, index)
+			this.$delete(this.form.field_images, index)
+		},
+		baseURL() {
+			return axios.defaults.baseURL
 		}
 	},
-	
 	computed: {
-		currentUser () {
+		currentUser() {
 			return this.$store.state.currentUser
 		},
-	},
-	watch: { 
-		'form.title.value': function (newValue) {
-			this.variations_form.sku[0].value = slugify(newValue.toLowerCase())
-		}
 	}
-
 
 };
 </script>

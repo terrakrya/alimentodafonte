@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-default navbar-fixed-top" v-if="currentUser">
     <div class="brand">
-      <h1 class="logo"><router-link to="/about"><span>REDE</span> de <strong>sementes</strong></router-link></h1>
+      <h1 class="logo"><a href="/"><span>REDE</span> de <strong>sementes</strong></a></h1>
     </div>
     <div class="container-fluid">
       <div class="navbar-btn">
