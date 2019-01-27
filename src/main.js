@@ -21,7 +21,7 @@ axios.defaults.headers.common['Content-Type'] = 'application/json';
 Vue.use(BootstrapVue);
 Vue.use(money, { prefix: 'R$ ', decimal: ',', thousands: '', masked: false })
 Vue.use(Vue2Filters)
-Vue.use(VeeValidate, { locale: 'pt_BR' });
+Vue.use(VeeValidate, { locale: 'pt_BR', fieldsBagName: 'veeFields' });
 
 Validator.localize('pt_BR', messages);
 
