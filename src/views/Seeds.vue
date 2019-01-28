@@ -33,7 +33,7 @@
 											</template>
 											<template slot="actions" slot-scope="data">
 												<router-link v-bind:to="'/editar-semente/'+ data.item.product_id" class="btn btn-primary btn-xs">Editar</router-link>
-												<router-link v-bind:to="'/editar-semente/'+ data.item.product_id" class="btn btn-danger btn-xs">Excluir</router-link>
+												<a @click="remove(data.item.product_id)" class="btn btn-danger btn-xs">Excluir</a>
 											</template>
 										</b-table>
 									</div>
@@ -68,27 +68,26 @@ export default {
 	},
 	
 	created () {
-		axios.get('rest/seeds-list?_format=json').then(response => {
-			this.seeds = response.data.map(seed => {
-				return { 
-					product_id: seed.product_id[0].value,
-					title: seed.title[0].value,
-					scientific_name: seed.field_scientific_name[0].value,
-					compensation_collect: seed.field_compensation_collect[0].number
-				}
-			})
-		}).catch(error => {
-			this.error = error
-		})
+		this.list()
 	},
 
 	methods: {
+		list () {
+			axios.get('rest/seeds-list?_format=json').then(response => {
+				this.seeds = response.data.map(seed => {
+					return { 
+						product_id: seed.product_id[0].value,
+						title: seed.title[0].value,
+						scientific_name: seed.field_scientific_name[0].value,
+						compensation_collect: seed.field_compensation_collect[0].number
+					}
+				})
+			}).catch(error => { this.error = error })
+		}
 		remove (id) {
 			axios.delete('product/' + id + '?_format=json').then(() => {
-				this.$router.replace('/sementes')
-			}).catch(error => {
-				this.error = error
-			})	
+				this.list()
+			}).catch(error => { this.error = error })	
 		}
 	}
 		
