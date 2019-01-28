@@ -83,11 +83,13 @@ export default {
 					}
 				})
 			}).catch(error => { this.error = error })
-		}
+		},
 		remove (id) {
-			axios.delete('product/' + id + '?_format=json').then(() => {
-				this.list()
-			}).catch(error => { this.error = error })	
+			if (confirm("Tem certeza que deseja excluír?")) {
+				axios.delete('product/' + id + '?_format=json').then(() => {
+					this.list()
+				}).catch(error => { this.error = error })	
+			}
 		}
 	}
 		
