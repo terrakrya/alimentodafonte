@@ -1,0 +1,71 @@
+version: "3"
+
+services:
+
+  php:
+    image: wodby/php:7.2-4.5.3
+    container_name: "frontend_sementes_php"
+    environment:
+      PHP_SENDMAIL_PATH: /usr/sbin/sendmail -t -i -S
+      PHP_XDEBUG: 1
+      PHP_XDEBUG_DEFAULT_ENABLE: 1
+      PHP_XDEBUG_REMOTE_CONNECT_BACK: 1
+      PHP_BLACKFIRE: 0
+      PHP_FPM_USER: wodby
+      PHP_FPM_GROUP: wodby
+      PHP_DISPLAY_ERRORS: 0
+      PHP_DISPLAY_STARTUP_ERRORS: 0
+    volumes:
+      - ./:/var/www/html
+  #      - ./:/var/www/html:cached # User-guided caching
+  #      - docker-sync:/var/www/html # Docker-sync for macOS users
+
+  nginx:
+    image: wodby/nginx:1.15-5.0.5
+    container_name: "frontend_sementes_nginx"
+    depends_on:
+      - php
+    environment:
+      NGINX_STATIC_CONTENT_OPEN_FILE_CACHE: "off"
+      NGINX_ERROR_LOG_LEVEL: debug
+      NGINX_BACKEND_HOST: php
+      NGINX_VHOST_PRESET: php
+      NGINX_SERVER_ROOT: /var/www/html/web
+      NGINX_USER: wodby
+    volumes:
+      - ./:/var/www/html
+      - ./docker/conf.d/:/etc/nginx/conf.d
+      # Options for macOS users (https://docker4drupal.readthedocs.io/en/latest/macos)
+      #      - ./:/var/www/html:cached # User-guided caching
+      #      - docker-sync:/var/www/html # Docker-sync
+    labels:
+      - 'traefik.docker.network=frontend'
+      - 'traefik.backend=sementes_nginx'
+      - 'traefik.port=80'
+      - 'traefik.frontend.rule=Host:sementes.docker.localhost'
+
+  portainer:
+    image: portainer/portainer
+    container_name: "frontend_sementes_portainer"
+    command: --no-auth -H unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - 'traefik.backend=portainer'
+      - "traefik.docker.network=frontend"
+      - 'traefik.port=9000'
+      - 'traefik.frontend.rule=Host:portainer.docker.localhost'
+
+  traefik:
+    image: traefik
+    command: -c /dev/null --web --docker --logLevel=INFO
+    ports:
+      - '8000:80'
+      - '8080:8080' # Dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - "traefik.docker.network=frontend"
+
+volumes:
+  codebase:
