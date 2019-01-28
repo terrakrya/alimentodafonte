@@ -11,13 +11,10 @@ run:
 	docker-compose up -d
 
 in:
-	docker-compose exec php /bin/bash
-
-in-nginx:
 	docker-compose exec nginx /bin/bash
 
 in-with-root:
-	docker-compose exec --user root php /bin/bash
+	docker-compose exec --user root nginx /bin/bash
 
 stop:
 	docker-compose stop
@@ -27,9 +24,6 @@ clean:
 
 build:
 	docker-compose build
-
-prod-run:
-	docker-compose -f docker-compose-prod.yml up -d
 
 stage-run:
 	docker-compose -f docker-compose-stage.yml up -d
