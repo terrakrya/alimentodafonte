@@ -1,8 +1,8 @@
 <template>
   <div class="left">
     <div class="content">
-      <div class="header">
-        <div class="logo"><h1>Rede de Sementes</h1></div>
+      <div class="brand">
+        <h1 class="logo"><a href="/"><span>REDE</span> de <strong>sementes</strong></a></h1>
       </div>
       <p v-if="$route.query.redirect">
         Você precisa entrar com seus dados para acessar.
@@ -30,7 +30,7 @@ import auth from '../auth'
 export default {
   created () {
     if (this.$store.state.currentUser) {
-      this.$router.replace('/painel')
+      this.$router.replace('/sementes')
     }
   },
   data () {
@@ -47,7 +47,7 @@ export default {
       this.loading = true
       auth.login(this.email, this.pass, response => {
         if (response.authenticated) {
-          this.$router.replace(this.$route.query.redirect || '/painel')
+          this.$router.replace(this.$route.query.redirect || '/sementes')
         } else {
           this.error = response.error
         }
@@ -58,8 +58,9 @@ export default {
 };
 </script>
 
-<style>
-.error {
-  color: red;
-}
+<style lang="sass">
+.error
+  color: red
+
+
 </style>

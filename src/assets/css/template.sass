@@ -11,8 +11,8 @@ $colorRed: #dc3545
 
 body 
   background: $colorLightBrown
-
-
+a, a:hover, a:focus
+  color: $colorOrange
 .navbar-default
   background: $colorBrown 
   .brand
@@ -86,9 +86,7 @@ body
     min-height: 100%
     left: unset
     position: unset 
-    // padding-left: 260px
     float: right
-    // width: auto
     .main-content
       padding-bottom: 0
 
@@ -130,7 +128,6 @@ body
   margin-right: 7px
 
 .panel-headline
-  // clear: both
   h1
     color: #111
     font-size: 32px
@@ -203,7 +200,6 @@ body
     padding: 12px 20px
     text-transform: uppercase
   .item
-    // clear: both
     min-height: 80px
     display: block
     border-bottom: 1px solid #ddd
@@ -333,7 +329,7 @@ body
   &:last-child
     margin-right: 0
 
-.pesca-area
+.item
   .panel-heading
     background: #EFF8F8
     font-size: 17px
@@ -391,8 +387,8 @@ body
     color: #3D9289
     font-size: 17px
 
-.fishing-title
-  margin-bottom: 60px
+.item-title
+  margin-bottom: 15px
   min-height: 120px
   span
     margin-left: 10px
@@ -403,7 +399,7 @@ body
     margin-right: 5px
   .fish-img
     width: 165px
-    height: 124px
+    min-height: 124px
     overflow: hidden
     border-radius: 2%
     display: block
@@ -412,7 +408,7 @@ body
     box-shadow: 0px 1px 2px 0 rgba(0, 0, 0, 0.2)
   img
     width: 165px
-    height: auto
+    min-height: 124px
   h1
     margin-bottom: 10px
     padding-top: 10px
@@ -421,7 +417,7 @@ body
     font-size: 15px
     color: #975E40
 
-.fishing-form
+.item-form
   h3
     color: #111
     margin-bottom: 20px
@@ -548,6 +544,8 @@ body
     font-weight: 600
     display: block
     margin-bottom: 12px
+    &.badge
+      display: inline-block
   &.subtable
     .panel-body table td span
       font-weight: 600
@@ -576,7 +574,7 @@ body
     h4
       margin-bottom: 0
   .panel-title img, img
-    width: 60px
+    width: 300px
     height: auto
     margin-right: 15px
   .panel-body
@@ -861,8 +859,9 @@ body
 .container-fluid
   min-width: 960px
 
-th.actions 
-  width: 10%
+th.actions, td.actions 
+  width: auto
+  text-align: center
 
 .pointer 
   cursor: pointer
@@ -918,3 +917,16 @@ form
   img 
     width: 100%
 
+.ecosystem, .fruiting_season
+  .badge
+    font-size: 14px
+    margin-right: 2px
+    padding: 10px
+    &.selected
+      background:
+  .forest
+    background: #2bb110
+  .thick
+    background: #eead2d 
+  .swamp
+    background: #006400

@@ -1,7 +1,7 @@
 <template>
 	<div class="dashboard">
 		<ol class="breadcrumb">
-			<li><router-link to="/painel">Painel do Gestor</router-link></li>
+			<li><router-link to="/painel">Painel do gestor</router-link></li>
 			<li class="active">Sementes</li>
 		</ol>
 		<div class="panel panel-headline data-list">
@@ -32,8 +32,8 @@
 												{{data.item.compensation_collect | currency('R$ ', 2, { decimalSeparator: ',' })}}
 											</template>
 											<template slot="actions" slot-scope="data">
-
 												<router-link v-bind:to="'/editar-semente/'+ data.item.product_id" class="btn btn-primary btn-xs">Editar</router-link>
+												<router-link v-bind:to="'/editar-semente/'+ data.item.product_id" class="btn btn-danger btn-xs">Excluir</router-link>
 											</template>
 										</b-table>
 									</div>
@@ -48,7 +48,6 @@
 </template>
 <script>
 import axios from 'axios'
-// import slugify from '@sindresorhus/slugify'
 
 export default {
 	
@@ -82,6 +81,16 @@ export default {
 			this.error = error
 		})
 	},
+
+	methods: {
+		remove (id) {
+			axios.delete('product/' + id + '?_format=json').then(() => {
+				this.$router.replace('/sementes')
+			}).catch(error => {
+				this.error = error
+			})	
+		}
+	}
 		
 };
 </script>
