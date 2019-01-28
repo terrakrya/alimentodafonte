@@ -42,29 +42,3 @@ export default {
 
   onChange () {}
 }
-
-// function pretendRequest (email, pass, cb) {
-//   setTimeout(() => {
-//     axios.post('user/login?_format=json', {
-//       name: email,
-//       pass: pass
-//     })
-//     .then(function (response) {
-//       cb({
-//         authenticated: true,
-//         currentUser: response
-//       })
-//     })
-//     .catch(function (error) {
-//       cb({ authenticated: false, error: error })
-//     });
-//     // if (email === 'joe@example.com' && pass === 'password1') {
-//     //   cb({
-//     //     authenticated: true,
-//     //     currentUser: Math.random().toString(36).substring(7)
-//     //   })
-//     // } else {
-//     //   cb({ authenticated: false })
-//     // }
-//   }, 0)
-// }

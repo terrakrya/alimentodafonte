@@ -1,7 +1,7 @@
 <template>
 	<div class="dashboard">
 		<ol class="breadcrumb">
-			<li><router-link to="/painel">Painel do Gestor</router-link></li>
+			<li><router-link to="/painel">Painel do gestor</router-link></li>
 			<li class="active">Sementes</li>
 		</ol>
 		<div class="panel panel-headline data-list">
@@ -141,11 +141,3 @@ export default {
 
 };
 </script>
-<!-- 
-curl --include \
-  --request POST \
-  --user klausi:secret \
-  --header 'Content-type: application/hal+json' \
-  --header 'X-CSRF-Token: fCY2htY0YLiyZqHtKDuxNqcXGqdnU1LQOoLqI58paZs \
-  http://example.com/entity/node?_format=hal_json \
-  --data-binary '{"_links":{"type":{"href":"http://example.com/rest/type/node/article"}},"title":[{"value":"Example node title"}],"type":[{"target_id":"article"}]}' -->

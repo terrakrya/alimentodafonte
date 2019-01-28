@@ -1,9 +1,9 @@
 <template>
 	<div class="dashboard">
 		<ol class="breadcrumb">
-			<li><router-link to="/painel">Painel do Gestor</router-link></li>
+			<li><router-link to="/painel">Painel do gestor</router-link></li>
 			<li><router-link to="/sementes">Sementes</router-link></li>
-			<li class="active">{{ isEditing() ? 'Editar' : 'Cadastrar' }} semente: {{form.title[0].value}}</li>
+			<li class="active">{{ isEditing() ? 'Editar' : 'Cadastrar' }} semente</li>
 		</ol>
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
@@ -79,7 +79,7 @@
 							</b-form-group>
 						</div>
 						<div class="col-md-4">
-							<b-form-group label="Limite de peso por lote (g)" v-bind:description="form.field_lot_limit[0].value > 0 ? 'Limite de '+ form.field_lot_limit[0].value + ' gramas por lote' : ''"> 
+							<b-form-group label="Limite de peso por lote" v-bind:description="form.field_lot_limit[0].value > 0 ? 'Limite de '+ form.field_lot_limit[0].value + ' kg por lote' : ''"> 
 								<b-form-input type="number" v-model="form.field_lot_limit[0].value"></b-form-input>
 							</b-form-group>
 						</div>
@@ -107,7 +107,7 @@
 							</b-form-group>
 							<div class="row images_preview" v-if="images_preview.length > 0">
 								<div class="col-md-4" v-for="(image, index) in images_preview" v-bind:key="index">
-									<img v-bind:src="(image.uri ? baseURL() + image.uri[0].url : image.url)">
+									<b-img v-bind:src="(image.uri ? baseURL() + image.uri[0].url : image.url)" fluid thumbnail />
 									<br>
 									<br>
 									<p class="text-center"><a class="btn btn-default btn-small" @click="deleteImage(index)"><i class="fa fa-trash"></i></a></p>
@@ -124,8 +124,6 @@
 								<button v-if="!sending" role="button" class="btn btn-primary btn-lg fa fa-save"> Salvar</button>
 							</div>
 						</div>
-						<pre>{{variations_form}}</pre>
-						<pre>{{form}}</pre>
 					</div>	
 				</b-form>
 			</div>				
@@ -220,8 +218,8 @@ export default {
 		},
 		save() {
 			this.$validator.validate().then(isValid => {
-        if (isValid) {
-        	this.sending = true
+				if (isValid) {
+					this.sending = true
 					this.error = false
 					if (this.isEditing()) {
 						this.variations_form.sku = undefined
@@ -249,8 +247,8 @@ export default {
 							this.sending = false
 						}).catch(error => { this.error = error.response.data.message; this.sending = false })
 					}).catch(error => { this.error = error; this.sending = false })				
-        }
-      })
+				}
+			})
 		},
 
 		uploadImages(e) {

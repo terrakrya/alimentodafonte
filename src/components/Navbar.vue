@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-default navbar-fixed-top" v-if="currentUser">
+  <nav class="navbar navbar-default" v-if="currentUser">
     <div class="brand">
       <h1 class="logo"><a href="/"><span>REDE</span> de <strong>sementes</strong></a></h1>
     </div>
@@ -15,7 +15,7 @@
       <div id="navbar-menu">
         <ul class="nav navbar-nav navbar-right">
           <li class="dropdown" v-bind:class="{open: userDropdown }">
-            <a v-on:click="toggleUserDropdown()" href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="../assets/img/user.png" class="img-circle img-prof" alt="Avatar"><span>{{currentUser.current_user.name}}</span> &nbsp;<i class="icon-submenu fa fa-chevron-down"></i></a>
+            <a v-on:click="toggleUserDropdown()" href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> &nbsp; <span>{{currentUser.current_user.name}}</span> &nbsp;<i class="icon-submenu fa fa-chevron-down"></i></a>
             <ul class="dropdown-menu">
               <li><router-link v-if="currentUser" to="/logout"><i class="lnr lnr-exit"></i> <span>Sair</span></router-link></li>
             </ul>

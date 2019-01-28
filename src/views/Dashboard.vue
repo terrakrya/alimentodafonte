@@ -1,23 +1,16 @@
 <template>
 	<div class="dashboard">
 		<ol class="breadcrumb">
-			<li class="active">Painel do Gestor</li>
+			<li class="active">Painel do gestor</li>
 		</ol>
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<div class="row">
-					<div class="col-md-8">
-						<h1>
-							Painel do Gestor 
-						</h1>
-					</div>
-				</div>
-				<div class="row">
 					<div class="col-md-12">
 						<div class="info-content">
 							<div class="row">
-								<div class="col-md-12">
-									
+								<div class="col-md-12 text-center">
+									Aqui serão apresentados gráficos e relatorios mais úteis e mais acessados
 								</div>
 							</div>
 						</div>

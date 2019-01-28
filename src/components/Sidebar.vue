@@ -7,7 +7,7 @@
             <router-link to="/painel"><i class="fa fa-home"></i> <span>Início</span></router-link>
           </li>
           <li>
-            <a><i class="fa fa-clipboard-list"></i><span>Cadastros</span><i class="fa fa-chevron-down"></i></a>
+            <a><i class="fa fa-list-alt"></i><span>Cadastros</span><i class="fa fa-chevron-down"></i></a>
             <ul class="nav">
               <li>
                 <router-link to="/sementes"><span>Sementes</span></router-link>

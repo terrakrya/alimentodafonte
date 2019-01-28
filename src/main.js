@@ -3,7 +3,6 @@ import axios from 'axios'
 import BootstrapVue from 'bootstrap-vue'
 import money from 'v-money'
 import Vue2Filters from 'vue2-filters'
-// import messages from 'vee-validate/dist/locale/pt_BR';
 import VeeValidate, { Validator } from 'vee-validate'
 
 import messages from './locale/pt_BR'
