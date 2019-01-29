@@ -2,7 +2,7 @@ version: "3"
 
 services:
 
-  nginx:
+  nginx_front:
     image: wodby/nginx:1.15-5.0.5
     container_name: "frontend_sementes_nginx"
     environment:
@@ -12,15 +12,20 @@ services:
       NGINX_USER: wodby
     volumes:
       - ./:/var/www/html
-      - ./docker/conf.d/:/etc/nginx/conf.d
+      #- ./docker/conf.d/:/etc/nginx/conf.d
       # Options for macOS users (https://docker4drupal.readthedocs.io/en/latest/macos)
       #      - ./:/var/www/html:cached # User-guided caching
       #      - docker-sync:/var/www/html # Docker-sync
+    networks:
+      sementes_sementes:
     labels:
       - 'traefik.docker.network=drupal'
-      - 'traefik.backend=sementes_nginx'
+      - 'traefik.backend=frontend_sementes_nginx'
       - 'traefik.port=80'
       - 'traefik.frontend.rule=Host:sementes.nyx.tc'
+      - 'traefik.enable=true'
 
-volumes:
-  codebase:
+networks:
+  sementes_sementes:
+    external: true
+
