@@ -27,3 +27,6 @@ build:
 
 stage-run:
 	docker-compose -f docker-compose-stage.yml up -d
+
+stage-stop:
+	docker-compose -f docker-compose-stage.yml stop

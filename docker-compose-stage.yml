@@ -17,33 +17,10 @@ services:
       #      - ./:/var/www/html:cached # User-guided caching
       #      - docker-sync:/var/www/html # Docker-sync
     labels:
-      - 'traefik.docker.network=frontend'
+      - 'traefik.docker.network=drupal'
       - 'traefik.backend=sementes_nginx'
       - 'traefik.port=80'
       - 'traefik.frontend.rule=Host:frontend-sementes.docker.localhost'
-
-  portainer:
-    image: portainer/portainer
-    container_name: "frontend_sementes_portainer"
-    command: --no-auth -H unix:///var/run/docker.sock
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    labels:
-      - 'traefik.backend=portainer'
-      - "traefik.docker.network=frontend"
-      - 'traefik.port=9000'
-      - 'traefik.frontend.rule=Host:frontend-sementes-portainer.docker.localhost'
-
-  traefik:
-    image: traefik
-    command: -c /dev/null --web --docker --logLevel=INFO
-    ports:
-      - '8000:80'
-      - '8080:8080' # Dashboard
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    labels:
-      - "traefik.docker.network=frontend"
 
 volumes:
   codebase:
