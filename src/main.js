@@ -12,8 +12,8 @@ import App from './App.vue'
 
 Vue.config.productionTip = false
 
-// axios.defaults.baseURL = "http://sementes.docker.localhost:8000/";
-axios.defaults.baseURL = "http://adminsementes.nyx.tc/";
+axios.defaults.baseURL = "http://sementes.docker.localhost:8000/";
+// axios.defaults.baseURL = "http://adminsementes.nyx.tc/";
 axios.defaults.headers.common['Authorization'] = 'Basic c2VtZW50ZXMtYWRtaW46bjNqdWtqZjk4NG4=';
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 

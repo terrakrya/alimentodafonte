@@ -3,7 +3,7 @@
 		<ol class="breadcrumb">
 			<li><router-link to="/painel">Painel do gestor</router-link></li>
 			<li><router-link to="/sementes">Sementes</router-link></li>
-			<li class="active">{{ isEditing() ? 'Editar' : 'Cadastrar' }} semente</li>
+			<li class="active">{{ isEditing() ? form.title[0].value : 'Cadastrar semente' }}</li>
 		</ol>
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
@@ -62,14 +62,14 @@
 							</b-form-group>
 						</div>
 						<div class="col-md-3">
-							<b-form-group label="Quantidade em estoque"> 
+							<b-form-group label="Quantidade em estoque (Kg)"> 
 								<b-form-input v-model="variations_form.field_stock[0].value" type="number"></b-form-input>
 							</b-form-group>
 						</div>
 					</div>				
 					<div class="row">
 						<div class="col-md-4">
-							<b-form-group label="Qtd. de sementes / Kg *" v-bind:description="form.field_seeds_kg[0].value > 0 ? form.field_seeds_kg[0].value + ' sementes / Kg' : ''">
+							<b-form-group label="Qtd. de sementes / Kg *" v-bind:description="form.field_seeds_kg[0].value > 0 ? form.field_seeds_kg[0].value + ' sementes por quilo' : ''">
 								<b-form-input v-model="form.field_seeds_kg[0].value" type="number"></b-form-input>
 							</b-form-group>
 						</div>
@@ -79,7 +79,7 @@
 							</b-form-group>
 						</div>
 						<div class="col-md-4">
-							<b-form-group label="Limite de peso por lote" v-bind:description="form.field_lot_limit[0].value > 0 ? 'Limite de '+ form.field_lot_limit[0].value + ' kg por lote' : ''"> 
+							<b-form-group label="Limite de peso por lote (Kg)" v-bind:description="form.field_lot_limit[0].value > 0 ? 'Limite de '+ form.field_lot_limit[0].value + ' quilos por lote' : ''"> 
 								<b-form-input type="number" v-model="form.field_lot_limit[0].value"></b-form-input>
 							</b-form-group>
 						</div>
@@ -102,17 +102,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-12">
-							<b-form-group label="Fotos" description="Tipos permetidos: PNG, GIF, JPG e JPEG. Tamanho máximo 32 MB.">
-								<b-form-file ref="files" id="files" multiple accept="image/*" v-on:change="uploadImages"></b-form-file>
-							</b-form-group>
-							<div class="row images_preview" v-if="images_preview.length > 0">
-								<div class="col-md-4" v-for="(image, index) in images_preview" v-bind:key="index">
-									<b-img v-bind:src="(image.uri ? baseURL() + image.uri[0].url : image.url)" fluid thumbnail />
-									<br>
-									<br>
-									<p class="text-center"><a class="btn btn-default btn-small" @click="deleteImage(index)"><i class="fa fa-trash"></i></a></p>
-								</div>
-							</div>
+							<pictures-upload v-bind:form="form" v-bind:preview="this.images_preview" v-bind:error="error" />							
 						</div>					
 					</div>					
 					<div class="row">
@@ -133,11 +123,14 @@
 <script>
 import axios from 'axios'
 import slugify from '@sindresorhus/slugify'
+import PicturesUpload from '@/components/PicturesUpload'
 
 export default {
 	
 	name: 'SeedForm', 
 	
+	components: { 'pictures-upload' : PicturesUpload }, 
+
 	data () {
 
 		return { 
@@ -280,13 +273,6 @@ export default {
 			}
 
 
-		},
-		deleteImage(index) {
-			this.$delete(this.images_preview, index)
-			this.$delete(this.form.field_images, index)
-		},
-		baseURL() {
-			return axios.defaults.baseURL
 		},
 		isEditing() {
 			return !!this.$route.params.id
