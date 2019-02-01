@@ -18,8 +18,9 @@ axios.defaults.headers.common['Authorization'] = 'Basic c2VtZW50ZXMtYWRtaW46bjNq
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 Vue.use(BootstrapVue);
+
 Vue.use(money, { prefix: 'R$ ', decimal: ',', thousands: '', masked: false })
-Vue.use(Vue2Filters)
+Vue.use(Vue2Filters, { thousandsSeparator: '' })
 Vue.use(VeeValidate, { locale: 'pt_BR', fieldsBagName: 'veeFields' });
 
 Validator.localize('pt_BR', messages);

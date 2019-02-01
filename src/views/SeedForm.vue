@@ -12,6 +12,7 @@
 						<h1>
 							{{ isEditing() ? 'Editar' : 'Cadastrar' }} semente
 						</h1>
+						<br>
 					</div>
 				</div>
 				<button v-if="loading" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Carregando dados do formulário...</button>
@@ -62,7 +63,7 @@
 							</b-form-group>
 						</div>
 						<div class="col-md-3">
-							<b-form-group label="Quantidade em estoque (Kg)"> 
+							<b-form-group label="Qtd. em estoque (Kg)"> 
 								<b-form-input v-model="variations_form.field_stock[0].value" type="number"></b-form-input>
 							</b-form-group>
 						</div>
@@ -189,8 +190,6 @@ export default {
 		if (this.isEditing()) {
 			this.edit(this.$route.params.id)
 		}
-
-
 	},
 	
 	methods: {
@@ -242,37 +241,6 @@ export default {
 					}).catch(error => { this.error = error; this.sending = false })				
 				}
 			})
-		},
-
-		uploadImages(e) {
-			let files = e.target.files || e.dataTransfer.files;
-			
-			for (var i = 0; i < files.length; i++) {
-
-				var reader  = new FileReader();
-				var file = files[i]
-				reader.onloadend = () => {
-					axios({
-						method  : 'POST',
-						url     : "file/upload/commerce_product/seed/field_images?_format=json",
-						headers : {
-							'Content-Type' : 'application/octet-stream',
-							'Content-Disposition': 'file; filename="' + file.name + '"',
-							'Authorization': 'Basic c2VtZW50ZXMtYWRtaW46bjNqdWtqZjk4NG4=',
-							'X-CSRF-Token': this.currentUser.csrf_token
-						},
-						data    : reader.result,
-					}).then(response => {
-						this.images_preview.push(response.data)
-						this.form.field_images.push({ target_id: response.data.fid[0].value })
-					}).catch(() => { this.error ="Ocorreu um erro ao enviar: "+ file.name });	
-				}
-
-				reader.readAsArrayBuffer(files[i]);
-
-			}
-
-
 		},
 		isEditing() {
 			return !!this.$route.params.id
