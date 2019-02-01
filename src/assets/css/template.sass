@@ -1,6 +1,7 @@
 @import "./assets/css/bootstrap.min.css"
 @import "./assets/css/font-awesome/css/font-awesome.min.css"
 @import "./assets/css/main.css"
+
 $colorBrown: #4b5637
 $colorLightBrown: #444c37
 $colorOrange: #d56606
@@ -8,17 +9,26 @@ $colorGray: #59604d
 $colorLightGray: #f5f5f5
 $colorWhite: #ffffff
 $colorRed: #dc3545
+$colorDark: #222
 
 body 
   background: $colorLightBrown
+
 a, a:hover, a:focus
   color: $colorOrange
+
+.red
+  color: $colorRed !important
+
 .navbar-default
   background: $colorBrown 
   .brand
     background: none
     padding-top: 16px
-    padding-bottom: 5px
+    padding-bottom: 16px
+    h1 
+      margin-top: 4px
+
   .navbar-nav > li > a
     color: #fff
     &:hover, &:focus
@@ -42,6 +52,11 @@ a, a:hover, a:focus
     font-size: 14px
     vertical-align: middle
     margin-left: 8px
+
+.menu-buttom 
+  margin-right: 15px
+  display: none
+  cursor: pointer
 
 .layout-fullwidth #wrapper .btn-toggle-fullwidth
   color: #975E40
@@ -80,6 +95,9 @@ a, a:hover, a:focus
     a
       color: #fff !important
       font-size: 18px
+    .profile
+      display: none
+
   .main
     background-color: #F1ECE4
     height: auto
@@ -105,17 +123,17 @@ a, a:hover, a:focus
 .help-button
   li > a
     font-size: 15px
-    color: #111
+    color: $colorDark
   > li > a > i
     font-size: 20px
     color: #4DB6AC
     &.icon-submenu
       font-size: 11px
-      color: #111
+      color: $colorDark
 
 .presentation-txt
   font-size: 26px
-  color: #111
+  color: $colorDark
   margin: 25px auto 60px auto
 
 .breadcrumb
@@ -129,16 +147,19 @@ a, a:hover, a:focus
 
 .panel-headline
   h1
-    color: #111
+    color: $colorDark
     font-size: 32px
-    margin: 30px auto 20px auto
+    margin: auto
     a
       font-size: 16px
       margin-left: 3px
       color: #4DB6AC
+      display: inline-block
 
-.panel .panel-body
-  padding-bottom: 40px
+.panel 
+  .panel-body
+    padding-top: 25px 
+    padding-bottom: 40px
 
 .filter-list-h
   font-size: 14px
@@ -152,7 +173,7 @@ a, a:hover, a:focus
     font-size: 18px
   label
     font-weight: 600
-    color: #111
+    color: $colorDark
     font-size: 14px
 
 .filter-list-h
@@ -165,7 +186,7 @@ a, a:hover, a:focus
     margin-right: 10px
     margin-top: 6px
     font-weight: 600
-    color: #111
+    color: $colorDark
 
 .filters-area a .fa-question-circle
   color: #975E40
@@ -210,7 +231,7 @@ a, a:hover, a:focus
     h2
       font-size: 20px
       margin: 0 auto 3px auto
-      color: #111
+      color: $colorDark
     p
       font-size: 16px
       color: #975E40
@@ -234,11 +255,11 @@ a, a:hover, a:focus
 .excerpt-list .nav-tabs > li > a, .data-list .nav-tabs > li > a
   background: #fff
   border: none
-  color: #111
+  color: $colorDark
   &:hover
     background: #fff
     border: none
-    color: #111
+    color: $colorDark
 
 .excerpt-list .nav-tabs > li > a:hover, .data-list .nav-tabs > li > a:hover
   color: #4DB6AC
@@ -250,7 +271,7 @@ a, a:hover, a:focus
   border-right: 1px solid #4DB6AC
   border-radius: 2px
   background: #fff
-  color: #111
+  color: $colorDark
   font-weight: 600
   &:focus, &:hover
     border: none
@@ -259,7 +280,7 @@ a, a:hover, a:focus
     border-right: 1px solid #4DB6AC
     border-radius: 2px
     background: #fff
-    color: #111
+    color: $colorDark
     font-weight: 600
 
 .data-list .nav-tabs > li.active > a
@@ -269,7 +290,7 @@ a, a:hover, a:focus
   border-right: 1px solid #4DB6AC
   border-radius: 2px
   background: #fff
-  color: #111
+  color: $colorDark
   font-weight: 600
   &:focus, &:hover
     border: none
@@ -278,7 +299,7 @@ a, a:hover, a:focus
     border-right: 1px solid #4DB6AC
     border-radius: 2px
     background: #fff
-    color: #111
+    color: $colorDark
     font-weight: 600
 
 .excerpt-list .nav-tabs > li.active > a:hover, .data-list .nav-tabs > li.active > a:hover
@@ -298,7 +319,7 @@ a, a:hover, a:focus
   display: inline-block
   p
     font-weight: 600
-    color: #111
+    color: $colorDark
     margin-bottom: 10px
     font-size: 14px
   .check-area
@@ -309,7 +330,7 @@ a, a:hover, a:focus
   margin-bottom: 60px
   p
     font-weight: 600
-    color: #111
+    color: $colorDark
     margin-bottom: 10px
   .check-area
     height: 250px
@@ -333,7 +354,7 @@ a, a:hover, a:focus
   .panel-heading
     background: #EFF8F8
     font-size: 17px
-    color: #111
+    color: $colorDark
     padding: 14px 20px
     border-bottom: 1px solid #ddd !important
     text-transform: uppercase
@@ -358,7 +379,7 @@ a, a:hover, a:focus
     box-shadow: none
     margin-bottom: 50px
     td
-      color: #111
+      color: $colorDark
       font-size: 16px
       padding: 15px 0
       vertical-align: middle
@@ -372,7 +393,7 @@ a, a:hover, a:focus
       height: auto
       border-radius: 2%
     td .badge
-      background: #111
+      background: $colorDark
       font-size: 13px
     .no-item
       color: #999
@@ -388,8 +409,6 @@ a, a:hover, a:focus
     font-size: 17px
 
 .item-title
-  margin-bottom: 15px
-  min-height: 120px
   span
     margin-left: 10px
     &:first-child
@@ -397,7 +416,7 @@ a, a:hover, a:focus
       margin-right: 10px
   .btn i
     margin-right: 5px
-  .fish-img
+  .item-img
     width: 165px
     min-height: 124px
     overflow: hidden
@@ -411,7 +430,7 @@ a, a:hover, a:focus
     min-height: 124px
   h1
     margin-bottom: 10px
-    padding-top: 10px
+    margin-top: 10px
   p
     font-style: italic
     font-size: 15px
@@ -419,11 +438,11 @@ a, a:hover, a:focus
 
 .item-form
   h3
-    color: #111
+    color: $colorDark
     margin-bottom: 20px
     font-size: 24px
   label
-    color: #111
+    color: $colorDark
     margin-top: 20px
   div.radio label, .radio-inline
     margin-top: 0
@@ -444,7 +463,7 @@ a, a:hover, a:focus
 
 .btn-default
   border-color: #DCCFBA
-  color: #111
+  color: $colorDark
 
 .btn-new i
   margin-right: 7px
@@ -455,13 +474,13 @@ a, a:hover, a:focus
 .modal-title
   text-transform: uppercase
   font-weight: 400
-  color: #111
+  color: $colorDark
 
 .modal-alert p
   font-weight: 600
   text-align: center
   font-size: 18px
-  color: #111
+  color: $colorDark
   margin: 50px auto
 
 .modal img
@@ -486,7 +505,7 @@ a, a:hover, a:focus
     background: #EFF8F8
     font-size: 17px
     font-weight: 600
-    color: #111
+    color: $colorDark
     padding: 13px 20px
     text-transform: uppercase
     border: 1px solid #ddd
@@ -518,14 +537,14 @@ a, a:hover, a:focus
   td, &.subtable .panel-body table td
     border: 1px solid #DCCFBA
     padding: 20px
-    color: #111
+    color: $colorDark
 
 .table-striped > tbody > tr:nth-of-type(2n+1)
   background: #F1ECE4
 
 .pesca-area .panel-default table th, .resume-table th
   padding: 10px 20px
-  color: #111
+  color: $colorDark
 
 .pesca-area .panel-default table th
   border-bottom: 2px solid #DCCFBA
@@ -563,7 +582,7 @@ a, a:hover, a:focus
       background-color: #fff
       padding: 0
     a
-      color: #111
+      color: $colorDark
       display: block
       margin-left: 0
   .panel-heading
@@ -606,7 +625,7 @@ a, a:hover, a:focus
 .area-new
   .intro
     margin: 40px 0 50px 0
-    color: #111
+    color: $colorDark
   h2
     font-size: 26px
     font-weight: 500
@@ -615,7 +634,7 @@ a, a:hover, a:focus
   p
     font-style: italic
     font-size: 18px
-    color: #111
+    color: $colorDark
     text-align: center
     &.label-custom
       font-style: normal
@@ -642,21 +661,21 @@ a, a:hover, a:focus
   padding: 10px 20px 20px 20px
 
 .upload-area h3
-  color: #111
+  color: $colorDark
   font-weight: 700
   font-size: 18px
   margin-bottom: 25px
 
 .description-area
   label
-    color: #111
+    color: $colorDark
     font-weight: 700
     font-size: 18px
     margin-bottom: 25px
     margin: 15px auto 18px auto
   span
     font-size: 16px
-    color: #111
+    color: $colorDark
     font-style: italic
     display: block
     padding: 10px 60px 20px 60px
@@ -670,7 +689,7 @@ a, a:hover, a:focus
     position: absolute
     z-index: -1
   .inputfile-1 + label
-    color: #111
+    color: $colorDark
   .inputfile + label
     white-space: nowrap
     cursor: pointer
@@ -728,7 +747,7 @@ a, a:hover, a:focus
     border: none
   .add-map .form-group label
     font-weight: normal
-    color: #111
+    color: $colorDark
   .form-group i
     position: relative
     top: 1px
@@ -765,7 +784,7 @@ a, a:hover, a:focus
         &:hover
           opacity: 0.9
       span
-        color: #111
+        color: $colorDark
         font-weight: 700
         font-size: 18px
         margin-top: 12px
@@ -775,7 +794,7 @@ a, a:hover, a:focus
     font-weight: 600
     margin-bottom: 7px
     text-align: left
-    color: #111
+    color: $colorDark
   .modal-insert-local
     p
       font-style: normal
@@ -783,7 +802,7 @@ a, a:hover, a:focus
       font-weight: 600
       margin-bottom: 7px
       text-align: left
-      color: #111
+      color: $colorDark
       margin-top: 20px
     iframe
       margin-top: 10px
@@ -856,9 +875,6 @@ a, a:hover, a:focus
   font-size: 15px
   font-weight: 400
 
-.container-fluid
-  min-width: 960px
-
 th.actions, td.actions 
   width: auto
   text-align: center
@@ -871,9 +887,16 @@ th.actions, td.actions
     color: $colorOrange
 
 form 
+  input:not([type="checkbox"])
+    width: 100%
+  legend 
+    color: $colorDark
+    border: 0
+    font-weight: bold
+    font-size: 16px
   > .row
     border: 1px solid #DCCFBA
-    color: #111
+    color: $colorDark
     padding: 0
     margin: 0
     border-bottom: 0
@@ -887,11 +910,6 @@ form
     &.gray 
       background: #F1ECE4
     
-  legend 
-    color: #111
-    border: 0
-    font-weight: bold
-    font-size: 16px
   .custom-file-label 
     display: none
   .custom-checkbox
@@ -930,3 +948,47 @@ form
     background: #eead2d 
   .swamp
     background: #006400
+
+.actions
+  .fa
+    width: 42px
+
+.search-input
+  background: url("./assets/img/search.png") no-repeat scroll 4px 4px
+  background-size: 24px
+  padding-left: 35px
+
+@media (max-width: 1024px)
+  #wrapper
+    .sidebar:not(.active)
+      display: none
+    .sidebar
+      position: absolute
+      left: 0
+  .menu-buttom
+    display: inline-block
+  .b-table
+    background: $colorWhite
+  .panel
+    margin-left: -25px
+    margin-right: -25px
+    margin-bottom: 0
+  .resume-table
+    width: auto
+    margin: 0 -27px
+
+@media (max-width: 767px)
+  .search-input
+    margin-top: 15px
+
+@media (max-width: 540px)
+  #wrapper
+    .sidebar
+      .profile
+        display: block
+
+@media (max-width: 364px)
+  .brand 
+    h1
+      font-size: 24px
+      margin-top: 10px
