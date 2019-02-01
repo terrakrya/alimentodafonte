@@ -7,7 +7,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    currentUser: JSON.parse(window.localStorage.getItem('currentUser'))
+    currentUser: JSON.parse(window.localStorage.getItem('currentUser')),
+    showMenu: false
   },
   actions,
   mutations
