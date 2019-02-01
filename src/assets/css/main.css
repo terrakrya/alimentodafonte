@@ -52,6 +52,7 @@ footer {
   text-align: right;
   font-size: 13px; }
   @media screen and (max-width: 767px) {
+
     .copyright {
       text-align: center;
       position: relative !important; } }
@@ -83,11 +84,6 @@ footer {
   position: relative;
   float: right;
   background-color: #f5f5fa; }
-
-@media screen and (max-width: 767px) {
-  #wrapper #sidebar-nav,
-  #wrapper .main {
-    padding-top: 130px; } }
 
 .layout-fullwidth #wrapper .sidebar {
   left: -260px; }
@@ -164,6 +160,9 @@ html.fullscreen-bg #wrapper {
   margin: 0;
   border: none;
   background-color: #fff; }
+  .navbar-default .navbar-nav {
+    margin: auto;
+  }
   .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
     background-color: #fafafa; }
   .navbar-default .navbar-toggle, .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
@@ -176,12 +175,8 @@ html.fullscreen-bg #wrapper {
     .navbar-default .brand {
       padding-left: 30px;
       padding-right: 15px; } }
-  @media screen and (max-width: 992px) {
-    .navbar-default .brand {
-      display: none; } }
-  @media screen and (max-width: 640px) {
-    .navbar-default #navbar-menu {
-      float: right; } }
+  .navbar-default #navbar-menu {
+    float: right; }
 
 .navbar-btn {
   float: left;
@@ -269,41 +264,18 @@ html.fullscreen-bg #wrapper {
   .navbar-nav .dropdown-menu > li > a i {
     vertical-align: middle; }
 
-@media screen and (min-width: 768px) {
-  .navbar-nav.navbar-right {
-    margin-right: 0; } }
+.navbar-right .dropdown-menu {
+    right: 0;
+    left: auto; }
 
-@media screen and (max-width: 767px) {
-  .navbar-nav {
-    width: 100%;
-    margin: 0; }
-    .navbar-nav > li {
-      display: table-cell;
-      width: 1%;
-      position: inherit;
-      text-align: center; }
+@media screen and (max-width: 540px) {
     .navbar-nav > li > a {
-      padding: 15px 20px; }
+      display: none;
+      text-align: right; }
       .navbar-nav > li > a span:not(.badge),
       .navbar-nav > li > a .icon-submenu {
         display: none; }
-    .navbar-nav .open .dropdown-menu {
-      -moz-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-      -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-      position: absolute;
-      width: 100%;
-      margin-top: 3px;
-      background-color: #fff; }
-    .navbar-nav .open .dropdown-menu > li > a {
-      padding: 10px 15px; }
-    .navbar-nav .icon-menu {
-      padding-top: 15px;
-      padding-bottom: 15px; }
-      .navbar-nav .icon-menu .badge {
-        top: 10px;
-        right: 15px; } }
-
+  }
 .navbar-toggle {
   padding: 5px 8px;
   margin: 20px 15px 20px 0; }
@@ -797,7 +769,8 @@ ul.activity-list > li {
   margin-bottom: 30px;
   font-weight: 300; }
   .weekly-summary .number {
-    font-size: 36px; }
+    font-size: 36px;
+    color: #222; }
   .weekly-summary i {
     font-size: 16px;
     margin-left: 10px; }

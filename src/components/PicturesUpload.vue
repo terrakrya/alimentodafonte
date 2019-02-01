@@ -1,6 +1,6 @@
 <template>
   <div class="pictures-upload">
-    <b-form-group label="Fotosss" description="Selecione um ou mais arquivos dos formatos: PNG, GIF, JPG ou JPEG, com no máximo 32 MB.">
+    <b-form-group label="Fotos" description="Selecione um ou mais arquivos dos formatos: PNG, GIF, JPG ou JPEG, com no máximo 32 MB.">
       <b-form-file ref="files" id="files" multiple accept="image/*" v-on:change="uploadImages"></b-form-file>
     </b-form-group>
     <div class="row preview" v-if="preview.length > 0">

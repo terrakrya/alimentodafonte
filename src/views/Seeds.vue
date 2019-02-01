@@ -7,11 +7,14 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<div class="row">
-					<div class="col-md-8">
+					<div class="col-sm-8">
 						<h1>
 							Sementes 
 							<router-link to="/cadastrar-semente">+ Cadastrar semente</router-link>
 						</h1>
+					</div>
+					<div class="col-sm-4">
+						<b-form-input v-model="filter" placeholder="Buscar semente" class="search-input" />
 					</div>
 				</div>
 				<div class="row">
@@ -22,8 +25,6 @@
 									<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
 									<button v-if="!seeds && !error" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Carregando lista de sementes...</button>
 									<div v-if="seeds">
-										<b-form-input v-model="filter" placeholder="Buscar" />
-										<br>
 										<b-table :fields="tableFields" :items="seeds" :sort-by="'title'" :filter="filter">
 											<template slot="title" slot-scope="data">
 												<router-link v-bind:to="'/semente/'+ data.item.product_id">{{data.item.title}}</router-link>
@@ -32,8 +33,8 @@
 												{{data.item.compensation_collect | currency('R$ ', 2, { decimalSeparator: ',' })}}
 											</template>
 											<template slot="actions" slot-scope="data">
-												<router-link v-bind:to="'/editar-semente/'+ data.item.product_id" class="btn btn-primary btn-xs">Editar</router-link>
-												<a @click="remove(data.item.product_id)" class="btn btn-danger btn-xs">Excluir</a>
+												<router-link v-bind:to="'/editar-semente/'+ data.item.product_id" class="fa fa-edit btn btn-primary btn-xs "></router-link>
+												<a @click="remove(data.item.product_id)" class="fa fa-trash btn btn-danger btn-xs"></a>
 											</template>
 										</b-table>
 									</div>

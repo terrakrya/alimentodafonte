@@ -9,8 +9,13 @@ export const mutations = {
   login (state, currentUser) {
     state.currentUser = currentUser
   },
+
   logout (state) {
     state.currentUser = undefined
+  },
+
+  toggleMenu (state) {
+    state.showMenu = !state.showMenu
   },
 
   addTodo (state, todo) {
