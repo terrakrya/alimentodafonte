@@ -12,6 +12,9 @@
               <li @click="toggleMenu">
                 <router-link to="/sementes"><span>Sementes</span></router-link>
               </li>
+              <li @click="toggleMenu">
+                <router-link to="/coletores"><span>Coletores</span></router-link>
+              </li>
               <li>
                 <a href="#"><span>Grupos de coletores</span></a>
               </li>
