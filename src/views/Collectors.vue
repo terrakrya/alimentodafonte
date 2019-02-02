@@ -10,11 +10,11 @@
 					<div class="col-sm-8">
 						<h1>
 							Coletores 
-							<router-link to="/cadastrar-coletor">+ Cadastrar coletor</router-link>
+							<router-link to="/cadastrar-coletor">+ Cadastrar</router-link>
 						</h1>
 					</div>
 					<div class="col-sm-4">
-						<b-form-input v-model="filter" placeholder="Buscar coletor" class="search-input" />
+						<b-form-input v-model="filter" placeholder="Buscar" class="search-input" />
 					</div>
 				</div>
 				<div class="info-content">

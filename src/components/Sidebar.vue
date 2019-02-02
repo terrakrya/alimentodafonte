@@ -65,9 +65,6 @@
 export default {
   name: 'Sidebar',
   computed: {
-    currentUser () {
-      return this.$store.state.currentUser
-    }, 
     showMenu () {
       return this.$store.state.showMenu
     }

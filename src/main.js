@@ -6,7 +6,7 @@ import Vue2Filters from 'vue2-filters'
 import VeeValidate, { Validator } from 'vee-validate'
 import VueTheMask from 'vue-the-mask'
 
-import messages from './locale/pt_BR'
+import ptBR from './locale/pt_BR'
 import router from './router'
 import store from './store/'
 import mixin from './mixin'
@@ -27,11 +27,9 @@ Vue.use(Vue2Filters)
 Vue.use(VeeValidate, { locale: 'pt_BR', fieldsBagName: 'veeFields' })
 Vue.use(VueTheMask)
 
-Validator.localize('pt_BR', messages)
+Validator.localize('pt_BR', ptBR)
 
 Vue.mixin(mixin)
-
-
 
 new Vue({
 	router,
