@@ -11,14 +11,14 @@
 				<button v-if="loading" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Carregando dados do coletor...</button>
 				<div v-if="collector && !loading">
 					<div class="row item-title">
-						<div class="col-md-2" v-if="collector.field_images && collector.field_images.length">
-							<img v-bind:src="collector.field_images[0].url" class="img-responsive item-img" />
+						<div class="col-md-2" v-if="collector.user_picture && collector.user_picture.length">
+							<img v-bind:src="collector.user_picture[0].url" class="img-responsive item-img" />
 						</div>
 						<div class="col-md-10">
 							<h1>
 								{{ collector.field_name[0].value }}
 							</h1>
-							<p><span>{{ collector.name[0].value }}</span> &bull; <span>{{ collector.mail[0].value }}</span></p>
+							<p><span>{{ collector.mail[0].value }}</span> &bull; <span>{{ collector.field_contact[0].value }}</span></p>
 
 							<router-link v-bind:to="'/editar-coletor/'+collector.uid[0].value" class="btn btn-default btn-xs">
 								<i class="fa fa-edit" aria-hidden="true"></i>
@@ -91,9 +91,9 @@
 								</dl>
 							</td>
 						</tr>
-						<tr v-if="collector.field_images && collector.field_images.length">
+						<tr v-if="collector.user_picture && collector.user_picture.length">
 							<td width="100%" colspan="2" valign="top">
-								<b-img v-for="(image, index) in collector.field_images" v-bind:src="image.url" fluid thumbnail :key="index" />
+								<b-img v-for="(image, index) in collector.user_picture" v-bind:src="image.url" fluid thumbnail :key="index" />
 							</td>
 						</tr>
 					</table> -->

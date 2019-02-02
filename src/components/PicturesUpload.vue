@@ -1,36 +1,42 @@
 <template>
   <div class="pictures-upload">
-    <b-form-group label="Fotos" description="Selecione um ou mais arquivos dos formatos: PNG, GIF, JPG ou JPEG, com no máximo 32 MB.">
-      <b-form-file ref="files" id="files" multiple accept="image/*" v-on:change="uploadImages"></b-form-file>
+    <b-form-group v-bind:label="'Foto' + (multiple ? 's' : '')" v-bind:description="'Selecione um '+ (multiple ? 'ou mais arquivos' : 'arquivo') +' no formato PNG, GIF, JPG ou JPEG, com no máximo 32 MB.'" v-show="!loading">
+      <b-form-file ref="files" id="files" v-bind:multiple="multiple" accept="image/*" v-on:change="uploadImages"></b-form-file>
+      <span class="text-danger" v-show="error">{{ error }}</span>
     </b-form-group>
-    <div class="row preview" v-if="preview.length > 0">
-      <div class="col-md-4" v-for="(image, index) in preview" v-bind:key="index">
+    <div class="row images_preview" v-if="!loading && images_preview.length > 0">
+      <div class="col-xs-4" v-for="(image, index) in images_preview" v-bind:key="index">
         <b-img v-bind:src="(image.uri ? baseURL() + image.uri[0].url : image.url)" fluid thumbnail />
         <br>
         <br>
         <p class="text-center"><a class="btn btn-default btn-small" @click="deleteImage(index)"><i class="fa fa-trash"></i></a></p>
       </div>
     </div>
+    <loading v-bind:loading="loading" msg="Enviando foto..."/>
   </div>  
 </template>
 
 <script>
 import axios from 'axios'
+import Loading from './Loading'
 
 export default {
 
   name: 'pictures-upload',
 
-  props: ['form', 'preview', 'error'],
+  props: ['form', 'preview', 'multiple', 'field', 'url'],
 
-  computed: {
-    currentUser () {
-      return this.$store.state.currentUser
+  data () {
+    return { 
+      error: false,
+      loading: false,
+      images_preview: this.preview
     }
   },
 
   methods: {
     uploadImages(e) {
+      this.loading = true
       let files = e.target.files || e.dataTransfer.files;
       
       for (var i = 0; i < files.length; i++) {
@@ -40,7 +46,7 @@ export default {
         reader.onloadend = () => {
           axios({
             method  : 'POST',
-            url     : "file/upload/commerce_product/seed/field_images?_format=json",
+            url     : this.url,
             headers : {
               'Content-Type' : 'application/octet-stream',
               'Content-Disposition': 'file; filename="' + file.name + '"',
@@ -48,9 +54,18 @@ export default {
             },
             data    : reader.result,
           }).then(response => {
-            this.preview.push(response.data)
-            this.form.field_images.push({ target_id: response.data.fid[0].value })
-          }).catch(() => { this.error ="Ocorreu um erro ao enviar: "+ file.name }); 
+            if (this.multiple) {
+              this.images_preview.push(response.data)
+              this.form[this.field].push({ target_id: response.data.fid[0].value })
+            } else {
+              this.images_preview = [response.data]
+              this.form[this.field] = [{ target_id: response.data.fid[0].value }]
+            }
+            this.loading = false
+          }).catch((error) => { 
+            this.loading = false
+            this.showError("Ocorreu um erro ao enviar: "+ file.name + ". Erro: "+ error.message)
+          }); 
         }
         reader.readAsArrayBuffer(files[i]);
       }
@@ -59,11 +74,18 @@ export default {
       return axios.defaults.baseURL
     },
     deleteImage(index) {
-      this.$delete(this.preview, index)
-      this.$delete(this.form.field_images, index)
+      this.$delete(this.images_preview, index)
+      this.$delete(this.form[this.field], index)
+    },
+    showError(msg) {
+      this.error = msg
     }
 
+  },
+  components: { 
+    'loading': Loading
   }
+
 };
 </script>
 

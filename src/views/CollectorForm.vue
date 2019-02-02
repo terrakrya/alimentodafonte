@@ -1,22 +1,22 @@
 <template>
-	<div class="dashboard">
-		<breadcrumb v-bind:links="[['Coletores', '/coletores']]" v-bind:active="isEditing() ? form.name[0].value : 'Cadastrar coletor'" />
+	<div class="collector-form">
+		<breadcrumb v-bind:links="[['Coletores', '/coletores']]" v-bind:active="isEditing() ? form.name[0].value : 'Cadastrar'" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="coletor" />
-				<loading v-bind:loading="loading" msg="Carregando dados do formulário" />
+				<loading v-bind:loading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Nome do coletor *">
-								<b-form-input v-model="form.field_name[0].value" v-validate="'required'" name="name" />
-								<span class="text-danger" v-show="errors.has('name')">{{ errors.first('name') }}</span>
+								<b-form-input v-model="form.field_name[0].value" v-validate="'required'" name="field_name" />
+								<field-error v-bind:msg="errors" field="field_name" />
 							</b-form-group>							
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Apelido *">
 								<b-form-input v-model="form.field_nickname[0].value" v-validate="'required'" name="nickname" />
-								<span class="text-danger" v-show="errors.has('nickname')">{{ errors.first('nickname') }}</span>
+								<field-error v-bind:msg="errors" field="nickname" />
 							</b-form-group>							
 						</div>
 					</div>						
@@ -24,35 +24,43 @@
 						<div class="col-sm-6">
 							<b-form-group label="Telefone *">
 								<b-form-input v-model="form.field_contact[0].value" v-validate="'required'" name="contact" v-mask="['(##) ####-####', '(##) #####-####']" />
-								<span class="text-danger" v-show="errors.has('contact')">{{ errors.first('contact') }}</span>
+								<field-error v-bind:msg="errors" field="contact" />
 							</b-form-group>							
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="CPF">
-								<b-form-input v-model="form.field_cpf[0].value" v-mask="['###.###.###-##', '##.###.###/####-##']" />
+								<the-mask  v-model="form.field_cpf[0].value" :mask="['###.###.###-##']" />
+							</b-form-group>							
+						</div>
+					</div>						
+<!-- 					<div class="row">
+						<div class="col-sm-6">
+							<b-form-group label="Estado *">
+								<b-form-select v-model="form.field_address[0].administrative_area" :options="estados" v-validate="'required'" name="administrative_area" />
+								<field-error v-bind:msg="errors" field="administrative_area" />
+							</b-form-group>							
+						</div>
+						<div class="col-sm-6">
+							<b-form-group label="Cidade *">
+								<b-form-input v-model="form.field_address[0].locality"  name="locality" />
+								<field-error v-bind:msg="errors" field="locality" />
 							</b-form-group>							
 						</div>
 					</div>						
 					<div class="row">
-						<div class="col-sm-12">
-							<b-form-group label="Endereço">
-								<b-form-input v-model="form.field_address[0].address_line1" :options="estados" />
+						<div class="col-sm-8">
+							<b-form-group label="Endereço *">
+								<b-form-input v-model="form.field_address[0].address_line1" v-validate="'required'" name="address_line1" />
+								<field-error v-bind:msg="errors" field="address_line1" />
+							</b-form-group>					
+						</div>
+						<div class="col-sm-4">
+							<b-form-group label="CEP">
+								<b-form-input v-model="form.field_address[0].postal_code" v-mask="['#####-###']" />
 							</b-form-group>					
 						</div>
 					</div>						
-					<div class="row">
-						<div class="col-sm-6">
-							<b-form-group label="Cidade">
-								<b-form-input v-model="form.field_address[0].locality" />
-							</b-form-group>							
-						</div>
-						<div class="col-sm-6">
-							<b-form-group label="Estado">
-								<b-form-select v-model="form.field_address[0].administrative_area" :options="estados" />
-							</b-form-group>							
-						</div>
-					</div>						
-					<div class="row gray">
+ -->			<div class="row">
 						<div class="col-md-3 col-sm-6">
 							<b-form-group label="Banco">
 								<b-form-select v-model="form.field_bank_number[0].value" :options="bancos" />
@@ -75,32 +83,41 @@
 							</b-form-group>							
 						</div>
 					</div>		
-					<div class="row">
-						<div class="col-sm-4">
-							<b-form-group label="Nome de usuário">
-								<b-form-input v-model="form.field_address[0].locality" />
-							</b-form-group>							
-						</div>
-						<div class="col-sm-4">
-							<b-form-group label="Email">
-								<b-form-input v-model="form.field_address[0].locality" />
-							</b-form-group>							
-						</div>
-						<div class="col-sm-4">
-							<b-form-group label="Senha">
-								<b-form-input v-model="form.field_address[0].locality" />
+					<div class="row gray">
+						<div class="col-sm-6">
+							<b-form-group label="Nome de usuário *" description="Nome que será usado para acessar o sistema">
+								<b-form-input v-model="form.name[0].value" v-validate="'required'" name="name" />
+								<field-error v-bind:msg="errors" field="name" />
 							</b-form-group>							
 						</div>
 						<div class="col-sm-6">
-							<b-form-group label="">
-								<b-form-select v-model="form.field_address[0].administrative_area" :options="estados" />
+							<b-form-group label="Email *">
+								<b-form-input v-model="form.mail[0].value" v-validate="'required'" name="mail" />
+								<field-error v-bind:msg="errors" field="mail" />
+								<div class="text-right" v-if="isEditing()">
+									<a class="pointer" @click="changePassword">Alterar senha</a>
+								</div>
+							</b-form-group>							
+						</div>
+					</div>
+					<div class="row gray" v-if="showPasswordFields">
+						<div class="col-sm-6">
+							<b-form-group label="Senha *">
+								<b-form-input v-model="form.pass[0].value" type="password" v-validate="'required'" name="pass" />
+								<field-error v-bind:msg="errors" field="pass" />
+							</b-form-group>							
+						</div>
+						<div class="col-sm-6">
+							<b-form-group label="Confirmar senha *">
+								<b-form-input v-model="form.pass[0].confirmation" type="password" v-validate="'required'" name="pass_confirmation" />
+								<field-error v-bind:msg="errors" field="pass_confirmation" />
 							</b-form-group>							
 						</div>
 					</div>						
 					
 					<div class="row">
 						<div class="col-md-12">
-							<pictures-upload v-bind:form="form" v-bind:preview="this.images_preview" v-bind:error="error" />							
+							<pictures-upload v-bind:form="form" v-bind:preview="this.images_preview" v-bind:error="error" field="user_picture" url="file/upload/user/user/user_picture?_format=json" /> 
 						</div>					
 					</div>					
 					<div class="row">
@@ -114,8 +131,6 @@
 						</div>
 					</div>	
 				</b-form>
-				<pre>{{form}}</pre>
-				<pre v-if="log">{{log}}</pre>
 			</div>				
 		</div>
 	</div>
@@ -126,6 +141,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Loading from '@/components/Loading'
 import FormHeadline from '@/components/FormHeadline'
 import PicturesUpload from '@/components/PicturesUpload'
+import FieldError from '@/components/FieldError'
 import estados from '@/data/estados.json';
 import bancos from '@/data/bancos.json';
 import tipos_de_conta from '@/data/tipos-de-conta.json';
@@ -134,6 +150,12 @@ export default {
 	
 	name: 'SeedForm', 
 	
+	computed: {
+		showPasswordFields () {
+			return !this.isEditing() || this.show_password
+		}
+	},
+
 	data () {
 
 		return { 
@@ -142,21 +164,24 @@ export default {
 			sending: false,
 			images_preview: [],
 			log: false,
+			show_password: false,
 			estados: estados,
 			bancos: bancos,
 			tipos_de_conta: tipos_de_conta,
 			form: {
 				timezone: [{ value: "America/Sao_Paulo" }],
+				status: [{ value: true }],
 				roles: [{ target_id: "collector" }],
 				name: [{ value: '' }],
 				mail: [{ value: '' }],
-				field_address: [{
-					country_code: "BR",
-					administrative_area: "",
-					locality: "Alto Paraíso de Goiás",
-					postal_code: "73770000",
-					address_line1: "Luiz Gonzaga, Qd 24, Lt 12"
-				}],
+				pass: [{ value: '' }],
+				// field_address: [{
+				// 	country_code: "BR",
+				// 	administrative_area: "",
+				// 	locality: "",
+				// 	postal_code: "",
+				// 	address_line1: ""
+				// }],
 				field_agency: [{ value: '' }],
 				field_bank_account: [{ value: '' }],
 				field_type_account: [{ value: 'corrente' }],
@@ -177,7 +202,7 @@ export default {
 	},
 	
 	methods: {
-		edit(id) {
+		edit (id) {
 			this.loading = true
 			axios.get('user/' + id + '?_format=json').then(response => {
 				var data = response.data
@@ -188,7 +213,7 @@ export default {
 
 			}).catch(error => { this.error = error; this.loading = false });
 		},
-		save() {
+		save () {
 			this.$validator.validate().then(isValid => {
 				if (isValid) {
 					this.sending = true
@@ -209,13 +234,16 @@ export default {
 				}
 			})
 		},
-		
+		changePassword () {
+			this.show_password = !this.show_password
+		}
 	},
 
 	components: { 
 		'breadcrumb': Breadcrumb, 
 		'loading': Loading, 
 		'form-headline': FormHeadline, 
+		'field-error' : FieldError,
 		'pictures-upload' : PicturesUpload
 	}
 

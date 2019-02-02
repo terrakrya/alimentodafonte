@@ -1,4 +1,5 @@
 [
+  { "value": "", "text": "Selecione o estado" },
   { "value": "AC", "text": "Acre" },
   { "value": "AL", "text": "Alagoas" },
   { "value": "AP", "text": "Amapá" },

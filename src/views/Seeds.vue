@@ -10,11 +10,11 @@
 					<div class="col-sm-8">
 						<h1>
 							Sementes 
-							<router-link to="/cadastrar-semente">+ Cadastrar semente</router-link>
+							<router-link to="/cadastrar-semente">+ Cadastrar</router-link>
 						</h1>
 					</div>
 					<div class="col-sm-4">
-						<b-form-input v-model="filter" placeholder="Buscar semente" class="search-input" />
+						<b-form-input v-model="filter" placeholder="Buscar" class="search-input" />
 					</div>
 				</div>
 				<div class="info-content">
