@@ -10,8 +10,8 @@ import Seeds from '@/views/Seeds.vue'
 import SeedForm from '@/views/SeedForm.vue'
 import Seed from '@/views/Seed.vue'
 import Collectors from '@/views/Collectors.vue'
-// import CollectorForm from '@/views/CollectorForm.vue'
-// import Collector from '@/views/Collector.vue'
+import CollectorForm from '@/views/CollectorForm.vue'
+import Collector from '@/views/Collector.vue'
 
 Vue.use(Router)
 
@@ -47,8 +47,8 @@ export default new Router({
     { path: '/semente/:id', component: Seed, beforeEnter: requireAuth },
 
     { path: '/coletores', component: Collectors, beforeEnter: requireAuth },
-    // { path: '/cadastrar-coletor', component: CollectorForm, beforeEnter: requireAuth },
-    // { path: '/editar-coletor/:id', component: CollectorForm, beforeEnter: requireAuth },
-    // { path: '/coletor/:id', component: Collector, beforeEnter: requireAuth }
+    { path: '/cadastrar-coletor', component: CollectorForm, beforeEnter: requireAuth },
+    { path: '/editar-coletor/:id', component: CollectorForm, beforeEnter: requireAuth },
+    { path: '/coletor/:id', component: Collector, beforeEnter: requireAuth }
   ]
 })

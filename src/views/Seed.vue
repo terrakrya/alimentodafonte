@@ -1,5 +1,5 @@
 <template>
-	<div class="dashboard">
+	<div class="seed">
 		<ol class="breadcrumb">
 			<li><router-link to="/painel">Painel do gestor</router-link></li>
 			<li><router-link to="/sementes">Sementes</router-link></li>
