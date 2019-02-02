@@ -18,15 +18,15 @@
 				<button v-if="loading" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Carregando dados do formulário...</button>
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-sm-6">
 							<b-form-group label="Nome da espécie *">
-								<b-form-input v-model="form.title[0].value" v-validate="'required'" name="title"></b-form-input>
+								<b-form-input v-model="form.title[0].value" v-validate="'required'" name="title"/>
 								<span class="text-danger" v-show="errors.has('title')">{{ errors.first('title') }}</span>
 							</b-form-group>							
 						</div>
-						<div class="col-md-6">
+						<div class="col-sm-6">
 							<b-form-group label="Nome científico *">
-								<b-form-input v-model="form.field_scientific_name[0].value" v-validate="'required'" name="field_scientific_name" ></b-form-input>
+								<b-form-input v-model="form.field_scientific_name[0].value" v-validate="'required'" name="field_scientific_name"  />
 								<span class="text-danger" v-show="errors.has('field_scientific_name')">{{ errors.first('field_scientific_name') }}</span>
 							</b-form-group>
 						</div>
@@ -34,7 +34,7 @@
 					<div class="row gray">
 						<div class="col-md-12">
 							<b-form-group label="Nome(s) regional(is) *" description="Escreva todos os nome regionais que essa semente possa ter separado por virgula.">
-								<b-form-input v-model="form.field_local_name[0].value" v-validate="'required'" name="field_local_name"></b-form-input>
+								<b-form-input v-model="form.field_local_name[0].value" v-validate="'required'" name="field_local_name" />
 								<span class="text-danger" v-show="errors.has('field_local_name')">{{ errors.first('field_local_name') }}</span>
 							</b-form-group>
 						</div>
@@ -64,24 +64,24 @@
 						</div>
 						<div class="col-md-3 col-sm-6">
 							<b-form-group label="Qtd. em estoque (Kg)"> 
-								<b-form-input v-model="variations_form.field_stock[0].value" type="number"></b-form-input>
+								<b-form-input v-model="variations_form.field_stock[0].value" type="number" />
 							</b-form-group>
 						</div>
 					</div>				
 					<div class="row">
 						<div class="col-sm-4">
 							<b-form-group label="Qtd. de sementes / Kg *" v-bind:description="form.field_seeds_kg[0].value > 0 ? form.field_seeds_kg[0].value + ' sementes por quilo' : ''">
-								<b-form-input v-model="form.field_seeds_kg[0].value" type="number"></b-form-input>
+								<b-form-input v-model="form.field_seeds_kg[0].value" type="number" />
 							</b-form-group>
 						</div>
 						<div class="col-sm-4">
 							<b-form-group label="Taxa de viabilidade *" v-bind:description="(form.field_viability_rate[0].value || 0) + '% de viabilidade'">
-								<b-form-input v-model="form.field_viability_rate[0].value" type="range"></b-form-input>
+								<b-form-input v-model="form.field_viability_rate[0].value" type="range" />
 							</b-form-group>
 						</div>
 						<div class="col-sm-4">
 							<b-form-group label="Limite de peso por lote (Kg)" v-bind:description="form.field_lot_limit[0].value > 0 ? 'Limite de '+ form.field_lot_limit[0].value + ' quilos por lote' : ''"> 
-								<b-form-input type="number" v-model="form.field_lot_limit[0].value"></b-form-input>
+								<b-form-input type="number" v-model="form.field_lot_limit[0].value" />
 							</b-form-group>
 						</div>
 					</div>						

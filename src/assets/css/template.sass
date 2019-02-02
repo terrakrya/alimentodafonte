@@ -887,13 +887,17 @@ th.actions, td.actions
     color: $colorOrange
 
 form 
-  input:not([type="checkbox"])
+  input:not([type="checkbox"]):not([type="radio"])
     width: 100%
   legend 
     color: $colorDark
     border: 0
     font-weight: bold
     font-size: 16px
+  .custom-control-label
+    font-weight: normal
+    padding-left: 10px
+    cursor: pointer
   > .row
     border: 1px solid #DCCFBA
     color: $colorDark
