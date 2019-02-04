@@ -36,9 +36,6 @@ export default {
     return { userDropdown: false }
   },
   computed: {
-    currentUser () {
-      return this.$store.state.currentUser
-    }, 
     showMenu () {
       return this.$store.state.showMenu
     }
