@@ -1,41 +1,30 @@
 <template>
-	<div class="dashboard">
-		<ol class="breadcrumb">
-			<li><router-link to="/painel">Painel do gestor</router-link></li>
-			<li><router-link to="/sementes">Sementes</router-link></li>
-			<li class="active">{{ isEditing() ? form.title[0].value : 'Cadastrar semente' }}</li>
-		</ol>
+	<div class="seed-form">
+		<breadcrumb v-bind:links="[['Sementes', '/sementes']]" v-bind:active="isEditing() ? form.title[0].value : 'Cadastrar'" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
-				<div class="row">
-					<div class="col-md-8">
-						<h1>
-							{{ isEditing() ? 'Editar' : 'Cadastrar' }} semente
-						</h1>
-						<br>
-					</div>
-				</div>
-				<button v-if="loading" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Carregando dados do formulário...</button>
+				<form-headline name="semente" />
+				<loading v-bind:loading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-sm-6">
 							<b-form-group label="Nome da espécie *">
-								<b-form-input v-model="form.title[0].value" v-validate="'required'" name="title"></b-form-input>
-								<span class="text-danger" v-show="errors.has('title')">{{ errors.first('title') }}</span>
+								<b-form-input v-model="form.title[0].value" v-validate="'required'" name="title"/>
+								<field-error v-bind:msg="veeErrors" field="title" />
 							</b-form-group>							
 						</div>
-						<div class="col-md-6">
+						<div class="col-sm-6">
 							<b-form-group label="Nome científico *">
-								<b-form-input v-model="form.field_scientific_name[0].value" v-validate="'required'" name="field_scientific_name" ></b-form-input>
-								<span class="text-danger" v-show="errors.has('field_scientific_name')">{{ errors.first('field_scientific_name') }}</span>
+								<b-form-input v-model="form.field_scientific_name[0].value" v-validate="'required'" name="field_scientific_name"  />
+								<field-error v-bind:msg="veeErrors" field="field_scientific_name" />
 							</b-form-group>
 						</div>
 					</div>						
 					<div class="row gray">
 						<div class="col-md-12">
 							<b-form-group label="Nome(s) regional(is) *" description="Escreva todos os nome regionais que essa semente possa ter separado por virgula.">
-								<b-form-input v-model="form.field_local_name[0].value" v-validate="'required'" name="field_local_name"></b-form-input>
-								<span class="text-danger" v-show="errors.has('field_local_name')">{{ errors.first('field_local_name') }}</span>
+								<b-form-input v-model="form.field_local_name[0].value" v-validate="'required'" name="field_local_name" />
+								<field-error v-bind:msg="veeErrors" field="field_local_name" />
 							</b-form-group>
 						</div>
 					</div>						
@@ -47,75 +36,66 @@
 						</div>
 					</div>						
 					<div class="row gray">
-						<div class="col-md-3"> 
+						<div class="col-md-3 col-sm-6"> 
 							<b-form-group label="Preço *">
 								<money v-model="variations_form.price[0].number"></money>
 							</b-form-group>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-3 col-sm-6">
 							<b-form-group label="Preço no atacado *">
 								<money v-model="variations_form.field_wholesale_price[0].number"></money>
 							</b-form-group>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-3 col-sm-6">
 							<b-form-group label="Remuneração do coletor *"> 
 								<money v-model="form.field_compensation_collect[0].number"></money>
 							</b-form-group>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-3 col-sm-6">
 							<b-form-group label="Qtd. em estoque (Kg)"> 
-								<b-form-input v-model="variations_form.field_stock[0].value" type="number"></b-form-input>
+								<b-form-input v-model="variations_form.field_stock[0].value" type="number" />
 							</b-form-group>
 						</div>
 					</div>				
 					<div class="row">
-						<div class="col-md-4">
+						<div class="col-sm-4">
 							<b-form-group label="Qtd. de sementes / Kg *" v-bind:description="form.field_seeds_kg[0].value > 0 ? form.field_seeds_kg[0].value + ' sementes por quilo' : ''">
-								<b-form-input v-model="form.field_seeds_kg[0].value" type="number"></b-form-input>
+								<b-form-input v-model="form.field_seeds_kg[0].value" type="number" />
 							</b-form-group>
 						</div>
-						<div class="col-md-4">
+						<div class="col-sm-4">
 							<b-form-group label="Taxa de viabilidade *" v-bind:description="(form.field_viability_rate[0].value || 0) + '% de viabilidade'">
-								<b-form-input v-model="form.field_viability_rate[0].value" type="range"></b-form-input>
+								<b-form-input v-model="form.field_viability_rate[0].value" type="range" />
 							</b-form-group>
 						</div>
-						<div class="col-md-4">
+						<div class="col-sm-4">
 							<b-form-group label="Limite de peso por lote (Kg)" v-bind:description="form.field_lot_limit[0].value > 0 ? 'Limite de '+ form.field_lot_limit[0].value + ' quilos por lote' : ''"> 
-								<b-form-input type="number" v-model="form.field_lot_limit[0].value"></b-form-input>
+								<b-form-input type="number" v-model="form.field_lot_limit[0].value" />
 							</b-form-group>
 						</div>
 					</div>						
 					<div class="row gray">
-						<div class="col-md-6">
+						<div class="col-sm-6">
 							<button v-if="!ecosystem_options" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Carregando lista de ecossistemas...</button>
 							<b-form-group label="Ecossistema *" v-if="ecosystem_options">
 								<b-form-checkbox-group v-model="form.field_ecosystem" :options="ecosystem_options"  v-validate="'required'" name="field_ecosystem" />
-								<span class="text-danger" v-show="errors.has('field_ecosystem')">{{ errors.first('field_ecosystem') }}</span>
+								<field-error v-bind:msg="veeErrors" field="field_ecosystem" />
 							</b-form-group>
 						</div>
-						<div class="col-md-6">
+						<div class="col-sm-6">
 							<button v-if="!fruiting_season_options" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Carregando lista de meses...</button>
 							<b-form-group label="Época da frutificação *" v-if="fruiting_season_options">
 								<b-form-checkbox-group  v-model="form.field_fruiting_season" :options="fruiting_season_options" v-validate="'required'" name="field_fruiting_season" />
-								<span class="text-danger" v-show="errors.has('field_fruiting_season')">{{ errors.first('field_fruiting_season') }}</span>
+								<field-error v-bind:msg="veeErrors" field="field_fruiting_season" />
 							</b-form-group>								
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-12">
-							<pictures-upload v-bind:form="form" v-bind:preview="this.images_preview" v-bind:error="error" />							
+							<pictures-upload v-bind:form="form" v-bind:preview="this.images_preview" v-bind:error="error" field="field_images" url="file/upload/commerce_product/seed/field_images?_format=json" v-bind:multiple="true"  />							
 						</div>					
 					</div>					
-					<div class="row">
-						<div class="col-md-12 text-center">
-							<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-							<b-alert variant="danger" show v-if="errors && errors.items.length">Verifique os erros acima para continuar</b-alert>
-							<div class="btn-group">
-								<button v-if="sending" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Enviando dados...</button>
-								<button v-if="!sending" role="button" class="btn btn-primary btn-lg fa fa-save"> Salvar</button>
-							</div>
-						</div>
-					</div>	
+					<form-submit v-bind:error="error" />
 				</b-form>
 			</div>				
 		</div>
@@ -124,14 +104,17 @@
 <script>
 import axios from 'axios'
 import slugify from '@sindresorhus/slugify'
+import Breadcrumb from '@/components/Breadcrumb'
+import Loading from '@/components/Loading'
+import FormHeadline from '@/components/FormHeadline'
+import FormSubmit from '@/components/FormSubmit'
 import PicturesUpload from '@/components/PicturesUpload'
+import FieldError from '@/components/FieldError'
 
 export default {
 	
 	name: 'SeedForm', 
 	
-	components: { 'pictures-upload' : PicturesUpload }, 
-
 	data () {
 
 		return { 
@@ -263,10 +246,14 @@ export default {
 			})
 		}
 	},
-	computed: {
-		currentUser() {
-			return this.$store.state.currentUser
-		},
+
+	components: { 
+		'breadcrumb': Breadcrumb, 
+		'loading': Loading, 
+		'form-headline': FormHeadline, 
+		'form-submit': FormSubmit, 
+		'field-error' : FieldError,
+		'pictures-upload' : PicturesUpload
 	}
 
 };
