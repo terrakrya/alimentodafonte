@@ -24,7 +24,7 @@ Vue.use(BootstrapVue)
 
 Vue.use(money, { prefix: 'R$ ', decimal: ',', thousands: '', masked: false })
 Vue.use(Vue2Filters)
-Vue.use(VeeValidate, { locale: 'pt_BR', fieldsBagName: 'veeFields' })
+Vue.use(VeeValidate, { locale: 'pt_BR', fieldsBagName: 'veeFields',  errorBagName: 'veeErrors' })
 Vue.use(VueTheMask)
 
 Validator.localize('pt_BR', ptBR)

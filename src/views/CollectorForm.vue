@@ -10,13 +10,13 @@
 						<div class="col-sm-6">
 							<b-form-group label="Nome do coletor *">
 								<b-form-input v-model="form.field_name[0].value" v-validate="'required'" name="field_name" />
-								<field-error v-bind:msg="errors" field="field_name" />
+								<field-error v-bind:msg="veeErrors" field="field_name" />
 							</b-form-group>							
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Apelido *">
 								<b-form-input v-model="form.field_nickname[0].value" v-validate="'required'" name="nickname" />
-								<field-error v-bind:msg="errors" field="nickname" />
+								<field-error v-bind:msg="veeErrors" field="nickname" />
 							</b-form-group>							
 						</div>
 					</div>						
@@ -24,7 +24,7 @@
 						<div class="col-sm-6">
 							<b-form-group label="Telefone *">
 								<b-form-input v-model="form.field_contact[0].value" v-validate="'required'" name="contact" v-mask="['(##) ####-####', '(##) #####-####']" />
-								<field-error v-bind:msg="errors" field="contact" />
+								<field-error v-bind:msg="veeErrors" field="contact" />
 							</b-form-group>							
 						</div>
 						<div class="col-sm-6">
@@ -33,17 +33,17 @@
 							</b-form-group>							
 						</div>
 					</div>						
-<!-- 					<div class="row">
+					<!-- <div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Estado *">
 								<b-form-select v-model="form.field_address[0].administrative_area" :options="estados" v-validate="'required'" name="administrative_area" />
-								<field-error v-bind:msg="errors" field="administrative_area" />
+								<field-error v-bind:msg="veeErrors" field="administrative_area" />
 							</b-form-group>							
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Cidade *">
 								<b-form-input v-model="form.field_address[0].locality"  name="locality" />
-								<field-error v-bind:msg="errors" field="locality" />
+								<field-error v-bind:msg="veeErrors" field="locality" />
 							</b-form-group>							
 						</div>
 					</div>						
@@ -51,7 +51,7 @@
 						<div class="col-sm-8">
 							<b-form-group label="Endereço *">
 								<b-form-input v-model="form.field_address[0].address_line1" v-validate="'required'" name="address_line1" />
-								<field-error v-bind:msg="errors" field="address_line1" />
+								<field-error v-bind:msg="veeErrors" field="address_line1" />
 							</b-form-group>					
 						</div>
 						<div class="col-sm-4">
@@ -59,8 +59,8 @@
 								<b-form-input v-model="form.field_address[0].postal_code" v-mask="['#####-###']" />
 							</b-form-group>					
 						</div>
-					</div>						
- -->			<div class="row">
+					</div>	 -->					
+					<div class="row">
 						<div class="col-md-3 col-sm-6">
 							<b-form-group label="Banco">
 								<b-form-select v-model="form.field_bank_number[0].value" :options="bancos" />
@@ -87,13 +87,13 @@
 						<div class="col-sm-6">
 							<b-form-group label="Nome de usuário *" description="Nome que será usado para acessar o sistema">
 								<b-form-input v-model="form.name[0].value" v-validate="'required'" name="name" />
-								<field-error v-bind:msg="errors" field="name" />
+								<field-error v-bind:msg="veeErrors" field="name" />
 							</b-form-group>							
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Email *">
-								<b-form-input v-model="form.mail[0].value" v-validate="'required'" name="mail" />
-								<field-error v-bind:msg="errors" field="mail" />
+								<b-form-input v-model="form.mail[0].value" v-validate="'required|email'" name="mail" />
+								<field-error v-bind:msg="veeErrors" field="mail" />
 								<div class="text-right" v-if="isEditing()">
 									<a class="pointer" @click="changePassword">Alterar senha</a>
 								</div>
@@ -104,13 +104,13 @@
 						<div class="col-sm-6">
 							<b-form-group label="Senha *">
 								<b-form-input v-model="form.pass[0].value" type="password" v-validate="'required'" name="pass" />
-								<field-error v-bind:msg="errors" field="pass" />
+								<field-error v-bind:msg="veeErrors" field="pass" />
 							</b-form-group>							
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Confirmar senha *">
 								<b-form-input v-model="form.pass[0].confirmation" type="password" v-validate="'required'" name="pass_confirmation" />
-								<field-error v-bind:msg="errors" field="pass_confirmation" />
+								<field-error v-bind:msg="veeErrors" field="pass_confirmation" />
 							</b-form-group>							
 						</div>
 					</div>						
@@ -120,16 +120,7 @@
 							<pictures-upload v-bind:form="form" v-bind:preview="this.images_preview" v-bind:error="error" field="user_picture" url="file/upload/user/user/user_picture?_format=json" /> 
 						</div>					
 					</div>					
-					<div class="row">
-						<div class="col-md-12 text-center">
-							<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-							<b-alert variant="danger" show v-if="errors && errors.items.length">Verifique os erros acima para continuar</b-alert>
-							<div class="btn-group">
-								<button v-if="sending" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Enviando dados...</button>
-								<button v-if="!sending" role="button" class="btn btn-primary btn-lg fa fa-save"> Salvar</button>
-							</div>
-						</div>
-					</div>	
+					<form-submit v-bind:error="error" />
 				</b-form>
 			</div>				
 		</div>
@@ -140,6 +131,7 @@ import axios from 'axios'
 import Breadcrumb from '@/components/Breadcrumb'
 import Loading from '@/components/Loading'
 import FormHeadline from '@/components/FormHeadline'
+import FormSubmit from '@/components/FormSubmit'
 import PicturesUpload from '@/components/PicturesUpload'
 import FieldError from '@/components/FieldError'
 import estados from '@/data/estados.json';
@@ -175,13 +167,13 @@ export default {
 				name: [{ value: '' }],
 				mail: [{ value: '' }],
 				pass: [{ value: '' }],
-				// field_address: [{
-				// 	country_code: "BR",
-				// 	administrative_area: "",
-				// 	locality: "",
-				// 	postal_code: "",
-				// 	address_line1: ""
-				// }],
+				field_address: [{
+					country_code: "BR",
+					administrative_area: "",
+					locality: "",
+					postal_code: "",
+					address_line1: ""
+				}],
 				field_agency: [{ value: '' }],
 				field_bank_account: [{ value: '' }],
 				field_type_account: [{ value: 'corrente' }],
@@ -243,6 +235,7 @@ export default {
 		'breadcrumb': Breadcrumb, 
 		'loading': Loading, 
 		'form-headline': FormHeadline, 
+		'form-submit': FormSubmit, 
 		'field-error' : FieldError,
 		'pictures-upload' : PicturesUpload
 	}
