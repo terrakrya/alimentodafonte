@@ -10,13 +10,13 @@
 						<div class="col-sm-6">
 							<b-form-group label="Nome da espécie *">
 								<b-form-input v-model="form.title[0].value" v-validate="'required'" name="title"/>
-								<field-error v-bind:msg="errors" field="title" />
+								<field-error v-bind:msg="veeErrors" field="title" />
 							</b-form-group>							
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Nome científico *">
 								<b-form-input v-model="form.field_scientific_name[0].value" v-validate="'required'" name="field_scientific_name"  />
-								<field-error v-bind:msg="errors" field="field_scientific_name" />
+								<field-error v-bind:msg="veeErrors" field="field_scientific_name" />
 							</b-form-group>
 						</div>
 					</div>						
@@ -24,7 +24,7 @@
 						<div class="col-md-12">
 							<b-form-group label="Nome(s) regional(is) *" description="Escreva todos os nome regionais que essa semente possa ter separado por virgula.">
 								<b-form-input v-model="form.field_local_name[0].value" v-validate="'required'" name="field_local_name" />
-								<field-error v-bind:msg="errors" field="field_local_name" />
+								<field-error v-bind:msg="veeErrors" field="field_local_name" />
 							</b-form-group>
 						</div>
 					</div>						
@@ -79,14 +79,14 @@
 							<button v-if="!ecosystem_options" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Carregando lista de ecossistemas...</button>
 							<b-form-group label="Ecossistema *" v-if="ecosystem_options">
 								<b-form-checkbox-group v-model="form.field_ecosystem" :options="ecosystem_options"  v-validate="'required'" name="field_ecosystem" />
-								<field-error v-bind:msg="errors" field="field_ecosystem" />
+								<field-error v-bind:msg="veeErrors" field="field_ecosystem" />
 							</b-form-group>
 						</div>
 						<div class="col-sm-6">
 							<button v-if="!fruiting_season_options" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Carregando lista de meses...</button>
 							<b-form-group label="Época da frutificação *" v-if="fruiting_season_options">
 								<b-form-checkbox-group  v-model="form.field_fruiting_season" :options="fruiting_season_options" v-validate="'required'" name="field_fruiting_season" />
-								<field-error v-bind:msg="errors" field="field_fruiting_season" />
+								<field-error v-bind:msg="veeErrors" field="field_fruiting_season" />
 							</b-form-group>								
 						</div>
 					</div>
@@ -95,16 +95,7 @@
 							<pictures-upload v-bind:form="form" v-bind:preview="this.images_preview" v-bind:error="error" field="field_images" url="file/upload/commerce_product/seed/field_images?_format=json" v-bind:multiple="true"  />							
 						</div>					
 					</div>					
-					<div class="row">
-						<div class="col-md-12 text-center">
-							<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-							<b-alert variant="danger" show v-if="errors && errors.items.length">Verifique os erros acima para continuar</b-alert>
-							<div class="btn-group">
-								<button v-if="sending" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Enviando dados...</button>
-								<button v-if="!sending" role="button" class="btn btn-primary btn-lg fa fa-save"> Salvar</button>
-							</div>
-						</div>
-					</div>	
+					<form-submit v-bind:error="error" />
 				</b-form>
 			</div>				
 		</div>
@@ -116,6 +107,7 @@ import slugify from '@sindresorhus/slugify'
 import Breadcrumb from '@/components/Breadcrumb'
 import Loading from '@/components/Loading'
 import FormHeadline from '@/components/FormHeadline'
+import FormSubmit from '@/components/FormSubmit'
 import PicturesUpload from '@/components/PicturesUpload'
 import FieldError from '@/components/FieldError'
 
@@ -259,6 +251,7 @@ export default {
 		'breadcrumb': Breadcrumb, 
 		'loading': Loading, 
 		'form-headline': FormHeadline, 
+		'form-submit': FormSubmit, 
 		'field-error' : FieldError,
 		'pictures-upload' : PicturesUpload
 	}
