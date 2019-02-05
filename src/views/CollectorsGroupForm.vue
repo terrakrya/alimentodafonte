@@ -56,21 +56,19 @@
 						</div>
 					</div>		
 					<div class="row">
-						<div class="col-md-12">
-							{{form.field_seeds}}
-							<b-form-group label="Sementes" description="Digite o nome da semente e clique para adicionar à lista" >
-								<cool-select v-model="seed" :items="seeds_options" item-text="title" @select="addSeed()" />
+						<div class="col-md-6">
+							<b-form-group label="Sementes" >
+								<form-entity-select :items="seeds_options" :form="form" field="field_seeds" />
 							</b-form-group>							
 						</div>					
-					</div>					
-					<div class="row">
-						<div class="col-md-12">
-							Coletores
+						<div class="col-md-6">
+							<b-form-group label="Coletores" >
+								<form-entity-select :items="collectors_options" :form="form" field="field_collectors" />
+							</b-form-group>							
 						</div>					
 					</div>					
 					<form-submit v-bind:error="error" />
 				</b-form>
-				<pre>{{form}}</pre>
 			</div>				
 		</div>
 	</div>
@@ -78,10 +76,10 @@
 
 <script>
 import axios from 'axios'
-import { CoolSelect } from 'vue-cool-select'
 import Breadcrumb from '@/components/Breadcrumb'
 import Loading from '@/components/Loading'
 import FormHeadline from '@/components/FormHeadline'
+import FormEntitySelect from '@/components/FormEntitySelect'
 import FormSubmit from '@/components/FormSubmit'
 import FieldError from '@/components/FieldError'
 import bancos from '@/data/bancos.json';
@@ -101,6 +99,7 @@ export default {
 			tipos_de_conta: tipos_de_conta,
 			seed: null,
 			seeds_options: [],
+			collectors_options: [],
 			seeds: [],
 			form: {
 				type:[{ target_id: "collector_groups" }],
@@ -127,8 +126,22 @@ export default {
 		axios.get('rest/seeds-list?_format=json').then(response => {
 			this.seeds_options = response.data.map(seed => {
 				return { 
-					product_id: seed.product_id[0].value,
-					title: seed.title[0].value
+					id: seed.product_id[0].value,
+					title: seed.title[0].value,
+					description: seed.field_scientific_name[0].value,
+					picture: this.present(seed.field_images, 'url') ? seed.field_images[0].url : null,
+				}
+			})
+		}).catch(error => { this.error = error.message })
+
+
+		axios.get('rest/collectors?_format=json').then(response => {
+			this.collectors_options = response.data.map(seed => {
+				return { 
+					id: seed.uid[0].value,
+					title: seed.field_name[0].value,
+					description: seed.field_nickname[0].value,
+					picture: this.present(seed.user_picture, 'url') ? seed.user_picture[0].url : null,
 				}
 			})
 		}).catch(error => { this.error = error.message })
@@ -164,17 +177,22 @@ export default {
 			})
 		},
 		addSeed () {
-			this.form.field_seeds.push({ target_id: this.seed.product_id })
+			if (!this.form.field_seeds.find(field_seed => (field_seed.target_id 
+				== this.seed.id))) {
+				this.form.field_seeds.push({ target_id: this.seed.id })
+
+			}
+			this.seed = null;
 		}
 	},
 
 	components: { 
-		'breadcrumb': Breadcrumb, 
-		'loading': Loading, 
-		'form-headline': FormHeadline, 
-		'form-submit': FormSubmit, 
-		'field-error' : FieldError,
-		CoolSelect
+		Breadcrumb, 
+		Loading, 
+		FormHeadline, 
+		FormEntitySelect, 
+		FormSubmit, 
+		FieldError
 	}
 
 };
