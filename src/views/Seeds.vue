@@ -1,27 +1,14 @@
 <template>
 	<div class="dashboard">
-		<ol class="breadcrumb">
-			<li><router-link to="/painel">Painel do gestor</router-link></li>
-			<li class="active">Sementes</li>
-		</ol>
+		<breadcrumb active="Sementes" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
-				<div class="row">
-					<div class="col-sm-8">
-						<h1>
-							Sementes 
-							<router-link to="/cadastrar-semente">+ Cadastrar</router-link>
-						</h1>
-					</div>
-					<div class="col-sm-4">
-						<b-form-input v-model="filter" placeholder="Buscar" class="search-input" />
-					</div>
-				</div>
+				<list-headline name="Sementes" addUrl="/cadastrar-semente" v-bind:filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<button v-if="!seeds && !error" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Carregando lista de sementes...</button>
+					<loading v-bind:loading="!seeds && !error" msg="Carregando lista de sementes" />
 					<div v-if="seeds">
-						<b-table :fields="tableFields" :items="seeds" :sort-by="'title'" :filter="filter">
+						<b-table :fields="table_fields" :items="seeds" :sort-by="'title'" :filter="filters.search">
 							<template slot="title" slot-scope="data">
 								<router-link v-bind:to="'/semente/'+ data.item.product_id">{{data.item.title}}</router-link>
 							</template>
@@ -41,6 +28,9 @@
 </template>
 <script>
 import axios from 'axios'
+import Loading from '@/components/Loading'
+import ListHeadline from '@/components/ListHeadline'
+import Breadcrumb from '@/components/Breadcrumb'
 
 export default {
 	
@@ -49,8 +39,8 @@ export default {
 	data () {
 		return { 
 			error: false,
-			filter: null,
-			tableFields: [
+			filters: { search: null },
+			table_fields: [
 				{ key: 'title', label: 'Semente', sortable: true },
 				{ key: 'scientific_name', label: 'Nome científico', sortable: true },
 				{ key: 'compensation_collect', label: 'Remuneração', sortable: true },
@@ -84,6 +74,12 @@ export default {
 				}).catch(error => { this.error = error.message })	
 			}
 		}
+	},
+
+	components: { 
+		'loading': Loading,
+		'list-headline': ListHeadline,
+		'breadcrumb': Breadcrumb
 	}
 		
 };
