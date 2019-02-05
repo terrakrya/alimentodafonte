@@ -1,27 +1,14 @@
 <template>
 	<div class="dashboard">
-		<ol class="breadcrumb">
-			<li><router-link to="/painel">Painel do gestor</router-link></li>
-			<li class="active">Coletores</li>
-		</ol>
+		<breadcrumb active="Coletores" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
-				<div class="row">
-					<div class="col-sm-8">
-						<h1>
-							Coletores 
-							<router-link to="/cadastrar-coletor">+ Cadastrar</router-link>
-						</h1>
-					</div>
-					<div class="col-sm-4">
-						<b-form-input v-model="filter" placeholder="Buscar" class="search-input" />
-					</div>
-				</div>
+				<list-headline name="Coletores" addUrl="/cadastrar-coletor" v-bind:filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<button v-if="!collectors && !error" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Carregando lista de coletores...</button>
+					<loading v-bind:loading="!collectors && !error" msg="Carregando lista de coletores" />
 					<div v-if="collectors">
-						<b-table :fields="tableFields" :items="collectors" :sort-by="'name'" :filter="filter">
+						<b-table :fields="table_fields" :items="collectors" :sort-by="'name'" :filter="filters.search">
 							<template slot="name" slot-scope="data">
 								<router-link v-bind:to="'/coletor/'+ data.item.uid">{{(data.item.nickname && data.item.nickname != data.item.name) ? data.item.nickname : data.item.name}}</router-link>
 								<p v-if="data.item.nickname != data.item.name"><small>{{data.item.name}}</small></p>
@@ -39,6 +26,9 @@
 </template>
 <script>
 import axios from 'axios'
+import Loading from '@/components/Loading'
+import ListHeadline from '@/components/ListHeadline'
+import Breadcrumb from '@/components/Breadcrumb'
 
 export default {
 	
@@ -47,8 +37,8 @@ export default {
 	data () {
 		return { 
 			error: false,
-			filter: null,
-			tableFields: [
+			filters: { search: null },
+			table_fields: [
 				{ key: 'name', label: 'Nome do coletor', sortable: true },
 				{ key: 'city', label: 'Cidade', sortable: true },
 				{ key: 'actions', label: 'Ações', 'class': 'actions' },
@@ -83,6 +73,12 @@ export default {
 				}).catch(error => { this.error = error.message })	
 			}
 		}
+	},
+
+	components: { 
+		'loading': Loading,
+		'list-headline': ListHeadline,
+		'breadcrumb': Breadcrumb
 	}
 		
 };

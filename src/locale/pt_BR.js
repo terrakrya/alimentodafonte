@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { formatFileSize, isDefinedGlobally } from './utils';
 
 const messages = {
