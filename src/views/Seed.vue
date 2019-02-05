@@ -1,17 +1,13 @@
 <template>
 	<div class="seed">
-		<ol class="breadcrumb">
-			<li><router-link to="/painel">Painel do gestor</router-link></li>
-			<li><router-link to="/sementes">Sementes</router-link></li>
-			<li class="active">Dados da semente</li>
-		</ol>
+		<breadcrumb v-bind:links="[['Sementes', '/sementes']]" active="Dados da semente" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-				<button v-if="loading" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Carregando dados da semente...</button>
+				<loading v-bind:loading="loading" />
 				<div v-if="seed && !loading">
 					<div class="row item-title">
-						<div class="col-md-2" v-if="seed.field_images && seed.field_images.length">
+						<div class="col-md-2" v-if="present(seed.field_images, 'url')">
 							<img v-bind:src="seed.field_images[0].url" class="img-responsive item-img" />
 						</div>
 						<div class="col-md-10">
@@ -28,25 +24,25 @@
 					</div>
 					<hr class="clearfix">
 					<div class="row">
-						<div class="col-sm-6 col-md-3" v-if="seed_variation.price && seed_variation.price.length">
+						<div class="col-sm-6 col-md-3" v-if="present(seed_variation.price, 'number')">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Preço</span>
 								<span class="number">{{ seed_variation.price[0].number | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-3" v-if="seed_variation.field_wholesale_price && seed_variation.field_wholesale_price.length">
+						<div class="col-sm-6 col-md-3" v-if="present(seed_variation.field_wholesale_price, 'number')">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Preço no atacado</span>
 								<span class="number">{{ seed_variation.field_wholesale_price[0].number | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-3" v-if="seed.field_compensation_collect && seed.field_compensation_collect.length">
+						<div class="col-sm-6 col-md-3" v-if="present(seed.field_compensation_collect, 'number')">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Remuneração do coletor</span>
 								<span class="number">{{ seed.field_compensation_collect[0].number | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-3" v-if="seed_variation.field_stock && seed_variation.field_stock.length">
+						<div class="col-sm-6 col-md-3" v-if="present(seed_variation.field_stock)">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Quantidade em estoque</span>
 								<span class="number" v-bind:class="{red: seed_variation.field_stock[0].value <= 0}">{{ seed_variation.field_stock[0].value | currency('', 0, { thousandsSeparator: '' }) }}</span>
@@ -57,10 +53,9 @@
 						<caption>
 							Detalhes
 						</caption>
-						<tr v-if="seed.body && seed.body.length">
+						<tr v-if="present(seed.body)">
 							<td class="details" colspan="2" v-html="seed.body[0].processed"></td>
 						</tr>
-
 						<tr>
 							<td width="50%" valign="top">
 								<dl>
@@ -91,7 +86,7 @@
 								</dl>
 							</td>
 						</tr>
-						<tr v-if="seed.field_images && seed.field_images.length">
+						<tr v-if="seed.field_images && seed.field_images.length > 1">
 							<td width="100%" colspan="2" valign="top">
 								<b-img v-for="(image, index) in seed.field_images" v-bind:src="image.url" fluid thumbnail :key="index" />
 							</td>
@@ -104,6 +99,8 @@
 </template>
 <script>
 import axios from 'axios'
+import Loading from '@/components/Loading'
+import Breadcrumb from '@/components/Breadcrumb'
 
 export default {
 
@@ -133,17 +130,22 @@ export default {
 				axios.get('entity/field_storage_config/commerce_product.field_ecosystem?_format=json')
 				.then(response => {
 					this.ecosystem_options = response.data.settings.allowed_values
-				}).catch(error => { this.error = error });
+				}).catch(error => { this.error = error.message });
 
 				axios.get('entity/field_storage_config/commerce_product.field_fruiting_season?_format=json')
 				.then(response => {
 					this.fruiting_season_options = response.data.settings.allowed_values
-				}).catch(error => { this.error = error });
+				}).catch(error => { this.error = error.message });
 
-			}).catch(error => { this.error = error; this.loading = false })
-		}).catch(error => { this.error = error, this.loading = false })
+			}).catch(error => { this.error = error.message; this.loading = false })
+		}).catch(error => { this.error = error.message, this.loading = false })
 
 	},
+
+	components: { 
+		'loading': Loading,
+		'breadcrumb': Breadcrumb
+	}
 
 
 };

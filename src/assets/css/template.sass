@@ -9,7 +9,8 @@ $colorGray: #59604d
 $colorLightGray: #f5f5f5
 $colorWhite: #ffffff
 $colorRed: #dc3545
-$colorDark: #222
+$colorDark: #333
+$colorLightDark: #555
 
 body 
   background: $colorLightBrown
@@ -898,7 +899,7 @@ form
     font-weight: normal
     padding-left: 10px
     cursor: pointer
-  > .row
+  > .row, > .form-address > .row
     border: 1px solid #DCCFBA
     color: $colorDark
     padding: 0
@@ -913,10 +914,11 @@ form
         border-left: 0
     &.gray 
       background: #F1ECE4
-    
+  > .form-address > .row:last-child
+    border-bottom: 0
   .custom-file-label 
     display: none
-  .custom-checkbox
+  .custom-checkbox, .custom-radio 
     display: inline-block
     width: 200px
     cursor: pointer
@@ -978,7 +980,7 @@ form
     margin-right: -25px
     margin-bottom: 0
   .resume-table
-    width: auto
+    width: calc(100% + 54px)
     margin: 0 -27px
 
 @media (max-width: 767px)
