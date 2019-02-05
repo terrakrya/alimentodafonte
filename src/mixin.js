@@ -1,3 +1,5 @@
+import { CPF, CNPJ } from 'cpf_cnpj'
+
 export default {
   computed: {
     currentUser() {
@@ -26,6 +28,17 @@ export default {
           })
         }
       })
-    }   
+    },
+    present (field, item = 'value') {
+      return (field && field.length > 0 && field[0][item])
+    }
+  },
+  filters: {
+    cpf: function (value) {
+      return CPF.format(value);
+    },
+    cnpj: function (value) {
+      return CNPJ.format(value);
+    }
   }
 }

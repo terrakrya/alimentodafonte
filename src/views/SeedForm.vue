@@ -76,14 +76,14 @@
 					</div>						
 					<div class="row gray">
 						<div class="col-sm-6">
-							<button v-if="!ecosystem_options" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Carregando lista de ecossistemas...</button>
+							<loading v-bind:loading="!ecosystem_options" msg="Carregando lista de ecossistemas" />
 							<b-form-group label="Ecossistema *" v-if="ecosystem_options">
 								<b-form-checkbox-group v-model="form.field_ecosystem" :options="ecosystem_options"  v-validate="'required'" name="field_ecosystem" />
 								<field-error v-bind:msg="veeErrors" field="field_ecosystem" />
 							</b-form-group>
 						</div>
 						<div class="col-sm-6">
-							<button v-if="!fruiting_season_options" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Carregando lista de meses...</button>
+							<loading v-bind:loading="!fruiting_season_options" msg="Carregando lista de meses" />
 							<b-form-group label="Época da frutificação *" v-if="fruiting_season_options">
 								<b-form-checkbox-group  v-model="form.field_fruiting_season" :options="fruiting_season_options" v-validate="'required'" name="field_fruiting_season" />
 								<field-error v-bind:msg="veeErrors" field="field_fruiting_season" />
@@ -160,7 +160,7 @@ export default {
 			this.ecosystem_options = Object.keys(values).map(function(key) {
 				return { text: values[key], value: { value: key } }
 			});
-		}).catch(error => { this.error = error });
+		}).catch(error => { this.error = error.message });
 
 		axios.get('entity/field_storage_config/commerce_product.field_fruiting_season?_format=json')
 		.then(response => {
@@ -168,7 +168,7 @@ export default {
 			this.fruiting_season_options = Object.keys(values).map(function(key) {
 				return { text: values[key], value: { value: key } }
 			});
-		}).catch(error => { this.error = error });
+		}).catch(error => { this.error = error.message });
 
 		if (this.isEditing()) {
 			this.edit(this.$route.params.id)
@@ -187,9 +187,9 @@ export default {
 						this.apiDataToForm(this.variations_form, resp.data)
 						this.images_preview = data.field_images
 						this.loading = false
-					}).catch(error => { this.error = error; this.loading = false });
+					}).catch(error => { this.error = error.message; this.loading = false });
 				}
-			}).catch(error => { this.error = error; this.loading = false });
+			}).catch(error => { this.error = error.message; this.loading = false });
 		},
 		save() {
 			this.$validator.validate().then(isValid => {
@@ -221,7 +221,7 @@ export default {
 							}
 							this.sending = false
 						}).catch(error => { this.error = error.response.data.message; this.sending = false })
-					}).catch(error => { this.error = error; this.sending = false })				
+					}).catch(error => { this.error = error.message; this.sending = false })				
 				}
 			})
 		},

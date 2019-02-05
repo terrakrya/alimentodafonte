@@ -140,7 +140,7 @@ import tipos_de_conta from '@/data/tipos-de-conta.json';
 
 export default {
 	
-	name: 'SeedForm', 
+	name: 'CollectorForm', 
 	
 	computed: {
 		showPasswordFields () {
@@ -167,13 +167,13 @@ export default {
 				name: [{ value: '' }],
 				mail: [{ value: '' }],
 				pass: [{ value: '' }],
-				field_address: [{
-					country_code: "BR",
-					administrative_area: "",
-					locality: "",
-					postal_code: "",
-					address_line1: ""
-				}],
+				// field_address: [{
+				// 	country_code: "BR",
+				// 	administrative_area: "",
+				// 	locality: "",
+				// 	postal_code: "",
+				// 	address_line1: ""
+				// }],
 				field_agency: [{ value: '' }],
 				field_bank_account: [{ value: '' }],
 				field_type_account: [{ value: 'corrente' }],
@@ -197,20 +197,16 @@ export default {
 		edit (id) {
 			this.loading = true
 			axios.get('user/' + id + '?_format=json').then(response => {
-				var data = response.data
-				this.apiDataToForm(this.form, data)
-				this.log = data
-				this.images_preview = data.user_picture
+				this.apiDataToForm(this.form, response.data)
+				this.images_preview = response.data.user_picture
 				this.loading = false
-
-			}).catch(error => { this.error = error; this.loading = false });
+			}).catch(error => { this.error = error.message; this.loading = false });
 		},
 		save () {
 			this.$validator.validate().then(isValid => {
 				if (isValid) {
 					this.sending = true
 					this.error = false
-
 					axios({
 						method: (this.isEditing() ? 'PATCH' : 'POST'),
 						url: (this.isEditing() ? 'user/'+ this.$route.params.id : 'entity/user')+'?_format=json', 
@@ -221,7 +217,6 @@ export default {
 							this.$router.replace('/coletor/'+collector.uid[0].value)
 						}
 						this.sending = false
-						
 					}).catch(error => { this.error = error.response.data.message; this.sending = false })
 				}
 			})
@@ -239,7 +234,6 @@ export default {
 		'field-error' : FieldError,
 		'pictures-upload' : PicturesUpload
 	}
-
 
 };
 </script>
