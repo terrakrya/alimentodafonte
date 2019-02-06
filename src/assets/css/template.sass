@@ -980,11 +980,15 @@ form
   overflow-y: scroll
   border: 1px solid $colorLightGray
 
-.entity-select-preview
+.list-group-item
   img
     width: 30px
     margin-right: 5px
 
+.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover
+  background-color: $colorOrange
+  border-color: $colorOrange
+  
 @media (max-width: 1024px)
   #wrapper
     .sidebar:not(.active)
@@ -1007,7 +1011,15 @@ form
 @media (max-width: 767px)
   .search-input
     margin-top: 15px
-
+  form
+    div[class*="col-sm-"], div[class*="col-xs-"]
+      border-left: none
+      border-bottom: 1px solid #DCCFBA
+    > .row, > .form-address > .row, > .row:last-child
+      border-bottom: none
+      border-top: none
+      &:first-child
+        border-top: 1px solid #DCCFBA
 @media (max-width: 540px)
   #wrapper
     .sidebar

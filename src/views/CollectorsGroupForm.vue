@@ -58,12 +58,12 @@
 					<div class="row">
 						<div class="col-md-6">
 							<b-form-group label="Sementes" >
-								<form-entity-select :items="seeds_options" :form="form" field="field_seeds" />
+								<form-entities-select :items="seed_options" :form="form" field="field_seeds" />
 							</b-form-group>							
 						</div>					
 						<div class="col-md-6">
 							<b-form-group label="Coletores" >
-								<form-entity-select :items="collectors_options" :form="form" field="field_collectors" />
+								<form-entities-select :items="collector_options" :form="form" field="field_collectors" />
 							</b-form-group>							
 						</div>					
 					</div>					
@@ -79,7 +79,7 @@ import axios from 'axios'
 import Breadcrumb from '@/components/Breadcrumb'
 import Loading from '@/components/Loading'
 import FormHeadline from '@/components/FormHeadline'
-import FormEntitySelect from '@/components/FormEntitySelect'
+import FormEntitiesSelect from '@/components/FormEntitiesSelect'
 import FormSubmit from '@/components/FormSubmit'
 import FieldError from '@/components/FieldError'
 import bancos from '@/data/bancos.json';
@@ -98,9 +98,8 @@ export default {
 			bancos: bancos,
 			tipos_de_conta: tipos_de_conta,
 			seed: null,
-			seeds_options: [],
-			collectors_options: [],
-			seeds: [],
+			seed_options: [],
+			collector_options: [],
 			form: {
 				type:[{ target_id: "collector_groups" }],
 				title: [{ value: '' }],
@@ -124,7 +123,7 @@ export default {
 		}
 		
 		axios.get('rest/seeds-list?_format=json').then(response => {
-			this.seeds_options = response.data.map(seed => {
+			this.seed_options = response.data.map(seed => {
 				return { 
 					id: seed.product_id[0].value,
 					title: seed.title[0].value,
@@ -136,7 +135,7 @@ export default {
 
 
 		axios.get('rest/collectors?_format=json').then(response => {
-			this.collectors_options = response.data.map(seed => {
+			this.collector_options = response.data.map(seed => {
 				return { 
 					id: seed.uid[0].value,
 					title: seed.field_name[0].value,
@@ -175,14 +174,6 @@ export default {
 					}).catch(error => { this.error = error.response.data.message; this.sending = false })
 				}
 			})
-		},
-		addSeed () {
-			if (!this.form.field_seeds.find(field_seed => (field_seed.target_id 
-				== this.seed.id))) {
-				this.form.field_seeds.push({ target_id: this.seed.id })
-
-			}
-			this.seed = null;
 		}
 	},
 
@@ -190,7 +181,7 @@ export default {
 		Breadcrumb, 
 		Loading, 
 		FormHeadline, 
-		FormEntitySelect, 
+		FormEntitiesSelect, 
 		FormSubmit, 
 		FieldError
 	}
