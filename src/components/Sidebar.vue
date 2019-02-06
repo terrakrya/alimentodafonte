@@ -18,8 +18,8 @@
               <li @click="toggleMenu">
                 <router-link to="/grupos-de-coletores"><span>Grupos de coletores</span></router-link>
               </li>
-              <li>
-                <a href="#"><span>Casas de Sementes</span></a>
+              <li @click="toggleMenu">
+                <router-link to="/casas-de-sementes"><span>Casas de sementes</span></router-link>
               </li>
               <li>
                 <a href="#"><span>Redes de Sementes</span></a>

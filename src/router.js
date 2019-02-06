@@ -15,6 +15,9 @@ import Collector from '@/views/Collector.vue'
 import CollectorsGroups from '@/views/CollectorsGroups.vue'
 import CollectorsGroupForm from '@/views/CollectorsGroupForm.vue'
 import CollectorsGroup from '@/views/CollectorsGroup.vue'
+import SeedsHouses from '@/views/SeedsHouses.vue'
+import SeedsHouseForm from '@/views/SeedsHouseForm.vue'
+import SeedsHouse from '@/views/SeedsHouse.vue'
 
 Vue.use(Router)
 
@@ -57,6 +60,11 @@ export default new Router({
     { path: '/grupos-de-coletores', component: CollectorsGroups, beforeEnter: requireAuth },
     { path: '/cadastrar-grupo-de-coletores', component: CollectorsGroupForm, beforeEnter: requireAuth },
     { path: '/editar-grupo-de-coletores/:id', component: CollectorsGroupForm, beforeEnter: requireAuth },
-    { path: '/grupo-de-coletores/:id', component: CollectorsGroup, beforeEnter: requireAuth }
+    { path: '/grupo-de-coletores/:id', component: CollectorsGroup, beforeEnter: requireAuth },
+
+    { path: '/casas-de-sementes', component: SeedsHouses, beforeEnter: requireAuth },
+    { path: '/cadastrar-casa-de-sementes', component: SeedsHouseForm, beforeEnter: requireAuth },
+    { path: '/editar-casa-de-sementes/:id', component: SeedsHouseForm, beforeEnter: requireAuth },
+    { path: '/casa-de-sementes/:id', component: SeedsHouse, beforeEnter: requireAuth }
   ]
 })

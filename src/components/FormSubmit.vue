@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-md-12 text-center">
+    <div class="col-sm-12 text-center">
       <b-alert variant="danger" show v-if="error">{{error}}</b-alert>
       <b-alert variant="danger" show v-if="veeErrors && veeErrors.items && veeErrors.items.length">Verifique os erros acima para continuar</b-alert>
       <div class="btn-group">

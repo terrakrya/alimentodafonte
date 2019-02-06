@@ -71,7 +71,7 @@ import tipos_de_conta from '@/data/tipos-de-conta.json';
 
 export default {
 
-	field_agency: 'Collector', 
+	name: 'CollectorsGroup', 
 
 	data () {
 		return { 
