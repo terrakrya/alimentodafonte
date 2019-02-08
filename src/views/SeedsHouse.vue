@@ -12,7 +12,7 @@
 								{{ seeds_house.name[0].value }}								
 							</h1>
 							<p>
-								<span v-if="present(seeds_house.field_phone)">{{ collector.field_contact[0].value }}</span>
+								<span v-if="present(seeds_house.field_phone)">{{ seeds_house.field_phone[0].value }}</span>
 								&bull;
 								<span v-if="user">
 									Proprietário: {{ user.field_name[0].value }}
@@ -26,7 +26,7 @@
 					</div>
 					<hr class="clearfix">
 					<div class="row">
-						<div class="col-sm-6" v-if="collectors">
+						<div class="col-sm-6" v-if="collectors && collectors.length">
 							<div class="list-group entity-select-preview">
 								<div class="list-group-item active">
 									<strong>Coletores</strong>
@@ -39,7 +39,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-6" v-if="collectors">
+						<div class="col-sm-6" v-if="collectors_groups && collectors_groups.length">
 							<div class="list-group entity-select-preview">
 								<div class="list-group-item active">
 									<strong>Grupos de coletores</strong>

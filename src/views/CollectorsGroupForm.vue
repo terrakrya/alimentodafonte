@@ -19,7 +19,7 @@
 							</b-form-group>							
 						</div>
 					</div>						
-					<div class="row gray">
+					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Contatos *" description="Liste todas as formas de contato com o grupo">
 								<b-form-textarea v-model="form.field_contact[0].value" v-validate="'required'" name="contact" :rows="3" />
@@ -32,7 +32,7 @@
 							</b-form-group>							
 						</div>
 					</div>	
-					<div class="row">
+					<div class="row gray">
 						<div class="col-md-3 col-sm-6">
 							<b-form-group label="Banco">
 								<b-form-select v-model="form.field_bank_number[0].value" :options="bancos" />
@@ -56,14 +56,14 @@
 						</div>
 					</div>		
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-sm-6">
 							<b-form-group label="Sementes" >
-								<form-entities-select :items="seed_options" :form="form" field="field_seeds" />
+								<form-entities-select v-if="seed_options && seed_options.length" :items="seed_options" :form="form" field="field_seeds" />
 							</b-form-group>							
 						</div>					
-						<div class="col-md-6">
+						<div class="col-sm-6">
 							<b-form-group label="Coletores" >
-								<form-entities-select :items="collector_options" :form="form" field="field_collectors" />
+								<form-entities-select v-if="collector_options && collector_options.length" :items="collector_options" :form="form" field="field_collectors" />
 							</b-form-group>							
 						</div>					
 					</div>					
@@ -83,7 +83,7 @@ import FormEntitiesSelect from '@/components/FormEntitiesSelect'
 import FormSubmit from '@/components/FormSubmit'
 import FieldError from '@/components/FieldError'
 import bancos from '@/data/bancos.json';
-import tipos_de_conta from '@/data/tipos-de-conta2.json';
+import tipos_de_conta from '@/data/tipos-de-conta.json';
 
 export default {
 	

@@ -11,52 +11,87 @@
 							<h1>
 								{{ collectors_group.title[0].value }}								
 							</h1>
-							<p><span>{{ collectors_group.field_contact[0].value }}</span></p>
-							<router-link v-bind:to="'/editar-grupo-de-coletores/'+collectors_group.nid[0].value" class="btn btn-default btn-xs">
-								<i class="fa fa-edit" aria-hidden="true"></i>
-								Editar grupo
-							</router-link>
+							<p v-if="present(collectors_group.field_cnpj)">
+								<span>CNPJ: {{ collectors_group.field_cnpj[0].value | cnpj }}</span>
+							</p>
 						</div>
 					</div>
 					<hr class="clearfix">
-					<table class="resume-table">
-						<caption>
-							Detalhes
-						</caption>
-						<tr v-if="present(collectors_group.body)">
-							<td class="details" colspan="2" v-html="collectors_group.body[0].processed"></td>
-						</tr>
-						<tr>
-							<td width="50%" valign="top">
-								<dl v-if="present(collectors_group.mail)">
-									<dt>Email</dt>
-									<dd>{{ collectors_group.mail[0].value }}</dd>
-								</dl>
-								<dl v-if="present(collectors_group.name)">
-									<dt>Nome de usuário</dt>
-									<dd>{{ collectors_group.name[0].value }}</dd>
-								</dl>
-								<dl v-if="present(collectors_group.field_cnpj)">
-									<dt>CPF</dt>
-									<dd>{{ collectors_group.field_cnpj[0].value | cnpj }}</dd>
-								</dl>
-							</td>
-							<td width="50%" valign="top">
-								<dl v-if="present(collectors_group.field_bank_number)">
-									<dt>Banco</dt>
-									<dd>{{ bancos.find((banco) => banco.value == collectors_group.field_bank_number[0].value ).text }}</dd>
-								</dl>
-								<dl v-if="present(collectors_group.field_agency)">
-									<dt>Agência</dt>
-									<dd>{{ collectors_group.field_agency[0].value }}</dd>
-								</dl>
-								<dl v-if="present(collectors_group.field_bank_account)">
-									<dt>Conta {{ collectors_group.field_type_account[0].value }}</dt>
-									<dd>{{ collectors_group.field_bank_account[0].value }}</dd>
-								</dl>
-							</td>
-						</tr>
-					</table>
+					<div class="row">
+						<div class="col-sm-12" >
+							<div class="list-group entity-select-preview">
+								<div class="list-group-item active">
+									<strong>Detalhes</strong>
+									<i @click="edit" class="pull-right fa fa-pencil"></i>
+								</div>
+								<div class="list-group-item">
+									<div class="row" v-if="present(collectors_group.body)"> 
+										<div class="col-sm-12">
+											<p class="details" colspan="2" v-html="collectors_group.body[0].processed"></p>
+										</div>
+									</div>
+									<div class="row"> 
+										<div class="col-sm-6">
+											<dl v-if="present(collectors_group.field_contact)">
+												<dt>Contatos</dt>
+												<dd>{{ collectors_group.field_contact[0].value }}</dd>
+											</dl>
+											<dl v-if="present(collectors_group.name)">
+												<dt>Nome de usuário</dt>
+												<dd>{{ collectors_group.name[0].value }}</dd>
+											</dl>
+											<dl v-if="present(collectors_group.field_cnpj)">
+												<dt>CNPJ</dt>
+												<dd>{{ collectors_group.field_cnpj[0].value | cnpj }}</dd>
+											</dl>
+										</div>
+										<div class="col-sm-6">
+											<dl v-if="present(collectors_group.field_bank_number)">
+												<dt>Banco</dt>
+												<dd>{{ bancos.find((banco) => banco.value == collectors_group.field_bank_number[0].value ).text }}</dd>
+											</dl>
+											<dl v-if="present(collectors_group.field_agency_number)">
+												<dt>Agência</dt>
+												<dd>{{ collectors_group.field_agency_number[0].value }}</dd>
+											</dl>
+											<dl v-if="present(collectors_group.field_account_number)">
+												<dt>Conta {{ collectors_group.field_account_type[0].value }}</dt>
+												<dd>{{ collectors_group.field_account_number[0].value }}</dd>
+											</dl>
+										</div>
+									</div>									
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6" v-if="collectors && collectors.length">
+							<div class="list-group entity-select-preview">
+								<div class="list-group-item active">
+									<strong>Coletores</strong>
+								</div>
+								<div class="list-group-item" v-for="(collector, index) in collectors" :key="index" >
+									<div> 
+										<img v-if="present(collector.user_picture, 'url')" :src="collector.user_picture[0].url" />
+										<span v-if="present(collector.field_name)">{{collector.field_name[0].value}}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6" v-if="seeds && seeds.length">
+							<div class="list-group entity-select-preview">
+								<div class="list-group-item active">
+									<strong>Sementes</strong>
+								</div>
+								<div class="list-group-item" v-for="(seed, index) in seeds" :key="index" >
+									<div> 
+										<img v-if="present(seed.field_images, 'url')" :src="seed.field_images[0].url" />
+										<span v-if="present(seed.title)">{{seed.title[0].value}}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -76,6 +111,8 @@ export default {
 	data () {
 		return { 
 			collectors_group: null,
+			collectors: null,
+			seeds: null,
 			error: false,
 			loading: false,
 			bancos: bancos,
@@ -90,8 +127,32 @@ export default {
 		axios.get('node/' + this.$route.params.id + '?_format=json').then(collectors_group => {
 			this.collectors_group = collectors_group.data 
 			this.loading = false
+
+			axios.get('rest/collectors?_format=json').then(response => {
+				this.collectors = response.data.filter(collector => {
+					return this.collectors_group.field_collectors.find(item => {
+						return collector.uid[0].value == item.target_id
+					})
+				})
+			}).catch(error => { this.error = error.message })
+
+			axios.get('rest/seeds-list?_format=json').then(response => {
+				this.seeds = response.data.filter(seed => {
+					return this.collectors_group.field_seeds.find(item => {
+						return seed.product_id[0].value == item.target_id
+					})
+				})
+
+			}).catch(error => { this.error = error.message })
+
 		}).catch(error => { this.error = error.message, this.loading = false })
 
+	},
+
+	methods: {
+		edit () {
+			this.$router.replace('/editar-grupo-de-coletores/'+this.collectors_group.nid[0].value)
+		}
 	},
 
 	components: { 

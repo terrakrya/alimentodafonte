@@ -49,49 +49,57 @@
 							</div>
 						</div>
 					</div>
-					<table class="resume-table">
-						<caption>
-							Detalhes
-						</caption>
-						<tr v-if="present(seed.body)">
-							<td class="details" colspan="2" v-html="seed.body[0].processed"></td>
-						</tr>
-						<tr>
-							<td width="50%" valign="top">
-								<dl>
-									<dt>Qtd. de sementes / Kg</dt>
-									<dd>{{ seed.field_seeds_kg[0].value | currency('', 0, { thousandsSeparator: '' }) }} sementes / Kg</dd>
-								</dl>
-								<dl>
-									<dt>Taxa de viabilidade</dt>
-									<dd>{{ seed.field_viability_rate[0].value | currency('', 0, { thousandsSeparator: '' }) }} % de viabilidade</dd>
-								</dl>
-								<dl>
-									<dt>Limite de peso por lote</dt>
-									<dd>{{ seed.field_lot_limit[0].value | currency('', 0, { thousandsSeparator: '' }) }} kg por lote</dd>
-								</dl>
-							</td>
-							<td width="50%" valign="top">
-								<dl class="ecosystem" v-if="ecosystem_options">
-									<dt>Ecossistemas</dt>
-									<dd>
-										<b-badge v-for="(ecosystem, index) in seed.field_ecosystem" v-bind:class="ecosystem.value" :key="index">{{ecosystem_options[ecosystem.value]}}</b-badge>
-									</dd>
-								</dl>
-								<dl class="fruiting_season" v-if="fruiting_season_options">
-									<dt>Época da frutificação</dt>
-									<dd>
-										<b-badge v-for="(fruiting_season_option, month) in fruiting_season_options" v-bind:class="{ 'btn-success': !!seed.field_fruiting_season.find((fs) => (fs.value == month))}" :key="month">{{fruiting_season_option}}</b-badge>
-									</dd>
-								</dl>
-							</td>
-						</tr>
-						<tr v-if="seed.field_images && seed.field_images.length > 1">
-							<td width="100%" colspan="2" valign="top">
-								<b-img v-for="(image, index) in seed.field_images" v-bind:src="image.url" fluid thumbnail :key="index" />
-							</td>
-						</tr>
-					</table>
+					<div class="row">
+						<div class="col-sm-12" >
+							<div class="list-group entity-select-preview">
+								<div class="list-group-item active">
+									<strong>Detalhes</strong>
+								</div>
+								<div class="list-group-item">
+									<div class="row" v-if="present(seed.body)"> 
+										<div class="col-sm-6">
+											<p class="details" colspan="2" v-html="seed.body[0].processed"></p>
+										</div>
+									</div>
+									<div class="row"> 
+										<div class="col-sm-6">
+											<dl>
+												<dt>Qtd. de sementes / Kg</dt>
+												<dd>{{ seed.field_seeds_kg[0].value | currency('', 0, { thousandsSeparator: '' }) }} sementes / Kg</dd>
+											</dl>
+											<dl>
+												<dt>Taxa de viabilidade</dt>
+												<dd>{{ seed.field_viability_rate[0].value | currency('', 0, { thousandsSeparator: '' }) }} % de viabilidade</dd>
+											</dl>
+											<dl>
+												<dt>Limite de peso por lote</dt>
+												<dd>{{ seed.field_lot_limit[0].value | currency('', 0, { thousandsSeparator: '' }) }} kg por lote</dd>
+											</dl>
+										</div>
+										<div class="col-sm-6">
+											<dl class="ecosystem" v-if="ecosystem_options">
+												<dt>Ecossistemas</dt>
+												<dd>
+													<b-badge v-for="(ecosystem, index) in seed.field_ecosystem" v-bind:class="ecosystem.value" :key="index">{{ecosystem_options[ecosystem.value]}}</b-badge>
+												</dd>
+											</dl>
+											<dl class="fruiting_season" v-if="fruiting_season_options">
+												<dt>Época da frutificação</dt>
+												<dd>
+													<b-badge v-for="(fruiting_season_option, month) in fruiting_season_options" v-bind:class="{ 'btn-success': !!seed.field_fruiting_season.find((fs) => (fs.value == month))}" :key="month">{{fruiting_season_option}}</b-badge>
+												</dd>
+											</dl>
+										</div>
+									</div>
+									<div class="row" v-if="seed.field_images && seed.field_images.length > 1">
+										<div class="col-sm-4" v-for="(image, index) in seed.field_images">
+											<b-img v-bind:src="image.url" fluid thumbnail :key="index" />
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -68,17 +68,17 @@
 						</div>
 						<div class="col-md-3 col-sm-6">
 							<b-form-group label="Agência">
-								<b-form-input v-model="form.field_agency[0].value" />
+								<b-form-input v-model="form.field_agency_number[0].value" />
 							</b-form-group>							
 						</div>
 						<div class="col-md-3 col-sm-6">
 							<b-form-group label="Conta">
-								<b-form-input v-model="form.field_bank_account[0].value" />
+								<b-form-input v-model="form.field_account_number[0].value" />
 							</b-form-group>							
 						</div>
 						<div class="col-md-3 col-sm-6">
 							<b-form-group label="Tipo de conta">
-								<b-form-radio-group v-model="form.field_type_account[0].value" :options="tipos_de_conta" stacked >
+								<b-form-radio-group v-model="form.field_account_type[0].value" :options="tipos_de_conta" stacked >
 								</b-form-radio-group>
 							</b-form-group>							
 						</div>
@@ -167,17 +167,17 @@ export default {
 				name: [{ value: '' }],
 				mail: [{ value: '' }],
 				pass: [{ value: '' }],
-				// field_address: [{
-				// 	country_code: "BR",
-				// 	administrative_area: "",
-				// 	locality: "",
-				// 	postal_code: "",
-				// 	address_line1: ""
-				// }],
-				field_agency: [{ value: '' }],
-				field_bank_account: [{ value: '' }],
-				field_type_account: [{ value: 'corrente' }],
+				field_address: [{
+					country_code: "BR",
+					administrative_area: "GO",
+					locality: "Goiânia",
+					postal_code: "73770-000",
+					address_line1: "Teste de endereço"
+				}],
 				field_bank_number: [{ value: '' }],
+				field_agency_number: [{ value: '' }],
+				field_account_number: [{ value: '' }],
+				field_account_type: [{ value: 'corrente' }],
 				field_contact: [{ value: '' }],
 				field_cpf: [{ value: '' }],
 				field_name: [{ value: '' }],
