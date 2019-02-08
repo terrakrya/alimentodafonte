@@ -28,13 +28,13 @@
 					</div>					
 					<div class="row">
 						<div class="col-sm-6">
-							<b-form-group label="Grupos de coletores" >
-								<form-entities-select :items="collectors_group_options" :form="form" field="field_group" />
+							<b-form-group label="Coletores" >
+								<form-entities-select :items="collector_options" :form="form" field="field_collector" />
 							</b-form-group>							
 						</div>					
 						<div class="col-sm-6">
-							<b-form-group label="Coletores" >
-								<form-entities-select :items="collector_options" :form="form" field="field_collector" />
+							<b-form-group label="Grupos de coletores" >
+								<form-entities-select :items="collectors_group_options" :form="form" field="field_group" />
 							</b-form-group>							
 						</div>					
 					</div>					
@@ -72,9 +72,11 @@ export default {
 			seeds: [],
 			form: {
 				type:[{ target_id: "seeds_house" }],
+				default_currency:[{ target_id: "BRL" }],
+				mail:[{ value: "seeds_house@sementes.com" }],
+				uid: [{ target_id: null }],
 				name: [{ value: '' }],
 				field_phone: [{ value: '' }],
-				uid: [{ target_id: null }],
 				field_group: [],
 				field_collector: [],
 			},
@@ -114,6 +116,7 @@ export default {
 				return { 
 					id: user.uid[0].value,
 					title: user.field_name[0].value,
+					mail: this.present(user.mail) ? user.mail[0].value : '',
 					description: user.field_nickname[0].value,
 					picture: this.present(user.user_picture, 'url') ? user.user_picture[0].url : null,
 				}
@@ -136,6 +139,18 @@ export default {
 				if (isValid) {
 					this.sending = true
 					this.error = false
+
+					this.form.address = this.form.field_address
+					if (this.present(this.form.uid, 'target_id')) {
+						let user = this.user_options.find(user_option => {
+							return user_option.id == this.form.uid[0].target_id
+						})
+
+						if (user && user.mail) {
+							this.form.mail = [{ value: user.mail } ]
+						}
+					}
+
 					axios({
 						method: (this.isEditing() ? 'PATCH' : 'POST'),
 						url: (this.isEditing() ? 'store/' + this.$route.params.id : 'entity/commerce_store')+'?_format=json',

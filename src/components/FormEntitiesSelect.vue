@@ -12,14 +12,14 @@
         </div>
       </template>
     </cool-select>
-    <div class="entity-select-preview">
+    <div class="entity-select-preview" v-if="preview && preview.length > 0">
       <h5> Selecionados: </h5> 
-      <div class="list-group" v-if="preview && preview.length > 0">
-        <div class="list-group-item" v-for="(item_preview, index) in preview" :key="index" >
+      <div class="list-group">
+        <div class="list-group-item" v-for="(item_preview, index) in preview" :key="index">
           <div> 
             <img v-if="item_preview && item_preview.picture" :src="item_preview.picture" />
             <span v-if="item_preview">{{item_preview.title}}</span>
-            <b-button v-if="item_preview" class="btn btn-sm btn-danger fa fa-trash pull-right" @click="removeItem(item_preview.id)"></b-button>
+            <b-button v-if="item_preview" class="btn btn-xs btn-danger fa fa-trash pull-right" @click="removeItem(item_preview.id)"></b-button>
           </div>
         </div>
       </div>
@@ -42,17 +42,15 @@ export default {
       if (this.form && this.form[this.field] && this.items) {
         return this.form[this.field].map(selected => {
           return this.getItem(selected.target_id)
-        })      
+        }).filter(preview => preview)
       } 
       return []
     }
   },
   methods: {
     addItem () {
-      if (!this.form[this.field].find(item => (item.target_id 
-        == this.entity.id))) {
+      if (!this.form[this.field].find(item => (item.target_id == this.entity.id))) {
         this.form[this.field].push({ target_id: this.entity.id })
-
       }
       this.entity = null
     }, 

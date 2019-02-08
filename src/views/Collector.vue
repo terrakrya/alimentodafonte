@@ -22,41 +22,50 @@
 						</div>
 					</div>
 					<hr class="clearfix">
-					<table class="resume-table">
-						<caption>
-							Detalhes
-						</caption>
-						<tr>
-							<td width="50%" valign="top">
-								<dl v-if="present(collector.mail)">
-									<dt>Email</dt>
-									<dd>{{ collector.mail[0].value }}</dd>
-								</dl>
-								<dl v-if="present(collector.name)">
-									<dt>Nome de usuário</dt>
-									<dd>{{ collector.name[0].value }}</dd>
-								</dl>
-								<dl v-if="present(collector.field_cpf)">
-									<dt>CPF</dt>
-									<dd>{{ collector.field_cpf[0].value | cpf }}</dd>
-								</dl>
-							</td>
-							<td width="50%" valign="top">
-								<dl v-if="present(collector.field_bank_number)">
-									<dt>Banco</dt>
-									<dd>{{ bancos.find((banco) => banco.value == collector.field_bank_number[0].value ).text }}</dd>
-								</dl>
-								<dl v-if="present(collector.field_agency)">
-									<dt>Agência</dt>
-									<dd>{{ collector.field_agency[0].value }}</dd>
-								</dl>
-								<dl v-if="present(collector.field_bank_account)">
-									<dt>Conta {{ collector.field_type_account[0].value }}</dt>
-									<dd>{{ collector.field_bank_account[0].value }}</dd>
-								</dl>
-							</td>
-						</tr>
-					</table>
+					<div class="row">
+						<div class="col-sm-6" >
+							<div class="list-group entity-select-preview">
+								<div class="list-group-item active">
+									<strong>Dados do coletor</strong>
+								</div>
+								<div class="list-group-item">
+									<dl v-if="present(collector.field_cpf)">
+										<dt>CPF</dt>
+										<dd>{{ collector.field_cpf[0].value | cpf }}</dd>
+									</dl>
+									<dl v-if="present(collector.mail)">
+										<dt>Email</dt>
+										<dd>{{ collector.mail[0].value }}</dd>
+									</dl>
+									<dl v-if="present(collector.name)">
+										<dt>Nome de usuário</dt>
+										<dd>{{ collector.name[0].value }}</dd>
+									</dl>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6" >
+							<div class="list-group entity-select-preview">
+								<div class="list-group-item active">
+									<strong>Dados bancários</strong>
+								</div>
+								<div class="list-group-item">
+									<dl v-if="present(collector.field_bank_number)">
+										<dt>Banco</dt>
+										<dd>{{ bancos.find((banco) => banco.value == collector.field_bank_number[0].value ).text }}</dd>
+									</dl>
+									<dl v-if="present(collector.field_agency_number)">
+										<dt>Agência</dt>
+										<dd>{{ collector.field_agency_number[0].value }}</dd>
+									</dl>
+									<dl v-if="present(collector.field_account_number)">
+										<dt>Conta {{ accountType }}</dt>
+										<dd>{{ collector.field_account_number[0].value }}</dd>
+									</dl>
+								</div>
+							</div>
+						</div>
+					</div>					
 				</div>
 			</div>
 		</div>
@@ -92,6 +101,16 @@ export default {
 			this.loading = false
 		}).catch(error => { this.error = error.message, this.loading = false })
 
+	},
+
+	computed: {
+		accountType () {
+			if (this.present(this.collector.field_account_type)) {
+				return tipos_de_conta.find(tipo_de_conta => {
+					return tipo_de_conta.value == this.collector.field_account_type[0].value
+				}).text			
+			}
+		}
 	},
 
 	components: { 
