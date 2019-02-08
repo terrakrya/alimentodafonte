@@ -71,10 +71,10 @@
 									<strong>Coletores</strong>
 								</div>
 								<div class="list-group-item" v-for="(collector, index) in collectors" :key="index" >
-									<div> 
+									<router-link v-bind:to="'/coletor/'+collector.uid[0].value">
 										<img v-if="present(collector.user_picture, 'url')" :src="collector.user_picture[0].url" />
 										<span v-if="present(collector.field_name)">{{collector.field_name[0].value}}</span>
-									</div>
+									</router-link>
 								</div>
 							</div>
 						</div>
@@ -84,10 +84,10 @@
 									<strong>Sementes</strong>
 								</div>
 								<div class="list-group-item" v-for="(seed, index) in seeds" :key="index" >
-									<div> 
+									<router-link v-bind:to="'/semente/'+seed.product_id[0].value">
 										<img v-if="present(seed.field_images, 'url')" :src="seed.field_images[0].url" />
 										<span v-if="present(seed.title)">{{seed.title[0].value}}</span>
-									</div>
+									</router-link>
 								</div>
 							</div>
 						</div>

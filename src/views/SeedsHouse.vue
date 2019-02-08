@@ -32,10 +32,10 @@
 									<strong>Coletores</strong>
 								</div>
 								<div class="list-group-item" v-for="(collector, index) in collectors" :key="index" >
-									<div> 
+									<router-link v-bind:to="'/coletor/'+collector.uid[0].value">
 										<img v-if="present(collector.user_picture, 'url')" :src="collector.user_picture[0].url" />
 										<span v-if="present(collector.field_name)">{{collector.field_name[0].value}}</span>
-									</div>
+									</router-link>
 								</div>
 							</div>
 						</div>
@@ -44,10 +44,10 @@
 								<div class="list-group-item active">
 									<strong>Grupos de coletores</strong>
 								</div>
-								<div class="list-group-item" v-for="(collectors_groups, index) in collectors_groups" :key="index" >
-									<div> 
-										<span v-if="present(collectors_groups.title)">{{collectors_groups.title[0].value}}</span>
-									</div>
+								<div class="list-group-item" v-for="(collectors_group, index) in collectors_groups" :key="index" >
+									<router-link v-bind:to="'/grupo-de-coletores/'+collectors_group.nid[0].value">
+										<span v-if="present(collectors_group.title)">{{collectors_group.title[0].value}}</span>
+									</router-link>
 								</div>
 							</div>
 						</div>
