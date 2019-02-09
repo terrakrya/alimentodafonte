@@ -21,14 +21,14 @@
               <li @click="toggleMenu">
                 <router-link to="/casas-de-sementes"><span>Casas de sementes</span></router-link>
               </li>
-              <li>
-                <a href="#"><span>Redes de Sementes</span></a>
+              <li @click="toggleMenu">
+                <router-link to="/redes-de-sementes"><span>Redes de sementes</span></router-link>
               </li>
-              <li>
-                <a href="#"><span>Área de Coleta</span></a>
+              <li @click="toggleMenu">
+                <router-link to="/areas-de-coleta"><span>Áreas de coleta</span></router-link>
               </li>
-              <li>
-                <a href="#"><span>Matrizes de Sementes</span></a>
+              <li @click="toggleMenu">
+                <router-link to="/matrizes-de-sementes"><span>Matrizes de sementes</span></router-link>
               </li>
             </ul>
           </li>

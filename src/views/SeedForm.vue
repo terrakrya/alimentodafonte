@@ -83,11 +83,10 @@
 							</b-form-group>
 						</div>
 						<div class="col-sm-6">
-							<loading v-bind:loading="!fruiting_season_options" msg="Carregando lista de meses" />
-							<b-form-group label="Época da frutificação *" v-if="fruiting_season_options">
-								<b-form-checkbox-group  v-model="form.field_fruiting_season" :options="fruiting_season_options" v-validate="'required'" name="field_fruiting_season" />
+							<b-form-group label="Época da frutificação *">
+								<b-form-checkbox-group  v-model="form.field_fruiting_season" :options="meses" v-validate="'required'" name="field_fruiting_season" />
 								<field-error v-bind:msg="veeErrors" field="field_fruiting_season" />
-							</b-form-group>								
+							</b-form-group>
 						</div>
 					</div>
 					<div class="row">
@@ -110,6 +109,7 @@ import FormHeadline from '@/components/FormHeadline'
 import FormSubmit from '@/components/FormSubmit'
 import PicturesUpload from '@/components/PicturesUpload'
 import FieldError from '@/components/FieldError'
+import meses from '@/data/meses.json'
 
 export default {
 	
@@ -119,6 +119,7 @@ export default {
 
 		return { 
 			error: false,
+			meses: meses,
 			form: {
 				type:[{ target_id: "seed" }],
 				title: [{ value: '' }],
@@ -145,7 +146,6 @@ export default {
 			},
 			showSkuInput: false,
 			ecosystem_options: null,
-			fruiting_season_options: null,
 			images_preview: [],
 			loading: false,
 			sending: false,
@@ -158,14 +158,6 @@ export default {
 		.then(response => {
 			let values = response.data.settings.allowed_values
 			this.ecosystem_options = Object.keys(values).map(function(key) {
-				return { text: values[key], value: { value: key } }
-			});
-		}).catch(error => { this.error = error.message });
-
-		axios.get('entity/field_storage_config/commerce_product.field_fruiting_season?_format=json')
-		.then(response => {
-			let values = response.data.settings.allowed_values
-			this.fruiting_season_options = Object.keys(values).map(function(key) {
 				return { text: values[key], value: { value: key } }
 			});
 		}).catch(error => { this.error = error.message });

@@ -117,11 +117,12 @@
 					
 					<div class="row">
 						<div class="col-md-12">
-							<pictures-upload v-bind:form="form" v-bind:preview="this.images_preview" v-bind:error="error" field="user_picture" url="file/upload/user/user/user_picture?_format=json" /> 
+							<pictures-upload v-bind:form="form" v-bind:preview="images_preview" v-bind:error="error" field="user_picture" url="file/upload/user/user/user_picture?_format=json" /> 
 						</div>					
 					</div>					
 					<form-submit v-bind:error="error" />
 				</b-form>
+				<pre>{{form}}</pre>
 			</div>				
 		</div>
 	</div>
@@ -207,6 +208,7 @@ export default {
 				if (isValid) {
 					this.sending = true
 					this.error = false
+					this.form.field_cpf[0].value = Number(this.form.field_cpf[0].value)
 					axios({
 						method: (this.isEditing() ? 'PATCH' : 'POST'),
 						url: (this.isEditing() ? 'user/'+ this.$route.params.id : 'entity/user')+'?_format=json', 

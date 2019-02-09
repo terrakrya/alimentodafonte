@@ -70,7 +70,7 @@ export default {
 		},
 		remove (id) {
 			if (confirm("Tem certeza que deseja excluír?")) {
-				axios.delete('user/' + id + '?_format=json').then(() => {
+				axios.delete('store/' + id + '?_format=json').then(() => {
 					this.list()
 				}).catch(error => { this.error = error.message })	
 			}
