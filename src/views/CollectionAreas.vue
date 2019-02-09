@@ -1,22 +1,22 @@
 <template>
 	<div class="dashboard">
-		<breadcrumb active="Grupos de coletores" />
+		<breadcrumb active="Áreas de coleta" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
-				<list-headline name="Grupos de coletores" addUrl="/cadastrar-grupo-de-coletores" v-bind:filters="filters"/>
+				<list-headline name="Áreas de coleta" addUrl="/cadastrar-area-de-coleta" v-bind:filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading v-bind:loading="!collectors_groups && !error" msg="Carregando lista de grupos" />
-					<div v-if="collectors_groups">
-						<b-table :fields="table_fields" :items="collectors_groups" :sort-by="'title'" :filter="filters.search">
+					<loading v-bind:loading="!collection_areas && !error" msg="Carregando lista de grupos" />
+					<div v-if="collection_areas">
+						<b-table :fields="table_fields" :items="collection_areas" :sort-by="'title'" :filter="filters.search">
 							<template slot="title" slot-scope="data">
-								<router-link v-bind:to="'/grupo-de-coletores/'+ data.item.nid">{{data.item.title}}</router-link>
-								<p v-if="data.item.collectors">
-									<small>{{data.item.collectors.length}} {{data.item.collectors.length | pluralize('coletor', 'coletores')}}</small>
+								<router-link v-bind:to="'/area-de-coleta/'+ data.item.nid">{{data.item.title}}</router-link>
+								<p v-if="data.item.estimated_area">
+									<small>{{data.item.estimated_area}} hectares</small>
 								</p>
 							</template>
 							<template slot="actions" slot-scope="data">
-								<router-link v-bind:to="'/editar-grupo-de-coletores/'+ data.item.nid" class="fa fa-edit btn btn-primary btn-xs "></router-link>
+								<router-link v-bind:to="'/editar-area-de-coleta/'+ data.item.nid" class="fa fa-edit btn btn-primary btn-xs "></router-link>
 								<a @click="remove(data.item.nid)" class="fa fa-trash btn btn-danger btn-xs"></a>
 							</template>
 						</b-table>
@@ -24,6 +24,7 @@
 				</div>
 			</div>
 		</div>
+		<pre>{{collection_areas}}</pre>
 	</div>
 </template>
 <script>
@@ -34,18 +35,18 @@ import Breadcrumb from '@/components/Breadcrumb'
 
 export default {
 	
-	name: 'CollectorsGroups', 
+	name: 'CollectionAreas', 
 	
 	data () {
 		return { 
 			error: false,
 			filters: { search: null },
 			table_fields: [
-				{ key: 'title', label: 'Grupo', sortable: true },
+				{ key: 'title', label: 'Nome da área', sortable: true },
 				{ key: 'city', label: 'Cidade', sortable: true },
 				{ key: 'actions', label: 'Ações', 'class': 'actions' },
 			],
-			collectors_groups: null
+			collection_areas: null
 		}
 	},
 	
@@ -55,14 +56,14 @@ export default {
 
 	methods: {
 		list () {
-			axios.get('rest/collectors-groups?_format=json').then(response => {
-				this.collectors_groups = response.data.map(collectors_group => {
+			axios.get('rest/collection-areas?_format=json').then(response => {
+				this.collection_areas = response.data.map(collection_area => {
 					return { 
-						nid: collectors_group.nid[0].value,
-						title: collectors_group.title[0].value,
-						collectors: collectors_group.field_collectors,
-						city: collectors_group.field_address.length ? 
-							[collectors_group.field_address[0].locality, collectors_group.field_address[0].administrative_area].filter(Boolean).join(' - ')
+						nid: collection_area.nid[0].value,
+						title: collection_area.title[0].value,
+						estimated_area: collection_area.field_estimated_area[0].value,
+						city: collection_area.field_state.length ? 
+							[collection_area.field_state[0].locality, collection_area.field_state[0].administrative_area].filter(Boolean).join(' - ')
 							: ''
 					}
 				})

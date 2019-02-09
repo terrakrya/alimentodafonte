@@ -21,6 +21,8 @@ export default {
               return { number: Number(f.number), currency_code: 'BRL' }
             } else if (f.target_id) {
               return { target_id: f.target_id }
+            } else if (f.lat) {
+              return { lat: f.lat, lng: f.lng }
             } else if (key == 'field_address') {
               return { address_line1: f.address_line1, locality: f.locality, administrative_area: f.administrative_area, postal_code: f.postal_code  }
             }

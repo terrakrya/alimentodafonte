@@ -1,3 +1,6 @@
-# resolver problemas do endereço do coletor e grupo
+# resolver problemas do endereço e geolocalização do coletor e grupo
 # adicionar endereço no perfil do coletor e grupo e casa
 # resolver problema de telefone integer na casa de semente
+# Validar coletor que so pode participar de um grupo
+# Corrigir o formato do nome dos documentos em anexo
+# Adicionar validação de mimetype no documents upload

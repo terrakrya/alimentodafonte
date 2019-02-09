@@ -18,6 +18,15 @@ import CollectorsGroup from '@/views/CollectorsGroup.vue'
 import SeedsHouses from '@/views/SeedsHouses.vue'
 import SeedsHouseForm from '@/views/SeedsHouseForm.vue'
 import SeedsHouse from '@/views/SeedsHouse.vue'
+import SeedsNetworks from '@/views/SeedsNetworks.vue'
+import SeedsNetworkForm from '@/views/SeedsNetworkForm.vue'
+import SeedsNetwork from '@/views/SeedsNetwork.vue'
+import CollectionAreas from '@/views/CollectionAreas.vue'
+import CollectionAreaForm from '@/views/CollectionAreaForm.vue'
+import CollectionArea from '@/views/CollectionArea.vue'
+import SeedsMatrixes from '@/views/SeedsMatrixes.vue'
+import SeedsMatrixForm from '@/views/SeedsMatrixForm.vue'
+import SeedsMatrix from '@/views/SeedsMatrix.vue'
 
 Vue.use(Router)
 
@@ -65,6 +74,21 @@ export default new Router({
     { path: '/casas-de-sementes', component: SeedsHouses, beforeEnter: requireAuth },
     { path: '/cadastrar-casa-de-sementes', component: SeedsHouseForm, beforeEnter: requireAuth },
     { path: '/editar-casa-de-sementes/:id', component: SeedsHouseForm, beforeEnter: requireAuth },
-    { path: '/casa-de-sementes/:id', component: SeedsHouse, beforeEnter: requireAuth }
+    { path: '/casa-de-sementes/:id', component: SeedsHouse, beforeEnter: requireAuth },
+
+    { path: '/redes-de-sementes', component: SeedsNetworks, beforeEnter: requireAuth },
+    { path: '/cadastrar-rede-de-sementes', component: SeedsNetworkForm, beforeEnter: requireAuth },
+    { path: '/editar-rede-de-sementes/:id', component: SeedsNetworkForm, beforeEnter: requireAuth },
+    { path: '/rede-de-sementes/:id', component: SeedsNetwork, beforeEnter: requireAuth },
+
+    { path: '/areas-de-coleta', component: CollectionAreas, beforeEnter: requireAuth },
+    { path: '/cadastrar-area-de-coleta', component: CollectionAreaForm, beforeEnter: requireAuth },
+    { path: '/editar-area-de-coleta/:id', component: CollectionAreaForm, beforeEnter: requireAuth },
+    { path: '/area-de-coleta/:id', component: CollectionArea, beforeEnter: requireAuth },
+
+    { path: '/matrizes-de-sementes', component: SeedsMatrixes, beforeEnter: requireAuth },
+    { path: '/cadastrar-matriz-de-sementes', component: SeedsMatrixForm, beforeEnter: requireAuth },
+    { path: '/editar-matriz-de-sementes/:id', component: SeedsMatrixForm, beforeEnter: requireAuth },
+    { path: '/matriz-de-sementes/:id', component: SeedsMatrix, beforeEnter: requireAuth }
   ]
 })
