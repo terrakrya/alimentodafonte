@@ -122,7 +122,6 @@
 					</div>					
 					<form-submit v-bind:error="error" />
 				</b-form>
-				<pre>{{form}}</pre>
 			</div>				
 		</div>
 	</div>
@@ -208,7 +207,6 @@ export default {
 				if (isValid) {
 					this.sending = true
 					this.error = false
-					this.form.field_cpf[0].value = Number(this.form.field_cpf[0].value)
 					axios({
 						method: (this.isEditing() ? 'PATCH' : 'POST'),
 						url: (this.isEditing() ? 'user/'+ this.$route.params.id : 'entity/user')+'?_format=json', 
