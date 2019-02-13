@@ -4,3 +4,13 @@
 # Validar coletor que so pode participar de um grupo
 # Corrigir o formato do nome dos documentos em anexo
 # Adicionar validação de mimetype no documents upload
+
+
+
+# endereço some após editar
+# grupo de coletores:
+ 	field_cnpj está dando erro pois é inteiro e o valor do cnpj é maior que 2147483647. mudar para outro tipo de dado que aceite um valor maior.
+# Casa de sementes: 
+	field_phone está dando erro pois é inteiro. mudar para outro tipo de dado que aceite um valor maior.
+	field_addess sempre retorna Unprocessable Entity: validation failed. field_address: This value should not be null. Existe um outro objeto de address que acho que vem por padrão na loja que está escondido no manage display. 
+#

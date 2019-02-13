@@ -17,7 +17,7 @@
 							</template>
 							<template slot="category" slot-scope="data">
 								<p v-if="data.item.category">
-									<small>{{categorias_de_matrizes.find(v => (data.item.category == v.value)).text}}</small>
+									<small>{{origens_de_matrizes.find(v => (data.item.source == v.value)).text}} - {{categorias_de_matrizes.find(v => (data.item.category == v.value)).text}}</small>
 								</p>
 							</template>
 							<template slot="actions" slot-scope="data">
@@ -51,7 +51,7 @@ export default {
 			origens_de_matrizes: origens_de_matrizes,
 			table_fields: [
 				{ key: 'title', label: 'Nome da matriz', sortable: true },
-				{ key: 'category', label: 'Categoria', sortable: true },
+				{ key: 'category', label: 'Origem / Categoria', sortable: true },
 				{ key: 'actions', label: 'Ações', 'class': 'actions' },
 			],
 			seeds_matrixes: null

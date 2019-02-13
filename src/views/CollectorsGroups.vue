@@ -10,10 +10,13 @@
 					<div v-if="collectors_groups">
 						<b-table :fields="table_fields" :items="collectors_groups" :sort-by="'title'" :filter="filters.search">
 							<template slot="title" slot-scope="data">
-								<router-link v-bind:to="'/grupo-de-coletores/'+ data.item.nid">{{data.item.title}}</router-link>
-								<p v-if="data.item.collectors">
-									<small>{{data.item.collectors.length}} {{data.item.collectors.length | pluralize('coletor', 'coletores')}}</small>
-								</p>
+								<router-link v-bind:to="'/grupo-de-coletores/'+ data.item.nid">
+									<strong>{{data.item.title}}</strong>
+									<small v-if="data.item.collectors">
+										<br>
+										{{data.item.collectors.length}} {{data.item.collectors.length | pluralize('coletor', 'coletores')}}
+									</small>
+								</router-link>
 							</template>
 							<template slot="actions" slot-scope="data">
 								<router-link v-bind:to="'/editar-grupo-de-coletores/'+ data.item.nid" class="fa fa-edit btn btn-primary btn-xs "></router-link>

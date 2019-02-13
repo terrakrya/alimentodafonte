@@ -36,12 +36,13 @@
 									<dl class="fruiting_season">
 										<dt>Meses prováveis de coleta</dt>
 										<dd>
-											<b-badge v-for="(month_option, month) in meses" v-bind:class="{ 'btn-success': !!seeds_matrix.field_seed_matrix_collec_month.find((fs) => (fs.value == month))}" :key="month">{{month_option.text}}</b-badge>
+											<b-badge v-for="(month_option, month) in meses" v-bind:class="{ 'btn-success': !!seeds_matrix.field_seed_matrix_collec_month.find((fs) => (fs.value == month))}" :key="month" v-show="!!seeds_matrix.field_seed_matrix_collec_month.find((fs) => (fs.value == month))">{{month_option.text}}</b-badge>
 										</dd>
 									</dl>
 									<dl v-if="present(seeds_matrix.field_seed_matrix_files, 'url')">
 										<dt>Documentos em anexo</dt>
-										<dd><a v-bind:href="seeds_matrix.field_seed_matrix_files[0].url" target="_blank"><i class="fa fa-download"></i> {{ fileName }}</a></dd>
+										<dd v-for="(seed_matrix_file, index) in seeds_matrix.field_seed_matrix_files" :key="index">
+											<a v-bind:href="seed_matrix_file.url" target="_blank"><i class="fa fa-download"></i> {{ fileName(seed_matrix_file) }}</a></dd>
 									</dl>
 								</div>
 							</div>
@@ -67,7 +68,6 @@
 				</div>
 			</div>
 		</div>
-		<pre>{{seeds_matrix}}</pre>
 	</div>
 </template>
 <script>
@@ -93,13 +93,6 @@ export default {
 		}
 	},
 
-	computed: {
-		fileName () {
-			let url = this.seeds_matrix.field_seed_matrix_files[0].url.split('/')
-			return url[url.length -1]
-		}
-	},
-
 	created () {
 		
 		this.loading = true
@@ -112,6 +105,10 @@ export default {
 	},
 
 	methods: {
+    fileName (doc) {
+      var doc_url = (doc.uri ? doc.uri[0].url : doc.url).split('/')
+      return doc_url[doc_url.length -1]
+    },
 		edit () {
 			this.$router.replace('/editar-matriz-de-sementes/'+this.seeds_matrix.nid[0].value)
 		}

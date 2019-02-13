@@ -17,7 +17,7 @@
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Telefone">
-								<b-form-input v-model="form.field_phone[0].value" v-mask="['(##) ####-####', '(##) #####-####']" />
+								<the-mask  v-model="form.field_phone[0].value" :mask="['(##) ####-####', '(##) #####-####']" />
 							</b-form-group>							
 						</div>
 						<div class="col-sm-6">

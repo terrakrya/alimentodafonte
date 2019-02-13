@@ -128,6 +128,13 @@ export default {
 					
 					this.form.field_seed_matrix_code = [{ value: 'teste' }]
 					
+					if (this.present(this.form.geolocation, 'lat')) {
+						this.form.geolocation[0].lat = Number(this.form.geolocation[0].lat)
+					}
+					if (this.present(this.form.geolocation, 'lng')) {
+						this.form.geolocation[0].lng = Number(this.form.geolocation[0].lng)
+					}
+					
 					axios({
 						method: (this.isEditing() ? 'PATCH' : 'POST'),
 						url: 'node' + (this.isEditing() ? '/' + this.$route.params.id : '')+'?_format=json',

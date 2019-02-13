@@ -10,8 +10,10 @@
 					<div v-if="collectors">
 						<b-table :fields="table_fields" :items="collectors" :sort-by="'name'" :filter="filters.search">
 							<template slot="name" slot-scope="data">
-								<router-link v-bind:to="'/coletor/'+ data.item.uid">{{(data.item.nickname && data.item.nickname != data.item.name) ? data.item.nickname : data.item.name}}</router-link>
-								<p v-if="data.item.nickname != data.item.name"><small>{{data.item.name}}</small></p>
+								<router-link v-bind:to="'/coletor/'+ data.item.uid">
+									<strong>{{(data.item.nickname && data.item.nickname != data.item.name) ? data.item.nickname : data.item.name}}</strong>
+									<small v-if="data.item.nickname != data.item.name"><br>{{data.item.name}}</small>
+								</router-link>
 							</template>
 							<template slot="actions" slot-scope="data">
 								<router-link v-bind:to="'/editar-coletor/'+ data.item.uid" class="fa fa-edit btn btn-primary btn-xs "></router-link>
@@ -40,7 +42,7 @@ export default {
 			filters: { search: null },
 			table_fields: [
 				{ key: 'name', label: 'Nome do coletor', sortable: true },
-				{ key: 'city', label: 'Cidade', sortable: true },
+				{ key: 'city', label: 'Localidade', sortable: true },
 				{ key: 'actions', label: 'Ações', 'class': 'actions' },
 			],
 			collectors: null

@@ -14,7 +14,17 @@
 							<h1>
 								{{ collector.field_name[0].value }}								
 							</h1>
-							<p><span>{{ collector.field_contact[0].value }}</span> &bull; <span v-if="present(collector.field_nickname) && collector.field_nickname[0].value != collector.field_name[0].value">{{ collector.field_nickname[0].value }}</span></p>
+							<p>
+								<span>{{ collector.field_contact[0].value }}</span> &bull; 
+								<span v-if="present(collector.field_nickname) && collector.field_nickname[0].value != collector.field_name[0].value">
+									{{ collector.field_nickname[0].value }}
+								</span>
+							</p>
+							<p v-if="collector.field_address && collector.field_address.length > 0">
+								<span>
+									{{collector.field_address | address}}
+								</span>
+							</p>
 							<router-link v-bind:to="'/editar-coletor/'+collector.uid[0].value" class="btn btn-default btn-xs">
 								<i class="fa fa-edit" aria-hidden="true"></i>
 								Editar coletor
@@ -54,13 +64,13 @@
 										<dt>Banco</dt>
 										<dd>{{ bancos.find((banco) => banco.value == collector.field_bank_number[0].value ).text }}</dd>
 									</dl>
-									<dl v-if="present(collector.field_agency_number)">
+									<dl v-if="present(collector.field_agency)">
 										<dt>Agência</dt>
-										<dd>{{ collector.field_agency_number[0].value }}</dd>
+										<dd>{{ collector.field_agency[0].value }}</dd>
 									</dl>
-									<dl v-if="present(collector.field_account_number)">
+									<dl v-if="present(collector.field_bank_account)">
 										<dt>Conta {{ accountType }}</dt>
-										<dd>{{ collector.field_account_number[0].value }}</dd>
+										<dd>{{ collector.field_bank_account[0].value }}</dd>
 									</dl>
 								</div>
 							</div>
@@ -105,11 +115,12 @@ export default {
 
 	computed: {
 		accountType () {
-			if (this.present(this.collector.field_account_type)) {
+			if (this.present(this.collector.field_type_account)) {
 				return tipos_de_conta.find(tipo_de_conta => {
-					return tipo_de_conta.value == this.collector.field_account_type[0].value
+					return tipo_de_conta.value == this.collector.field_type_account[0].value
 				}).text			
 			}
+			return ''
 		}
 	},
 

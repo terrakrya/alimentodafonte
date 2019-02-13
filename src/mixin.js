@@ -41,6 +41,15 @@ export default {
     },
     cnpj: function (value) {
       return CNPJ.format(value);
+    },
+    address: function (address) {
+      return address ? [
+        address[0].address_line1, 
+        address[0].locality, 
+        address[0].administrative_area,
+        address[0].postal_code
+      ].filter(Boolean).join(' - ')
+      : '';
     }
   }
 }

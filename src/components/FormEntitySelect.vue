@@ -20,6 +20,7 @@ import { CoolSelect } from 'vue-cool-select'
 export default {
   name: 'form-entities-select',
   props: ['items', 'form', 'field'],
+  inject: ['$validator'],
   data () {
     return { 
       entity: [],
