@@ -23,9 +23,8 @@ import Loading from './Loading'
 export default {
 
   name: 'pictures-upload',
-
-  props: ['form', 'preview', 'multiple', 'field', 'url'],
-
+  props: ['form', 'preview', 'multiple', 'field', 'url'],  
+  inject: ['$validator'],
   data () {
     return { 
       error: false,
@@ -33,7 +32,6 @@ export default {
       images_preview: this.preview
     }
   },
-
   methods: {
     uploadImages(e) {
       this.loading = true
@@ -80,12 +78,10 @@ export default {
     showError(msg) {
       this.error = msg
     }
-
   },
   components: { 
     'loading': Loading
   }
-
 };
 </script>
 

@@ -10,10 +10,13 @@
 					<div v-if="seeds_networks">
 						<b-table :fields="table_fields" :items="seeds_networks" :sort-by="'title'" :filter="filters.search">
 							<template slot="title" slot-scope="data">
-								<router-link v-bind:to="'/rede-de-sementes/'+ data.item.nid">{{data.item.title}}</router-link>
-								<p v-if="data.item.seeds_houses">
-									<small>{{data.item.seeds_houses.length}} {{data.item.seeds_houses.length | pluralize('casa de sementes', 'casas de sementes')}}</small>
-								</p>
+								<router-link v-bind:to="'/rede-de-sementes/'+ data.item.nid">
+									{{data.item.title}}
+									<small v-if="data.item.seeds_houses">
+										<br>
+										{{data.item.seeds_houses.length}} {{data.item.seeds_houses.length | pluralize('casa de sementes', 'casas de sementes')}}
+									</small>
+								</router-link>
 							</template>
 							<template slot="actions" slot-scope="data">
 								<router-link v-bind:to="'/editar-rede-de-sementes/'+ data.item.nid" class="fa fa-edit btn btn-primary btn-xs "></router-link>
@@ -68,7 +71,7 @@ export default {
 		},
 		remove (id) {
 			if (confirm("Tem certeza que deseja excluír?")) {
-				axios.delete('user/' + id + '?_format=json').then(() => {
+				axios.delete('node/' + id + '?_format=json').then(() => {
 					this.list()
 				}).catch(error => { this.error = error.message })	
 			}

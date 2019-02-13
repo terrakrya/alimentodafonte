@@ -57,7 +57,7 @@
 								</div>
 								<div class="list-group-item">
 									<div class="row" v-if="present(seed.body)"> 
-										<div class="col-sm-6">
+										<div class="col-sm-12">
 											<p class="details" colspan="2" v-html="seed.body[0].processed"></p>
 										</div>
 									</div>
@@ -92,7 +92,7 @@
 										</div>
 									</div>
 									<div class="row" v-if="seed.field_images && seed.field_images.length > 1">
-										<div class="col-sm-4" v-for="(image, index) in seed.field_images">
+										<div class="col-sm-4" v-for="(image, index) in seed.field_images" :key="index">
 											<b-img v-bind:src="image.url" fluid thumbnail :key="index" />
 										</div>
 									</div>

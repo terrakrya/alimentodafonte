@@ -19,7 +19,7 @@
 							</b-form-group>							
 						</div>
 					</div>						
-					<div class="row">
+					<div class="row gray">
 						<div class="col-sm-6">
 							<b-form-group label="Contatos *" description="Liste todas as formas de contato com o grupo">
 								<b-form-textarea v-model="form.field_contact[0].value" v-validate="'required'" name="contact" :rows="3" />
@@ -32,6 +32,7 @@
 							</b-form-group>							
 						</div>
 					</div>	
+					<form-address :form="form" />
 					<div class="row gray">
 						<div class="col-md-3 col-sm-6">
 							<b-form-group label="Banco">
@@ -80,22 +81,21 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Loading from '@/components/Loading'
 import FormHeadline from '@/components/FormHeadline'
 import FormEntitiesSelect from '@/components/FormEntitiesSelect'
+import FormAddress from '@/components/FormAddress'
 import FormSubmit from '@/components/FormSubmit'
 import FieldError from '@/components/FieldError'
 import bancos from '@/data/bancos.json';
-import tipos_de_conta from '@/data/tipos-de-conta.json';
+import tipos_de_conta from '@/data/tipos-de-conta2.json';
 
 export default {
 	
 	name: 'CollectorsGroupForm', 
-	
 	data () {
-
 		return { 
 			error: false,
 			loading: false,
 			sending: false,
-			bancos: bancos,
+			bancos: bancos.map(banco => ({ value: Number(banco.value), text: banco.text })),
 			tipos_de_conta: tipos_de_conta,
 			seed: null,
 			seed_options: [],
@@ -110,12 +110,18 @@ export default {
 				field_agency_number: [{ value: '' }],
 				field_account_number: [{ value: '' }],
 				field_account_type: [{ value: 'corrente' }],
+				field_address: [{
+					country_code: "BR",
+					administrative_area: "",
+					locality: "",
+					postal_code: "",
+					address_line1: ""
+				}],
 				field_seeds: [],
 				field_collectors: [],
 			},
 		}
 	},
-	
 	created () {
 
 		if (this.isEditing()) {
@@ -144,9 +150,7 @@ export default {
 				}
 			})
 		}).catch(error => { this.error = error.message })
-
 	},
-	
 	methods: {
 		edit (id) {
 			this.loading = true
@@ -161,6 +165,7 @@ export default {
 				if (isValid) {
 					this.sending = true
 					this.error = false
+
 					axios({
 						method: (this.isEditing() ? 'PATCH' : 'POST'),
 						url: 'node' + (this.isEditing() ? '/' + this.$route.params.id : '')+'?_format=json',
@@ -176,15 +181,14 @@ export default {
 			})
 		}
 	},
-
 	components: { 
 		Breadcrumb, 
 		Loading, 
 		FormHeadline, 
 		FormEntitiesSelect, 
+		FormAddress, 
 		FormSubmit, 
 		FieldError
 	}
-
 };
 </script>

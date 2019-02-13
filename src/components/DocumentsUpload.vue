@@ -1,7 +1,7 @@
 <template>
   <div class="pictures-upload">
     <b-form-group v-bind:label="'Documento' + (multiple ? 's' : '')" v-bind:description="'Selecione um '+ (multiple ? 'ou mais arquivos' : 'arquivo') +' no formato PDF, JPG, JPEG, KMZ ou DOC, com no máximo 32 MB.'" v-show="!loading">
-      <b-form-file ref="files" id="files" v-bind:multiple="multiple" accept="*" v-on:change="uploadDocuments"></b-form-file>
+      <b-form-file ref="files" id="files" v-bind:multiple="multiple" accept="application/msword, application/vnd.google-earth.kml+xml, image/*, application/pdf" v-on:change="uploadDocuments"></b-form-file>
       <span class="text-danger" v-show="error">{{ error }}</span>
     </b-form-group> 
     <div class="row" v-if="!loading && documents_preview.length > 0">

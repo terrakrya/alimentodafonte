@@ -29,6 +29,14 @@
 										<dt>Contatos</dt>
 										<dd>{{ seeds_network.field_contact[0].value }}</dd>
 									</dl>
+									<dl v-if="present(seeds_network.field_address, 'administrative_area')">
+										<dt>Cidade</dt>
+										<dd>{{ [seeds_network.field_address[0].locality, seeds_network.field_address[0].administrative_area].join(' - ') }}</dd>
+									</dl>
+									<dl v-if="present(seeds_network.field_address, 'address_line1')">
+										<dt>Endereço</dt>
+										<dd>{{ seeds_network.field_address[0].address_line1 }}</dd>
+									</dl>
 								</div>
 							</div>
 						</div>
@@ -48,7 +56,6 @@
 				</div>
 			</div>
 		</div>
-		<pre>{{seeds_network}}</pre>
 	</div>
 </template>
 <script>
