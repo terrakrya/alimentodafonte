@@ -1,6 +1,6 @@
 <template>
   <div>  
-    <cool-select :arrowsDisableInstantSelection="true" placeholder="Busque pelo nome clique para adicionar à lista" v-model="entity" :items="items" item-text="title" @select="addItem()">
+    <cool-select :arrowsDisableInstantSelection="true" placeholder="Busque pelo nome clique para selecionar" v-model="entity" :items="items" item-text="title" @select="addItem()">
       <template slot="item" slot-scope="{ item: option }">
         <div style="display: flex; align-items: center;">
           <img v-if="option.picture" :src="option.picture">
