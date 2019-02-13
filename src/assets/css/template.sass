@@ -888,8 +888,8 @@ th.actions, td.actions
     color: $colorOrange
 
 form 
-  input:not([type="checkbox"]):not([type="radio"])
-    width: 100%
+  input:not([type="checkbox"]):not([type="radio"]):not([class*="col-"])
+    width: 100% 
   legend 
     color: $colorDark
     border: 0
@@ -1014,6 +1014,14 @@ form
     display: block
     small
       color: $colorDark
+.seeds-select  
+  input.weight
+    width: calc(100% - 80px) !important
+  .col-sm-8
+    border: none
+  .col-sm-4
+    border: none
+    padding-left: 0
 @media (max-width: 1024px)
   #wrapper
     .sidebar:not(.active)
@@ -1050,6 +1058,10 @@ form
       &:not(:first-child)
         border-left: 0
         border-top: 1px solid $colorLightGray
+  .seeds-select  
+    .col-sm-4
+      margin-top: 10px
+      padding-left: 15px
 
 @media (max-width: 540px)
   #wrapper

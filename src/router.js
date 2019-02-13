@@ -27,6 +27,9 @@ import CollectionArea from '@/views/CollectionArea.vue'
 import SeedsMatrixes from '@/views/SeedsMatrixes.vue'
 import SeedsMatrixForm from '@/views/SeedsMatrixForm.vue'
 import SeedsMatrix from '@/views/SeedsMatrix.vue'
+import CollectorsRequests from '@/views/CollectorsRequests.vue'
+import CollectorsRequestForm from '@/views/CollectorsRequestForm.vue'
+// import CollectorsRequest from '@/views/CollectorsRequest.vue'
 
 Vue.use(Router)
 
@@ -89,6 +92,11 @@ export default new Router({
     { path: '/matrizes-de-sementes', component: SeedsMatrixes, beforeEnter: requireAuth },
     { path: '/cadastrar-matriz-de-sementes', component: SeedsMatrixForm, beforeEnter: requireAuth },
     { path: '/editar-matriz-de-sementes/:id', component: SeedsMatrixForm, beforeEnter: requireAuth },
-    { path: '/matriz-de-sementes/:id', component: SeedsMatrix, beforeEnter: requireAuth }
+    { path: '/matriz-de-sementes/:id', component: SeedsMatrix, beforeEnter: requireAuth },
+
+    { path: '/pedidos-para-coletores', component: CollectorsRequests, beforeEnter: requireAuth },
+    { path: '/cadastrar-pedido-para-coletores', component: CollectorsRequestForm, beforeEnter: requireAuth },
+    { path: '/editar-pedido-para-coletores/:id', component: CollectorsRequestForm, beforeEnter: requireAuth },
+    // { path: '/pedido-para-coletores/:id', component: CollectorsRequest, beforeEnter: requireAuth }
   ]
 })

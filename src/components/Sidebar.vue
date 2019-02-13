@@ -35,8 +35,8 @@
           <li>
             <a><i class="fa fa-cogs"></i><span>Operacional</span><i class="fa fa-chevron-down"></i></a>
             <ul class="nav">
-              <li>
-                <a href="#"><span>Pedidos para Coletores</span></a>
+              <li @click="toggleMenu">
+                <router-link to="/pedidos-para-coletores"><span>Pedidos para Coletores</span></router-link>
               </li>
               <li>
                 <a href="#"><span>Estoque</span></a>
