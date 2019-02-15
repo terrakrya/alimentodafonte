@@ -43,7 +43,7 @@ export default {
 			filters: { search: null },
 			table_fields: [
 				{ key: 'title', label: 'Título', sortable: true },
-				{ key: 'nid', label: 'Cidade', sortable: true },
+				{ key: 'nid', label: 'Localidade', sortable: true },
 				{ key: 'actions', label: 'Ações', 'class': 'actions' },
 			],
 			collectors_requests: null

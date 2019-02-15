@@ -6,7 +6,7 @@
 				<list-headline name="Casas de semente" addUrl="/cadastrar-casa-de-sementes" v-bind:filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading v-bind:loading="!seeds_houses && !error" msg="Carregando lista de grupos" />
+					<loading v-bind:loading="!seeds_houses && !error" msg="Carregando lista de casas" />
 					<div v-if="seeds_houses">
 						<b-table :fields="table_fields" :items="seeds_houses" :sort-by="'name'" :filter="filters.search">
 							<template slot="name" slot-scope="data">
@@ -42,7 +42,7 @@ export default {
 			filters: { search: null },
 			table_fields: [
 				{ key: 'name', label: 'Nome da casa', sortable: true },
-				{ key: 'city', label: 'Cidade', sortable: true },
+				{ key: 'city', label: 'Localidade', sortable: true },
 				{ key: 'actions', label: 'Ações', 'class': 'actions' },
 			],
 			seeds_houses: null
