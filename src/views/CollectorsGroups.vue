@@ -45,7 +45,7 @@ export default {
 			filters: { search: null },
 			table_fields: [
 				{ key: 'title', label: 'Grupo', sortable: true },
-				{ key: 'city', label: 'Cidade', sortable: true },
+				{ key: 'city', label: 'Localidade', sortable: true },
 				{ key: 'actions', label: 'Ações', 'class': 'actions' },
 			],
 			collectors_groups: null

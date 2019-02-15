@@ -6,7 +6,7 @@
 				<list-headline name="Matrizes de sementes" addUrl="/cadastrar-matriz-de-sementes" v-bind:filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading v-bind:loading="!seeds_matrixes && !error" msg="Carregando lista de grupos" />
+					<loading v-bind:loading="!seeds_matrixes && !error" msg="Carregando lista de matrizes" />
 					<div v-if="seeds_matrixes">
 						<b-table :fields="table_fields" :items="seeds_matrixes" :sort-by="'title'" :filter="filters.search">
 							<template slot="title" slot-scope="data">

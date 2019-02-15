@@ -6,7 +6,7 @@
 				<list-headline name="Áreas de coleta" addUrl="/cadastrar-area-de-coleta" v-bind:filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading v-bind:loading="!collection_areas && !error" msg="Carregando lista de grupos" />
+					<loading v-bind:loading="!collection_areas && !error" msg="Carregando lista de áreas" />
 					<div v-if="collection_areas">
 						<b-table :fields="table_fields" :items="collection_areas" :sort-by="'title'" :filter="filters.search">
 							<template slot="title" slot-scope="data">
@@ -45,7 +45,7 @@ export default {
 			filters: { search: null },
 			table_fields: [
 				{ key: 'title', label: 'Nome da área', sortable: true },
-				{ key: 'city', label: 'Cidade', sortable: true },
+				{ key: 'city', label: 'Localidade', sortable: true },
 				{ key: 'actions', label: 'Ações', 'class': 'actions' },
 			],
 			collection_areas: null
