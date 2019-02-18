@@ -38,8 +38,8 @@
               <li @click="toggleMenu">
                 <router-link to="/pedidos-para-coletores"><span>Pedidos para Coletores</span></router-link>
               </li>
-              <li>
-                <a href="#"><span>Estoque</span></a>
+              <li @click="toggleMenu">
+                <router-link to="/entrada-de-estoque"><span>Estoque</span></router-link>
               </li>
               <li>
                 <a href="#"><span>Relatórios</span></a>

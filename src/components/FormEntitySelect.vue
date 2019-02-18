@@ -1,12 +1,12 @@
 <template>
   <div>  
-    <cool-select :arrowsDisableInstantSelection="true" placeholder="Busque pelo nome clique para selecionar" v-model="entity" :items="items" item-text="title" @select="addItem()">
+    <cool-select :arrowsDisableInstantSelection="true" placeholder="Busque pelo nome clique para selecionar" v-model="entity" :items="items" item-text="title" @select="addItem(); callback(entity)">
       <template slot="item" slot-scope="{ item: option }">
         <div style="display: flex; align-items: center;">
           <img v-if="option.picture" :src="option.picture">
           <div>
             <strong>{{ option.title }}</strong>
-            <br>
+            <br v-if="option.description && option.description">
             <small>{{ option.description }}</small>
           </div>
         </div>
@@ -19,7 +19,7 @@
 import { CoolSelect } from 'vue-cool-select'
 export default {
   name: 'form-entities-select',
-  props: ['items', 'form', 'field'],
+  props: ['items', 'form', 'field', 'input'],
   inject: ['$validator'],
   data () {
     return { 
@@ -35,6 +35,11 @@ export default {
     }, 
     removeItem (id) {
       this.form[this.field] = this.form[this.field].filter(item => (item.target_id != id))
+    },
+    callback (entity) {
+      if (this.input) {
+        this.input(entity)
+      }
     }
   },
   components: {

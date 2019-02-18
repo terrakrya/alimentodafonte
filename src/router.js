@@ -30,6 +30,9 @@ import SeedsMatrix from '@/views/SeedsMatrix.vue'
 import CollectorsRequests from '@/views/CollectorsRequests.vue'
 import CollectorsRequestForm from '@/views/CollectorsRequestForm.vue'
 // import CollectorsRequest from '@/views/CollectorsRequest.vue'
+import Stock from '@/views/Stock.vue'
+import StockInForm from '@/views/StockInForm.vue'
+import StockOutForm from '@/views/StockOutForm.vue'
 
 Vue.use(Router)
 
@@ -98,5 +101,10 @@ export default new Router({
     { path: '/cadastrar-pedido-para-coletores', component: CollectorsRequestForm, beforeEnter: requireAuth },
     { path: '/editar-pedido-para-coletores/:id', component: CollectorsRequestForm, beforeEnter: requireAuth },
     // { path: '/pedido-para-coletores/:id', component: CollectorsRequest, beforeEnter: requireAuth }
+
+    { path: '/estoque', component: Stock, beforeEnter: requireAuth },
+    { path: '/entrada-de-estoque', component: StockInForm, beforeEnter: requireAuth },
+    { path: '/saida-de-estoque', component: StockOutForm, beforeEnter: requireAuth },
+
   ]
 })
