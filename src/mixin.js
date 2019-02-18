@@ -42,6 +42,9 @@ export default {
     cnpj: function (value) {
       return CNPJ.format(value);
     },
+    data: function (value) {
+      return value.toLocaleDateString('pt-BR');
+    },
     address: function (address) {
       return address ? [
         address[0].address_line1, 

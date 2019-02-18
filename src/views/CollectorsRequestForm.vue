@@ -25,27 +25,26 @@
 					</div>					
 					<div class="row">
 						<div class="col-sm-12 seeds-select">
-							<b-form-group label="Sementes">
-								<div class="row" v-for="(field_paragraph, index) in form.field_paragraph_seeds" :key="index">
-									<cool-select :arrowsDisableInstantSelection="true" placeholder="Selecione a semente" v-model="seeds[index].target_id" :items="seeds_options" item-text="title" item-value="id" class="col-sm-8">
-							      <template slot="item" slot-scope="{ item: option }">
-							        <div style="display: flex; align-items: center;">
-							          <img v-if="option.picture" :src="option.picture">
-							          <div>
-							            <strong>{{ option.title }}</strong>
-							            <br>
-							            <small>{{ option.description }}</small>
-							          </div>
-							        </div>
-							      </template>
-							    </cool-select>
-							    <div class="col-sm-4">
-								    <input class="weight" placeholder="Peso" /> Kg
-								    <b-button class="btn btn-xs btn-danger fa fa-trash pull-right"></b-button>
-								  </div>
-							    <br>
-							    <br>
-							  </div>
+							<b-form-group label="Adicionar semente">
+								<cool-select :arrowsDisableInstantSelection="true" placeholder="Selecione a semente" :items="seeds_options" item-text="title" class="col-sm-6">
+									<template slot="item" slot-scope="{ item: option }">
+										<div style="display: flex; align-items: center;">
+											<img v-if="option.picture" :src="option.picture">
+											<div>
+												<strong>{{ option.title }}</strong>
+												<br>
+												<small>{{ option.description }}</small>
+											</div>
+										</div>
+									</template>
+								</cool-select>
+								<div class="col-sm-6">
+									<input v-model="seed_form.weight" class="weight" placeholder="Peso" /> Kg
+									<b-button class="btn btn-primary fa fa-plus pull-right" @click="addSeed()">Adicionar</b-button>
+								</div>
+								<br>
+								<br>
+								<loading v-bind:loading="sending" msg="Adicionando semente" />
 							</b-form-group>							
 						</div>					
 					</div>					
@@ -53,6 +52,7 @@
 				</b-form>
 			</div>				
 		</div>
+		<pre>{{seed_form}}</pre>
 		<pre>{{form}}</pre>
 	</div>
 </template>
@@ -64,13 +64,12 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Loading from '@/components/Loading'
 import FormHeadline from '@/components/FormHeadline'
 import FormEntitySelect from '@/components/FormEntitySelect'
-import FormEntitiesSelect from '@/components/FormEntitiesSelect'
 import FormSubmit from '@/components/FormSubmit'
 import FieldError from '@/components/FieldError'
 
 export default {
 	
-	name: 'SeedsHouseForm', 
+	name: 'CollectorsRequestForm', 
 	
 	data () {
 
@@ -78,6 +77,8 @@ export default {
 			error: false,
 			loading: false,
 			sending: false,
+			sending_seed: false,
+			error_seed: false,
 			seed: null,
 			seeds_options: [],
 			seeds_house_options: [],
@@ -86,12 +87,20 @@ export default {
 			seeds: [],
 			form: {
 				type: [{ target_id: "requests_for_collectors" }],
-				title: [{ value: '' }],
+				title: [{ value: Date.now() }],
 				field_requests_seeds_house: [],
 				field_requests_group: [],
 				field_requests_collector: [],
-				field_paragraph_seeds: [],
+				field_paragraph_seeds: [{target_id: 3}],
 			},
+			seed_form: {
+				type: [{ target_id: "collectors_seeds_requests" }],
+				parent_id: [{ value: "93" }],
+				parent_type: [{ value: "node" }],
+				parent_field_name: [{ value: "field_paragraph_seeds" }],
+				field_paragraph_seed: [{ target_id: "3" }],
+				field_paragraph_weight: [{ value: "0" }],
+			}
 		}
 	},
 	
@@ -107,7 +116,7 @@ export default {
 					id: collectors_group.nid[0].value,
 					title: collectors_group.title[0].value,
 					city: collectors_group.field_address.length ? 
-							[collectors_group.field_address[0].locality, collectors_group.field_address[0].administrative_area].filter(Boolean).join(' - ') : ''
+					[collectors_group.field_address[0].locality, collectors_group.field_address[0].administrative_area].filter(Boolean).join(' - ') : ''
 				}
 			})
 		}).catch(error => { this.error = error.message })
@@ -140,7 +149,7 @@ export default {
 					id: seeds_house.store_id[0].value,
 					title: seeds_house.name[0].value,
 					city: seeds_house.field_address.length ? 
-							[seeds_house.field_address[0].locality, seeds_house.field_address[0].administrative_area].filter(Boolean).join(' - ') : ''
+					[seeds_house.field_address[0].locality, seeds_house.field_address[0].administrative_area].filter(Boolean).join(' - ') : ''
 				}
 			})
 		}).catch(error => { this.error = error.message })
@@ -176,7 +185,22 @@ export default {
 					}).catch(error => { this.error = error.response.data.message; this.sending = false })
 				}
 			})
+		},
+
+		addSeed () {
+			this.sending_seed = true
+			this.error_seed = false
+
+			axios({
+				method: 'POST',
+				url: '/entity/paragraph?_format=json',
+				data: this.seed_form
+			}).then(resp => {
+				console.log(resp)
+				this.sending = false
+			}).catch(error => { this.error_seed = error.response.data.message; this.sending = false })
 		}
+
 	},
 
 	components: { 
@@ -184,7 +208,6 @@ export default {
 		Loading, 
 		FormHeadline, 
 		FormEntitySelect, 
-		FormEntitiesSelect, 
 		FormSubmit, 
 		FieldError,
 		CoolSelect

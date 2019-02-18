@@ -1,5 +1,5 @@
 <template>
-	<div class="dashboard">
+	<div class="seeds">
 		<breadcrumb active="Sementes" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">

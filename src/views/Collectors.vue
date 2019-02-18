@@ -1,5 +1,5 @@
 <template>
-	<div class="dashboard">
+	<div class="collectors">
 		<breadcrumb active="Coletores" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
