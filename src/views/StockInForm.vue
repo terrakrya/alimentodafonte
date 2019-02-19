@@ -224,8 +224,8 @@ export default {
 				url: 'node' + (this.isEditing() ? '/' + this.$route.params.id : '')+'?_format=json',
 				data: this.form
 			}).then(resp => {
-				var collectors_request = resp.data
-				if (collectors_request && collectors_request.nid) {
+				var stock_in = resp.data
+				if (stock_in && stock_in.nid) {
 					this.$router.replace('/estoque')
 				}
 				this.sending = false						
