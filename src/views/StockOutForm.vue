@@ -12,42 +12,32 @@
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Casa de sementes *" >
-								<form-entity-select :input="seedsHouseSelected" :items="seeds_house_options" :form="form" field="field_seeds_house" />
+								<form-entity-select :input="seedsHouseSelected" :items="seeds_house_options" :form="form" field="field_seeds_house_out" />
 							</b-form-group>							
 						</div>					
 						<div class="col-sm-6">
 							<b-form-group label="Semente *" >
-								<form-entity-select :input="seedSelected" :items="seed_options" :form="form" field="field_seed" />
+								<form-entity-select :input="seedSelected" :items="seed_options" :form="form" field="field_seed_out" />
 							</b-form-group>							
 						</div>					
 					</div>					
 					<div class="row">
 						<div class="col-sm-6">
-							<b-form-group label="Coletor" >
-								<form-entity-select :items="collector_options" :form="form" field="field_collector" />
+							<b-form-group label="Comprador" >
+								<form-entity-select :items="client_options" :form="form" field="field_buyer" />
 							</b-form-group>							
 						</div>					
 						<div class="col-sm-6">
-							<b-form-group label="Grupo de coletores" >
-								<form-entity-select :items="collectors_group_options" :form="form" field="field_group" />
-							</b-form-group>							
-						</div>					
-					</div>					
-					<div class="row">
-						<div class="col-sm-4">
 							<b-form-group label="Quantidade (Kg) *">
-								<b-form-input v-model="form.field_qty[0].value" type="number" v-validate="'required'" name="field_qty" />
-								<field-error v-bind:msg="veeErrors" field="field_qty" />
+								<b-form-input v-model="form.field_qty_out[0].value" type="number" v-validate="'required'" name="field_qty_out" />
+								<field-error v-bind:msg="veeErrors" field="field_qty_out" />
 							</b-form-group>
 						</div>
-						<div class="col-sm-4">
-							<b-form-group label="Data da coleta">
-								<b-form-input v-model="form.field_collection_date[0].value" type="date" />
-							</b-form-group>
-						</div>
-						<div class="col-sm-4">
+					</div>					
+					<div class="row">
+						<div class="col-sm-6">
 							<b-form-group label="Lote *" v-if="lot_filtered_options.length && !add_new_lot"> 
-								<form-entity-select :items="lot_filtered_options" :form="form" field="field_lot" />
+								<form-entity-select :items="lot_filtered_options" :form="form" field="field_lot_out" />
 								<a @click="newLot" class="pull-right pointer">Adicionar novo lote</a>
 							</b-form-group>
 							<b-form-group label="Novo lote *" v-if="!lot_filtered_options.length || add_new_lot" description="Um novo lote será criado com esse código"> 
@@ -55,6 +45,12 @@
 								<field-error v-bind:msg="veeErrors" field="new_lot" />
 							</b-form-group>
 						</div>
+						<div class="col-sm-6">
+							<b-form-group label="Modos de saída" >
+								<b-form-radio-group v-model="form.field_out_modes[0].value" :options="modos_de_saida" stacked v-validate="'required'" name="field_out_modes" />
+								<field-error v-bind:msg="veeErrors" field="field_out_modes" />
+							</b-form-group>							
+						</div>					
 					</div>						
 
 					<form-submit v-bind:error="error" />
@@ -74,10 +70,11 @@ import Loading from '@/components/Loading'
 import FormEntitySelect from '@/components/FormEntitySelect'
 import FormSubmit from '@/components/FormSubmit'
 import FieldError from '@/components/FieldError'
+import modos_de_saida from '@/data/modos-de-saida.json'
 
 export default {
 	
-	name: 'StockInForm', 
+	name: 'StockOutForm', 
 	
 	data () {
 
@@ -85,58 +82,38 @@ export default {
 			error: false,
 			loading: false,
 			sending: false,
-			sending_seed: false,
-			error_seed: false,
-			seed: null,
 			seed_options: [],
 			seeds_house_options: [],
-			collectors_group_options: [],
-			collector_options: [],
+			client_options: [],
 			lot_filtered_options: [],
 			lot_options: [],
-			seeds: [],
 			new_lot: null,
 			add_new_lot: false,
 			price: null,
+			modos_de_saida: modos_de_saida,
 			form: {
-				type: [{ target_id: "stock_in" }],
+				type: [{ target_id: "stock_out" }],
 				title: [{ value: 'saida-'+Date.now() }], 
-				field_price: [{ value: 0 }],
-				field_seeds_house: [],
-				field_group: [],
-				field_collector: [],
-				field_seed: [],
-				field_qty: [{ value: "" }],
-				field_lot: [{ target_id: "" }],
-				field_collection_date: [{ value: "" }]
+				field_price_out: [{ value: 0 }],
+				field_seeds_house_out: [],
+				field_buyer: [],
+				field_out_modes: [{ value: ""}],
+				field_seed_out: [],
+				field_qty_out: [{ value: "" }],
+				field_lot_out: [{ target_id: "" }]
 			}
 		}
 	},
 	
 	created () {
 
-		if (this.isEditing()) {
-			this.edit(this.$route.params.id)
-		}
-		
-		axios.get('rest/collectors-groups?_format=json').then(response => {
-			this.collectors_group_options = response.data.map(collectors_group => {
+		axios.get('rest/clients?_format=json').then(response => {
+			this.client_options = response.data.map(client => {
 				return { 
-					id: collectors_group.nid[0].value,
-					title: collectors_group.title[0].value,
-					description: collectors_group.field_address.length ? 
-					[collectors_group.field_address[0].locality, collectors_group.field_address[0].administrative_area].filter(Boolean).join(' - ') : ''
-				}
-			})
-		}).catch(error => { this.error = error.message })
-
-		axios.get('rest/collectors?_format=json').then(response => {
-			this.collector_options = response.data.map(collector => {
-				return { 
-					id: collector.uid[0].value,
-					title: collector.field_name[0].value,
-					description: collector.field_nickname[0].value,
-					picture: this.present(collector.user_picture, 'url') ? collector.user_picture[0].url : null,
+					id: client.uid[0].value,
+					title: client.field_name[0].value,
+					description: client.field_nickname[0].value,
+					picture: this.present(client.user_picture, 'url') ? client.user_picture[0].url : null,
 				}
 			})
 		}).catch(error => { this.error = error.message })
@@ -179,37 +156,29 @@ export default {
 	},
 	
 	methods: {
-		edit (id) {
-			this.loading = true
-			axios.get('node/' + id + '?_format=json').then(response => {
-				var data = response.data
-				this.apiDataToForm(this.form, data)
-				this.loading = false
-			}).catch(error => { this.error = error.message; this.loading = false });
-		},
 		save () {
 			this.$validator.validate().then(isValid => {
 				if (isValid) {
 					this.sending = true
 					this.error = false
 
-					if (this.present(this.form.field_qty)) {
-						this.form.field_qty[0].value = Number(this.form.field_qty[0].value)
+					if (this.present(this.form.field_qty_out)) {
+						this.form.field_qty_out[0].value = Number(this.form.field_qty_out[0].value)
 
 						if (this.price) {
-							this.form.field_price = [{ value: this.price * this.form.field_qty[0].value }]
+							this.form.field_price_out = [{ value: this.price * this.form.field_qty_out[0].value }]
 						}
 					}
 
-					if (!this.present(this.form.field_lot) && this.new_lot) {
+					if (!this.present(this.form.field_lot_out) && this.new_lot) {
 						axios.post('taxonomy/term', {
 							vid: [{ target_id: 'seed_lot' }], 
 							name: [{ value: this.new_lot }], 
 							field_code: [{ value: this.new_lot }], 
-							field_seeds_house: this.form.field_seeds_house, 
-							field_species: this.form.field_seed, 
+							field_seeds_house: this.form.field_seeds_house_out, 
+							field_species: this.form.field_seed_out, 
 						}).then(resp => {
-							this.form.field_lot = [{ target_id: resp.data.tid[0].value }]
+							this.form.field_lot_out = [{ target_id: resp.data.tid[0].value }]
 							this.saveItem()
 						}).catch(error => { this.error = error.message; this.sending = false })
 					} else {
@@ -224,8 +193,8 @@ export default {
 				url: 'node' + (this.isEditing() ? '/' + this.$route.params.id : '')+'?_format=json',
 				data: this.form
 			}).then(resp => {
-				var collectors_request = resp.data
-				if (collectors_request && collectors_request.nid) {
+				var stock_out = resp.data
+				if (stock_out && stock_out.nid) {
 					this.$router.replace('/estoque')
 				}
 				this.sending = false						
@@ -242,14 +211,14 @@ export default {
 		},
 		newLot () {
 			this.add_new_lot = true
-			this.form.field_lot = [{ target_id: '' }]
+			this.form.field_lot_out = [{ target_id: '' }]
 		},
 		filterOptions () {
-			if (this.present(this.form.field_seed, 'target_id') && this.present(this.form.field_seeds_house, 'target_id')) {
+			if (this.present(this.form.field_seed_out, 'target_id') && this.present(this.form.field_seeds_house_out, 'target_id')) {
 				this.lot_filtered_options = this.lot_options.filter(lot => {
-					return lot.seed == this.form.field_seed[0].target_id && lot.seeds_house == this.form.field_seeds_house[0].target_id
+					return lot.seed == this.form.field_seed_out[0].target_id && lot.seeds_house == this.form.field_seeds_house_out[0].target_id
 				})
-				this.form.field_lot = [{ target_id: '' }]
+				this.form.field_lot_out = [{ target_id: '' }]
 			}
 		}
 	},

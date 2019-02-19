@@ -11,6 +11,7 @@ $colorWhite: #ffffff
 $colorRed: #dc3545
 $colorDark: #333
 $colorLightDark: #555
+$colorBlue: #4DB6AC
 
 body 
   background: $colorLightBrown
@@ -113,15 +114,15 @@ a, a:hover, a:focus
 
 
 .btn-primary
-  background-color: $colorOrange
-  border-color: $colorOrange
+  background-color: $colorBlue
+  border-color: $colorBlue
   color: $colorWhite
   &:hover
-    background-color: $colorOrange
-    border-color: $colorOrange
+    background-color: $colorBlue
+    border-color: $colorBlue
   &:focus
-    background-color: $colorOrange
-    border-color: $colorOrange
+    background-color: $colorBlue
+    border-color: $colorBlue
 
 .help-button
   li > a
@@ -162,6 +163,10 @@ a, a:hover, a:focus
     text-align: right
     a
       margin: 5px
+    .btn
+      background-color: $colorOrange
+      border-color: $colorOrange
+      font-size: 14px
 
 .panel 
   .panel-body
@@ -1021,6 +1026,7 @@ form
       color: $colorDark
   .b-table-bottom-row
     background-color: $colorLightGray
+
 .seeds-select  
   input.weight
     width: calc(100% - 172px) !important
