@@ -1,16 +1,16 @@
 <template>
 	<div class="collectors-group-form">
-		<breadcrumb v-bind:links="[['Grupos de coletores', '/grupos-de-coletores']]" v-bind:active="isEditing() ? form.title[0].value : 'Cadastrar'" />
+		<breadcrumb :links="[['Grupos de coletores', '/grupos-de-coletores']]" :active="isEditing() ? form.title[0].value : 'Cadastrar'" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="grupo de coletores" />
-				<loading v-bind:loading="loading" />
+				<loading :loading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Nome do grupo *">
 								<b-form-input v-model="form.title[0].value" v-validate="'required'" name="title" />
-								<field-error v-bind:msg="veeErrors" field="title" />
+								<field-error :msg="veeErrors" field="title" />
 							</b-form-group>							
 						</div>
 						<div class="col-sm-6">
@@ -23,7 +23,7 @@
 						<div class="col-sm-6">
 							<b-form-group label="Contatos *" description="Liste todas as formas de contato com o grupo">
 								<b-form-textarea v-model="form.field_contact[0].value" v-validate="'required'" name="contact" :rows="3" />
-								<field-error v-bind:msg="veeErrors" field="contact" />
+								<field-error :msg="veeErrors" field="contact" />
 							</b-form-group>							
 						</div>
 						<div class="col-sm-6">
@@ -68,7 +68,7 @@
 							</b-form-group>							
 						</div>					
 					</div>					
-					<form-submit v-bind:error="error" />
+					<form-submit :error="error" :sending="sending" />
 				</b-form>
 			</div>				
 		</div>

@@ -3,20 +3,20 @@
 		<breadcrumb active="Coletores" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
-				<list-headline name="Coletores" addUrl="/cadastrar-coletor" v-bind:filters="filters"/>
+				<list-headline name="Coletores" addUrl="/cadastrar-coletor" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading v-bind:loading="!collectors && !error" msg="Carregando lista de coletores" />
+					<loading :loading="!collectors && !error" msg="Carregando lista de coletores" />
 					<div v-if="collectors">
-						<b-table :fields="table_fields" :items="collectors" :sort-by="'name'" :filter="filters.search">
+						<b-table stacked="md" :fields="table_fields" :items="collectors" :sort-by="'name'" :filter="filters.search">
 							<template slot="name" slot-scope="data">
-								<router-link v-bind:to="'/coletor/'+ data.item.uid">
+								<router-link :to="'/coletor/'+ data.item.uid">
 									<strong>{{(data.item.nickname && data.item.nickname != data.item.name) ? data.item.nickname : data.item.name}}</strong>
 									<small v-if="data.item.nickname != data.item.name"><br>{{data.item.name}}</small>
 								</router-link>
 							</template>
 							<template slot="actions" slot-scope="data">
-								<router-link v-bind:to="'/editar-coletor/'+ data.item.uid" class="fa fa-edit btn btn-primary btn-xs "></router-link>
+								<router-link :to="'/editar-coletor/'+ data.item.uid" class="fa fa-edit btn btn-primary btn-xs "></router-link>
 								<a @click="remove(data.item.uid)" class="fa fa-trash btn btn-danger btn-xs"></a>
 							</template>
 						</b-table>
@@ -41,7 +41,7 @@ export default {
 			error: false,
 			filters: { search: null },
 			table_fields: [
-				{ key: 'name', label: 'Nome do coletor', sortable: true },
+				{ key: 'name', label: 'Coletor', sortable: true },
 				{ key: 'city', label: 'Localidade', sortable: true },
 				{ key: 'actions', label: 'Ações', 'class': 'actions' },
 			],

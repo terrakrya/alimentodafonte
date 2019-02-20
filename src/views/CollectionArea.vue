@@ -1,10 +1,10 @@
 <template>
 	<div class="collection-area">
-		<breadcrumb v-bind:links="[['Áreas de coleta', '/areas-de-coleta']]" active="Dados da área" />
+		<breadcrumb :links="[['Áreas de coleta', '/areas-de-coleta']]" active="Dados da área" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-				<loading v-bind:loading="loading" />
+				<loading :loading="loading" />
 				<div v-if="collection_area && !loading">
 					<div class="row item-title">
 						<div class="col-md-10">
@@ -34,7 +34,7 @@
 									</dl>
 									<dl v-if="present(collection_area.field_upload, 'url')">
 										<dt>Documento anexo</dt>
-										<dd><a v-bind:href="collection_area.field_upload[0].url" target="_blank"><i class="fa fa-download"></i> {{ fileName }}</a></dd>
+										<dd><a :href="collection_area.field_upload[0].url" target="_blank"><i class="fa fa-download"></i> {{ fileName }}</a></dd>
 									</dl>
 								</div>
 							</div>

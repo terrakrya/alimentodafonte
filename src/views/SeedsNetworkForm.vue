@@ -1,16 +1,16 @@
 <template>
 	<div class="seeds-network-form">
-		<breadcrumb v-bind:links="[['Redes de sementes', '/redes-de-sementes']]" v-bind:active="isEditing() ? form.title[0].value : 'Cadastrar'" />
+		<breadcrumb :links="[['Redes de sementes', '/redes-de-sementes']]" :active="isEditing() ? form.title[0].value : 'Cadastrar'" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="rede de sementes" />
-				<loading v-bind:loading="loading" />
+				<loading :loading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-12">
 							<b-form-group label="Nome da rede *">
 								<b-form-input v-model="form.title[0].value" v-validate="'required'" name="title" />
-								<field-error v-bind:msg="veeErrors" field="title" />
+								<field-error :msg="veeErrors" field="title" />
 							</b-form-group>							
 						</div>
 					</div>						
@@ -18,7 +18,7 @@
 						<div class="col-sm-6">
 							<b-form-group label="Contatos" description="Liste todas as formas de contato com a rede">
 								<b-form-textarea v-model="form.field_contact[0].value" :rows="3" />
-								<field-error v-bind:msg="veeErrors" field="contact" />
+								<field-error :msg="veeErrors" field="contact" />
 							</b-form-group>							
 						</div>
 						<div class="col-sm-6">
@@ -34,7 +34,7 @@
 							</b-form-group>							
 						</div>					
 					</div>					
-					<form-submit v-bind:error="error" />
+					<form-submit :error="error" :sending="sending" />
 				</b-form>
 			</div>				
 		</div>

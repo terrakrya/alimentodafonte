@@ -1,13 +1,13 @@
 <template>
 	<div class="stock-in-form">
-		<breadcrumb v-bind:links="[['Estoque', '/estoque']]" active="Saída de estoque" />
+		<breadcrumb :links="[['Estoque', '/estoque']]" active="Saída de estoque" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<h1>
-					Saída de estoque
+					Cadastrar saída
 				</h1>
 				<br>
-				<loading v-bind:loading="loading" />
+				<loading :loading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-6">
@@ -30,7 +30,7 @@
 						<div class="col-sm-6">
 							<b-form-group label="Quantidade (Kg) *">
 								<b-form-input v-model="form.field_qty_out[0].value" type="number" v-validate="'required'" name="field_qty_out" />
-								<field-error v-bind:msg="veeErrors" field="field_qty_out" />
+								<field-error :msg="veeErrors" field="field_qty_out" />
 							</b-form-group>
 						</div>
 					</div>					
@@ -42,24 +42,20 @@
 							</b-form-group>
 							<b-form-group label="Novo lote *" v-if="!lot_filtered_options.length || add_new_lot" description="Um novo lote será criado com esse código"> 
 								<b-form-input v-model="new_lot" v-validate="'required'" name="new_lot" />
-								<field-error v-bind:msg="veeErrors" field="new_lot" />
+								<field-error :msg="veeErrors" field="new_lot" />
 							</b-form-group>
 						</div>
 						<div class="col-sm-6">
-							<b-form-group label="Modos de saída" >
+							<b-form-group label="Modos de saída *" >
 								<b-form-radio-group v-model="form.field_out_modes[0].value" :options="modos_de_saida" stacked v-validate="'required'" name="field_out_modes" />
-								<field-error v-bind:msg="veeErrors" field="field_out_modes" />
+								<field-error :msg="veeErrors" field="field_out_modes" />
 							</b-form-group>							
 						</div>					
 					</div>						
-
-					<form-submit v-bind:error="error" />
+					<form-submit :error="error" :sending="sending" />
 				</b-form>
 			</div>				
 		</div>
-		<pre>{{price}}</pre>
-		<pre>{{lot_filtered_options}}</pre>
-		<pre>{{form}}</pre>
 	</div>
 </template>
 
@@ -195,7 +191,22 @@ export default {
 			}).then(resp => {
 				var stock_out = resp.data
 				if (stock_out && stock_out.nid) {
-					this.$router.replace('/estoque')
+					axios.get('product/'+stock_out.field_seed_out[0].target_id+'?_format=json').then(seed => {
+						axios.get('/entity/commerce_product_variation/'+seed.data.variations[0].target_id+'?_format=json').then(variation => {
+
+							let variation_form = { type:[{ target_id: "default" }] }
+
+							if (this.present(variation.data.field_stock)){
+								variation_form.field_stock = [{value: Number(variation.data.field_stock[0].value) - Number(stock_out.field_qty_out[0].value)}]
+							} else {
+								variation_form.field_stock = [{value: Number(stock_out.field_qty_out[0].value)}]
+							}
+							axios.patch('/entity/commerce_product_variation/'+seed.data.variations[0].target_id+'?_format=json', variation_form).then(v => {
+								this.sending = false
+								this.$router.replace('/estoque')
+							})
+						})
+					}).catch(error => { this.error = error.message; this.sending = false })
 				}
 				this.sending = false						
 			}).catch(error => { this.error = error.response.data.message; this.sending = false })

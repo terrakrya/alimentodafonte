@@ -1,10 +1,10 @@
 <template>
 	<div class="seeds-network">
-		<breadcrumb v-bind:links="[['Redes de sementes', '/redes-de-sementes']]" active="Dados da rede" />
+		<breadcrumb :links="[['Redes de sementes', '/redes-de-sementes']]" active="Dados da rede" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-				<loading v-bind:loading="loading" />
+				<loading :loading="loading" />
 				<div v-if="seeds_network && !loading">
 					<div class="row item-title">
 						<div class="col-md-10">
@@ -46,7 +46,7 @@
 									<strong>Casas de sementes</strong>
 								</div>
 								<div class="list-group-item" v-for="(seeds_house, index) in seeds_houses" :key="index" >
-									<router-link v-bind:to="'/casa-de-sementes/'+seeds_house.store_id[0].value">
+									<router-link :to="'/casa-de-sementes/'+seeds_house.store_id[0].value">
 										<span v-if="present(seeds_house.name)">{{seeds_house.name[0].value}}</span>
 									</router-link>
 								</div>

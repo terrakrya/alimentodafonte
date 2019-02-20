@@ -1,10 +1,10 @@
 <template>
 	<div class="seeds-matrix">
-		<breadcrumb v-bind:links="[['Matrizes de sementes', '/matrizes-de-sementes']]" active="Dados da matriz" />
+		<breadcrumb :links="[['Matrizes de sementes', '/matrizes-de-sementes']]" active="Dados da matriz" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-				<loading v-bind:loading="loading" />
+				<loading :loading="loading" />
 				<div v-if="seeds_matrix && !loading">
 					<div class="row item-title">
 						<div class="col-md-10">
@@ -36,13 +36,13 @@
 									<dl class="fruiting_season">
 										<dt>Meses prováveis de coleta</dt>
 										<dd>
-											<b-badge v-for="(month_option, month) in meses" v-bind:class="{ 'btn-success': !!seeds_matrix.field_seed_matrix_collec_month.find((fs) => (fs.value == month))}" :key="month" v-show="!!seeds_matrix.field_seed_matrix_collec_month.find((fs) => (fs.value == month))">{{month_option.text}}</b-badge>
+											<b-badge v-for="(month_option, month) in meses" :class="{ 'btn-success': !!seeds_matrix.field_seed_matrix_collec_month.find((fs) => (fs.value == month))}" :key="month" v-show="!!seeds_matrix.field_seed_matrix_collec_month.find((fs) => (fs.value == month))">{{month_option.text}}</b-badge>
 										</dd>
 									</dl>
 									<dl v-if="present(seeds_matrix.field_seed_matrix_files, 'url')">
 										<dt>Documentos em anexo</dt>
 										<dd v-for="(seed_matrix_file, index) in seeds_matrix.field_seed_matrix_files" :key="index">
-											<a v-bind:href="seed_matrix_file.url" target="_blank"><i class="fa fa-download"></i> {{ fileName(seed_matrix_file) }}</a></dd>
+											<a :href="seed_matrix_file.url" target="_blank"><i class="fa fa-download"></i> {{ fileName(seed_matrix_file) }}</a></dd>
 									</dl>
 								</div>
 							</div>

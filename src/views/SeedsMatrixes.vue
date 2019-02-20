@@ -3,14 +3,14 @@
 		<breadcrumb active="Matrizes de sementes" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
-				<list-headline name="Matrizes de sementes" addUrl="/cadastrar-matriz-de-sementes" v-bind:filters="filters"/>
+				<list-headline name="Matrizes de sementes" addUrl="/cadastrar-matriz-de-sementes" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading v-bind:loading="!seeds_matrixes && !error" msg="Carregando lista de matrizes" />
+					<loading :loading="!seeds_matrixes && !error" msg="Carregando lista de matrizes" />
 					<div v-if="seeds_matrixes">
-						<b-table :fields="table_fields" :items="seeds_matrixes" :sort-by="'title'" :filter="filters.search">
+						<b-table stacked="md" :fields="table_fields" :items="seeds_matrixes" :sort-by="'title'" :filter="filters.search">
 							<template slot="title" slot-scope="data">
-								<router-link v-bind:to="'/matriz-de-sementes/'+ data.item.nid">{{data.item.title}}</router-link>
+								<router-link :to="'/matriz-de-sementes/'+ data.item.nid">{{data.item.title}}</router-link>
 								<p v-if="data.item.seed_matrix_scient_name">
 									<small>{{data.item.seed_matrix_scient_name}}</small>
 								</p>
@@ -21,7 +21,7 @@
 								</p>
 							</template>
 							<template slot="actions" slot-scope="data">
-								<router-link v-bind:to="'/editar-matriz-de-sementes/'+ data.item.nid" class="fa fa-edit btn btn-primary btn-xs "></router-link>
+								<router-link :to="'/editar-matriz-de-sementes/'+ data.item.nid" class="fa fa-edit btn btn-primary btn-xs "></router-link>
 								<a @click="remove(data.item.nid)" class="fa fa-trash btn btn-danger btn-xs"></a>
 							</template>
 						</b-table>

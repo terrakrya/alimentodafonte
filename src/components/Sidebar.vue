@@ -1,5 +1,5 @@
 <template>
-  <div id="sidebar-nav" class="sidebar" v-bind:class="{active: showMenu}">
+  <div id="sidebar-nav" class="sidebar" :class="{active: showMenu}">
     <div class="sidebar-scroll">
       <nav>
         <ul class="nav">
@@ -39,7 +39,7 @@
                 <router-link to="/pedidos-para-coletores"><span>Pedidos para Coletores</span></router-link>
               </li>
               <li @click="toggleMenu">
-                <router-link to="/entrada-de-estoque"><span>Estoque</span></router-link>
+                <router-link to="/estoque"><span>Estoque</span></router-link>
               </li>
               <li>
                 <a href="#"><span>Relatórios</span></a>

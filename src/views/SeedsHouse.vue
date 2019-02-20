@@ -1,10 +1,10 @@
 <template>
 	<div class="seeds-house">
-		<breadcrumb v-bind:links="[['Casas de sementes', '/casas-de-sementes']]" active="Dados da casa" />
+		<breadcrumb :links="[['Casas de sementes', '/casas-de-sementes']]" active="Dados da casa" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-				<loading v-bind:loading="loading" />
+				<loading :loading="loading" />
 				<div v-if="seeds_house && !loading">
 					<div class="row item-title">
 						<div class="col-md-10">
@@ -18,7 +18,7 @@
 									Proprietário: {{ user.field_name[0].value }}
 								</span>
 							</p>
-							<router-link v-bind:to="'/editar-casa-de-sementes/'+seeds_house.store_id[0].value" class="btn btn-default btn-xs">
+							<router-link :to="'/editar-casa-de-sementes/'+seeds_house.store_id[0].value" class="btn btn-default btn-xs">
 								<i class="fa fa-edit" aria-hidden="true"></i>
 								Editar casa
 							</router-link>
@@ -32,7 +32,7 @@
 									<strong>Coletores</strong>
 								</div>
 								<div class="list-group-item" v-for="(collector, index) in collectors" :key="index" >
-									<router-link v-bind:to="'/coletor/'+collector.uid[0].value">
+									<router-link :to="'/coletor/'+collector.uid[0].value">
 										<img v-if="present(collector.user_picture, 'url')" :src="collector.user_picture[0].url" />
 										<span v-if="present(collector.field_name)">{{collector.field_name[0].value}}</span>
 									</router-link>
@@ -45,7 +45,7 @@
 									<strong>Grupos de coletores</strong>
 								</div>
 								<div class="list-group-item" v-for="(collectors_group, index) in collectors_groups" :key="index" >
-									<router-link v-bind:to="'/grupo-de-coletores/'+collectors_group.nid[0].value">
+									<router-link :to="'/grupo-de-coletores/'+collectors_group.nid[0].value">
 										<span v-if="present(collectors_group.title)">{{collectors_group.title[0].value}}</span>
 									</router-link>
 								</div>

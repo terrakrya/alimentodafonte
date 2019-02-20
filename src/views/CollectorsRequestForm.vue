@@ -1,10 +1,10 @@
 <template>
 	<div class="collectors-request-form">
-		<breadcrumb v-bind:links="[['Pedidos para coletores', '/pedidos-para-coletores']]" v-bind:active="isEditing() ? form.title[0].value : 'Cadastrar'" />
+		<breadcrumb :links="[['Pedidos para coletores', '/pedidos-para-coletores']]" :active="isEditing() ? form.title[0].value : 'Cadastrar'" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="pedido para coletores" />
-				<loading v-bind:loading="loading" />
+				<loading :loading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-4">
@@ -18,8 +18,9 @@
 							</b-form-group>							
 						</div>					
 						<div class="col-sm-4">
-							<b-form-group label="Casa de sementes" >
-								<form-entity-select :items="seeds_house_options" :form="form" field="field_requests_seeds_house" />
+							<b-form-group label="Casa de sementes *" >
+								<form-entity-select :items="seeds_house_options" :form="form" field="field_requests_seeds_house"  v-validate="'required'" name="field_requests_seeds_house" />
+								<field-error :msg="veeErrors" field="field_requests_seeds_house" />
 							</b-form-group>							
 						</div>					
 					</div>					
@@ -44,16 +45,14 @@
 								</div>
 								<br>
 								<br>
-								<loading v-bind:loading="sending" msg="Adicionando semente" />
+								<loading :loading="sending_seed" msg="Adicionando semente" />
 							</b-form-group>							
 						</div>					
 					</div>					
-					<form-submit v-bind:error="error" />
+					<form-submit :error="error" :sending="sending" />
 				</b-form>
 			</div>				
 		</div>
-		<pre>{{seed_form}}</pre>
-		<pre>{{form}}</pre>
 	</div>
 </template>
 
@@ -195,10 +194,9 @@ export default {
 				method: 'POST',
 				url: '/entity/paragraph?_format=json',
 				data: this.seed_form
-			}).then(resp => {
-				console.log(resp)
-				this.sending = false
-			}).catch(error => { this.error_seed = error.response.data.message; this.sending = false })
+			}).then(() => {
+				this.sending_seed = false
+			}).catch(error => { this.error_seed = error.response.data.message; this.sending_seed = false })
 		}
 
 	},

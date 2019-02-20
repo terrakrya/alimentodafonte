@@ -13,7 +13,6 @@
 						<a @click="clearFilters" class="btn btn-default" v-if="showClearButton">
 							Limpar filtros
 						</a>
-
 						<router-link to="/entrada-de-estoque" class="btn btn-primary btn-xs">
 							+ Entrada
 						</router-link>
@@ -24,8 +23,8 @@
 				</div>
 				<div class="info-content"> 
 					<b-tabs content-class="mt-3">
-				    <b-tab title="Movimentações do estoque" active>
-							<div class="filters">
+						<b-tab title="Movimentações do estoque" active>
+							<div class="filters gray" v-if="filtered_stock">
 								<b-form-group label="Filtrar por:" >
 									<div class="row">
 										<div class="col-sm-4">
@@ -53,15 +52,15 @@
 								</b-form-group>
 							</div>
 							<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-							<loading v-bind:loading="!filtered_stock && !error" msg="Carregando relatório movimentações" />
+							<loading :loading="!filtered_stock && !error" msg="Carregando relatório movimentações" />
 							<div v-if="filtered_stock && !filtered_stock.length">
 								<h4 class="text-center">Nenhuma movimentação encontrada</h4>
-							</div>
+							</div> 
 							<div v-if="filtered_stock && filtered_stock.length">
-								<b-table @filtered="onFiltered" :fields="table_fields" :items="filtered_stock" :sort-by="'title'" :filter="filters.search">
+								<b-table stacked="md" striped @filtered="onFiltered" :fields="table_fields" :items="filtered_stock" :sort-by="'title'">
 									<template slot="created" slot-scope="data">
 										<div >
-											<a @click="setFilter(data.field.key, data.value)" v-bind:class="data.item.type == 'stock_in' ? 'text-success' : 'text-danger'">
+											<a @click="setFilter(data.field.key, data.value)" :class="data.item.type == 'stock_in' ? 'text-success' : 'text-danger'">
 												{{data.item.type == 'stock_in' ? 'Entrada' : 'Saída'}}
 											</a>
 											{{data.value | moment("DD/MM/YYYY HH:MM")}}
@@ -107,9 +106,29 @@
 									</template>
 								</b-table>
 							</div>
-				    </b-tab>
-				    <b-tab title="Controle de sementes">Sementes</p></b-tab>
-				  </b-tabs>
+						</b-tab>
+						<b-tab title="Controle de sementes">
+							<loading :loading="!seeds && !error" msg="Carregando lista de sementes" />
+							<div v-if="seeds">
+								<div class="row search">
+									<div class="col-sm-4 col-sm-offset-8">
+										<b-form-input v-model="filters.search" placeholder="Buscar" class="search-input" />
+									</div>
+								</div>
+								<b-table stacked="md" :fields="seeds_table_fields" :items="seeds" :sort-by="'title'" :filter="filters.search">
+									<template slot="title" slot-scope="data">
+										<router-link :to="'/semente/'+ data.item.product_id">{{data.item.title[0].value}}</router-link>
+									</template>
+									<template slot="scientific_name" slot-scope="data">
+										{{data.item.field_scientific_name[0].value}}
+									</template>
+									<template slot="stock_qtd" slot-scope="data">
+										<span v-if="data.item.variation && present(data.item.variation.field_stock)" :class="{'text-danger': data.item.variation.field_stock[0].value < 1}">{{data.item.variation.field_stock[0].value | currency('', 0, { thousandsSeparator: '' }) }} Kg</span>
+									</template>
+								</b-table>
+							</div>
+						</b-tab>
+					</b-tabs>
 				</div>
 			</div>
 		</div>
@@ -117,7 +136,6 @@
 </template>
 <script>
 import axios from 'axios'
-import moment from 'moment'
 import Loading from '@/components/Loading'
 import Breadcrumb from '@/components/Breadcrumb'
 import FilterEntitySelect from '@/components/FilterEntitySelect'
@@ -147,17 +165,23 @@ export default {
 			seed_options: [],
 			seeds_house_options: [],
 			lot_options: [],
+			seeds: [],
 			total_qty: 0,
 			total_price: 0,
 			modos_de_saida: modos_de_saida,
 			table_fields: [
-				{ key: 'created', label: 'Data', sortable: true },
-				{ key: 'seeds_house', label: 'Casa de sementes', sortable: true },
-				{ key: 'group_collector_client', label: 'Grupo / Coletor / Comprador', sortable: true },
-				{ key: 'seed', label: 'Semente', sortable: true },
-				{ key: 'lot', label: 'Lote', sortable: true },
-				{ key: 'qty', label: 'Quantidade', sortable: true },
-				{ key: 'price', label: 'Preço', sortable: true },
+			{ key: 'created', label: 'Data', sortable: true },
+			{ key: 'seeds_house', label: 'Casa de sementes', sortable: true },
+			{ key: 'group_collector_client', label: 'Grupo / Coletor / Comprador', sortable: true },
+			{ key: 'seed', label: 'Semente', sortable: true },
+			{ key: 'lot', label: 'Lote', sortable: true },
+			{ key: 'qty', label: 'Quantidade', sortable: true },
+			{ key: 'price', label: 'Preço', sortable: true },
+			],
+			seeds_table_fields: [
+			{ key: 'title', label: 'Semente', sortable: true },
+			{ key: 'scientific_name', label: 'Nome científico', sortable: true },
+			{ key: 'stock_qtd', label: 'Estoque (Kg)', sortable: true },
 			],
 			stock: null,
 			filtered_stock: null
@@ -168,7 +192,7 @@ export default {
 			return this.collectors_group_options.concat(this.collector_options, this.client_options)
 		}, 
 		showClearButton () {
-			return Object.keys(this.filters).find(k => (this.filters[k] != null))
+			return Object.keys(this.filters).find(k => (this.filters[k]))
 		}
 	},
 	async created () {
@@ -205,6 +229,8 @@ export default {
 		}).catch(error => { this.error = error.message })
 
 		await axios.get('rest/seeds-list?_format=json').then(response => {
+			this.seeds = response.data
+			this.setVariations()
 			this.seed_options = response.data.map(seed => {
 				return { 
 					id: seed.product_id[0].value,
@@ -331,8 +357,6 @@ export default {
 						}
 						if (filter == 'to') {
 							let date = new Date(this.filters[filter]+'T23:59:59+00:00')
-							console.log(this.filters[filter]+'T23:59:59+00:00')
-							console.log(item.created)
 							return new Date(item.created) <= date
 						}
 						return item[filter] == this.filters[filter]
@@ -349,6 +373,18 @@ export default {
 				this.filters[filter] = null
 			})
 			this.filtered_stock = this.stock
+		},
+		setVariations() {
+			axios.get('rest/product-variations?_format=json').then(resp => {
+				this.product_variations = resp.data
+				this.seeds = this.seeds.map(seed => {
+					seed.variation = this.product_variations.find(product_variation => {
+						return product_variation.variation_id[0].value == seed.variations[0].target_id
+					})
+					return seed
+				})
+				
+			}).catch(error => { this.error = error.message })
 		}		
 	},
 

@@ -1,16 +1,16 @@
 <template>
   <div class="pictures-upload">
-    <b-form-group v-bind:label="'Documento' + (multiple ? 's' : '')" v-bind:description="'Selecione um '+ (multiple ? 'ou mais arquivos' : 'arquivo') +' no formato PDF, JPG, JPEG, KMZ ou DOC, com no máximo 32 MB.'" v-show="!loading">
-      <b-form-file ref="files" id="files" v-bind:multiple="multiple" accept="application/msword, application/vnd.google-earth.kml+xml, image/*, application/pdf" v-on:change="uploadDocuments"></b-form-file>
+    <b-form-group :label="'Documento' + (multiple ? 's' : '')" :description="'Selecione um '+ (multiple ? 'ou mais arquivos' : 'arquivo') +' no formato PDF, JPG, JPEG, KMZ ou DOC, com no máximo 32 MB.'" v-show="!loading">
+      <b-form-file ref="files" id="files" :multiple="multiple" accept="application/msword, application/vnd.google-earth.kml+xml, image/*, application/pdf" v-on:change="uploadDocuments"></b-form-file>
       <span class="text-danger" v-show="error">{{ error }}</span>
     </b-form-group> 
     <div class="row" v-if="!loading && documents_preview.length > 0">
-      <div class="col-xs-12" v-for="(doc, index) in documents_preview" v-bind:key="index">
-        <a v-bind:href="(doc.uri ? baseURL() + doc.uri[0].url : doc.url)" target="_blank"><i class="fa fa-download"></i> {{ fileName(doc) }}</a>
+      <div class="col-xs-12" v-for="(doc, index) in documents_preview" :key="index">
+        <a :href="(doc.uri ? baseURL() + doc.uri[0].url : doc.url)" target="_blank"><i class="fa fa-download"></i> {{ fileName(doc) }}</a>
         <a class="btn btn-danger btn-xs pull-right" @click="deleteDocument(index)"><i class="fa fa-trash"></i></a>
       </div>
     </div>
-    <loading v-bind:loading="loading" msg="Enviando documento..."/>
+    <loading :loading="loading" msg="Enviando documento..."/>
   </div>  
 </template>
 

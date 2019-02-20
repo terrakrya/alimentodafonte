@@ -1,22 +1,22 @@
 <template>
 	<div class="seed-form">
-		<breadcrumb v-bind:links="[['Sementes', '/sementes']]" v-bind:active="isEditing() ? form.title[0].value : 'Cadastrar'" />
+		<breadcrumb :links="[['Sementes', '/sementes']]" :active="isEditing() ? form.title[0].value : 'Cadastrar'" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="semente" />
-				<loading v-bind:loading="loading" />
+				<loading :loading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Nome da espécie *">
 								<b-form-input v-model="form.title[0].value" v-validate="'required'" name="title"/>
-								<field-error v-bind:msg="veeErrors" field="title" />
+								<field-error :msg="veeErrors" field="title" />
 							</b-form-group>							
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Nome científico *">
 								<b-form-input v-model="form.field_scientific_name[0].value" v-validate="'required'" name="field_scientific_name"  />
-								<field-error v-bind:msg="veeErrors" field="field_scientific_name" />
+								<field-error :msg="veeErrors" field="field_scientific_name" />
 							</b-form-group>
 						</div>
 					</div>						
@@ -24,7 +24,7 @@
 						<div class="col-md-12">
 							<b-form-group label="Nome(s) regional(is) *" description="Escreva todos os nome regionais que essa semente possa ter separado por virgula.">
 								<b-form-input v-model="form.field_local_name[0].value" v-validate="'required'" name="field_local_name" />
-								<field-error v-bind:msg="veeErrors" field="field_local_name" />
+								<field-error :msg="veeErrors" field="field_local_name" />
 							</b-form-group>
 						</div>
 					</div>						
@@ -59,42 +59,42 @@
 					</div>				
 					<div class="row">
 						<div class="col-sm-4">
-							<b-form-group label="Qtd. de sementes / Kg *" v-bind:description="form.field_seeds_kg[0].value > 0 ? form.field_seeds_kg[0].value + ' sementes por quilo' : ''">
+							<b-form-group label="Qtd. de sementes / Kg *" :description="form.field_seeds_kg[0].value > 0 ? form.field_seeds_kg[0].value + ' sementes por quilo' : ''">
 								<b-form-input v-model="form.field_seeds_kg[0].value" type="number" />
 							</b-form-group>
 						</div>
 						<div class="col-sm-4">
-							<b-form-group label="Taxa de viabilidade *" v-bind:description="(form.field_viability_rate[0].value || 0) + '% de viabilidade'">
+							<b-form-group label="Taxa de viabilidade *" :description="(form.field_viability_rate[0].value || 0) + '% de viabilidade'">
 								<b-form-input v-model="form.field_viability_rate[0].value" type="range" />
 							</b-form-group>
 						</div>
 						<div class="col-sm-4">
-							<b-form-group label="Limite de peso por lote (Kg)" v-bind:description="form.field_lot_limit[0].value > 0 ? 'Limite de '+ form.field_lot_limit[0].value + ' quilos por lote' : ''"> 
+							<b-form-group label="Limite de peso por lote (Kg)" :description="form.field_lot_limit[0].value > 0 ? 'Limite de '+ form.field_lot_limit[0].value + ' quilos por lote' : ''"> 
 								<b-form-input type="number" v-model="form.field_lot_limit[0].value" />
 							</b-form-group>
 						</div>
 					</div>						
 					<div class="row gray">
 						<div class="col-sm-6">
-							<loading v-bind:loading="!ecosystem_options" msg="Carregando lista de ecossistemas" />
+							<loading :loading="!ecosystem_options" msg="Carregando lista de ecossistemas" />
 							<b-form-group label="Ecossistema *" v-if="ecosystem_options">
 								<b-form-checkbox-group v-model="form.field_ecosystem" :options="ecosystem_options"  v-validate="'required'" name="field_ecosystem" />
-								<field-error v-bind:msg="veeErrors" field="field_ecosystem" />
+								<field-error :msg="veeErrors" field="field_ecosystem" />
 							</b-form-group>
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Época da frutificação *">
 								<b-form-checkbox-group  v-model="form.field_fruiting_season" :options="meses" v-validate="'required'" name="field_fruiting_season" />
-								<field-error v-bind:msg="veeErrors" field="field_fruiting_season" />
+								<field-error :msg="veeErrors" field="field_fruiting_season" />
 							</b-form-group>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-12">
-							<pictures-upload v-bind:form="form" v-bind:preview="this.images_preview" v-bind:error="error" field="field_images" url="file/upload/commerce_product/seed/field_images?_format=json" v-bind:multiple="true"  />							
+							<pictures-upload :form="form" :preview="this.images_preview" :error="error" field="field_images" url="file/upload/commerce_product/seed/field_images?_format=json" :multiple="true"  />							
 						</div>					
 					</div>					
-					<form-submit v-bind:error="error" />
+					<form-submit :error="error" :sending="sending"/>
 				</b-form>
 			</div>				
 		</div>

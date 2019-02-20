@@ -3,20 +3,20 @@
 		<breadcrumb active="Pedidos para coletores" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
-				<list-headline name="Pedidos para coletores" addUrl="/cadastrar-pedido-para-coletores" v-bind:filters="filters"/>
+				<list-headline name="Pedidos para coletores" addUrl="/cadastrar-pedido-para-coletores" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading v-bind:loading="!collectors_requests && !error" msg="Carregando lista de pedidos" />
+					<loading :loading="!collectors_requests && !error" msg="Carregando lista de pedidos" />
 					<div v-if="collectors_requests">
-						<b-table :fields="table_fields" :items="collectors_requests" :sort-by="'name'" :filter="filters.search">
+						<b-table stacked="md" :fields="table_fields" :items="collectors_requests" :sort-by="'name'" :filter="filters.search">
 							<template slot="name" slot-scope="data">
-								<router-link v-bind:to="'/pedido-para-coletores/'+ data.item.nid">{{data.item.title}}</router-link>
+								<router-link :to="'/pedido-para-coletores/'+ data.item.nid">{{data.item.title}}</router-link>
 <!-- 								<p v-if="data.item.collectors">
 									<small>{{data.item.collectors.length}} {{data.item.collectors.length | pluralize('coletor', 'coletores')}}</small>
 								</p>
  -->							</template>
 							<template slot="actions" slot-scope="data">
-								<router-link v-bind:to="'/editar-pedido-para-coletores/'+ data.item.nid" class="fa fa-edit btn btn-primary btn-xs "></router-link>
+								<router-link :to="'/editar-pedido-para-coletores/'+ data.item.nid" class="fa fa-edit btn btn-primary btn-xs "></router-link>
 								<a @click="remove(data.item.nid)" class="fa fa-trash btn btn-danger btn-xs"></a>
 							</template>
 						</b-table>
@@ -24,7 +24,6 @@
 				</div>
 			</div>
 		</div>
-		<pre>{{collectors_requests}}</pre>
 	</div>
 </template>
 <script>
