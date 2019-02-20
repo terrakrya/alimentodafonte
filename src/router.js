@@ -33,6 +33,8 @@ import CollectorsRequestForm from '@/views/CollectorsRequestForm.vue'
 import Stock from '@/views/Stock.vue'
 import StockInForm from '@/views/StockInForm.vue'
 import StockOutForm from '@/views/StockOutForm.vue'
+import PotentialItemForm from '@/views/PotentialItemForm.vue'
+import PotentialList from '@/views/PotentialList.vue'
 
 Vue.use(Router)
 
@@ -106,5 +108,8 @@ export default new Router({
     { path: '/entrada-de-estoque', component: StockInForm, beforeEnter: requireAuth },
     { path: '/saida-de-estoque', component: StockOutForm, beforeEnter: requireAuth },
 
+    { path: '/lista-de-potencial', component: PotentialList, beforeEnter: requireAuth },
+    { path: '/cadastrar-item-potencial', component: PotentialItemForm, beforeEnter: requireAuth },
+    { path: '/editar-item-potencial/:id', component: PotentialItemForm, beforeEnter: requireAuth },
   ]
 })

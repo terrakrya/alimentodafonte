@@ -147,8 +147,6 @@ export default {
 				}
 			}) 
 		}).catch(error => { this.error = error.message })
-
-
 	},
 	
 	methods: {
@@ -162,7 +160,7 @@ export default {
 						this.form.field_qty_out[0].value = Number(this.form.field_qty_out[0].value)
 
 						if (this.price) {
-							this.form.field_price_out = [{ value: this.price * this.form.field_qty_out[0].value }]
+							this.form.field_price_out = [{ value: (this.price * this.form.field_qty_out[0].value) * -1 }]
 						}
 					}
 
@@ -201,7 +199,7 @@ export default {
 							} else {
 								variation_form.field_stock = [{value: Number(stock_out.field_qty_out[0].value)}]
 							}
-							axios.patch('/entity/commerce_product_variation/'+seed.data.variations[0].target_id+'?_format=json', variation_form).then(v => {
+							axios.patch('/entity/commerce_product_variation/'+seed.data.variations[0].target_id+'?_format=json', variation_form).then(() => {
 								this.sending = false
 								this.$router.replace('/estoque')
 							})
