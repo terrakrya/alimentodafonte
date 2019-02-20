@@ -4,12 +4,16 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<div class="row">
-					<div class="col-xs-8">
+					<div class="col-xs-4">
 						<h1>
 							Estoque 
 						</h1>
 					</div>
-					<div class="col-xs-4">
+					<div class="col-xs-8">
+						<a @click="clearFilters" class="btn btn-default" v-if="showClearButton">
+							Limpar filtros
+						</a>
+
 						<router-link to="/entrada-de-estoque" class="btn btn-primary btn-xs">
 							+ Entrada
 						</router-link>
@@ -18,67 +22,106 @@
 						</router-link>
 					</div>
 				</div>
-
 				<div class="info-content"> 
-					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading v-bind:loading="!stock && !error" msg="Carregando relatório movimentações" />
-					<div v-if="stock">
-						<b-table @filtered="onFiltered" :fields="table_fields" :items="stock" :sort-by="'title'" :filter="filters.search">
-							<template slot="created" slot-scope="data">
-								<div >
-									<router-link v-if="data.value" v-bind:to="'/'+ (data.item.type == 'stock_in' ? 'entrada-de-estoque' : 'saida-de-estoque') + '/' + data.item.nid" v-bind:class="data.item.type == 'stock_in' ? 'text-success' : 'text-danger'">
-										{{data.item.type == 'stock_in' ? 'Entrada' : 'Saída'}}
-										<br>
-										{{data.value | moment("DD/MM/YYYY")}}
-										<small v-if="data.item.out_mode"><br>({{data.item.out_mode}})</small>
-									</router-link>
-								</div>
-							</template>
-							<template slot="seeds_house" slot-scope="data">
-								<router-link v-if="data.value" v-bind:to="'/casa-de-sementes/'+ data.value.id">
-									{{data.value.title}}
-								</router-link>
-							</template>
-							<template slot="group_collector" slot-scope="data">
-								<router-link v-if="data.value" v-bind:to="'/'+(data.value.type == 'collector' ? 'coletor' : 'grupo-de-coletores') + '/'+ data.value.id">
-									{{data.value.title}}
-								</router-link>
-							</template>
-							<template slot="seed" slot-scope="data">
-								<router-link v-if="data.value" v-bind:to="'/semente/'+ data.value.id">
-									{{data.value.title}}
-								</router-link>
-							</template>
-							<template slot="lot" slot-scope="data">
-								<small v-if="data.value">{{data.value.title}}</small>
-							</template>
-							<template slot="qty" slot-scope="data">
-								{{data.value | currency('', 0, { thousandsSeparator: '' })}} Kg
-							</template>
-							<template slot="price" slot-scope="data">
-								{{data.value | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
-							</template>
-							<template slot="bottom-row">
-								<td/>
-								<td/>
-								<td/>
-								<td/>
-								<td><strong>Total</strong></td>
-								<td><strong>{{total_qty}} Kg</strong></td>
-								<td><strong>{{total_price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}</strong></td>
-							</template>
-						</b-table>
-					</div>
+					<b-tabs content-class="mt-3">
+				    <b-tab title="Movimentações do estoque" active>
+							<div class="filters">
+								<b-form-group label="Filtrar por:" >
+									<div class="row">
+										<div class="col-sm-4">
+											<filter-entity-select :items="seeds_house_options" :form="filters" field="seeds_house" :input="applyFilters" placeholder="Casa de sementes" /> 
+										</div>
+										<div class="col-sm-4">
+											<filter-entity-select :items="groupCollectorClientOptions" :form="filters" field="group_collector_client" :input="applyFilters" placeholder="Grupo - Coletor - Comprador" /> 
+										</div>
+										<div class="col-sm-4">
+											<filter-entity-select :items="seed_options" :form="filters" field="seed" :input="applyFilters" placeholder="Semente" /> 
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-3">
+											<filter-entity-select :items="[{ title: 'Entrada', id: 'stock_in' }, { title: 'Saída', id: 'stock_out' }]" :form="filters" field="type" :input="applyFilters" placeholder="Tipo de movimentação" itemValue="id" /> 
+										</div>
+										<div class="col-sm-3">
+											<filter-entity-select :items="modos_de_saida.map(m => ({title: m, id: m}))" :form="filters" field="out_mode" :input="applyFilters" placeholder="Modo de saída" itemValue="id" /> 
+										</div>
+										<div class="col-sm-6 from_to">
+											De <b-form-input v-model="filters.from" type="date" @input="applyFilters" />
+											Até <b-form-input v-model="filters.to" type="date" @input="applyFilters" />
+										</div>
+									</div>
+								</b-form-group>
+							</div>
+							<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
+							<loading v-bind:loading="!filtered_stock && !error" msg="Carregando relatório movimentações" />
+							<div v-if="filtered_stock && !filtered_stock.length">
+								<h4 class="text-center">Nenhuma movimentação encontrada</h4>
+							</div>
+							<div v-if="filtered_stock && filtered_stock.length">
+								<b-table @filtered="onFiltered" :fields="table_fields" :items="filtered_stock" :sort-by="'title'" :filter="filters.search">
+									<template slot="created" slot-scope="data">
+										<div >
+											<a @click="setFilter(data.field.key, data.value)" v-bind:class="data.item.type == 'stock_in' ? 'text-success' : 'text-danger'">
+												{{data.item.type == 'stock_in' ? 'Entrada' : 'Saída'}}
+											</a>
+											{{data.value | moment("DD/MM/YYYY HH:MM")}}
+											<a @click="setFilter('out_mode', data.item.out_mode)" v-if="data.item.out_mode">
+												<small>({{data.item.out_mode}})</small>
+											</a>
+										</div>
+									</template>
+									<template slot="seeds_house" slot-scope="data">
+										<a @click="setFilter(data.field.key, data.value)" v-if="data.value">
+											{{data.value.title}}
+										</a>
+									</template>
+									<template slot="group_collector_client" slot-scope="data">
+										<a @click="setFilter(data.field.key, data.value)" v-if="data.value">
+											{{data.value.title}}
+										</a>
+									</template>
+									<template slot="seed" slot-scope="data">
+										<a @click="setFilter(data.field.key, data.value)" v-if="data.value">
+											{{data.value.title}}
+										</a>
+									</template>
+									<template slot="lot" slot-scope="data">
+										<a @click="setFilter(data.field.key, data.value)" v-if="data.value">
+											<small v-if="data.value">{{data.value.title}}</small>
+										</a>
+									</template>
+									<template slot="qty" slot-scope="data">
+										{{data.value | currency('', 0, { thousandsSeparator: '' })}} Kg
+									</template>
+									<template slot="price" slot-scope="data">
+										{{data.value | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+									</template>
+									<template slot="bottom-row">
+										<td/>
+										<td/>
+										<td/>
+										<td/>
+										<td><strong>Total</strong></td>
+										<td><strong>{{total_qty}} Kg</strong></td>
+										<td><strong>{{total_price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}</strong></td>
+									</template>
+								</b-table>
+							</div>
+				    </b-tab>
+				    <b-tab title="Controle de sementes">Sementes</p></b-tab>
+				  </b-tabs>
 				</div>
 			</div>
 		</div>
-		<pre></pre>
 	</div>
 </template>
 <script>
 import axios from 'axios'
+import moment from 'moment'
 import Loading from '@/components/Loading'
 import Breadcrumb from '@/components/Breadcrumb'
+import FilterEntitySelect from '@/components/FilterEntitySelect'
+import modos_de_saida from '@/data/modos-de-saida.json'
 
 export default {
 	
@@ -87,31 +130,54 @@ export default {
 	data () {
 		return { 
 			error: false,
-			filters: { search: null },
+			filters: { 
+				search: null, 
+				type: null, 
+				seeds_house: null, 
+				group_collector_client: null, 
+				seed: null, 
+				lot: null,
+				out_mode: null, 
+				from: null, 
+				to: null 
+			},
+			collectors_group_options: [],
+			collector_options: [],
+			client_options: [],
+			seed_options: [],
 			seeds_house_options: [],
+			lot_options: [],
 			total_qty: 0,
 			total_price: 0,
+			modos_de_saida: modos_de_saida,
 			table_fields: [
-			{ key: 'created', label: 'Data', sortable: true },
-			{ key: 'seeds_house', label: 'Casa de sementes', sortable: true },
-			{ key: 'group_collector', label: 'Grupo / Coletor', sortable: true },
-			{ key: 'seed', label: 'Semente', sortable: true },
-			{ key: 'lot', label: 'Lote', sortable: true },
-			{ key: 'qty', label: 'Quantidade', sortable: true },
-			{ key: 'price', label: 'Preço', sortable: true },
+				{ key: 'created', label: 'Data', sortable: true },
+				{ key: 'seeds_house', label: 'Casa de sementes', sortable: true },
+				{ key: 'group_collector_client', label: 'Grupo / Coletor / Comprador', sortable: true },
+				{ key: 'seed', label: 'Semente', sortable: true },
+				{ key: 'lot', label: 'Lote', sortable: true },
+				{ key: 'qty', label: 'Quantidade', sortable: true },
+				{ key: 'price', label: 'Preço', sortable: true },
 			],
-			stock: null
+			stock: null,
+			filtered_stock: null
 		}
 	},
-	
+	computed: {
+		groupCollectorClientOptions () {
+			return this.collectors_group_options.concat(this.collector_options, this.client_options)
+		}, 
+		showClearButton () {
+			return Object.keys(this.filters).find(k => (this.filters[k] != null))
+		}
+	},
 	async created () {
 		await axios.get('rest/collectors-groups?_format=json').then(response => {
 			this.collectors_group_options = response.data.map(collectors_group => {
 				return { 
 					id: collectors_group.nid[0].value,
 					title: collectors_group.title[0].value,
-					description: collectors_group.field_address.length ? 
-					[collectors_group.field_address[0].locality, collectors_group.field_address[0].administrative_area].filter(Boolean).join(' - ') : ''
+					description: "Grupo de coletores"
 				}
 			})
 		}).catch(error => { this.error = error.message })
@@ -121,8 +187,19 @@ export default {
 				return { 
 					id: collector.uid[0].value,
 					title: collector.field_name[0].value,
-					description: collector.field_nickname[0].value,
+					description: "Coletor",
 					picture: this.present(collector.user_picture, 'url') ? collector.user_picture[0].url : null,
+				}
+			})
+		}).catch(error => { this.error = error.message })
+
+		await axios.get('rest/clients?_format=json').then(response => {
+			this.client_options = response.data.map(client => {
+				return { 
+					id: client.uid[0].value,
+					title: client.field_name[0].value,
+					description: "Comprador",
+					picture: this.present(client.user_picture, 'url') ? client.user_picture[0].url : null,
 				}
 			})
 		}).catch(error => { this.error = error.message })
@@ -182,15 +259,22 @@ export default {
 					}
 
 					if (this.present(stock_movement.field_group, 'target_id')) {
-						movement.group_collector = this.collectors_group_options.find(item => {
+						movement.group_collector_client = this.collectors_group_options.find(item => {
 							return item.id == stock_movement.field_group[0].target_id
 						})
+						movement.group_collector_client.type = 'collectors_group'
 					} else if (this.present(stock_movement.field_collector, 'target_id')) {
-						movement.group_collector = this.collector_options.find(item => {
+						movement.group_collector_client = this.collector_options.find(item => {
 							return item.id == stock_movement.field_collector[0].target_id
 						})
-						movement.group_collector.type = 'collector'
+						movement.group_collector_client.type = 'collector'
+					} else if (this.present(stock_movement.field_buyer, 'target_id')) {
+						movement.group_collector_client = this.client_options.find(item => {
+							return item.id == stock_movement.field_buyer[0].target_id
+						})
+						movement.group_collector_client.type = 'buyer'
 					}
+
 					if (this.present(stock_movement['field_seed'+type], 'target_id')) {
 						movement.seed = this.seed_options.find(item => {
 							return item.id == stock_movement['field_seed'+type][0].target_id
@@ -218,6 +302,7 @@ export default {
 					return movement
 				})
 				
+				this.filtered_stock = this.stock
 			}).catch(error => { this.error = error.message })
 		},
 		onFiltered(filteredItems) {
@@ -231,12 +316,46 @@ export default {
 					this.total_qty += Number(item.qty)
 				}
 			})
-		}
+		},
+		setFilter(field, value) {
+			this.filters[field] = value
+			this.applyFilters()
+		},
+		applyFilters() {
+			this.filtered_stock = this.stock
+			Object.keys(this.filters).map((filter) => {
+				if (filter && this.filters[filter] && filter != 'search') {
+					this.filtered_stock = this.filtered_stock.filter(item => {
+						if (filter == 'from') {
+							return new Date(item.created) >= new Date(this.filters[filter])
+						}
+						if (filter == 'to') {
+							let date = new Date(this.filters[filter]+'T23:59:59+00:00')
+							console.log(this.filters[filter]+'T23:59:59+00:00')
+							console.log(item.created)
+							return new Date(item.created) <= date
+						}
+						return item[filter] == this.filters[filter]
+					})
+				}				
+			})
+		},
+		clearFilter(filter) {
+			this.filters[filter] = null
+			this.applyFilters()
+		},
+		clearFilters() {
+			Object.keys(this.filters).map((filter) => {
+				this.filters[filter] = null
+			})
+			this.filtered_stock = this.stock
+		}		
 	},
 
 	components: { 
-		'loading': Loading,
-		'breadcrumb': Breadcrumb
+		Loading,
+		Breadcrumb,
+		FilterEntitySelect, 
 	}
 
 };

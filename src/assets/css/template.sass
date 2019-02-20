@@ -159,11 +159,11 @@ a, a:hover, a:focus
       margin-left: 3px
       color: #4DB6AC
       display: inline-block
-  .col-xs-4
+  .col-xs-8
     text-align: right
     a
       margin: 5px
-    .btn
+    .btn.btn-primary
       background-color: $colorOrange
       border-color: $colorOrange
       font-size: 14px
@@ -990,7 +990,9 @@ form
   max-height: 268px
   overflow-y: scroll
   border: 1px solid $colorLightGray
-
+  position: absolute
+  background-color: $colorWhite
+  z-index: 100
 .list-group-item
   img
     width: 30px
@@ -1022,6 +1024,7 @@ form
 .b-table
   a:not(.btn)
     display: block
+    cursor: pointer
     small
       color: $colorDark
   .b-table-bottom-row
@@ -1045,6 +1048,62 @@ form
     color: green
   .stock_out
     color: red
+
+.filters
+  legend
+    font-size: 16px
+    border-bottom: 0
+    margin-bottom: 5px
+  .row
+    margin-right: -5px
+    margin-left: -5px
+    div[class*="col-sm-"]
+      padding-left: 5px
+      padding-right: 5px
+    input, select
+      width: 100% 
+      font-weight: bold
+      font-size: 14px
+      &::placeholder
+        color: $colorLightDark
+        opacity: 1
+        font-weight: normal
+    .from_to
+      input
+        width: calc(50% - 28px)
+        display: inline-block
+    .filter-entity-select
+      .IZ-select
+        margin-bottom: 10px
+        float: left
+        width: calc(100%)
+      i
+        background-color: #fff
+        cursor: pointer
+        width: 18px
+        height: 20px
+        text-align: center
+        margin-left: -22px
+        margin-top: 9px
+
+.fade.active
+  opacity: 1
+.nav-item
+  border: 1px solid $colorLightGray
+  margin-right: 1px
+  border-top-left-radius: 5px
+  border-top-right-radius: 5px
+  a.active
+    font-weight: bold
+.data-list 
+  .tab-content
+    padding-top: 0
+  .nav-tabs
+    border-bottom: 1px solid $colorLightGray
+    > li > a:hover
+      color: $colorDark
+  .tab-pane
+    padding: 15px 0
 
 @media (max-width: 1024px)
   #wrapper
