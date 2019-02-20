@@ -36,13 +36,13 @@
             <a><i class="fa fa-cogs"></i><span>Operacional</span><i class="fa fa-chevron-down"></i></a>
             <ul class="nav">
               <li @click="toggleMenu">
-                <router-link to="/pedidos-para-coletores"><span>Pedidos para Coletores</span></router-link>
+                <router-link to="/lista-de-potencial"><span>Lista de potencial</span></router-link>
               </li>
               <li @click="toggleMenu">
                 <router-link to="/estoque"><span>Estoque</span></router-link>
               </li>
-              <li>
-                <a href="#"><span>Relatórios</span></a>
+              <li @click="toggleMenu">
+                <router-link to="/pedidos-para-coletores"><span>Pedidos para Coletores</span></router-link>
               </li>
             </ul>
           </li>

@@ -57,13 +57,13 @@
 								<h4 class="text-center">Nenhuma movimentação encontrada</h4>
 							</div> 
 							<div v-if="filtered_stock && filtered_stock.length">
-								<b-table stacked="md" striped @filtered="onFiltered" :fields="table_fields" :items="filtered_stock" :sort-by="'title'">
+								<b-table stacked="md" @filtered="onFiltered" :fields="table_fields" :items="filtered_stock">
 									<template slot="created" slot-scope="data">
-										<div >
-											<a @click="setFilter(data.field.key, data.value)" :class="data.item.type == 'stock_in' ? 'text-success' : 'text-danger'">
+										<div>
+											<a @click="setFilter('type', data.item.type)" :class="data.item.type == 'stock_in' ? 'text-success' : 'text-danger'">
 												{{data.item.type == 'stock_in' ? 'Entrada' : 'Saída'}}
 											</a>
-											{{data.value | moment("DD/MM/YYYY HH:MM")}}
+											{{data.value | moment("DD/MM/YYYY")}}
 											<a @click="setFilter('out_mode', data.item.out_mode)" v-if="data.item.out_mode">
 												<small>({{data.item.out_mode}})</small>
 											</a>
@@ -95,12 +95,13 @@
 									<template slot="price" slot-scope="data">
 										{{data.value | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
 									</template>
-									<template slot="bottom-row">
+									<!-- eslint-disable-next-line -->
+									<template slot="bottom-row" slot-scope="data">
 										<td/>
 										<td/>
 										<td/>
 										<td/>
-										<td><strong>Total</strong></td>
+										<td><strong> Total</strong></td>
 										<td><strong>{{total_qty}} Kg</strong></td>
 										<td><strong>{{total_price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}</strong></td>
 									</template>
@@ -115,7 +116,7 @@
 										<b-form-input v-model="filters.search" placeholder="Buscar" class="search-input" />
 									</div>
 								</div>
-								<b-table stacked="md" :fields="seeds_table_fields" :items="seeds" :sort-by="'title'" :filter="filters.search">
+								<b-table stacked="md" @filtered="onFilteredSeed" :fields="seeds_table_fields" :items="seeds" :sort-by="'title'" :filter="filters.search">
 									<template slot="title" slot-scope="data">
 										<router-link :to="'/semente/'+ data.item.product_id">{{data.item.title[0].value}}</router-link>
 									</template>
@@ -124,6 +125,12 @@
 									</template>
 									<template slot="stock_qtd" slot-scope="data">
 										<span v-if="data.item.variation && present(data.item.variation.field_stock)" :class="{'text-danger': data.item.variation.field_stock[0].value < 1}">{{data.item.variation.field_stock[0].value | currency('', 0, { thousandsSeparator: '' }) }} Kg</span>
+									</template>
+									<!-- eslint-disable-next-line -->
+									<template slot="bottom-row" slot-scope="data">
+										<td/>
+										<td><strong> Total</strong></td>
+										<td><strong>{{total_seeds_qty}} Kg</strong></td>
 									</template>
 								</b-table>
 							</div>
@@ -168,6 +175,7 @@ export default {
 			seeds: [],
 			total_qty: 0,
 			total_price: 0,
+			total_seeds_qty: 0,
 			modos_de_saida: modos_de_saida,
 			table_fields: [
 			{ key: 'created', label: 'Data', sortable: true },
@@ -343,6 +351,14 @@ export default {
 				}
 			})
 		},
+		onFilteredSeed(filteredItems) {
+			this.total_seeds_qty = 0
+			filteredItems.map(item => {
+				if (item.variation && this.present(item.variation.field_stock)) {
+					this.total_seeds_qty += Number(item.variation.field_stock[0].value)
+				}
+			})
+		},
 		setFilter(field, value) {
 			this.filters[field] = value
 			this.applyFilters()
@@ -383,7 +399,7 @@ export default {
 					})
 					return seed
 				})
-				
+				this.onFilteredSeed(this.seeds)
 			}).catch(error => { this.error = error.message })
 		}		
 	},

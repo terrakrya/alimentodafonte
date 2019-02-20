@@ -232,7 +232,7 @@ export default {
 							} else {
 								variation_form.field_stock = [{value: Number(stock_in.field_qty[0].value)}]
 							}
-							axios.patch('/entity/commerce_product_variation/'+seed.data.variations[0].target_id+'?_format=json', variation_form).then(v => {
+							axios.patch('/entity/commerce_product_variation/'+seed.data.variations[0].target_id+'?_format=json', variation_form).then(() => {
 								this.sending = false
 								this.$router.replace('/estoque')
 							})
