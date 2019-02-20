@@ -1,10 +1,10 @@
 <template>
 	<div class="collectors-group">
-		<breadcrumb v-bind:links="[['Grupos de coletores', '/grupos-de-coletores']]" active="Dados do grupo" />
+		<breadcrumb :links="[['Grupos de coletores', '/grupos-de-coletores']]" active="Dados do grupo" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-				<loading v-bind:loading="loading" />
+				<loading :loading="loading" />
 				<div v-if="collectors_group && !loading">
 					<div class="row item-title">
 						<div class="col-md-10">
@@ -71,7 +71,7 @@
 									<strong>Coletores</strong>
 								</div>
 								<div class="list-group-item" v-for="(collector, index) in collectors" :key="index" >
-									<router-link v-bind:to="'/coletor/'+collector.uid[0].value">
+									<router-link :to="'/coletor/'+collector.uid[0].value">
 										<img v-if="present(collector.user_picture, 'url')" :src="collector.user_picture[0].url" />
 										<span v-if="present(collector.field_name)">{{collector.field_name[0].value}}</span>
 									</router-link>
@@ -84,7 +84,7 @@
 									<strong>Sementes</strong>
 								</div>
 								<div class="list-group-item" v-for="(seed, index) in seeds" :key="index" >
-									<router-link v-bind:to="'/semente/'+seed.product_id[0].value">
+									<router-link :to="'/semente/'+seed.product_id[0].value">
 										<img v-if="present(seed.field_images, 'url')" :src="seed.field_images[0].url" />
 										<span v-if="present(seed.title)">{{seed.title[0].value}}</span>
 									</router-link>

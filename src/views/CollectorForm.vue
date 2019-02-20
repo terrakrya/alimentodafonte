@@ -1,22 +1,22 @@
 <template>
 	<div class="collector-form">
-		<breadcrumb v-bind:links="[['Coletores', '/coletores']]" v-bind:active="isEditing() ? form.name[0].value : 'Cadastrar'" />
+		<breadcrumb :links="[['Coletores', '/coletores']]" :active="isEditing() ? form.name[0].value : 'Cadastrar'" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="coletor" />
-				<loading v-bind:loading="loading" />
+				<loading :loading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Nome do coletor *">
 								<b-form-input v-model="form.field_name[0].value" v-validate="'required'" name="field_name" />
-								<field-error v-bind:msg="veeErrors" field="field_name" />
+								<field-error :msg="veeErrors" field="field_name" />
 							</b-form-group>							
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Apelido *">
 								<b-form-input v-model="form.field_nickname[0].value" v-validate="'required'" name="nickname" />
-								<field-error v-bind:msg="veeErrors" field="nickname" />
+								<field-error :msg="veeErrors" field="nickname" />
 							</b-form-group>							
 						</div>
 					</div>						
@@ -24,7 +24,7 @@
 						<div class="col-sm-6">
 							<b-form-group label="Telefone *">
 								<b-form-input v-model="form.field_contact[0].value" v-validate="'required'" name="contact" v-mask="['(##) ####-####', '(##) #####-####']" />
-								<field-error v-bind:msg="veeErrors" field="contact" />
+								<field-error :msg="veeErrors" field="contact" />
 							</b-form-group>							
 						</div>
 						<div class="col-sm-6">
@@ -61,13 +61,13 @@
 						<div class="col-sm-6">
 							<b-form-group label="Nome de usuário *" description="Nome que será usado para acessar o sistema">
 								<b-form-input v-model="form.name[0].value" v-validate="'required'" name="name" />
-								<field-error v-bind:msg="veeErrors" field="name" />
+								<field-error :msg="veeErrors" field="name" />
 							</b-form-group>							
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Email">
 								<b-form-input v-model="form.mail[0].value" v-validate="'required|email'" name="mail" />
-								<field-error v-bind:msg="veeErrors" field="mail" />
+								<field-error :msg="veeErrors" field="mail" />
 								<div class="text-right" v-if="isEditing()">
 									<a class="pointer" @click="changePassword">Alterar senha</a>
 								</div>
@@ -78,23 +78,23 @@
 						<div class="col-sm-6">
 							<b-form-group label="Senha *">
 								<b-form-input v-model="form.pass[0].value" type="password" v-validate="'required'" name="pass" />
-								<field-error v-bind:msg="veeErrors" field="pass" />
+								<field-error :msg="veeErrors" field="pass" />
 							</b-form-group>							
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Confirmar senha *">
 								<b-form-input v-model="form.pass[0].confirmation" type="password" v-validate="'required'" name="pass_confirmation" />
-								<field-error v-bind:msg="veeErrors" field="pass_confirmation" />
+								<field-error :msg="veeErrors" field="pass_confirmation" />
 							</b-form-group>							
 						</div>
 					</div>						
 					
 					<div class="row">
 						<div class="col-md-12">
-							<pictures-upload v-bind:form="form" v-bind:preview="images_preview" v-bind:error="error" field="user_picture" url="file/upload/user/user/user_picture?_format=json" /> 
+							<pictures-upload :form="form" :preview="images_preview" :error="error" field="user_picture" url="file/upload/user/user/user_picture?_format=json" /> 
 						</div>					
 					</div>					
-					<form-submit v-bind:error="error" />
+					<form-submit :error="error" :sending="sending" />
 				</b-form>
 			</div>				
 		</div>

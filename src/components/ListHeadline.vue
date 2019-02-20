@@ -3,7 +3,7 @@
     <div class="col-sm-8">
       <h1>
         {{name}} 
-        <router-link v-if="addUrl" v-bind:to="addUrl">+ Cadastrar</router-link>
+        <router-link v-if="addUrl" :to="addUrl">+ Cadastrar</router-link>
       </h1>
     </div>
     <div class="col-sm-4">

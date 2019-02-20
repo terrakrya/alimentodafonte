@@ -1,10 +1,10 @@
 <template>
   <div class="form-address">
-    <div class="row" v-bind:class="{gray: gray}">
+    <div class="row" :class="{gray: gray}">
       <div class="col-sm-6">
         <b-form-group label="Estado *">
           <b-form-select @input="loadCities" v-model="form.field_address[0].administrative_area" :options="estados" v-validate="'required'" name="administrative_area" />
-          <field-error v-bind:msg="veeErrors" field="administrative_area" />
+          <field-error :msg="veeErrors" field="administrative_area" />
         </b-form-group>             
       </div>
       <div class="col-sm-6">
@@ -13,11 +13,11 @@
         </b-form-group>             
       </div>
     </div>            
-    <div class="row" v-bind:class="{gray: gray}">
+    <div class="row" :class="{gray: gray}">
       <div class="col-sm-8">
         <b-form-group label="Endereço *">
           <b-form-input v-model="form.field_address[0].address_line1" v-validate="'required'" name="address_line1" />
-          <field-error v-bind:msg="veeErrors" field="address_line1" />
+          <field-error :msg="veeErrors" field="address_line1" />
         </b-form-group>         
       </div>
       <div class="col-sm-4">

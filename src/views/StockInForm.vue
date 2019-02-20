@@ -1,13 +1,13 @@
 <template>
 	<div class="stock-in-form">
-		<breadcrumb v-bind:links="[['Estoque', '/estoque']]" active="Entrada de estoque" />
+		<breadcrumb :links="[['Estoque', '/estoque']]" active="Entrada de estoque" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<h1>
-					Entrada de estoque
+					Cadastrar entrada	
 				</h1>
 				<br>
-				<loading v-bind:loading="loading" />
+				<loading :loading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-6">
@@ -37,7 +37,7 @@
 						<div class="col-sm-4">
 							<b-form-group label="Quantidade (Kg) *">
 								<b-form-input v-model="form.field_qty[0].value" type="number" v-validate="'required'" name="field_qty" />
-								<field-error v-bind:msg="veeErrors" field="field_qty" />
+								<field-error :msg="veeErrors" field="field_qty" />
 							</b-form-group>
 						</div>
 						<div class="col-sm-4">
@@ -52,18 +52,14 @@
 							</b-form-group>
 							<b-form-group label="Novo lote *" v-if="!lot_filtered_options.length || add_new_lot" description="Um novo lote será criado com esse código"> 
 								<b-form-input v-model="new_lot" v-validate="'required'" name="new_lot" />
-								<field-error v-bind:msg="veeErrors" field="new_lot" />
+								<field-error :msg="veeErrors" field="new_lot" />
 							</b-form-group>
 						</div>
 					</div>						
-
-					<form-submit v-bind:error="error" />
+					<form-submit :error="error" :sending="sending" />
 				</b-form>
 			</div>				
 		</div>
-		<pre>{{price}}</pre>
-		<pre>{{lot_filtered_options}}</pre>
-		<pre>{{form}}</pre>
 	</div>
 </template>
 
@@ -226,9 +222,24 @@ export default {
 			}).then(resp => {
 				var stock_in = resp.data
 				if (stock_in && stock_in.nid) {
-					this.$router.replace('/estoque')
+					axios.get('product/'+stock_in.field_seed[0].target_id+'?_format=json').then(seed => {
+						axios.get('/entity/commerce_product_variation/'+seed.data.variations[0].target_id+'?_format=json').then(variation => {
+
+							let variation_form = { type:[{ target_id: "default" }] }
+
+							if (this.present(variation.data.field_stock)){
+								variation_form.field_stock = [{value: Number(variation.data.field_stock[0].value) + Number(stock_in.field_qty[0].value)}]
+							} else {
+								variation_form.field_stock = [{value: Number(stock_in.field_qty[0].value)}]
+							}
+							axios.patch('/entity/commerce_product_variation/'+seed.data.variations[0].target_id+'?_format=json', variation_form).then(v => {
+								this.sending = false
+								this.$router.replace('/estoque')
+							})
+						})
+					}).catch(error => { this.error = error.message; this.sending = false })
 				}
-				this.sending = false						
+				
 			}).catch(error => { this.error = error.response.data.message; this.sending = false })
 		},
 		seedSelected (seed) {

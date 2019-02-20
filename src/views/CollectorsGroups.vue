@@ -3,14 +3,14 @@
 		<breadcrumb active="Grupos de coletores" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
-				<list-headline name="Grupos de coletores" addUrl="/cadastrar-grupo-de-coletores" v-bind:filters="filters"/>
+				<list-headline name="Grupos de coletores" addUrl="/cadastrar-grupo-de-coletores" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading v-bind:loading="!collectors_groups && !error" msg="Carregando lista de grupos" />
+					<loading :loading="!collectors_groups && !error" msg="Carregando lista de grupos" />
 					<div v-if="collectors_groups">
-						<b-table :fields="table_fields" :items="collectors_groups" :sort-by="'title'" :filter="filters.search">
+						<b-table stacked="md" :fields="table_fields" :items="collectors_groups" :sort-by="'title'" :filter="filters.search">
 							<template slot="title" slot-scope="data">
-								<router-link v-bind:to="'/grupo-de-coletores/'+ data.item.nid">
+								<router-link :to="'/grupo-de-coletores/'+ data.item.nid">
 									<strong>{{data.item.title}}</strong>
 									<small v-if="data.item.collectors">
 										<br>
@@ -19,7 +19,7 @@
 								</router-link>
 							</template>
 							<template slot="actions" slot-scope="data">
-								<router-link v-bind:to="'/editar-grupo-de-coletores/'+ data.item.nid" class="fa fa-edit btn btn-primary btn-xs "></router-link>
+								<router-link :to="'/editar-grupo-de-coletores/'+ data.item.nid" class="fa fa-edit btn btn-primary btn-xs "></router-link>
 								<a @click="remove(data.item.nid)" class="fa fa-trash btn btn-danger btn-xs"></a>
 							</template>
 						</b-table>

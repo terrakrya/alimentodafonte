@@ -15,7 +15,7 @@
       </div>
       <div id="navbar-menu">
         <ul class="nav navbar-nav navbar-right">
-          <li class="dropdown" v-bind:class="{open: userDropdown }">
+          <li class="dropdown" :class="{open: userDropdown }">
             <a @click="toggleUserDropdown()" href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> &nbsp; <span>{{currentUser.current_user.name}}</span> &nbsp;<i class="icon-submenu fa fa-chevron-down"></i></a>
             <ul class="dropdown-menu">
               <li @click="toggleUserDropdown()"><router-link v-if="currentUser" to="/logout"><i class="fa fa-exit"></i> <span>Sair</span></router-link></li>

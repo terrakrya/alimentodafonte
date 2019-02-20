@@ -6,7 +6,7 @@ $colorBrown: #4b5637
 $colorLightBrown: #444c37
 $colorOrange: #d56606
 $colorGray: #59604d
-$colorLightGray: #dddddd
+$colorLightGray: #F1ECE4
 $colorWhite: #ffffff
 $colorRed: #dc3545
 $colorDark: #333
@@ -1090,20 +1090,31 @@ form
   opacity: 1
 .nav-item
   border: 1px solid $colorLightGray
-  margin-right: 1px
+  // margin-right: 1px
   border-top-left-radius: 5px
   border-top-right-radius: 5px
-  a.active
-    font-weight: bold
 .data-list 
   .tab-content
     padding-top: 0
   .nav-tabs
     border-bottom: 1px solid $colorLightGray
-    > li > a:hover
-      color: $colorDark
+    > li 
+      margin-right: 1px
+      > a 
+        margin-right: 0
+        &.active
+          background: $colorLightGray
+          color: $colorOrange
+        &:hover
+          color: $colorDark
   .tab-pane
     padding: 15px 0
+
+.tab-content
+  .row.search input
+    margin-top: -60px
+    position: absolute
+    right: 15px
 
 @media (max-width: 1024px)
   #wrapper
@@ -1146,11 +1157,29 @@ form
       margin-top: 10px
       padding-left: 15px
 
+  .tab-content
+    .row.search input
+      position: static
+      right: 0
+      margin-top: 0
+      margin-bottom: 15px
+  .filters .row div[class*="col-sm-"]
+    clear: both
+
 @media (max-width: 540px)
   #wrapper
     .sidebar
       .profile
         display: block
+
+  .data-list 
+    .tab-content
+      padding-top: 0
+    .nav-tabs
+      > li 
+        width: 100%
+        display: block
+        border-radius: 0
 
 @media (max-width: 364px)
   .brand 

@@ -1,16 +1,16 @@
 <template>
 	<div class="collection-area-form">
-		<breadcrumb v-bind:links="[['Áreas de coleta', '/areas-de-coleta']]" v-bind:active="isEditing() ? form.title[0].value : 'Cadastrar'" />
+		<breadcrumb :links="[['Áreas de coleta', '/areas-de-coleta']]" :active="isEditing() ? form.title[0].value : 'Cadastrar'" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="área de coleta" />
-				<loading v-bind:loading="loading" />
+				<loading :loading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-12">
 							<b-form-group label="Nome da área *">
 								<b-form-input v-model="form.title[0].value" v-validate="'required'" name="title" />
-								<field-error v-bind:msg="veeErrors" field="title" />
+								<field-error :msg="veeErrors" field="title" />
 							</b-form-group>							
 						</div>
 					</div>						
@@ -21,7 +21,7 @@
 							</b-form-group>							
 						</div>
 						<div class="col-sm-6">
-							<documents-upload v-bind:form="form" v-bind:preview="documents_preview" v-bind:error="error" field="field_upload" url="file/upload/node/collection_area/field_upload?_format=json" /> 
+							<documents-upload :form="form" :preview="documents_preview" :error="error" field="field_upload" url="file/upload/node/collection_area/field_upload?_format=json" /> 
 						</div>
 					</div>	
 					<div class="row gray">
@@ -36,7 +36,7 @@
 							</b-form-group>							
 						</div>					
 					</div>					
-					<form-submit v-bind:error="error" />
+					<form-submit :error="error" :sending="sending" />
 				</b-form>
 			</div>				
 		</div>

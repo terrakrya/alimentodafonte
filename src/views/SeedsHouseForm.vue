@@ -1,16 +1,16 @@
 <template>
 	<div class="seeds-house-form">
-		<breadcrumb v-bind:links="[['Casas de sementes', '/casas-de-sementes']]" v-bind:active="isEditing() ? form.name[0].value : 'Cadastrar'" />
+		<breadcrumb :links="[['Casas de sementes', '/casas-de-sementes']]" :active="isEditing() ? form.name[0].value : 'Cadastrar'" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="casa de sementes" />
-				<loading v-bind:loading="loading" />
+				<loading :loading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-12">
 							<b-form-group label="Nome da casa *">
 								<b-form-input v-model="form.name[0].value" v-validate="'required'" name="name" />
-								<field-error v-bind:msg="veeErrors" field="name" />
+								<field-error :msg="veeErrors" field="name" />
 							</b-form-group>							
 						</div>
 					</div>						
@@ -22,7 +22,7 @@
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Proprietário" >
-								<form-entity-select v-if="user_options && user_options.length > 0" v-bind:items="user_options" :form="form" field="uid" />
+								<form-entity-select v-if="user_options && user_options.length > 0" :items="user_options" :form="form" field="uid" />
 							</b-form-group>							
 						</div>					
 					</div>					
@@ -38,7 +38,7 @@
 							</b-form-group>							
 						</div>					
 					</div>					
-					<form-submit v-bind:error="error" />
+					<form-submit :error="error" :sending="sending" />
 				</b-form>
 			</div>				
 		</div>

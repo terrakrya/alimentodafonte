@@ -3,20 +3,20 @@
 		<breadcrumb active="Sementes" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
-				<list-headline name="Sementes" addUrl="/cadastrar-semente" v-bind:filters="filters"/>
+				<list-headline name="Sementes" addUrl="/cadastrar-semente" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading v-bind:loading="!seeds && !error" msg="Carregando lista de sementes" />
+					<loading :loading="!seeds && !error" msg="Carregando lista de sementes" />
 					<div v-if="seeds">
-						<b-table :fields="table_fields" :items="seeds" :sort-by="'title'" :filter="filters.search">
+						<b-table stacked="md" :fields="table_fields" :items="seeds" :sort-by="'title'" :filter="filters.search">
 							<template slot="title" slot-scope="data">
-								<router-link v-bind:to="'/semente/'+ data.item.product_id">{{data.item.title}}</router-link>
+								<router-link :to="'/semente/'+ data.item.product_id">{{data.item.title}}</router-link>
 							</template>
 							<template slot="compensation_collect" slot-scope="data">
 								{{data.item.compensation_collect | currency('R$ ', 2, { decimalSeparator: ',' })}}
 							</template>
 							<template slot="actions" slot-scope="data">
-								<router-link v-bind:to="'/editar-semente/'+ data.item.product_id" class="fa fa-edit btn btn-primary btn-xs "></router-link>
+								<router-link :to="'/editar-semente/'+ data.item.product_id" class="fa fa-edit btn btn-primary btn-xs "></router-link>
 								<a @click="remove(data.item.product_id)" class="fa fa-trash btn btn-danger btn-xs"></a>
 							</template>
 						</b-table>

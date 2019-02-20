@@ -1,14 +1,14 @@
 <template>
 	<div class="collector">
-		<breadcrumb v-bind:links="[['Coletores', '/coletores']]" active="Dados do coletor" />
+		<breadcrumb :links="[['Coletores', '/coletores']]" active="Dados do coletor" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-				<loading v-bind:loading="loading" />
+				<loading :loading="loading" />
 				<div v-if="collector && !loading">
 					<div class="row item-title">
 						<div class="col-md-2" v-if="present(collector.user_picture, 'url')">
-							<img v-bind:src="collector.user_picture[0].url" class="img-responsive item-img" />
+							<img :src="collector.user_picture[0].url" class="img-responsive item-img" />
 						</div>
 						<div class="col-md-10">
 							<h1>
@@ -25,7 +25,7 @@
 									{{collector.field_address | address}}
 								</span>
 							</p>
-							<router-link v-bind:to="'/editar-coletor/'+collector.uid[0].value" class="btn btn-default btn-xs">
+							<router-link :to="'/editar-coletor/'+collector.uid[0].value" class="btn btn-default btn-xs">
 								<i class="fa fa-edit" aria-hidden="true"></i>
 								Editar coletor
 							</router-link>

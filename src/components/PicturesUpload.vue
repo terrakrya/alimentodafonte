@@ -1,18 +1,18 @@
 <template>
   <div class="pictures-upload">
-    <b-form-group v-bind:label="'Foto' + (multiple ? 's' : '')" v-bind:description="'Selecione um '+ (multiple ? 'ou mais arquivos' : 'arquivo') +' no formato PNG, GIF, JPG ou JPEG, com no máximo 32 MB.'" v-show="!loading">
-      <b-form-file ref="files" id="files" v-bind:multiple="multiple" accept="image/*" v-on:change="uploadImages"></b-form-file>
+    <b-form-group :label="'Foto' + (multiple ? 's' : '')" :description="'Selecione um '+ (multiple ? 'ou mais arquivos' : 'arquivo') +' no formato PNG, GIF, JPG ou JPEG, com no máximo 32 MB.'" v-show="!loading">
+      <b-form-file ref="files" id="files" :multiple="multiple" accept="image/*" v-on:change="uploadImages"></b-form-file>
       <span class="text-danger" v-show="error">{{ error }}</span>
     </b-form-group>
     <div class="row images_preview" v-if="!loading && images_preview.length > 0">
-      <div class="col-xs-4" v-for="(image, index) in images_preview" v-bind:key="index">
-        <b-img v-bind:src="(image.uri ? baseURL() + image.uri[0].url : image.url)" fluid thumbnail />
+      <div class="col-xs-4" v-for="(image, index) in images_preview" :key="index">
+        <b-img :src="(image.uri ? baseURL() + image.uri[0].url : image.url)" fluid thumbnail />
         <br>
         <br>
         <p class="text-center"><a class="btn btn-default btn-small" @click="deleteImage(index)"><i class="fa fa-trash"></i></a></p>
       </div>
     </div>
-    <loading v-bind:loading="loading" msg="Enviando foto..."/>
+    <loading :loading="loading" msg="Enviando foto..."/>
   </div>  
 </template>
 

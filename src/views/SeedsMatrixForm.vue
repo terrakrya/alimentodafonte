@@ -1,16 +1,16 @@
 <template>
 	<div class="seeds-matrix-form">
-		<breadcrumb v-bind:links="[['Matrizes de semente', '/matrizes-de-sementes']]" v-bind:active="isEditing() ? form.title[0].value : 'Cadastrar'" />
+		<breadcrumb :links="[['Matrizes de semente', '/matrizes-de-sementes']]" :active="isEditing() ? form.title[0].value : 'Cadastrar'" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="matriz de sementes" />
-				<loading v-bind:loading="loading" />
+				<loading :loading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Nome da matriz *">
 								<b-form-input v-model="form.title[0].value" v-validate="'required'" name="title" />
-								<field-error v-bind:msg="veeErrors" field="title" />
+								<field-error :msg="veeErrors" field="title" />
 							</b-form-group>							
 						</div>
 						<div class="col-sm-6">
@@ -35,13 +35,13 @@
 						<div class="col-sm-4">
 							<b-form-group label="Categoria *">
 								<b-form-radio-group v-model="form.field_seed_matrix_category[0].value" :options="categorias_de_matrizes" stacked v-validate="'required'" name="field_seed_matrix_category" />
-								<field-error v-bind:msg="veeErrors" field="field_seed_matrix_category" />
+								<field-error :msg="veeErrors" field="field_seed_matrix_category" />
 							</b-form-group>
 						</div>
 						<div class="col-sm-4">
 							<b-form-group label="Origem *">
 								<b-form-radio-group v-model="form.field_seed_matrix_source[0].value" :options="origens_de_matrizes" stacked v-validate="'required'" name="field_seed_matrix_source" />
-								<field-error v-bind:msg="veeErrors" field="field_seed_matrix_source" />
+								<field-error :msg="veeErrors" field="field_seed_matrix_source" />
 							</b-form-group>
 						</div>
 						<div class="col-sm-4">
@@ -52,10 +52,10 @@
 					</div>
 					<div class="row">
 						<div class="col-sm-12">
-							<documents-upload v-bind:form="form" :multiple="true" v-bind:preview="documents_preview" v-bind:error="error" field="field_seed_matrix_files" url="file/upload/node/seed_matrix/field_seed_matrix_files?_format=json" /> 
+							<documents-upload :form="form" :multiple="true" :preview="documents_preview" :error="error" field="field_seed_matrix_files" url="file/upload/node/seed_matrix/field_seed_matrix_files?_format=json" /> 
 						</div>
 					</div>	
-					<form-submit v-bind:error="error" />
+					<form-submit :error="error" :sending="sending" />
 				</b-form>
 			</div>				
 		</div>

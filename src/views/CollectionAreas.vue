@@ -3,14 +3,14 @@
 		<breadcrumb active="Áreas de coleta" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
-				<list-headline name="Áreas de coleta" addUrl="/cadastrar-area-de-coleta" v-bind:filters="filters"/>
+				<list-headline name="Áreas de coleta" addUrl="/cadastrar-area-de-coleta" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading v-bind:loading="!collection_areas && !error" msg="Carregando lista de áreas" />
+					<loading :loading="!collection_areas && !error" msg="Carregando lista de áreas" />
 					<div v-if="collection_areas">
-						<b-table :fields="table_fields" :items="collection_areas" :sort-by="'title'" :filter="filters.search">
+						<b-table stacked="md" :fields="table_fields" :items="collection_areas" :sort-by="'title'" :filter="filters.search">
 							<template slot="title" slot-scope="data">
-								<router-link v-bind:to="'/area-de-coleta/'+ data.item.nid">
+								<router-link :to="'/area-de-coleta/'+ data.item.nid">
 									{{data.item.title}}
 									<small v-if="data.item.estimated_area">
 										<br>
@@ -19,7 +19,7 @@
 								</router-link>
 							</template>
 							<template slot="actions" slot-scope="data">
-								<router-link v-bind:to="'/editar-area-de-coleta/'+ data.item.nid" class="fa fa-edit btn btn-primary btn-xs "></router-link>
+								<router-link :to="'/editar-area-de-coleta/'+ data.item.nid" class="fa fa-edit btn btn-primary btn-xs "></router-link>
 								<a @click="remove(data.item.nid)" class="fa fa-trash btn btn-danger btn-xs"></a>
 							</template>
 						</b-table>

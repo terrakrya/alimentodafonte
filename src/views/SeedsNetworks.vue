@@ -3,14 +3,14 @@
 		<breadcrumb active="Redes de sementes" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
-				<list-headline name="Redes de sementes" addUrl="/cadastrar-rede-de-sementes" v-bind:filters="filters"/>
+				<list-headline name="Redes de sementes" addUrl="/cadastrar-rede-de-sementes" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading v-bind:loading="!seeds_networks && !error" msg="Carregando lista de redes" />
+					<loading :loading="!seeds_networks && !error" msg="Carregando lista de redes" />
 					<div v-if="seeds_networks">
-						<b-table :fields="table_fields" :items="seeds_networks" :sort-by="'title'" :filter="filters.search">
+						<b-table stacked="md" :fields="table_fields" :items="seeds_networks" :sort-by="'title'" :filter="filters.search">
 							<template slot="title" slot-scope="data">
-								<router-link v-bind:to="'/rede-de-sementes/'+ data.item.nid">
+								<router-link :to="'/rede-de-sementes/'+ data.item.nid">
 									{{data.item.title}}
 									<small v-if="data.item.seeds_houses">
 										<br>
@@ -19,7 +19,7 @@
 								</router-link>
 							</template>
 							<template slot="actions" slot-scope="data">
-								<router-link v-bind:to="'/editar-rede-de-sementes/'+ data.item.nid" class="fa fa-edit btn btn-primary btn-xs "></router-link>
+								<router-link :to="'/editar-rede-de-sementes/'+ data.item.nid" class="fa fa-edit btn btn-primary btn-xs "></router-link>
 								<a @click="remove(data.item.nid)" class="fa fa-trash btn btn-danger btn-xs"></a>
 							</template>
 						</b-table>

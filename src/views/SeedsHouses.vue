@@ -3,20 +3,20 @@
 		<breadcrumb active="Casas de semente" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
-				<list-headline name="Casas de semente" addUrl="/cadastrar-casa-de-sementes" v-bind:filters="filters"/>
+				<list-headline name="Casas de semente" addUrl="/cadastrar-casa-de-sementes" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading v-bind:loading="!seeds_houses && !error" msg="Carregando lista de casas" />
+					<loading :loading="!seeds_houses && !error" msg="Carregando lista de casas" />
 					<div v-if="seeds_houses">
-						<b-table :fields="table_fields" :items="seeds_houses" :sort-by="'name'" :filter="filters.search">
+						<b-table stacked="md" :fields="table_fields" :items="seeds_houses" :sort-by="'name'" :filter="filters.search">
 							<template slot="name" slot-scope="data">
-								<router-link v-bind:to="'/casa-de-sementes/'+ data.item.store_id">{{data.item.name}}</router-link>
+								<router-link :to="'/casa-de-sementes/'+ data.item.store_id">{{data.item.name}}</router-link>
 								<p v-if="data.item.collectors">
 									<small>{{data.item.collectors.length}} {{data.item.collectors.length | pluralize('coletor', 'coletores')}}</small>
 								</p>
 							</template>
 							<template slot="actions" slot-scope="data">
-								<router-link v-bind:to="'/editar-casa-de-sementes/'+ data.item.store_id" class="fa fa-edit btn btn-primary btn-xs "></router-link>
+								<router-link :to="'/editar-casa-de-sementes/'+ data.item.store_id" class="fa fa-edit btn btn-primary btn-xs "></router-link>
 								<a @click="remove(data.item.store_id)" class="fa fa-trash btn btn-danger btn-xs"></a>
 							</template>
 						</b-table>
