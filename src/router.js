@@ -12,6 +12,9 @@ import Seed from '@/views/Seed.vue'
 import Collectors from '@/views/Collectors.vue'
 import CollectorForm from '@/views/CollectorForm.vue'
 import Collector from '@/views/Collector.vue'
+import Clients from '@/views/Clients.vue'
+import ClientForm from '@/views/ClientForm.vue'
+import Client from '@/views/Client.vue'
 import CollectorsGroups from '@/views/CollectorsGroups.vue'
 import CollectorsGroupForm from '@/views/CollectorsGroupForm.vue'
 import CollectorsGroup from '@/views/CollectorsGroup.vue'
@@ -73,6 +76,11 @@ export default new Router({
     { path: '/cadastrar-coletor', component: CollectorForm, beforeEnter: requireAuth },
     { path: '/editar-coletor/:id', component: CollectorForm, beforeEnter: requireAuth },
     { path: '/coletor/:id', component: Collector, beforeEnter: requireAuth },
+
+    { path: '/clientes', component: Clients, beforeEnter: requireAuth },
+    { path: '/cadastrar-cliente', component: ClientForm, beforeEnter: requireAuth },
+    { path: '/editar-cliente/:id', component: ClientForm, beforeEnter: requireAuth },
+    { path: '/cliente/:id', component: Client, beforeEnter: requireAuth },
 
     { path: '/grupos-de-coletores', component: CollectorsGroups, beforeEnter: requireAuth },
     { path: '/cadastrar-grupo-de-coletores', component: CollectorsGroupForm, beforeEnter: requireAuth },

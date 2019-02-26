@@ -1,0 +1,214 @@
+<template>
+	<div class="client-form">
+		<breadcrumb :links="[['Clientes', '/clientes']]" :active="isEditing() ? form.name[0].value : 'Cadastrar'" />
+		<div class="panel panel-headline data-list">
+			<div class="panel-body">
+				<form-headline name="cliente" />
+				<loading :loading="loading" />
+				<b-form @submit.prevent="save" v-if="!loading">
+					<div class="row">
+						<div class="col-sm-6">
+							<b-form-group label="Nome do cliente *">
+								<b-form-input v-model="form.field_name[0].value" v-validate="'required'" name="field_name" />
+								<field-error :msg="veeErrors" field="field_name" />
+							</b-form-group>							
+						</div>
+						<div class="col-sm-6">
+							<b-form-group label="Apelido *">
+								<b-form-input v-model="form.field_nickname[0].value" v-validate="'required'" name="nickname" />
+								<field-error :msg="veeErrors" field="nickname" />
+							</b-form-group>							
+						</div>
+					</div>						
+					<div class="row gray">
+						<div class="col-sm-6">
+							<b-form-group label="Telefone *">
+								<b-form-input v-model="form.field_contact[0].value" v-validate="'required'" name="contact" v-mask="['(##) ####-####', '(##) #####-####']" />
+								<field-error :msg="veeErrors" field="contact" />
+							</b-form-group>							
+						</div>
+						<div class="col-sm-6">
+							<b-form-group label="CPF">
+								<the-mask  v-model="form.field_cpf[0].value" :mask="['###.###.###-##']" />
+							</b-form-group>							
+						</div>
+					</div>						
+					<form-address :form="form" />
+					<div class="row gray">
+						<div class="col-md-3 col-sm-6">
+							<b-form-group label="Banco">
+								<b-form-select v-model="form.field_bank_number[0].value" :options="bancos" />
+							</b-form-group>							
+						</div>
+						<div class="col-md-3 col-sm-6">
+							<b-form-group label="Agência">
+								<b-form-input v-model="form.field_agency[0].value" />
+							</b-form-group>							
+						</div>
+						<div class="col-md-3 col-sm-6">
+							<b-form-group label="Conta">
+								<b-form-input v-model="form.field_bank_account[0].value" />
+							</b-form-group>							
+						</div>
+						<div class="col-md-3 col-sm-6">
+							<b-form-group label="Tipo de conta">
+								<b-form-radio-group v-model="form.field_type_account[0].value" :options="tipos_de_conta" stacked >
+								</b-form-radio-group>
+							</b-form-group>							
+						</div>
+					</div>		
+					<div class="row">
+						<div class="col-sm-6">
+							<b-form-group label="Nome de usuário *" description="Nome que será usado para acessar o sistema">
+								<b-form-input v-model="form.name[0].value" v-validate="'required'" name="name" />
+								<field-error :msg="veeErrors" field="name" />
+							</b-form-group>							
+						</div>
+						<div class="col-sm-6">
+							<b-form-group label="Email">
+								<b-form-input v-model="form.mail[0].value" />
+								<div class="text-right" v-if="isEditing()">
+									<a class="pointer" @click="changePassword">Alterar senha</a>
+								</div>
+							</b-form-group>							
+						</div>
+					</div>
+					<div class="row gray" v-if="showPasswordFields">
+						<div class="col-sm-6">
+							<b-form-group label="Senha *">
+								<b-form-input v-model="form.pass[0].value" type="password" v-validate="'required'" name="pass" />
+								<field-error :msg="veeErrors" field="pass" />
+							</b-form-group>							
+						</div>
+						<div class="col-sm-6">
+							<b-form-group label="Confirmar senha *">
+								<b-form-input v-model="form.pass[0].confirmation" type="password" v-validate="'required'" name="pass_confirmation" />
+								<field-error :msg="veeErrors" field="pass_confirmation" />
+							</b-form-group>							
+						</div>
+					</div>						
+					
+					<div class="row">
+						<div class="col-md-12">
+							<pictures-upload :form="form" :preview="images_preview" :error="error" field="user_picture" url="file/upload/user/user/user_picture?_format=json" /> 
+						</div>					
+					</div>					
+					<form-submit :error="error" :sending="sending" />
+				</b-form>
+			</div>				
+		</div>
+	</div>
+</template>
+<script>
+import axios from 'axios'
+import Breadcrumb from '@/components/Breadcrumb'
+import Loading from '@/components/Loading'
+import FormHeadline from '@/components/FormHeadline'
+import FormAddress from '@/components/FormAddress'
+import FormSubmit from '@/components/FormSubmit'
+import PicturesUpload from '@/components/PicturesUpload'
+import FieldError from '@/components/FieldError'
+import bancos from '@/data/bancos.json';
+import tipos_de_conta from '@/data/tipos-de-conta.json';
+
+export default {
+	
+	name: 'CollectorForm', 
+	
+	computed: {
+		showPasswordFields () {
+			return !this.isEditing() || this.show_password
+		}
+	},
+
+	data () {
+
+		return { 
+			error: false,
+			loading: false,
+			sending: false,
+			images_preview: [],
+			log: false,
+			show_password: false,
+			bancos: bancos,
+			tipos_de_conta: tipos_de_conta,
+			form: {
+				timezone: [{ value: "America/Sao_Paulo" }],
+				status: [{ value: true }],
+				roles: [{ target_id: "client" }],
+				name: [{ value: '' }],
+				mail: [{ value: '' }],
+				pass: [{ value: '' }],
+				field_address: [{
+					country_code: "BR",
+					administrative_area: "",
+					locality: "",
+					postal_code: "",
+					address_line1: ""
+				}],
+				field_bank_number: [{ value: '' }],
+				field_agency: [{ value: '' }],
+				field_bank_account: [{ value: '' }],
+				field_type_account: [{ value: 'corrente' }],
+				field_contact: [{ value: '' }],
+				field_cpf: [{ value: '' }],
+				field_name: [{ value: '' }],
+				field_nickname: [{ value: '' }],
+				user_picture: [],
+			},
+		}
+	},
+	
+	created () {
+		if (this.isEditing()) {
+			this.edit(this.$route.params.id)
+		}
+	},
+	
+	methods: {
+		edit (id) {
+			this.loading = true
+			axios.get('user/' + id + '?_format=json').then(response => {
+				this.apiDataToForm(this.form, response.data)
+				this.images_preview = response.data.user_picture
+				this.loading = false
+			}).catch(error => { this.error = error.message; this.loading = false });
+		},
+		save () {
+			this.$validator.validate().then(isValid => {
+				if (isValid) {
+					this.sending = true
+					this.error = false
+
+					axios({
+						method: (this.isEditing() ? 'PATCH' : 'POST'),
+						url: (this.isEditing() ? 'user/'+ this.$route.params.id : 'entity/user')+'?_format=json', 
+						data: this.form
+					}).then(resp => {
+						var client = resp.data
+						if (client && client.uid) {
+							this.$router.replace('/cliente/'+client.uid[0].value)
+						}
+						this.sending = false
+					}).catch(error => { this.error = error.response.data.message; this.sending = false })
+				}
+			})
+		},
+		changePassword () {
+			this.show_password = !this.show_password
+		}
+
+	},
+
+	components: { 
+		Breadcrumb, 
+		Loading, 
+		FormHeadline, 
+		FormAddress, 
+		FormSubmit, 
+		FieldError,
+		PicturesUpload
+	}
+
+};
+</script>
