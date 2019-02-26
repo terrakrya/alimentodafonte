@@ -13,6 +13,9 @@
                 <router-link to="/lista-de-potencial"><span>Lista de potencial</span></router-link>
               </li>
               <li @click="toggleMenu">
+                <router-link to="/encomendas"><span>Encomendas</span></router-link>
+              </li>
+              <li @click="toggleMenu">
                 <router-link to="/pedidos-para-coletores"><span>Pedidos para Coletores</span></router-link>
               </li>
               <li @click="toggleMenu">

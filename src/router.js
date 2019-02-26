@@ -33,6 +33,8 @@ import SeedsMatrix from '@/views/SeedsMatrix.vue'
 import CollectorsRequests from '@/views/CollectorsRequests.vue'
 import CollectorsRequestForm from '@/views/CollectorsRequestForm.vue'
 // import CollectorsRequest from '@/views/CollectorsRequest.vue'
+import Orders from '@/views/Orders.vue'
+import OrderForm from '@/views/OrderForm.vue'
 import Stock from '@/views/Stock.vue'
 import StockInForm from '@/views/StockInForm.vue'
 import StockOutForm from '@/views/StockOutForm.vue'
@@ -112,12 +114,17 @@ export default new Router({
     { path: '/editar-pedido-para-coletores/:id', component: CollectorsRequestForm, beforeEnter: requireAuth },
     // { path: '/pedido-para-coletores/:id', component: CollectorsRequest, beforeEnter: requireAuth }
 
-    { path: '/estoque', component: Stock, beforeEnter: requireAuth },
-    { path: '/entrada-de-estoque', component: StockInForm, beforeEnter: requireAuth },
-    { path: '/saida-de-estoque', component: StockOutForm, beforeEnter: requireAuth },
+    { path: '/encomendas', component: Orders, beforeEnter: requireAuth },
+    { path: '/cadastrar-encomenda', component: OrderForm, beforeEnter: requireAuth },
+    { path: '/editar-encomenda/:id', component: OrderForm, beforeEnter: requireAuth },
 
     { path: '/lista-de-potencial', component: PotentialList, beforeEnter: requireAuth },
     { path: '/cadastrar-item-potencial', component: PotentialItemForm, beforeEnter: requireAuth },
     { path: '/editar-item-potencial/:id', component: PotentialItemForm, beforeEnter: requireAuth },
+
+    { path: '/estoque', component: Stock, beforeEnter: requireAuth },
+    { path: '/entrada-de-estoque', component: StockInForm, beforeEnter: requireAuth },
+    { path: '/saida-de-estoque', component: StockOutForm, beforeEnter: requireAuth },
+
   ]
 })
