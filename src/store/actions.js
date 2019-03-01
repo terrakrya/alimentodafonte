@@ -11,6 +11,10 @@ export default {
     commit('toggleMenu')
   },
 
+  loadList ({ commit }, type) {
+    commit('loadList', type)
+  },
+
   addTodo ({ commit }, text) {
     commit('addTodo', {
       text,

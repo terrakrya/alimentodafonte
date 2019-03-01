@@ -18,7 +18,7 @@
 <script>
 import { CoolSelect } from 'vue-cool-select'
 export default {
-  name: 'form-entities-select',
+  name: 'form-entity-select',
   props: ['items', 'form', 'field', 'input'],
   inject: ['$validator'],
   data () {
@@ -27,7 +27,9 @@ export default {
     }
   },
   created: function () {
-    this.entity = this.items.find(item => { return item.id == this.form[this.field][0].target_id })
+    if (this.form[this.field] && this.form[this.field].length) {
+      this.entity = this.items.find(item => { return item.id == this.form[this.field][0].target_id })  
+    }
   },
   methods: {
     addItem () {

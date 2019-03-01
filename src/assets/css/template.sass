@@ -163,7 +163,7 @@ a, a:hover, a:focus
     text-align: right
     a
       margin: 5px
-    .btn.btn-primary
+    .btn.btn-primary, .btn.btn-primary:focus
       background-color: $colorOrange
       border-color: $colorOrange
       font-size: 14px
@@ -1017,6 +1017,14 @@ form
   > a
     color: $colorDark
     display: block
+.list-group
+  table
+    tr
+      td
+        padding-top: 0
+        padding-bottom: 0
+        // margin: 0
+        border: none
 .list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover
   background-color: $colorOrange
   border-color: $colorOrange
@@ -1025,24 +1033,26 @@ form
   a:not(.btn)
     display: block
     cursor: pointer
+    &:not([class*="text-"])
+      color: $colorDark
     small
       color: $colorDark
   .b-table-bottom-row
     background-color: $colorLightGray
-
 .seeds-select  
   input.weight
     width: calc(100% - 172px) !important
+    height: 34px
   .col-sm-6
     border: none
   .col-sm-6
     border: none
     padding-left: 0
 
-.stock
+.stock, .collectors-requests
   table
     font-size: 14px 
-    a:not([class*="text-"]) 
+    a:not([class*="text-"]):not(.btn) 
       color: $colorDark
   .stock_in
     color: green
@@ -1166,6 +1176,12 @@ form
   .filters .row div[class*="col-sm-"]
     clear: both
 
+  .b-table-bottom-row
+    display: block !important
+    text-align: center
+    td:empty
+      display: none !important
+    
 @media (max-width: 540px)
   #wrapper
     .sidebar
