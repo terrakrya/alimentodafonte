@@ -1,5 +1,5 @@
 <template>
-	<div class="collectors_requests">
+	<div class="collectors-requests">
 		<breadcrumb active="Pedidos para coletores" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
@@ -8,17 +8,36 @@
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
 					<loading :loading="!collectors_requests && !error" msg="Carregando lista de pedidos" />
 					<div v-if="collectors_requests">
-						<b-table stacked="md" :fields="table_fields" :items="collectors_requests" :sort-by="'name'" :filter="filters.search">
-							<template slot="name" slot-scope="data">
-								<router-link :to="'/pedido-para-coletores/'+ data.item.nid">{{data.item.title}}</router-link>
-<!-- 								<p v-if="data.item.collectors">
-									<small>{{data.item.collectors.length}} {{data.item.collectors.length | pluralize('coletor', 'coletores')}}</small>
-								</p>
- -->							</template>
-							<template slot="actions" slot-scope="data">
-								<router-link :to="'/editar-pedido-para-coletores/'+ data.item.nid" class="fa fa-edit btn btn-primary btn-xs "></router-link>
-								<a @click="remove(data.item.nid)" class="fa fa-trash btn btn-danger btn-xs"></a>
+						<b-table stacked="md" :fields="table_fields" :items="collectors_requests" :sort-by="'created'" :filter="filters.search">
+							<template slot="created" slot-scope="data">
+								<router-link v-if="data.item.created" :to="'/pedido-para-coletores/'+ data.item.id"> {{data.item.created | moment("DD/MM/YYYY")}} </router-link>
 							</template>
+							<template slot="seeds_house" slot-scope="data">
+								<router-link v-if="data.item.seeds_house" :to="'/casa-de-sementes/'+ data.item.seeds_house.id"> {{data.item.seeds_house.title}} </router-link>
+							</template>
+							<template slot="collector" slot-scope="data">
+								<router-link v-if="data.item.collectors_group" :to="'/grupo-de-coletores/'+ data.item.collectors_group.id"> {{data.item.collectors_group.title}} </router-link>
+								<router-link v-if="data.item.collector" :to="'/coletor/'+ data.item.collector.id"> {{data.item.collector.title}} </router-link>
+							</template>
+							<template slot="actions" slot-scope="data">
+								<router-link :to="'/editar-pedido-para-coletores/'+ data.item.id" class="fa fa-edit btn btn-primary btn-xs "></router-link>
+								<a @click="remove(data.item.id)" class="fa fa-trash btn btn-danger btn-xs"></a>
+							</template>
+							<template slot="weight" slot-scope="data">
+								{{data.item.weight}} kg
+							</template>
+							<template slot="price" slot-scope="data">
+								{{data.item.price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+							</template>
+							<!-- eslint-disable-next-line -->
+							<template slot="bottom-row" slot-scope="data">
+								<td/>
+								<td/>
+								<td><strong> Total</strong></td>
+								<td><strong>{{total_weight}} Kg</strong></td>
+								<td><strong>{{total_price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}</strong></td>
+								<td/>
+							</template> 
 						</b-table>
 					</div>
 				</div>
@@ -41,29 +60,34 @@ export default {
 			error: false,
 			filters: { search: null },
 			table_fields: [
-				{ key: 'title', label: 'Título', sortable: true },
-				{ key: 'nid', label: 'Localidade', sortable: true },
-				{ key: 'actions', label: 'Ações', 'class': 'actions' },
-			],
-			collectors_requests: null
+			{ key: 'created', label: 'Data', sortable: true },
+			{ key: 'seeds_house', label: 'Casa de sementes', sortable: true },
+			{ key: 'collector', label: 'Grupo / Coletor', sortable: true },
+			{ key: 'weight', label: 'Peso', sortable: true },
+			{ key: 'price', label: 'Total', sortable: true },
+			{ key: 'actions', label: 'Ações', 'class': 'actions' },
+			]
 		}
 	},
-	
 	created () {
-		this.list()
+		this.loadList('collectors_requests')
 	},
-
-	methods: {
-		list () {
-			axios.get('rest/collectors-requests?_format=json').then(response => {
-				this.collectors_requests = response.data.map(collectors_request => {
-					return { 
-						nid: collectors_request.nid[0].value,
-						title: collectors_request.title[0].value
-					}
-				})
-			}).catch(error => { this.error = error.message })
+	computed: {
+		collectors_requests () {
+			return this.$store.state.collectors_requests
 		},
+		total_weight () {
+			return this.collectors_requests.map(collectors_request => {
+				return collectors_request.weight
+			}).reduce((a, b) => a + b)
+		},
+		total_price () {
+			return this.collectors_requests.map(collectors_request => {
+				return collectors_request.price
+			}).reduce((a, b) => a + b)
+		}
+	},
+	methods: {
 		remove (id) {
 			if (confirm("Tem certeza que deseja excluír?")) {
 				axios.delete('node/' + id + '?_format=json').then(() => {
@@ -72,12 +96,11 @@ export default {
 			}
 		}
 	},
-
 	components: { 
 		'loading': Loading,
 		'list-headline': ListHeadline,
 		'breadcrumb': Breadcrumb
 	}
-		
+
 };
 </script>

@@ -8,7 +8,13 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     currentUser: JSON.parse(window.localStorage.getItem('currentUser')),
-    showMenu: false
+    showMenu: false,
+    collectors_requests: false,
+    collectors: [],
+    collectors_groups: [],
+    seeds_houses: [],
+    seeds: [],
+    product_variations: []
   },
   actions,
   mutations
