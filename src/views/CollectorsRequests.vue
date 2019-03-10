@@ -10,7 +10,11 @@
 					<div v-if="collectors_requests">
 						<b-table stacked="md" :fields="table_fields" :items="collectors_requests" :sort-by="'created'" :filter="filters.search">
 							<template slot="created" slot-scope="data">
-								<router-link v-if="data.item.created" :to="'/pedido-para-coletores/'+ data.item.id"> {{data.item.created | moment("DD/MM/YYYY")}} </router-link>
+								<router-link v-if="data.item.created" :to="'/pedido-para-coletores/'+ data.item.id"> 
+									{{data.item.created | moment("DD/MM/YYYY")}} 
+									<br>
+									Pedido {{data.item.id}}
+								</router-link>
 							</template>
 							<template slot="seeds_house" slot-scope="data">
 								<router-link v-if="data.item.seeds_house" :to="'/casa-de-sementes/'+ data.item.seeds_house.id"> {{data.item.seeds_house.title}} </router-link>
@@ -43,6 +47,7 @@
 				</div>
 			</div>
 		</div>
+		<pre>{{collectors_requests}}</pre>
 	</div>
 </template>
 <script>
@@ -60,10 +65,10 @@ export default {
 			error: false,
 			filters: { search: null },
 			table_fields: [
-			{ key: 'created', label: 'Data', sortable: true },
+			{ key: 'created', label: 'ID / Data', sortable: true },
 			{ key: 'seeds_house', label: 'Casa de sementes', sortable: true },
 			{ key: 'collector', label: 'Grupo / Coletor', sortable: true },
-			{ key: 'weight', label: 'Peso', sortable: true },
+			{ key: 'weight', label: 'Quantidade', sortable: true },
 			{ key: 'price', label: 'Total', sortable: true },
 			{ key: 'actions', label: 'Ações', 'class': 'actions' },
 			]

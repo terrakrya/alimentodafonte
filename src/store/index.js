@@ -10,11 +10,11 @@ export default new Vuex.Store({
     currentUser: JSON.parse(window.localStorage.getItem('currentUser')),
     showMenu: false,
     collectors_requests: false,
-    collectors: [],
-    collectors_groups: [],
-    seeds_houses: [],
-    seeds: [],
-    product_variations: []
+    collectors: false,
+    collectors_groups: false,
+    seeds_houses: false,
+    seeds: false,
+    product_variations: false
   },
   actions,
   mutations

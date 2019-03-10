@@ -1,6 +1,6 @@
 <template>
 	<div class="collectors-request-form">
-		<breadcrumb :links="[['Pedidos para coletores', '/pedidos-para-coletores']]" :active="isEditing() ? form.title[0].value : 'Cadastrar'" />
+		<breadcrumb :links="[['Pedidos para coletores', '/pedidos-para-coletores']]" :active="isEditing() ? 'Pedido '+$route.params.id : 'Cadastrar'" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="pedido para coletores" />
@@ -9,23 +9,23 @@
 					<div class="row">
 						<div class="col-sm-4">
 							<b-form-group label="Casa de sementes *" >
-								<form-entity-select :items="seeds_houses" :form="form" field="field_requests_seeds_house" />
+								<form-entity-select v-if="seeds_houses" :items="seeds_houses" :form="form" field="field_requests_seeds_house" />
 							</b-form-group>							
 						</div>					
 						<div class="col-sm-4">
 							<b-form-group label="Grupo de coletores" >
-								<form-entity-select :items="collectors_groups" :form="form" field="field_requests_group" />
+								<form-entity-select v-if="collectors_groups.length" :items="collectors_groups" :form="form" field="field_requests_group" />
 							</b-form-group>							
 						</div>					
 						<div class="col-sm-4">
 							<b-form-group label="Coletor" >
-								<form-entity-select :items="collectors" :form="form" field="field_requests_collector" />
+								<form-entity-select v-if="collectors" :items="collectors" :form="form" field="field_requests_collector" />
 							</b-form-group>							
 						</div>					
 					</div>		
 					<div class="row">
 						<div class="col-sm-12">
-							<form-seeds-select :form="form" field="field_paragraph_seeds" fieldtype="collectors_seeds_requests" :parent="this.$route.params.id" fieldseed="field_paragraph_seed" fieldextra="field_paragraph_weight" />
+							<form-seeds-select :form="form" field="field_paragraph_seeds" fieldtype="collectors_seeds_requests" :parent="this.$route.params.id" fieldseed="field_paragraph_seed" fieldextra="field_paragraph_weight" :seeds="seeds" v-if="seeds.length" />
 						</div>
 					</div>								
 					<form-submit :error="error" :sending="sending" />
@@ -65,12 +65,13 @@ export default {
 			}
 		}
 	},
-	created () {
+	async created () {
 
-		this.loadList('collectors')
-		this.loadList('collectors_groups')
-		this.loadList('seeds_houses')
-
+		this.getList('collectors')
+		this.getList('collectors_groups')
+		this.getList('seeds_houses')
+		this.getList('seeds')
+ 
 		if (this.isEditing()) {
 			this.edit(this.$route.params.id)
 		}
@@ -84,6 +85,9 @@ export default {
     },
     seeds_houses () {
       return this.$store.state.seeds_houses
+    },
+    seeds () {
+      return this.$store.state.seeds
     }
 	},
 	methods: {
@@ -107,6 +111,7 @@ export default {
 					}).then(resp => {
 						var collectors_request = resp.data
 						if (collectors_request && collectors_request.nid) {
+							this.loadList('collectors_request')
 							this.$router.replace('/pedido-para-coletores/'+collectors_request.nid[0].value)
 						}
 						this.sending = false						
@@ -115,7 +120,6 @@ export default {
 			})
 		}
 	},
-
 	components: { 
 		Breadcrumb, 
 		Loading, 

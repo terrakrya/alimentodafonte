@@ -25,7 +25,8 @@
 								<form-entity-select v-if="user_options && user_options.length > 0" :items="user_options" :form="form" field="uid" />
 							</b-form-group>							
 						</div>					
-					</div>					
+					</div>			
+					<!-- <form-address :form="form" />		 -->
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Coletores" >
@@ -42,6 +43,7 @@
 				</b-form>
 			</div>				
 		</div>
+		<!-- <pre>{{form}}</pre> -->
 	</div>
 </template>
 
@@ -52,6 +54,7 @@ import Loading from '@/components/Loading'
 import FormHeadline from '@/components/FormHeadline'
 import FormEntitySelect from '@/components/FormEntitySelect'
 import FormEntitiesSelect from '@/components/FormEntitiesSelect'
+import FormAddress from '@/components/FormAddress'
 import FormSubmit from '@/components/FormSubmit'
 import FieldError from '@/components/FieldError'
 
@@ -79,6 +82,13 @@ export default {
 				field_phone: [{ value: '' }],
 				field_group: [],
 				field_collector: [],
+				// field_address: [{
+				// 	country_code: "BR",
+				// 	administrative_area: "",
+				// 	locality: "",
+				// 	postal_code: "",
+				// 	address_line1: ""
+				// }]
 			},
 		}
 	},
@@ -173,6 +183,7 @@ export default {
 		FormHeadline, 
 		FormEntitySelect, 
 		FormEntitiesSelect, 
+		FormAddress, 
 		FormSubmit, 
 		FieldError
 	}
