@@ -2,7 +2,7 @@
   <div>  
     <div class="seeds-select">
       <b-form-group label="Adicionar semente">
-        <cool-select v-model="seed_form[fieldseed][0].target_id" :arrowsDisableInstantSelection="true" placeholder="Selecione a semente" :items="seed_options" item-text="title" item-value="id" class="col-sm-6">
+        <cool-select v-if="seeds" v-model="seed_form[fieldseed][0].target_id" :arrowsDisableInstantSelection="true" placeholder="Selecione a semente" :items="seeds" item-text="title" item-value="id" class="col-sm-6">
           <template slot="item" slot-scope="{ item: option }">
             <div style="display: flex; align-items: center;">
               <img v-if="option.picture" :src="option.picture">
@@ -15,7 +15,7 @@
           </template>
         </cool-select>
         <div class="col-sm-6">
-          <input v-model="seed_form[fieldextra][0].value" class="weight" placeholder="Peso" type="number" /> Kg
+          <input v-model="seed_form[fieldextra][0].value" class="weight" placeholder="Quantidade" type="number" /> Kg
           <b-button class="btn btn-primary fa fa-plus pull-right" @click="addSeed()">Adicionar</b-button>
         </div>
         <br>
@@ -79,7 +79,7 @@ import Loading from '@/components/Loading'
 
 export default {
   name: 'form-entities-select',
-  props: ['form', 'field', 'fieldtype', 'parent', 'fieldseed', 'fieldextra'],
+  props: ['form', 'field', 'fieldtype', 'parent', 'fieldseed', 'fieldextra', 'seeds'],
   inject: ['$validator'],
   data () {
     var seed_form = {
@@ -89,33 +89,19 @@ export default {
         parent_field_name: [{ value: this.field }]
       }   
     seed_form[this.fieldseed] = [{ target_id: '' }]
-    seed_form[this.fieldextra] = [{ target_id: '' }]
+    seed_form[this.fieldextra] = [{ value: '' }]
 
     return { 
       error: false,      
       sending: false,      
-      seed_options: [],
       items: [],
       seed_form: seed_form
     }
   },
   created () {
-    axios.get('rest/seeds-list?_format=json').then(response => {
-      this.seed_options = response.data.map(seed => {
-        return { 
-          id: seed.product_id[0].value,
-          title: seed.title[0].value,
-          description: seed.field_scientific_name[0].value,
-          picture: this.present(seed.field_images, 'url') ? seed.field_images[0].url : null,
-          variation_id: seed.variations[0].target_id,
-        }
-      })
-
-      if (this.isEditing()) {
-        this.edit()
-      }
-
-    }).catch(error => { this.error = error.message })
+    if (this.isEditing()) {
+      this.edit()
+    }
   },
   computed: {
     preview () {
@@ -129,11 +115,15 @@ export default {
     totalQty () {
       if (this.preview) {
         return this.preview.map((item) => Number(item.extra)).reduce((a, b) => a + b)
+      } else {
+        return 0
       }
     },
     totalPrice () {
       if (this.preview) {
         return this.preview.map((item) => Number(item.price) * Number(item.extra)).reduce((a, b) => a + b)
+      } else {
+        return 0
       }
     }
   },
@@ -164,18 +154,17 @@ export default {
       })
     },
     addItem(paragraph) {
-      var seed = this.seed_options.find(s => {
-        return s.id == paragraph[this.fieldseed][0].target_id
-      })
-
-      axios.get('entity/commerce_product_variation/' + seed.variation_id + '?_format=json').then(seed_variation => {
+      if (this.seeds) {
+        var seed = this.seeds.find(s => {
+          return s.id == paragraph[this.fieldseed][0].target_id
+        })
         this.items.push({ 
           id: paragraph.id[0].value, 
           name: seed.title, 
           extra: paragraph[this.fieldextra][0].value,
-          price: seed_variation.data.price[0].number 
+          price: seed.price 
         })
-      })
+      }
     },
     edit () {
       this.loading = true
@@ -184,7 +173,6 @@ export default {
           axios.get('entity/paragraph/' + item.target_id + '?_format=json').then(response => {
             this.addItem(response.data)
           }).catch(error => { this.error = error.message; this.loading = false });
-
         })        
       }
     }

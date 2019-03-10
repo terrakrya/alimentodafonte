@@ -32,7 +32,7 @@ import SeedsMatrixForm from '@/views/SeedsMatrixForm.vue'
 import SeedsMatrix from '@/views/SeedsMatrix.vue'
 import CollectorsRequests from '@/views/CollectorsRequests.vue'
 import CollectorsRequestForm from '@/views/CollectorsRequestForm.vue'
-// import CollectorsRequest from '@/views/CollectorsRequest.vue'
+import CollectorsRequest from '@/views/CollectorsRequest.vue'
 import Orders from '@/views/Orders.vue'
 import OrderForm from '@/views/OrderForm.vue'
 import Stock from '@/views/Stock.vue'
@@ -112,7 +112,7 @@ export default new Router({
     { path: '/pedidos-para-coletores', component: CollectorsRequests, beforeEnter: requireAuth },
     { path: '/cadastrar-pedido-para-coletores', component: CollectorsRequestForm, beforeEnter: requireAuth },
     { path: '/editar-pedido-para-coletores/:id', component: CollectorsRequestForm, beforeEnter: requireAuth },
-    // { path: '/pedido-para-coletores/:id', component: CollectorsRequest, beforeEnter: requireAuth }
+    { path: '/pedido-para-coletores/:id', component: CollectorsRequest, beforeEnter: requireAuth },
 
     { path: '/encomendas', component: Orders, beforeEnter: requireAuth },
     { path: '/cadastrar-encomenda', component: OrderForm, beforeEnter: requireAuth },

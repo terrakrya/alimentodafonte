@@ -62,7 +62,8 @@
 					</div>					
 					<div class="row">
 						<div class="col-sm-12">
-							<form-seeds-select :form="form" field="this.$route.params.id" fieldtype="order_entry_seeds" :parent="this.$route.params.id" />
+							<form-seeds-select :form="form" field="field_order_entry_seeds" fieldtype="order_entry_seeds" :parent="this.$route.params.id" fieldseed="field_order_entry_seed" fieldextra="field_order_entry_seeds_qty" :seeds="seeds" v-if="seeds.length" />
+							
 						</div>					
 					</div>					
 					<form-submit :error="error" :sending="sending" />
@@ -75,14 +76,12 @@
 
 <script>
 import axios from 'axios'
-import { CoolSelect } from 'vue-cool-select'
 import Breadcrumb from '@/components/Breadcrumb'
 import Loading from '@/components/Loading'
 import FormHeadline from '@/components/FormHeadline'
 import FormEntitySelect from '@/components/FormEntitySelect'
 import FormSeedsSelect from '@/components/FormSeedsSelect'
 import FormSubmit from '@/components/FormSubmit'
-import FieldError from '@/components/FieldError'
 import fitofisionomias from '@/data/fitofisionomias.json'
 
 export default {
@@ -195,9 +194,7 @@ export default {
 		FormHeadline, 
 		FormEntitySelect, 
 		FormSeedsSelect, 
-		FormSubmit, 
-		FieldError,
-		CoolSelect
+		FormSubmit
 	}
 
 };
