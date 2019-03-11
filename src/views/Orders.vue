@@ -24,15 +24,27 @@
 								{{data.item.total | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
 								<small v-if="data.item.total && data.item.purchase_type"><br/>({{data.item.purchase_type}})</small>
 							</template>
+							<template slot="weight" slot-scope="data">
+								{{data.item.weight}} kg
+							</template>
 							<template slot="actions" slot-scope="data">
 								<router-link :to="'/editar-encomenda/'+ data.item.id" class="fa fa-edit btn btn-primary btn-xs "></router-link>
 								<a @click="remove(data.item.id)" class="fa fa-trash btn btn-danger btn-xs"></a>
+							</template>
+							<!-- eslint-disable-next-line -->
+							<template slot="bottom-row" slot-scope="data">
+								<td/>
+								<td><strong> Total</strong></td>
+								<td><strong>{{total_weight}} Kg</strong></td>
+								<td><strong>{{total_price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}</strong></td>
+								<td/>
 							</template>
 						</b-table>
 					</div>
 				</div>
 			</div>
 		</div>
+		<pre>{{orders}}</pre>
 	</div>
 </template>
 <script>
@@ -52,6 +64,7 @@ export default {
 			table_fields: [
 				{ key: 'date_receiving', label: 'Data / ID', sortable: true },
 				{ key: 'client', label: 'Cliente', sortable: true },
+				{ key: 'weight', label: 'Quantidade', sortable: true },
 				{ key: 'total', label: 'Total', sortable: true },
 				{ key: 'actions', label: 'Ações', 'class': 'actions' },
 			]
@@ -63,13 +76,23 @@ export default {
 	computed: {
 		orders () {
 			return this.$store.state.orders
+		},
+		total_weight () {
+			return this.orders.map(order => {
+				return order.weight
+			}).reduce((a, b) => a + b)
+		},
+		total_price () {
+			return this.orders.map(order => {
+				return order.total 
+			}).reduce((a, b) => a + b)
 		}
 	},
 	methods: {
 		remove (id) {
 			if (confirm("Tem certeza que deseja excluír?")) {
 				axios.delete('node/' + id + '?_format=json').then(() => {
-					this.list()
+					this.loadList('orders')
 				}).catch(error => { this.error = error.message })	
 			}
 		}

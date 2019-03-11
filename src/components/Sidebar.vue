@@ -10,7 +10,7 @@
             <a><i class="fa fa-cogs"></i><span>Operacional</span><i class="fa fa-chevron-down"></i></a>
             <ul class="nav">
               <li @click="toggleMenu">
-                <router-link to="/lista-de-potencial"><span>Lista de potencial</span></router-link>
+                <router-link to="/listas-de-potencial"><span>Potencial de coleta</span></router-link>
               </li>
               <li @click="toggleMenu">
                 <router-link to="/encomendas"><span>Encomendas</span></router-link>

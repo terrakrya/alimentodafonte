@@ -56,7 +56,7 @@
 								<tbody>
 									<tr v-for="(seed, index) in collectors_request.seeds" :key="index">
 										<td>
-											{{seed.title}}
+											<router-link :to="'/semente/'+seed.id">{{seed.title}}</router-link>
 										</td>
 										<td>
 											{{seed.price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
