@@ -68,6 +68,64 @@ async function getCollectorsRequests (state) {
   })
 }
 
+async function getOrders (state) {
+  return await axios.get('rest/orders-entries?_format=json').then(async response => {
+    if (!state.clients.length) {
+      await getClients(state)
+    }    
+    if (!state.seeds.length) {
+      await getSeeds(state)
+    }
+
+    let orders = []
+    response.data.forEach(r => {
+      let index = -1
+      orders.forEach((req, i) => {
+        if (req.nid == r.nid) {
+          index = i
+        }
+      })
+      let seed = state.seeds.find(s => s.id == r.field_order_entry_seed) 
+       
+      var new_seed = Object.assign({}, seed)
+
+      new_seed.weight = Number(r.field_order_entry_seeds_qty)
+      if (index >= 0) {
+        orders[index].seeds.push(new_seed)
+      } else {
+        r.seeds = [new_seed]
+        orders.push(r)
+      }
+    })
+    state.orders = orders.map(order => {
+      return { 
+        id: order.nid,
+        title: order.title,
+        client: order.field_order_entry_clients.length 
+          ? state.clients.find(c => c.id == order.field_order_entry_clients[0])
+          : null,
+        // total: Number(order.field_order_entry_total),
+        total: order.seeds.map((i) => i.price * i.weight).reduce((a, b) => a + b),
+        status: order.field_order_entry_contract,
+        area: order.field_order_entry_restored_area,
+        date_receiving: order.field_order_entry_date_receiving,
+        deadline: order.field_order_entry_deadline,
+        flood: order.field_order_entry_flood,
+        bog: order.field_order_entry_bog,
+        purchase_type: order.field_order_entry_purchase_type,
+        amount_paid: order.field_order_entry_amount_paid || 0,
+        amount_remain: order.field_order_entry_amount_remain || 0,
+        close: (order.field_order_entry_close == 1),
+        vegetation: order.field_order_entry_vegetation,
+        seeds: order.seeds,
+        weight: order.seeds.map((i) => i.weight).reduce((a, b) => a + b),
+        price: order.seeds.map((i) => i.price * i.weight).reduce((a, b) => a + b)
+      }
+    })
+    return state.orders
+  })
+}
+
 async function getCollectors (state) {
   return await axios.get('rest/collectors?_format=json').then(response => {
     state.collectors = response.data.map(item => {
@@ -81,6 +139,21 @@ async function getCollectors (state) {
     return state.collectors
   })
 }
+
+async function getClients (state) {
+  return await axios.get('rest/clients?_format=json').then(response => {
+    state.clients = response.data.map(item => {
+      return { 
+        id: item.uid[0].value,
+        title: item.field_name[0].value,
+        description: item.field_nickname[0].value,
+        picture: present(item.user_picture, 'url') ? item.user_picture[0].url : null,
+      }
+    })
+    return state.clients
+  })
+}
+
 async function getCollectorsGroups (state) {
   return await axios.get('rest/collectors-groups?_format=json').then(response => {
     state.collectors_groups = response.data.map(item => {
@@ -162,6 +235,10 @@ export const mutations = {
       getSeedsHouses(state)
     } else if (type == 'seeds') {
       getSeeds(state)
+    } else if (type == 'orders') {
+      getOrders(state)
+    } else if (type == 'clients') {
+      getOrders(state)
     }
     
   },

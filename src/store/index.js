@@ -14,7 +14,9 @@ export default new Vuex.Store({
     collectors_groups: false,
     seeds_houses: false,
     seeds: false,
-    product_variations: false
+    product_variations: false,
+    orders: false,
+    clients: false,
   },
   actions,
   mutations

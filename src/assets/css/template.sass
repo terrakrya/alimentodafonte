@@ -421,11 +421,14 @@ a, a:hover, a:focus
     font-size: 17px
 
 .item-title
-  span
+  span:not(.badge)
     margin-left: 10px
     &:first-child
       margin-left: 0
       margin-right: 10px
+  .badge
+    margin-right: 5px
+    font-size: 14px
   .btn i
     margin-right: 5px
   .item-img

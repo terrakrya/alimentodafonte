@@ -8,7 +8,7 @@
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
 					<loading :loading="!collectors_requests && !error" msg="Carregando lista de pedidos" />
 					<div v-if="collectors_requests">
-						<b-table stacked="md" :fields="table_fields" :items="collectors_requests" :sort-by="'created'" :filter="filters.search">
+						<b-table stacked="md" :fields="table_fields" :items="collectors_requests" :sort-by="'created'" :sort-desc="true" :filter="filters.search">
 							<template slot="created" slot-scope="data">
 								<router-link v-if="data.item.created" :to="'/pedido-para-coletores/'+ data.item.id"> 
 									{{data.item.created | moment("DD/MM/YYYY")}} 
@@ -96,7 +96,7 @@ export default {
 		remove (id) {
 			if (confirm("Tem certeza que deseja excluír?")) {
 				axios.delete('node/' + id + '?_format=json').then(() => {
-					this.list()
+					this.loadList('collectors_requests')
 				}).catch(error => { this.error = error.message })	
 			}
 		}

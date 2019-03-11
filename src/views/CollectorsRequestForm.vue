@@ -111,7 +111,7 @@ export default {
 					}).then(resp => {
 						var collectors_request = resp.data
 						if (collectors_request && collectors_request.nid) {
-							this.loadList('collectors_request')
+							this.loadList('collectors_requests')
 							this.$router.replace('/pedido-para-coletores/'+collectors_request.nid[0].value)
 						}
 						this.sending = false						

@@ -35,6 +35,7 @@ import CollectorsRequestForm from '@/views/CollectorsRequestForm.vue'
 import CollectorsRequest from '@/views/CollectorsRequest.vue'
 import Orders from '@/views/Orders.vue'
 import OrderForm from '@/views/OrderForm.vue'
+import Order from '@/views/Order.vue'
 import Stock from '@/views/Stock.vue'
 import StockInForm from '@/views/StockInForm.vue'
 import StockOutForm from '@/views/StockOutForm.vue'
@@ -117,6 +118,7 @@ export default new Router({
     { path: '/encomendas', component: Orders, beforeEnter: requireAuth },
     { path: '/cadastrar-encomenda', component: OrderForm, beforeEnter: requireAuth },
     { path: '/editar-encomenda/:id', component: OrderForm, beforeEnter: requireAuth },
+    { path: '/encomenda/:id', component: Order, beforeEnter: requireAuth },
 
     { path: '/lista-de-potencial', component: PotentialList, beforeEnter: requireAuth },
     { path: '/cadastrar-item-potencial', component: PotentialItemForm, beforeEnter: requireAuth },
