@@ -44,7 +44,6 @@
 				</div>
 			</div>
 		</div>
-		<pre>{{orders}}</pre>
 	</div>
 </template>
 <script>

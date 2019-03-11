@@ -43,7 +43,6 @@
 				</b-form>
 			</div>				
 		</div>
-		<!-- <pre>{{form}}</pre> -->
 	</div>
 </template>
 
@@ -54,7 +53,7 @@ import Loading from '@/components/Loading'
 import FormHeadline from '@/components/FormHeadline'
 import FormEntitySelect from '@/components/FormEntitySelect'
 import FormEntitiesSelect from '@/components/FormEntitiesSelect'
-import FormAddress from '@/components/FormAddress'
+// import FormAddress from '@/components/FormAddress'
 import FormSubmit from '@/components/FormSubmit'
 import FieldError from '@/components/FieldError'
 
@@ -183,7 +182,7 @@ export default {
 		FormHeadline, 
 		FormEntitySelect, 
 		FormEntitiesSelect, 
-		FormAddress, 
+		// FormAddress, 
 		FormSubmit, 
 		FieldError
 	}
