@@ -97,7 +97,6 @@
 				</div>
 			</div>
 		</div>
-		<pre>{{potential_list}}</pre>
 	</div>
 </template>
 <script>
@@ -106,7 +105,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 
 export default {
 
-	name: 'CollectorsRequest', 
+	name: 'PotentialList', 
 
 	data () {
 		return { 

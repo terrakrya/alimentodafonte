@@ -32,7 +32,6 @@
 				</b-form>
 			</div>				
 		</div>
-		<pre>{{form}}</pre>
 	</div>
 </template>
 
@@ -47,7 +46,7 @@ import FormSubmit from '@/components/FormSubmit'
 
 export default {
 	
-	name: 'PotentialItemForm', 
+	name: 'PotentialListForm', 
 	
 	data () {
 

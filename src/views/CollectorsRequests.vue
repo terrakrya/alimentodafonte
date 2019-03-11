@@ -47,7 +47,6 @@
 				</div>
 			</div>
 		</div>
-		<pre>{{collectors_requests}}</pre>
 	</div>
 </template>
 <script>

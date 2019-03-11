@@ -42,7 +42,6 @@
 				</div>
 			</div>
 		</div>
-		<pre>{{potential_lists}}a</pre>
 	</div>
 </template>
 <script>

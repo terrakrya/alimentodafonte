@@ -95,7 +95,6 @@
 				</div>
 			</div>
 		</div>
-		<pre>{{order}}</pre>
 	</div>
 </template>
 <script>
