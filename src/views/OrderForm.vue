@@ -1,6 +1,6 @@
 <template>
 	<div class="collectors-request-form">
-		<breadcrumb :links="[['Encomendas', '/encomendas']]" :active="isEditing() ? form.title[0].value : 'Cadastrar'" />
+		<breadcrumb :links="[['Encomendas', '/encomendas']]" :active="isEditing() ? 'Encomenda ' + $route.params.id : 'Cadastrar'" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="encomenda" />
@@ -9,7 +9,7 @@
 					<div class="row">
 						<div class="col-sm-4">
 							<b-form-group label="Cliente *" >
-								<form-entity-select v-if="client_options.length" :items="client_options" :form="form" field="field_order_entry_clients" />
+								<form-entity-select v-if="clients.length" :items="clients" :form="form" field="field_order_entry_clients" />
 							</b-form-group>							
 						</div>			
 						<div class="col-sm-4">
@@ -63,7 +63,6 @@
 					<div class="row">
 						<div class="col-sm-12">
 							<form-seeds-select :form="form" field="field_order_entry_seeds" fieldtype="order_entry_seeds" :parent="this.$route.params.id" fieldseed="field_order_entry_seed" fieldextra="field_order_entry_seeds_qty" :seeds="seeds" v-if="seeds.length" />
-							
 						</div>					
 					</div>					
 					<form-submit :error="error" :sending="sending" />
@@ -94,10 +93,6 @@ export default {
 			error: false,
 			loading: false,
 			sending: false,
-			seeds_house_options: [],
-			collectors_group_options: [],
-			client_options: [],
-			seeds: [],
 			fitofisionomias: fitofisionomias,
 			form: {
 				type: [{ target_id: "order_entry" }],
@@ -118,44 +113,22 @@ export default {
 	
 	created () {
 
+		this.getList('clients')
+		this.getList('seeds')
+	
 		if (this.isEditing()) {
 			this.edit(this.$route.params.id)
 		}
 		
-		axios.get('rest/collectors-groups?_format=json').then(response => {
-			this.collectors_group_options = response.data.map(collectors_group => {
-				return { 
-					id: collectors_group.nid[0].value,
-					title: collectors_group.title[0].value,
-					city: collectors_group.field_address.length ? 
-					[collectors_group.field_address[0].locality, collectors_group.field_address[0].administrative_area].filter(Boolean).join(' - ') : ''
-				}
-			})
-		}).catch(error => { this.error = error.message })
-
-		axios.get('rest/clients?_format=json').then(response => {
-			this.client_options = response.data.map(client => {
-				return { 
-					id: client.uid[0].value,
-					title: client.field_name[0].value,
-					description: client.field_nickname[0].value,
-					picture: this.present(client.user_picture, 'url') ? client.user_picture[0].url : null,
-				}
-			})
-		}).catch(error => { this.error = error.message })
-
-		axios.get('rest/seeds-houses?_format=json').then(response => {
-			this.seeds_house_options = response.data.map(seeds_house => {
-				return { 
-					id: seeds_house.store_id[0].value,
-					title: seeds_house.name[0].value,
-					city: seeds_house.field_address.length ? 
-					[seeds_house.field_address[0].locality, seeds_house.field_address[0].administrative_area].filter(Boolean).join(' - ') : ''
-				}
-			})
-		}).catch(error => { this.error = error.message })
 	},
-	
+	computed: {
+		clients () {
+			return this.$store.state.clients
+		},
+		seeds () {
+			return this.$store.state.seeds
+		}
+	},
 	methods: {
 		edit (id) {
 			this.loading = true
@@ -176,9 +149,10 @@ export default {
 						url: 'node' + (this.isEditing() ? '/' + this.$route.params.id : '')+'?_format=json',
 						data: this.form
 					}).then(resp => {
-						var collectors_request = resp.data
-						if (collectors_request && collectors_request.nid) {
-							this.$router.replace('/encomenda/'+collectors_request.nid[0].value)
+						var order = resp.data
+						if (order && order.nid) {
+							this.loadList('orders')
+							this.$router.replace('/encomenda/'+order.nid[0].value)
 						}
 						this.sending = false						
 					}).catch(error => { this.error = error.response.data.message; this.sending = false })

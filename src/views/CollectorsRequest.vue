@@ -7,7 +7,7 @@
 				<loading :loading="loading" />
 				<div v-if="collectors_request && !loading">
 					<div class="row item-title">
-						<div class="col-md-10">
+						<div class="col-md-12">
 							<router-link :to="'/editar-pedido-para-coletores/'+collectors_request.id" class="btn btn-default btn-xs pull-right">
 								<i class="fa fa-edit" aria-hidden="true"></i>
 								Editar pedido
@@ -44,32 +44,32 @@
 					<div class="row">
 						<div class="col-sm-12" v-if="collectors_request">
 							<table class="table b-table b-table-stacked-md">
-				        <thead>
-				          <tr>
-				            <th>Espécie</th>
-				            <th>Valor / Kg</th>
-				            <th>Quantidade</th>
-				            <th>Total</th>
-				            <th></th>
-				          </tr>
-				        </thead>
-				        <tbody>
-				          <tr v-for="(seed, index) in collectors_request.seeds" :key="index">
-				            <td>
-				              {{seed.title}}
-				            </td>
-				            <td>
-				              {{seed.price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
-				            </td>
-				            <td>
-				              {{seed.weight | currency('', 0, { thousandsSeparator: '' })}} kg
-				            </td>
-				            <td>
-				              {{seed.price * seed.weight | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
-				            </td>
-				          </tr>
-				        </tbody>
-				      </table>
+								<thead>
+									<tr>
+										<th>Espécie</th>
+										<th>Valor / Kg</th>
+										<th>Quantidade</th>
+										<th>Total</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr v-for="(seed, index) in collectors_request.seeds" :key="index">
+										<td>
+											{{seed.title}}
+										</td>
+										<td>
+											{{seed.price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+										</td>
+										<td>
+											{{seed.weight | currency('', 0, { thousandsSeparator: '' })}} kg
+										</td>
+										<td>
+											{{seed.price * seed.weight | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+										</td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
 					</div>
 				</div>
@@ -79,7 +79,6 @@
 	</div>
 </template>
 <script>
-import axios from 'axios'
 import Loading from '@/components/Loading'
 import Breadcrumb from '@/components/Breadcrumb'
 
@@ -100,10 +99,10 @@ export default {
 			return !this.collectors_request
 		},
 		collectors_request () {
-			console.log(this.$store.state.collectors_requests)
 			if (this.$store.state.collectors_requests) {
 				return this.$store.state.collectors_requests.find(cr => cr.id == this.$route.params.id)	
-			} 
+			}
+			return null
 		}
 	},
 	components: { 

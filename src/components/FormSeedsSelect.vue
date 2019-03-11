@@ -140,6 +140,8 @@ export default {
         var paragraph = response.data
         this.form[this.field].push({ target_id: paragraph.id[0].value, target_revision_id: paragraph.revision_id[0].value })
 
+        this.seed_form[this.fieldseed] = [{ target_id: '' }]
+        this.seed_form[this.fieldextra] = [{ value: '' }]
         this.addItem(paragraph)
         this.sending = false
       }).catch(error => { this.error = error.message; this.sending = false })
