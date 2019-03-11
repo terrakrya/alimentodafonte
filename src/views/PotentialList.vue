@@ -1,142 +1,136 @@
 <template>
-	<div class="potential-list">
-		<breadcrumb active="Potencial de coleta" />
+	<div class="potential_list">
+		<breadcrumb :links="[['Listas de potencial', '/listas-de-potencial']]" active="Dados da lista de potencial" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
-				<list-headline name="Lista de potencial" addUrl="/cadastrar-item-potencial" :filters="filters"/>
-				<div class="info-content">
-					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading :loading="!potential_items && !error" msg="Carregando lista de potencial" />
-					<div v-if="potential_items">
-						<b-table  @filtered="onFiltered" stacked="md" :fields="table_fields" :items="potential_items" :sort-by="'title'" :filter="filters.search">
-							<template slot="date" slot-scope="data">
-								{{data.value | moment("DD/MM/YYYY")}}
-							</template>
-							<template slot="seed" slot-scope="data">
-								<router-link :to="'/semente/'+ data.item.nid">{{data.value.title[0].value}}</router-link>
-								<p v-if="present(data.value.field_scientific_name)">
-									<small>{{data.value.field_scientific_name[0].value}}</small>
-								</p>
-							</template>
-							<template slot="collector" slot-scope="data">
-								<router-link v-if="data.value" :to="'/coletor/'+ data.value.uid.value">{{data.value.field_name[0].value}}</router-link>
-							</template>
-							<template slot="group" slot-scope="data">
-								<router-link v-if="data.value" :to="'/grupo-de-coletores/'+ data.value.nid[0].value">{{data.value.title[0].value}}</router-link>
-							</template>
-							<template slot="qty" slot-scope="data">
-								{{data.value | currency('', 0, { thousandsSeparator: '' })}} Kg
-							</template>
-							<template slot="actions" slot-scope="data">
-								<router-link :to="'/editar-item-potencial/'+ data.item.nid" class="fa fa-edit btn btn-primary btn-xs "></router-link>
-								<a @click="remove(data.item.nid)" class="fa fa-trash btn btn-danger btn-xs"></a>
-							</template>
-							<!-- eslint-disable-next-line -->
-							<template slot="bottom-row" slot-scope="data">
-								<td/>
-								<td/>
-								<td/>
-								<td><strong>Total</strong></td>
-								<td><strong>{{total_qty}} Kg</strong></td>
-								<td/>								
-							</template>
-						</b-table>
+				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
+				<loading :loading="loading" />
+				<div v-if="potential_list && !loading">
+					<div class="row item-title">
+						<div class="col-md-12">
+							<router-link :to="'/editar-lista-de-potencial/'+potential_list.id" class="btn btn-default btn-xs pull-right">
+								<i class="fa fa-edit" aria-hidden="true"></i>
+								Editar lista
+							</router-link>
+							<h1>
+								Lista de potencial {{ potential_list.id }}
+							</h1>
+							<p>
+								<span v-if="potential_list.date">Data: {{ potential_list.date | moment("DD/MM/YYYY") }}</span>
+							</p>
+							<p>
+								<router-link v-if="potential_list.group" :to="'/grupo-de-coletores/'+potential_list.group.id"> &bull; {{ potential_list.group.title }}</router-link>			
+								<router-link v-if="potential_list.collector" :to="'/coletor/'+potential_list.collector.id"> &bull; {{ potential_list.collector.title }}</router-link>			
+							</p>
+							<p>
+								<span v-if="potential_list.area">{{potential_list.area}} hectares</span>
+								<span v-if="potential_list.vegetation">{{potential_list.vegetation}}</span>
+							</p>
+							<div>
+								<b-badge v-if="potential_list.flood" pill><i class="fa fa-check"></i> Alaga</b-badge>
+								<b-badge v-if="potential_list.bog" pill><i class="fa fa-check"></i> Brejo</b-badge>
+							</div>
+						</div>
+					</div>
+					<hr class="clearfix">
+					<div class="row">
+						<div class="col-sm-3" v-if="potential_list.weight">
+							<div class="weekly-summary text-center">
+								<span class="info-label">Quantidade</span>
+								<span class="number">{{ potential_list.weight }} Kg</span>
+							</div>
+						</div>
+						<div class="col-sm-3" v-if="potential_list.compensation_collect">
+							<div class="weekly-summary text-center">
+								<span class="info-label">Remuneração</span>
+								<span class="number">{{ potential_list.compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+							</div>
+						</div>
+						<div class="col-sm-3" v-if="potential_list.wholesale_price">
+							<div class="weekly-summary text-center">
+								<span class="info-label">Potencial atacado</span>
+								<span class="number">{{ potential_list.wholesale_price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+							</div>
+						</div>
+						<div class="col-sm-3" v-if="potential_list.price">
+							<div class="weekly-summary text-center">
+								<span class="info-label">Potencial varejo</span>
+								<span class="number">{{ potential_list.price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12" v-if="potential_list">
+							<table class="table b-table b-table-stacked-md">
+								<thead>
+									<tr>
+										<th>Espécie</th>
+										<th>Quantidade</th>
+										<th>Remuneração</th>
+										<th>Atacado</th>
+										<th>Varejo</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr v-for="(seed, index) in potential_list.seeds" :key="index">
+										<td>
+											<router-link :to="'/semente/'+seed.id">{{seed.title}}</router-link>
+										</td>
+										<td>
+											{{seed.weight | currency('', 0, { thousandsSeparator: '' })}} kg
+										</td>
+										<td>
+											{{seed.compensation_collect * seed.weight | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+										</td>
+										<td>
+											{{seed.wholesale_price * seed.weight | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+										</td>
+										<td>
+											{{seed.price * seed.weight | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+										</td>										
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		<pre>{{potential_list}}</pre>
 	</div>
 </template>
 <script>
-import axios from 'axios'
 import Loading from '@/components/Loading'
-import ListHeadline from '@/components/ListHeadline'
 import Breadcrumb from '@/components/Breadcrumb'
 
 export default {
-	
-	name: 'PotentialList', 
-	
+
+	name: 'CollectorsRequest', 
+
 	data () {
 		return { 
-			error: false,
-			filters: { search: null },
-			collectors_group_options: [],
-			collector_options: [],
-			seed_options: [],
-			total_qty: 0,
-			table_fields: [
-				{ key: 'date', label: 'Data', sortable: true },
-				{ key: 'seed', label: 'Semente', sortable: true },
-				{ key: 'collector', label: 'Coletor', sortable: true },
-				{ key: 'group', label: 'Grupo', sortable: true },
-				{ key: 'qty', label: 'Quantidade', sortable: true },
-				{ key: 'actions', label: 'Ações', 'class': 'actions' },
-			],
-			potential_items: null
+			error: false
 		}
 	},
-	
-	async created () {
-		await axios.get('rest/collectors-groups?_format=json').then(response => {
-			this.collectors_group_options = response.data
-		}).catch(error => { this.error = error.message })
-
-		await axios.get('rest/collectors?_format=json').then(response => {
-			this.collector_options = response.data
-		}).catch(error => { this.error = error.message })
-		
-		await axios.get('rest/seeds-list?_format=json').then(response => {
-			this.seed_options = response.data
-		}).catch(error => { this.error = error.message })
-
-		this.list()
+	created () {
+		this.getList('potential_lists')
 	},
-
-	methods: {
-		list () {
-			axios.get('rest/potential-list?_format=json').then(response => {
-				this.potential_items = response.data.map(potential_item => {
-					this.total_qty += Number(potential_item.field_potential_qty[0].value)
-					return { 
-						nid: potential_item.nid[0].value,
-						seed: this.seed_options.find(seed => {
-							return seed.product_id[0].value == potential_item.field_potential_seed[0].target_id
-						}),
-						collector: this.collector_options.find(collector => {
-							return collector.uid[0].value == potential_item.field_potential_collector[0].target_id
-						}),
-						group: this.collectors_group_options.find(collectors_group => {
-							return collectors_group.nid[0].value == potential_item.field_potential_group[0].target_id
-						}), 
-						qty: potential_item.field_potential_qty[0].value,
-						date: potential_item.field_potential_date[0].value
-					}
-				})
-			}).catch(error => { this.error = error.message })
+	computed: {
+		loading () {
+			return !this.potential_list
 		},
-		remove (id) {
-			if (confirm("Tem certeza que deseja excluír?")) {
-				axios.delete('node/' + id + '?_format=json').then(() => {
-					this.list()
-				}).catch(error => { this.error = error.message })	
+		potential_list () {
+			if (this.$store.state.potential_lists) {
+				return this.$store.state.potential_lists.find(cr => cr.id == this.$route.params.id)	
 			}
-		},
-		onFiltered(filteredItems) {
-			this.total_qty = 0
-			filteredItems.map(item => {
-				if (item.qty) {
-					this.total_qty += Number(item.qty)
-				}
-			})
+			return null
 		}
 	},
-
 	components: { 
 		'loading': Loading,
-		'list-headline': ListHeadline,
 		'breadcrumb': Breadcrumb
 	}
-		
+
 };
 </script>

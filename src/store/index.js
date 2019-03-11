@@ -17,6 +17,7 @@ export default new Vuex.Store({
     product_variations: false,
     orders: false,
     clients: false,
+    potential_lists: false,
   },
   actions,
   mutations

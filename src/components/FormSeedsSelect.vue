@@ -31,7 +31,7 @@
             <th>Espécie</th>
             <th>Valor / Kg</th>
             <th>Quantidade</th>
-            <th>Valor total</th>
+            <th>{{basecalc == 'compensation_collect' ? 'Remuneração' : 'Valor total'}}</th>
             <th></th>
           </tr>
         </thead>
@@ -79,7 +79,7 @@ import Loading from '@/components/Loading'
 
 export default {
   name: 'form-entities-select',
-  props: ['form', 'field', 'fieldtype', 'parent', 'fieldseed', 'fieldextra', 'seeds'],
+  props: ['form', 'field', 'fieldtype', 'parent', 'fieldseed', 'fieldextra', 'seeds', 'basecalc'],
   inject: ['$validator'],
   data () {
     var seed_form = {
@@ -164,7 +164,7 @@ export default {
           id: paragraph.id[0].value, 
           name: seed.title, 
           extra: paragraph[this.fieldextra][0].value,
-          price: seed.price 
+          price: seed[this.basecalc || 'price'] 
         })
       }
     },

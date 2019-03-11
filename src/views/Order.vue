@@ -36,25 +36,25 @@
 					</div>
 					<hr class="clearfix">
 					<div class="row">
-						<div class="col-sm-3" v-if="order.weight">
+						<div class="col-sm-3" v-if="order.weight >= 0">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Quantidade</span>
 								<span class="number">{{ order.weight }} Kg</span>
 							</div>
 						</div>
-						<div class="col-sm-3" v-if="order.price">
+						<div class="col-sm-3" v-if="order.price >= 0">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Total {{order.purchase_type.toLowerCase()}}</span>
 								<span class="number">{{ order.price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
 							</div>
 						</div>
-						<div class="col-sm-3" v-if="order.price">
+						<div class="col-sm-3" v-if="order.amount_paid >= 0">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Pago</span>
 								<span class="number">{{ order.amount_paid | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
 							</div>
 						</div>
-						<div class="col-sm-3" v-if="order.price">
+						<div class="col-sm-3" v-if="order.amount_remain >= 0">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Restante</span>
 								<span class="number">{{ order.amount_remain | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
@@ -76,7 +76,7 @@
 								<tbody>
 									<tr v-for="(seed, index) in order.seeds" :key="index">
 										<td>
-											{{seed.title}}
+											<router-link :to="'/semente/'+seed.id">{{seed.title}}</router-link>
 										</td>
 										<td>
 											{{seed.price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}

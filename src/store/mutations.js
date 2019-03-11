@@ -59,9 +59,9 @@ async function getCollectorsRequests (state) {
           ? state.seeds_houses.find(c => c.id == item.field_requests_seeds_house)
           : null, 
         seeds: item.seeds,
-        weight: item.seeds.map((i) => i.weight).reduce((a, b) => a + b),
-        remaining_weight: item.seeds.map((i) => i.remaining_weight).reduce((a, b) => a + b),
-        price: item.seeds.map((i) => i.price * i.weight).reduce((a, b) => a + b),
+        weight: item.seeds.map((i) => i.weight).reduce((a, b) => a + b) || 0,
+        remaining_weight: item.seeds.map((i) => i.remaining_weight).reduce((a, b) => a + b) || 0,
+        price: item.seeds.map((i) => i.price * i.weight).reduce((a, b) => a + b) || 0,
       }
     })
     return state.collectors_requests
@@ -105,7 +105,7 @@ async function getOrders (state) {
           ? state.clients.find(c => c.id == order.field_order_entry_clients[0])
           : null,
         // total: Number(order.field_order_entry_total),
-        total: order.seeds.map((i) => i.price * i.weight).reduce((a, b) => a + b),
+        total: order.seeds.map((i) => i.price * i.weight).reduce((a, b) => a + b) || 0,
         status: order.field_order_entry_contract,
         area: order.field_order_entry_restored_area,
         date_receiving: order.field_order_entry_date_receiving,
@@ -118,11 +118,64 @@ async function getOrders (state) {
         close: (order.field_order_entry_close == 1),
         vegetation: order.field_order_entry_vegetation,
         seeds: order.seeds,
-        weight: order.seeds.map((i) => i.weight).reduce((a, b) => a + b),
-        price: order.seeds.map((i) => i.price * i.weight).reduce((a, b) => a + b)
+        weight: order.seeds.map((i) => i.weight).reduce((a, b) => a + b) || 0,
+        price: order.seeds.map((i) => i.price * i.weight).reduce((a, b) => a + b) || 0
       }
     })
     return state.orders
+  })
+}
+
+async function getPotentialLists (state) {
+  return await axios.get('rest/potential-list?_format=json').then(async response => {
+    if (!state.collectors.length) {
+      await getCollectors(state)
+    }    
+    if (!state.collectors_groups.length) {
+      await getCollectorsGroups(state)
+    }    
+    if (!state.seeds.length) {
+      await getSeeds(state)
+    }
+
+    let potential_lists = []
+    response.data.forEach(r => {
+      let index = -1
+      potential_lists.forEach((req, i) => {
+        if (req.nid == r.nid) {
+          index = i
+        }
+      })
+      let seed = state.seeds.find(s => s.id == r.field_potential_seed) 
+       
+      var new_seed = Object.assign({}, seed)
+
+      new_seed.weight = Number(r.field_potential_qty)
+      if (index >= 0) {
+        potential_lists[index].seeds.push(new_seed)
+      } else {
+        r.seeds = [new_seed]
+        potential_lists.push(r)
+      }
+    })
+    state.potential_lists = potential_lists.map(potential_list => {
+      return { 
+        id: potential_list.nid,
+        collector: potential_list.field_potential_collector 
+          ? state.collectors.find(c => c.id == potential_list.field_potential_collector)
+          : null,
+        group: potential_list.field_potential_group
+          ? state.collectors_groups.find(c => c.id == potential_list.field_potential_group)
+          : null,
+        date: potential_list.field_potential_date,
+        weight: potential_list.seeds.map((i) => i.weight).reduce((a, b) => a + b) || 0,
+        price: potential_list.seeds.map((i) => i.price * i.weight).reduce((a, b) => a + b) || 0,
+        compensation_collect: potential_list.seeds.map((i) => i.compensation_collect * i.weight).reduce((a, b) => a + b) || 0,
+        wholesale_price: potential_list.seeds.map((i) => i.wholesale_price * i.weight).reduce((a, b) => a + b) || 0,
+        seeds: potential_list.seeds,
+      }
+    })
+    return state.potential_lists
   })
 }
 
@@ -193,7 +246,8 @@ async function getSeeds (state) {
         description: item.field_scientific_name[0].value,
         picture: present(item.field_images, 'url') ? item.field_images[0].url : null,
         price: product_variation.price[0].number,
-        wholesale_price: present(product_variation.field_wholesale_price, 'number') ? product_variation.field_wholesale_price[0].number : null,
+        wholesale_price: present(product_variation.field_wholesale_price, 'number') ? product_variation.field_wholesale_price[0].number : 0,
+        compensation_collect: present(item.field_compensation_collect, 'number') ? item.field_compensation_collect[0].number : 0,
         stock: product_variation.field_stock[0].value,
       }
     })
@@ -239,6 +293,8 @@ export const mutations = {
       getOrders(state)
     } else if (type == 'clients') {
       getOrders(state)
+    } else if (type == 'potential_lists') {
+      getPotentialLists(state)
     }
     
   },

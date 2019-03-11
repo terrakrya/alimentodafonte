@@ -39,8 +39,9 @@ import Order from '@/views/Order.vue'
 import Stock from '@/views/Stock.vue'
 import StockInForm from '@/views/StockInForm.vue'
 import StockOutForm from '@/views/StockOutForm.vue'
-import PotentialItemForm from '@/views/PotentialItemForm.vue'
 import PotentialList from '@/views/PotentialList.vue'
+import PotentialListForm from '@/views/PotentialListForm.vue'
+import PotentialLists from '@/views/PotentialLists.vue'
 
 Vue.use(Router)
 
@@ -120,9 +121,10 @@ export default new Router({
     { path: '/editar-encomenda/:id', component: OrderForm, beforeEnter: requireAuth },
     { path: '/encomenda/:id', component: Order, beforeEnter: requireAuth },
 
-    { path: '/lista-de-potencial', component: PotentialList, beforeEnter: requireAuth },
-    { path: '/cadastrar-item-potencial', component: PotentialItemForm, beforeEnter: requireAuth },
-    { path: '/editar-item-potencial/:id', component: PotentialItemForm, beforeEnter: requireAuth },
+    { path: '/listas-de-potencial', component: PotentialLists, beforeEnter: requireAuth },
+    { path: '/cadastrar-lista-de-potencial', component: PotentialListForm, beforeEnter: requireAuth },
+    { path: '/editar-lista-de-potencial/:id', component: PotentialListForm, beforeEnter: requireAuth },
+    { path: '/lista-de-potencial/:id', component: PotentialList, beforeEnter: requireAuth },
 
     { path: '/estoque', component: Stock, beforeEnter: requireAuth },
     { path: '/entrada-de-estoque', component: StockInForm, beforeEnter: requireAuth },
