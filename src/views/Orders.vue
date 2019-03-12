@@ -77,14 +77,17 @@ export default {
 			return this.$store.state.orders
 		},
 		total_weight () {
-			return this.orders.map(order => {
+			let values = this.orders.map(order => {
 				return order.weight
-			}).reduce((a, b) => a + b)
+			})
+			return values.length ? values.reduce((a, b) => a + b) : 0
 		},
 		total_price () {
-			return this.orders.map(order => {
+			let values = this.orders.map(order => {
 				return order.total 
-			}).reduce((a, b) => a + b)
+			})
+
+			return values.length ? values.reduce((a, b) => a + b) : 0
 		}
 	},
 	methods: {
