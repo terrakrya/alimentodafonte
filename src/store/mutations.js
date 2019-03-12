@@ -248,7 +248,7 @@ async function getSeeds (state) {
         price: product_variation.price[0].number,
         wholesale_price: present(product_variation.field_wholesale_price, 'number') ? product_variation.field_wholesale_price[0].number : 0,
         compensation_collect: present(item.field_compensation_collect, 'number') ? item.field_compensation_collect[0].number : 0,
-        stock: product_variation.field_stock[0].value,
+        stock: present(product_variation.field_stock) ? product_variation.field_stock[0].value : 0,
       }
     })
     return state.product_variations
