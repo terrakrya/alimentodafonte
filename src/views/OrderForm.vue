@@ -7,22 +7,16 @@
 				<loading :loading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
-						<div class="col-sm-4">
+						<div class="col-sm-6">
 							<b-form-group label="Cliente *" >
 								<form-entity-select v-if="clients.length" :items="clients" :form="form" field="field_order_entry_clients" />
 							</b-form-group>							
 						</div>			
-						<div class="col-sm-4">
+						<div class="col-sm-6">
 							<b-form-group label="Área total" description="Área total a ser restaurada em hectares">
 								<b-form-input v-model="form.field_order_entry_restored_area[0].value" type="number" />
 							</b-form-group>
 						</div>
-						<div class="col-sm-4">
-							<b-form-group label="Tipo de compra">
-								<b-form-radio-group v-model="form.field_order_entry_purchase_type[0].value" :options="
-								['Atacado', 'Varejo']" stacked />
-							</b-form-group>
-						</div>	
 					</div>					
 					<div class="row gray">
 						<div class="col-sm-4">
@@ -60,6 +54,24 @@
 							</b-form-group>
 						</div>	
 					</div>					
+					<div class="row gray">
+						<div class="col-sm-4">
+							<b-form-group label="Valor pago">
+								<money v-model="form.field_order_entry_amount_paid[0].value"></money>
+							</b-form-group>
+						</div>
+						<div class="col-sm-4">
+							<b-form-group label="Valor restante">
+								<money v-model="form.field_order_entry_amount_remain[0].value"></money>
+							</b-form-group>
+						</div>
+						<div class="col-sm-4">
+							<b-form-group label="Tipo de compra">
+								<b-form-radio-group v-model="form.field_order_entry_purchase_type[0].value" :options="
+								['Atacado', 'Varejo']" stacked />
+							</b-form-group>
+						</div>	
+					</div>
 					<div class="row">
 						<div class="col-sm-12">
 							<form-seeds-select :form="form" field="field_order_entry_seeds" fieldtype="order_entry_seeds" :parent="this.$route.params.id" fieldseed="field_order_entry_seed" fieldextra="field_order_entry_seeds_qty" :seeds="seeds" v-if="seeds.length" />
@@ -106,6 +118,8 @@ export default {
 				field_order_entry_restored_area: [{value: ''}],
 				field_order_entry_bog: [{value: false}],
 				field_order_entry_flood: [{value: false}],
+				field_order_entry_amount_paid: [{value: ''}],
+				field_order_entry_amount_remain: [{value: ''}],
 			}
 		}
 	},
