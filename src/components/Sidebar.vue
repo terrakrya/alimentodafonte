@@ -50,6 +50,9 @@
               <li @click="toggleMenu">
                 <router-link to="/clientes"><span>Clientes</span></router-link>
               </li>
+              <li @click="toggleMenu">
+                <router-link to="/coletas"><span>Coletas</span></router-link>
+              </li>
             </ul>
           </li>
           <li class="profile">

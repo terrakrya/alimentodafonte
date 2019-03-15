@@ -58,9 +58,6 @@ export default {
 		return { 
 			error: false,
 			filters: { search: null },
-			collectors_group_options: [],
-			collector_options: [],
-			seed_options: [],
 			total_qty: 0,
 			table_fields: [
 				{ key: 'date', label: 'Data', sortable: true },
