@@ -92,7 +92,7 @@ import PicturesUpload from '@/components/PicturesUpload'
 
 export default {
 	
-	name: 'CollectionAreaForm', 
+	name: 'CollectionForm', 
 	
 	data () {
 

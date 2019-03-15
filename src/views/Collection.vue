@@ -98,7 +98,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 
 export default {
 
-	name: 'CollectionArea', 
+	name: 'Collection', 
 
 	data () {
 		return { 
