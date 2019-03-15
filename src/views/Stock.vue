@@ -296,17 +296,20 @@ export default {
 						movement.group_collector_client = this.collectors_group_options.find(item => {
 							return item.id == stock_movement.field_group[0].target_id
 						})
-						movement.group_collector_client.type = 'collectors_group'
+						if (movement.group_collector_client)
+							movement.group_collector_client.type = 'collectors_group'
 					} else if (this.present(stock_movement.field_collector, 'target_id')) {
 						movement.group_collector_client = this.collector_options.find(item => {
 							return item.id == stock_movement.field_collector[0].target_id
 						})
-						movement.group_collector_client.type = 'collector'
+						if (movement.group_collector_client)
+							movement.group_collector_client.type = 'collector'
 					} else if (this.present(stock_movement.field_buyer, 'target_id')) {
 						movement.group_collector_client = this.client_options.find(item => {
 							return item.id == stock_movement.field_buyer[0].target_id
 						})
-						movement.group_collector_client.type = 'buyer'
+						if (movement.group_collector_client)
+							movement.group_collector_client.type = 'buyer'
 					}
 
 					if (this.present(stock_movement['field_seed'+type], 'target_id')) {
