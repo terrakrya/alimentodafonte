@@ -1,6 +1,6 @@
 <template>
 	<div class="collection-form">
-		<breadcrumb :links="[['Coletas', '/coletas']]" :active="isEditing() ? 'Coleta ' + $route.params.id : 'Cadastrar'" />
+		<breadcrumb :links="[['Coletas de sementes', '/coletas']]" :active="isEditing() ? 'Coleta ' + $route.params.id : 'Cadastrar'" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="coleta" />
