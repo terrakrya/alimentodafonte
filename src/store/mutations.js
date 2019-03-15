@@ -251,13 +251,53 @@ async function getSeeds (state) {
         stock: present(product_variation.field_stock) ? product_variation.field_stock[0].value : 0,
       }
     })
-    return state.product_variations
+    return state.seeds
   })
 }
 
 async function getProductVariations (state) {
   return await axios.get('rest/product-variations?_format=json').then(resp => {
     state.product_variations = resp.data
+  })
+}
+
+async function getCollections (state) {
+  return await axios.get('rest/collections?_format=json').then(async response => {
+    if (!state.seeds.length) {
+      await getSeeds(state)
+    }
+    if (!state.collectors.length) {
+      await getCollectors(state)
+    }
+    if (!state.collectors_groups.length) {
+      await getCollectorsGroups(state)
+    }
+    state.collections = response.data.map(item => {
+      if (present(item.field_seeds_collect_seed, 'target_id')) {
+        var seed = state.seeds.find(seed => seed.id == item.field_seeds_collect_seed[0].target_id)
+      }
+      if (present(item.field_seeds_collect_collector, 'target_id')) {
+        var collector = state.collectors.find(collector => collector.id == item.field_seeds_collect_collector[0].target_id)
+      }
+      if (present(item.field_seeds_collect_group, 'target_id')) {
+        var collectors_group = state.collectors_groups.find(collectors_group => collectors_group.id == item.field_seeds_collect_group[0].target_id)
+      }
+      return { 
+        id: item.nid[0].value,
+        date_time: present(item.field_seeds_collect_date_time) ? item.field_seeds_collect_date_time[0].value : null,
+        weight_gross: present(item.field_seeds_collect_weight_gross) ? item.field_seeds_collect_weight_gross[0].value : 0,
+        weight_benef: present(item.field_seeds_collect_weight_benef) ? item.field_seeds_collect_weight_benef[0].value : 0,
+        flowering: present(item.field_seeds_collect_flowering) ? item.field_seeds_collect_flowering[0].value : null,
+        commentary: present(item.field_seeds_collect_commentary) ? item.field_seeds_collect_commentary[0].value : null,
+        geolocation: present(item.field_seeds_collect_geolocation, 'lat') ? item.field_seeds_collect_geolocation[0] : {lat: null, lgn: null},
+        photos: item.field_seeds_collect_photo.length ? item.field_seeds_collect_photo.map(p => p.url) : null,
+        audio: item.field_seeds_collect_audio.length ? item.field_seeds_collect_audio[0].url : null,
+        seed: seed,        
+        collector: collector,        
+        collectors_group: collectors_group,        
+      } 
+    })
+    return state.collections
   })
 }
 
@@ -292,9 +332,11 @@ export const mutations = {
     } else if (type == 'orders') {
       getOrders(state)
     } else if (type == 'clients') {
-      getOrders(state)
+      getClients(state)
     } else if (type == 'potential_lists') {
       getPotentialLists(state)
+    } else if (type == 'collections') {
+      getCollections(state)
     }
     
   },
