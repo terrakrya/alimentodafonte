@@ -43,7 +43,6 @@ export default {
         var reader  = new FileReader();
         var file = files[i]
         reader.onloadend = () => {
-          console.log(file.name)
           axios({
             method  : 'POST',
             url     : this.url,
