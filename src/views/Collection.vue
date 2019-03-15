@@ -1,6 +1,6 @@
 <template>
 	<div class="collection-area">
-		<breadcrumb :links="[['Coletas', '/coletas']]" active="Dados da coleta" />
+		<breadcrumb :links="[['Coletas de sementes', '/coletas']]" active="Dados da coleta" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>

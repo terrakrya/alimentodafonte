@@ -21,6 +21,9 @@
               <li @click="toggleMenu">
                 <router-link to="/estoque"><span>Estoque</span></router-link>
               </li>
+              <li @click="toggleMenu">
+                <router-link to="/coletas"><span>Coletas de sementes</span></router-link>
+              </li>
             </ul>
           </li>
           <li>
@@ -49,9 +52,6 @@
               </li>
               <li @click="toggleMenu">
                 <router-link to="/clientes"><span>Clientes</span></router-link>
-              </li>
-              <li @click="toggleMenu">
-                <router-link to="/coletas"><span>Coletas</span></router-link>
               </li>
             </ul>
           </li>

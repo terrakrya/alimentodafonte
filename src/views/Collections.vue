@@ -1,9 +1,9 @@
 <template>
 	<div class="collections">
-		<breadcrumb active="Coletas" />
+		<breadcrumb active="Coletas de sementes" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
-				<list-headline name="Coletas" addUrl="/cadastrar-coleta" :filters="filters"/>
+				<list-headline name="Coletas de sementes" addUrl="/cadastrar-coleta" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
 					<loading :loading="!collections && !error" msg="Carregando lista de coletas" />
