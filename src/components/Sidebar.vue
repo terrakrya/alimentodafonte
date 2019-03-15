@@ -10,25 +10,31 @@
             <a><i class="fa fa-cogs"></i><span>Operacional</span><i class="fa fa-chevron-down"></i></a>
             <ul class="nav">
               <li @click="toggleMenu">
+                <router-link to="/estoque"><span>Estoque</span></router-link>
+              </li>
+              <li @click="toggleMenu">
                 <router-link to="/listas-de-potencial"><span>Potencial de coleta</span></router-link>
+              </li>
+              <li @click="toggleMenu">
+                <router-link to="/pedidos-para-coletores"><span>Pedidos para coletores</span></router-link>
               </li>
               <li @click="toggleMenu">
                 <router-link to="/encomendas"><span>Encomendas</span></router-link>
               </li>
               <li @click="toggleMenu">
-                <router-link to="/pedidos-para-coletores"><span>Pedidos para Coletores</span></router-link>
-              </li>
-              <li @click="toggleMenu">
-                <router-link to="/estoque"><span>Estoque</span></router-link>
-              </li>
-              <li @click="toggleMenu">
-                <router-link to="/coletas"><span>Coletas de sementes</span></router-link>
+                <router-link to="/coletas"><span>Coleta de sementes</span></router-link>
               </li>
             </ul>
           </li>
           <li>
             <a><i class="fa fa-list-alt"></i><span>Cadastros</span><i class="fa fa-chevron-down"></i></a>
             <ul class="nav">
+              <li @click="toggleMenu">
+                <router-link to="/clientes"><span>Clientes</span></router-link>
+              </li>
+              <li @click="toggleMenu">
+                <router-link to="/redes-de-sementes"><span>Redes de sementes</span></router-link>
+              </li>
               <li @click="toggleMenu">
                 <router-link to="/sementes"><span>Sementes</span></router-link>
               </li>
@@ -42,16 +48,10 @@
                 <router-link to="/casas-de-sementes"><span>Casas de sementes</span></router-link>
               </li>
               <li @click="toggleMenu">
-                <router-link to="/redes-de-sementes"><span>Redes de sementes</span></router-link>
-              </li>
-              <li @click="toggleMenu">
                 <router-link to="/areas-de-coleta"><span>Áreas de coleta</span></router-link>
               </li>
               <li @click="toggleMenu">
-                <router-link to="/matrizes-de-sementes"><span>Matrizes de sementes</span></router-link>
-              </li>
-              <li @click="toggleMenu">
-                <router-link to="/clientes"><span>Clientes</span></router-link>
+                <router-link to="/matrizes-de-sementes"><span>Matrizes</span></router-link>
               </li>
             </ul>
           </li>
