@@ -16,9 +16,6 @@
 									Pedido {{data.item.id}}
 								</router-link>
 							</template>
-							<template slot="seeds_house" slot-scope="data">
-								<router-link v-if="data.item.seeds_house" :to="'/casa-de-sementes/'+ data.item.seeds_house.id"> {{data.item.seeds_house.title}} </router-link>
-							</template>
 							<template slot="collector" slot-scope="data">
 								<router-link v-if="data.item.collectors_group" :to="'/grupo-de-coletores/'+ data.item.collectors_group.id"> {{data.item.collectors_group.title}} </router-link>
 								<router-link v-if="data.item.collector" :to="'/coletor/'+ data.item.collector.id"> {{data.item.collector.title}} </router-link>
@@ -65,7 +62,6 @@ export default {
 			filters: { search: null },
 			table_fields: [
 			{ key: 'created', label: 'ID / Data', sortable: true },
-			{ key: 'seeds_house', label: 'Casa de sementes', sortable: true },
 			{ key: 'collector', label: 'Grupo / Coletor', sortable: true },
 			{ key: 'weight', label: 'Quantidade', sortable: true },
 			{ key: 'price', label: 'Total', sortable: true },
