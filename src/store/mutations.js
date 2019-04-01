@@ -179,6 +179,99 @@ async function getPotentialLists (state) {
   })
 }
 
+async function getStock (state) {
+  return await axios.get('rest/stock?_format=json').then(async response => {
+    if (!state.collectors.length) {
+      await getCollectors(state)
+    }    
+    if (!state.collectors_groups.length) {
+      await getCollectorsGroups(state)
+    }    
+    if (!state.seeds.length) {
+      await getSeeds(state)
+    }
+    if (!state.seeds_houses.length) {
+      await getSeedsHouses(state)
+    }
+    if (!state.clients.length) {
+      await getClients(state)
+    }
+    if (!state.lots.length) {
+      await getLots(state)
+    }
+
+    state.stock = response.data.map(stock_movement => {
+
+      let type = stock_movement.type[0].target_id == 'stock_in' ? '' : '_out' 
+
+      let movement = { 
+        nid: stock_movement.nid[0].value,
+        created: stock_movement.created[0].value,
+        type: stock_movement.type[0].target_id,
+      }
+
+      if (present(stock_movement['field_seeds_house'+type], 'target_id')) {
+        movement.seeds_house = state.seeds_houses.find(item => {
+          return item.id == stock_movement['field_seeds_house'+type][0].target_id
+        })
+      }
+
+      if (present(stock_movement.field_group, 'target_id')) {
+        movement.group_collector_client = state.collectors_groups.find(item => {
+          return item.id == stock_movement.field_group[0].target_id
+        })
+        if (movement.group_collector_client)
+          movement.group_collector_client.type = 'collectors_group'
+      } else if (present(stock_movement.field_collector, 'target_id')) {
+        movement.group_collector_client = state.collectors.find(item => {
+          return item.id == stock_movement.field_collector[0].target_id
+        })
+        if (movement.group_collector_client)
+          movement.group_collector_client.type = 'collector'
+      } else if (present(stock_movement.field_buyer, 'target_id')) {
+        movement.group_collector_client = state.clients.find(item => {
+          return item.id == stock_movement.field_buyer[0].target_id
+        })
+        if (movement.group_collector_client)
+          movement.group_collector_client.type = 'buyer'
+      }
+
+      if (present(stock_movement['field_seed'+type], 'target_id')) {
+        movement.seed = state.seeds.find(item => {
+          return item.id == stock_movement['field_seed'+type][0].target_id
+        })
+      }
+
+      if (present(stock_movement['field_lot'+type], 'target_id')) {
+        movement.lot = state.lots.find(item => {
+          return item.id == stock_movement['field_lot'+type][0].target_id
+        })
+      }
+
+      if (present(stock_movement['field_qty'+type])) {
+        if (type == '_out' && Number(stock_movement['field_qty'+type][0].value) > 0) {
+          movement.qty = Number(stock_movement['field_qty'+type][0].value) * - 1
+        } else {
+          movement.qty = Number(stock_movement['field_qty'+type][0].value)
+        }
+        
+      } 
+
+      if (present(stock_movement['field_price'+type])) {
+        movement.price = Number(stock_movement['field_price'+type][0].value)
+      } 
+
+      if (present(stock_movement.field_out_modes)) {
+        movement.out_mode = stock_movement.field_out_modes[0].value
+      } 
+
+      return movement
+    })
+
+    return state.stock
+  })
+}
+
 async function getCollectors (state) {
   return await axios.get('rest/collectors?_format=json').then(response => {
     state.collectors = response.data.map(item => {
@@ -261,6 +354,18 @@ async function getProductVariations (state) {
   })
 }
 
+async function getLots (state) {
+  return await axios.get('rest/lots?_format=json').then(response => {
+    state.lots = response.data.map(item => {
+      return { 
+        id: item.tid[0].value,
+        title: item.name[0].value
+      }
+    })
+    return state.lots
+  })
+}
+
 async function getCollections (state) {
   return await axios.get('rest/collections?_format=json').then(async response => {
     if (!state.seeds.length) {
@@ -337,6 +442,10 @@ export const mutations = {
       getPotentialLists(state)
     } else if (type == 'collections') {
       getCollections(state)
+    } else if (type == 'stock') {
+      getStock(state)
+    } else if (type == 'lots') {
+      getLots(state)
     }
     
   },
