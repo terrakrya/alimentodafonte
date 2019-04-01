@@ -139,8 +139,6 @@
 				</div>
 			</div>
 		</div>
-		<pre>{{filtered_stock}}</pre>
-		<pre>{{stock}}</pre>
 	</div>
 </template>
 <script>
