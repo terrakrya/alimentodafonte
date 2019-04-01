@@ -45,12 +45,12 @@
 						</div>	
 						<div class="col-sm-4">
 							<b-form-group label="Brejo?">
-								<b-form-checkbox v-model="form.field_order_entry_bog[0].value">O local fica inundado por mais de um mês?</b-form-checkbox>
+								<b-form-checkbox v-model="form.field_order_entry_bog[0].value">O solo fica encharcado por mais de um mês?</b-form-checkbox>
 							</b-form-group> 
 						</div>
 						<div class="col-sm-4">
 							<b-form-group label="Alaga?">
-								<b-form-checkbox v-model="form.field_order_entry_flood[0].value">O solo fica encharcado por mais de um mês?</b-form-checkbox>
+								<b-form-checkbox v-model="form.field_order_entry_flood[0].value">O local fica inundado por mais de um mês?</b-form-checkbox>
 							</b-form-group>
 						</div>	
 					</div>					

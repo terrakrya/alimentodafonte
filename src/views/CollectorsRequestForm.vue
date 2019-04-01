@@ -7,17 +7,12 @@
 				<loading :loading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
-						<div class="col-sm-4">
-							<b-form-group label="Casa de sementes *" >
-								<form-entity-select v-if="seeds_houses" :items="seeds_houses" :form="form" field="field_requests_seeds_house" />
-							</b-form-group>							
-						</div>					
-						<div class="col-sm-4">
+						<div class="col-sm-6">
 							<b-form-group label="Grupo de coletores" >
 								<form-entity-select v-if="collectors_groups.length" :items="collectors_groups" :form="form" field="field_requests_group" />
 							</b-form-group>							
 						</div>					
-						<div class="col-sm-4">
+						<div class="col-sm-6">
 							<b-form-group label="Coletor" >
 								<form-entity-select v-if="collectors" :items="collectors" :form="form" field="field_requests_collector" />
 							</b-form-group>							
