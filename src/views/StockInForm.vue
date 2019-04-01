@@ -36,7 +36,7 @@
 					<div class="row">
 						<div class="col-sm-4">
 							<b-form-group label="Quantidade (Kg) *">
-								<b-form-input v-model="form.field_qty[0].value" type="number" v-validate="'required'" name="field_qty" />
+								<b-form-input v-model="form.field_qty[0].value" type="number" v-validate="'required'" name="field_qty" @input="validateOrderQty" />
 								<field-error :msg="veeErrors" field="field_qty" />
 							</b-form-group>
 						</div>
@@ -262,8 +262,19 @@ export default {
 				})
 				this.form.field_lot = [{ target_id: '' }]
 			}
+		},
+		validateOrderQty () {
+			console.log(this.present(this.form.field_seeds_house, 'target_id'))
+      console.log(this.present(this.form.field_seed, 'target_id'))
+      console.log(this.present(this.form.field_group, 'target_id'))
+      console.log(this.present(this.form.field_collector, 'target_id'))
 		}
 	},
+  watch: {
+    "form.field_qty": function (val) {
+      this.validateOrderQty()
+    }
+  },
 	components: { 
 		Breadcrumb, 
 		Loading, 

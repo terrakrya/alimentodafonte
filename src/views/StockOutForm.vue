@@ -158,9 +158,12 @@ export default {
 
 					if (this.present(this.form.field_qty_out)) {
 						this.form.field_qty_out[0].value = Number(this.form.field_qty_out[0].value)
+						if (this.form.field_qty_out[0].value > 0) {
+							this.form.field_qty_out[0].value = this.form.field_qty_out[0].value * -1 
+						}
 
 						if (this.price) {
-							this.form.field_price_out = [{ value: (this.price * this.form.field_qty_out[0].value) * -1 }]
+							this.form.field_price_out = [{ value: (this.price * this.form.field_qty_out[0].value)}]
 						}
 					}
 
