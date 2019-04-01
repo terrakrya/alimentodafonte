@@ -144,7 +144,6 @@
 	</div>
 </template>
 <script>
-import axios from 'axios'
 import Loading from '@/components/Loading'
 import Breadcrumb from '@/components/Breadcrumb'
 import FilterEntitySelect from '@/components/FilterEntitySelect'
@@ -266,7 +265,6 @@ export default {
 	}, 
 	watch: {
 		stock () {
-			console.log("this.stock", this.stock)
 			this.applyFilters()
 		}
 	},
