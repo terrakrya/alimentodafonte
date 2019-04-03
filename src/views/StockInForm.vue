@@ -257,7 +257,7 @@ export default {
 						return true
 					}
 				} else {
-					this.qty_error = 'Não existe pedido para esta entrada de semente nesta casa, grupo e coletor '
+					this.qty_error = 'Não existe registro de pedido dessa semente para este coletor/grupo'
 					return false
 				}
 			}
