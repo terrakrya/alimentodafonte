@@ -12,24 +12,24 @@
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Casa de sementes *" >
-								<form-entity-select :input="seedsHouseSelected" :items="seeds_house_options" :form="form" field="field_seeds_house" />
+								<form-entity-select :input="seedsHouseSelected" v-if="seeds_houses" :items="seeds_houses" :form="form" field="field_seeds_house" />
 							</b-form-group>							
 						</div>					
 						<div class="col-sm-6">
 							<b-form-group label="Semente *" >
-								<form-entity-select :input="seedSelected" :items="seed_options" :form="form" field="field_seed" />
+								<form-entity-select :input="seedSelected" v-if="seeds" :items="seeds" :form="form" field="field_seed" />
 							</b-form-group>							
 						</div>					
 					</div>					
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Coletor" >
-								<form-entity-select :items="collector_options" :form="form" field="field_collector" />
+								<form-entity-select v-if="collectors" :items="collectors" :form="form" field="field_collector" />
 							</b-form-group>							
 						</div>					
 						<div class="col-sm-6">
 							<b-form-group label="Grupo de coletores" >
-								<form-entity-select :items="collectors_group_options" :form="form" field="field_group" />
+								<form-entity-select v-if="collectors_groups" :items="collectors_groups" :form="form" field="field_group" />
 							</b-form-group>							
 						</div>					
 					</div>					
@@ -56,6 +56,11 @@
 							</b-form-group>
 						</div>
 					</div>						
+					<div class="row" v-if="qty_error">
+						<div class="col-sm-12 text-center">
+							<b-alert variant="danger" show >{{qty_error}}</b-alert>
+						</div>
+					</div>
 					<form-submit :error="error" :sending="sending" />
 				</b-form>
 			</div>				
@@ -82,15 +87,9 @@ export default {
 			loading: false,
 			sending: false,
 			sending_seed: false,
-			error_seed: false,
+			qty_error: null,
 			seed: null,
-			seed_options: [],
-			seeds_house_options: [],
-			collectors_group_options: [],
-			collector_options: [],
 			lot_filtered_options: [],
-			lot_options: [],
-			seeds: [],
 			new_lot: null,
 			add_new_lot: false,
 			price: null,
@@ -108,72 +107,40 @@ export default {
 			}
 		}
 	},
-	
 	created () {
+		this.getList('collectors')
+		this.getList('collectors_groups')
+		this.getList('seeds_houses')
+		this.getList('seeds')
+		this.getList('lots')
+		this.getList('collectors_requests')
 
 		if (this.isEditing()) {
 			this.edit(this.$route.params.id)
 		}
 		
-		axios.get('rest/collectors-groups?_format=json').then(response => {
-			this.collectors_group_options = response.data.map(collectors_group => {
-				return { 
-					id: collectors_group.nid[0].value,
-					title: collectors_group.title[0].value,
-					description: collectors_group.field_address.length ? 
-					[collectors_group.field_address[0].locality, collectors_group.field_address[0].administrative_area].filter(Boolean).join(' - ') : ''
-				}
-			})
-		}).catch(error => { this.error = error.message })
-
-		axios.get('rest/collectors?_format=json').then(response => {
-			this.collector_options = response.data.map(collector => {
-				return { 
-					id: collector.uid[0].value,
-					title: collector.field_name[0].value,
-					description: collector.field_nickname[0].value,
-					picture: this.present(collector.user_picture, 'url') ? collector.user_picture[0].url : null,
-				}
-			})
-		}).catch(error => { this.error = error.message })
-
-		axios.get('rest/seeds-list?_format=json').then(response => {
-			this.seed_options = response.data.map(seed => {
-				return { 
-					id: seed.product_id[0].value,
-					title: seed.title[0].value,
-					description: seed.field_scientific_name[0].value,
-					compensation_collect: seed.field_compensation_collect[0].number,
-					picture: this.present(seed.field_images, 'url') ? seed.field_images[0].url : null,
-				}
-			})
-		}).catch(error => { this.error = error.message })
-
-		axios.get('rest/seeds-houses?_format=json').then(response => {
-			this.seeds_house_options = response.data.map(seeds_house => {
-				return { 
-					id: seeds_house.store_id[0].value,
-					title: seeds_house.name[0].value,
-					description: seeds_house.field_address.length ? 
-					[seeds_house.field_address[0].locality, seeds_house.field_address[0].administrative_area].filter(Boolean).join(' - ') : ''
-				}
-			})
-		}).catch(error => { this.error = error.message })
-
-		axios.get('rest/lots?_format=json').then(response => {
-			this.lot_options = response.data.map(lot => {
-				return { 
-					id: lot.tid[0].value,
-					title: lot.name[0].value,
-					seed: this.present(lot.field_species, 'target_id') ? lot.field_species[0].target_id : null,
-					seeds_house: this.present(lot.field_seeds_house, 'target_id') ? lot.field_seeds_house[0].target_id : null
-				}
-			}) 
-		}).catch(error => { this.error = error.message })
-
+	},
+	computed: {
+		collectors () {
+      return this.$store.state.collectors
+    },
+    collectors_groups () {
+      return this.$store.state.collectors_groups
+    },
+    seeds_houses () {
+      return this.$store.state.seeds_houses
+    },
+    seeds () {
+      return this.$store.state.seeds
+    },
+    lots () {
+      return this.$store.state.lots
+    },
+    collectors_requests () {
+      return this.$store.state.collectors_requests
+    }
 
 	},
-	
 	methods: {
 		edit (id) {
 			this.loading = true
@@ -185,7 +152,7 @@ export default {
 		},
 		save () {
 			this.$validator.validate().then(isValid => {
-				if (isValid) {
+				if (isValid && this.validateQty()) {
 					this.sending = true
 					this.error = false
 
@@ -257,10 +224,43 @@ export default {
 		},
 		filterOptions () {
 			if (this.present(this.form.field_seed, 'target_id') && this.present(this.form.field_seeds_house, 'target_id')) {
-				this.lot_filtered_options = this.lot_options.filter(lot => {
+				this.lot_filtered_options = this.lots.filter(lot => {
 					return lot.seed == this.form.field_seed[0].target_id && lot.seeds_house == this.form.field_seeds_house[0].target_id
 				})
 				this.form.field_lot = [{ target_id: '' }]
+			}
+		}, 
+		validateQty () {
+			this.qty_error = ''
+			if ((this.form.field_group.length || this.form.field_collector.length) && this.form.field_seeds_house.length && this.form.field_seed.length && this.collectors_requests) {
+				let collectors_request = this.collectors_requests.find(cr => {
+					
+					let collector = this.present(this.form.field_collector, 'target_id') ? this.form.field_collector[0].target_id : null
+
+					let group = this.present(this.form.field_group, 'target_id') ? this.form.field_group[0].target_id : null
+
+					return (
+						(
+							(collector && cr.collector && cr.collector.id == collector) ||
+							(group && cr.collectors_group && cr.collectors_group.id == group)
+						) &&
+						cr.seeds_house && cr.seeds_house.id == this.form.field_seeds_house[0].target_id &&
+						cr.seeds && cr.seeds.find(s => (s.id == this.form.field_seed[0].target_id))
+					)
+				})
+
+				if (collectors_request) {
+					let seed = collectors_request.seeds.find(s => (s.id == this.form.field_seed[0].target_id))
+					if (Number(seed.weight) < Number(this.form.field_qty[0].value)) {
+						this.qty_error = 'Quantidade maior que a solicitada no Pedido '+collectors_request.id+': '+ seed.weight + ' kg de '+seed.title
+						return false
+					} else {
+						return true
+					}
+				} else {
+					this.qty_error = 'Não existe pedido para esta entrada de semente nesta casa, grupo e coletor '
+					return false
+				}
 			}
 		}
 	},
