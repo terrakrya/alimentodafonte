@@ -359,7 +359,9 @@ async function getLots (state) {
     state.lots = response.data.map(item => {
       return { 
         id: item.tid[0].value,
-        title: item.name[0].value
+        title: item.name[0].value,
+        seed: present(item.field_species, 'target_id') ? item.field_species[0].target_id : null,
+        seeds_house: present(item.field_seeds_house, 'target_id') ? item.field_seeds_house[0].target_id : null
       }
     })
     return state.lots
