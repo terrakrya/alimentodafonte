@@ -232,7 +232,7 @@ export default {
 		}, 
 		validateQty () {
 			this.qty_error = ''
-			if ((this.form.field_group.length || this.form.field_collector.length) && this.form.field_seeds_house.length && this.form.field_seed.length && this.collectors_requests) {
+			if ((this.form.field_group.length || this.form.field_collector.length) && this.form.field_seed.length && this.collectors_requests) {
 				let collectors_request = this.collectors_requests.find(cr => {
 					
 					let collector = this.present(this.form.field_collector, 'target_id') ? this.form.field_collector[0].target_id : null
@@ -244,7 +244,6 @@ export default {
 							(collector && cr.collector && cr.collector.id == collector) ||
 							(group && cr.collectors_group && cr.collectors_group.id == group)
 						) &&
-						cr.seeds_house && cr.seeds_house.id == this.form.field_seeds_house[0].target_id &&
 						cr.seeds && cr.seeds.find(s => (s.id == this.form.field_seed[0].target_id))
 					)
 				})
