@@ -20,6 +20,7 @@ export default new Vuex.Store({
     potential_lists: false,
     collections: false,
     seeds_matrixes: false,
+    collection_areas: false,
     stock: false,
     lots: false,
   },

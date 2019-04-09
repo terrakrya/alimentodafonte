@@ -34,7 +34,7 @@
 									<dl v-if="seeds_matrix.collector">
 										<dt>Coletor</dt>
 										<dd>
-											<router-link v-if="seeds_matrix.collector" :to="'/grupo-de-coletores/'+ seeds_matrix.collector.id">{{seeds_matrix.collector.title}}</router-link>
+											<router-link v-if="seeds_matrix.collector" :to="'/coletor/'+ seeds_matrix.collector.id">{{seeds_matrix.collector.title}}</router-link>
 										</dd>
 									</dl>
 									<dl v-if="seeds_matrix.category">

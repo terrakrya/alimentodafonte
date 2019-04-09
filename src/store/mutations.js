@@ -440,6 +440,39 @@ async function getSeedsMatrixes (state) {
   })
 }
 
+async function getCollectionAreas (state) {
+  return await axios.get('rest/collection-areas?_format=json').then(async response => {
+    if (!state.collectors.length) {
+      await getCollectors(state)
+    }
+    if (!state.collectors_groups.length) {
+      await getCollectorsGroups(state)
+    }
+    state.collection_areas = response.data.map(item => {
+      if (present(item.field_collection_collector, 'target_id')) {
+        var collector = state.collectors.find(collector => collector.id == item.field_collection_collector[0].target_id)
+      }
+      if (present(item.field_collection_group, 'target_id')) {
+        var collectors_group = state.collectors_groups.find(collectors_group => collectors_group.id == item.field_collection_group[0].target_id)
+      }
+      return { 
+        id: item.nid[0].value,
+        title: item.title[0].value,
+        description: present(item.field_description) ? item.field_description[0].value : '',
+        estimated_area: item.field_estimated_area.length ? item.field_estimated_area[0].value : '',
+        city: item.field_state.length ? 
+          [item.field_state[0].locality, item.field_state[0].administrative_area].filter(Boolean).join(' - ')
+          : '',
+        geolocation: item.field_geolocation[0],
+        file: present(item.field_upload, 'url') ? item.field_upload[0].url : '',
+        collector: collector,        
+        collectors_group: collectors_group 
+      } 
+    })
+    return state.collection_areas
+  })
+}
+
 export const mutations = {
   login (state, currentUser) {
     state.currentUser = currentUser
@@ -478,6 +511,8 @@ export const mutations = {
       getCollections(state)
     } else if (type == 'seeds_matrixes') {
       getSeedsMatrixes(state)
+    } else if (type == 'collection_areas') {
+      getCollectionAreas(state)
     } else if (type == 'stock') {
       getStock(state)
     } else if (type == 'lots') {

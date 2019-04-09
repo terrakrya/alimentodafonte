@@ -181,11 +181,11 @@ export default {
 	components: { 
 		Breadcrumb, 
 		Loading, 
-		FormHeadline, 
+		FormHeadline,
+		FormEntitySelect, 
 		FormSubmit, 
 		FieldError,
-		DocumentsUpload,
-		FormEntitySelect
+		DocumentsUpload
 	}
 
 };
