@@ -7,21 +7,16 @@
 				<loading :loading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
-						<div class="col-sm-4">
-							<b-form-group label="Coletor" >
-								<form-entity-select v-if="collectors" :items="collectors" :form="form" field="field_potential_collector" />
-							</b-form-group>							
-						</div>					
-						<div class="col-sm-4">
+						<div class="col-sm-6">
 							<b-form-group label="Grupo de coletores" >
 								<form-entity-select v-if="collectors_groups" :items="collectors_groups" :form="form" field="field_potential_group" />
 							</b-form-group>							
 						</div>					
-						<div class="col-sm-4">
-							<b-form-group label="Data da coleta">
-								<b-form-input v-model="form.field_potential_date[0].value" type="date" />
-							</b-form-group>
-						</div>
+						<div class="col-sm-6">
+							<b-form-group label="Coletor" >
+								<form-entity-select v-if="collectors" :items="collectors" :form="form" field="field_potential_collector" />
+							</b-form-group>							
+						</div>					
 					</div>			
 					<div class="row">
 						<div class="col-sm-12">
@@ -112,7 +107,7 @@ export default {
 						var potential_list = resp.data
 						if (potential_list && potential_list.nid) {
 							this.loadList('potential_lists')
-							this.$router.replace('/listas-de-potencial/')
+							this.$router.replace('/lista-de-potencial/'+potential_list.nid[0].value)
 						}
 						this.sending = false						
 					}).catch(error => { this.error = error.response.data.message; this.sending = false })
