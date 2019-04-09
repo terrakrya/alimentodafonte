@@ -167,7 +167,6 @@ async function getPotentialLists (state) {
         group: potential_list.field_potential_group
           ? state.collectors_groups.find(c => c.id == potential_list.field_potential_group)
           : null,
-        date: potential_list.field_potential_date,
         weight: potential_list.seeds.map((i) => i.weight).reduce((a, b) => a + b) || 0,
         price: potential_list.seeds.map((i) => i.price * i.weight).reduce((a, b) => a + b) || 0,
         compensation_collect: potential_list.seeds.map((i) => i.compensation_collect * i.weight).reduce((a, b) => a + b) || 0,

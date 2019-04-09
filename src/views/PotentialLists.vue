@@ -9,10 +9,8 @@
 					<loading :loading="!potential_lists && !error" msg="Carregando lista de potencial" />
 					<div v-if="potential_lists">
 						<b-table  @filtered="onFiltered" stacked="md" :fields="table_fields" :items="potential_lists" :sort-by="'title'" :filter="filters.search">
-							<template slot="date" slot-scope="data">
-								<router-link v-if="data.item.date" :to="'/lista-de-potencial/'+ data.item.id"> 
-									{{data.item.date | moment("DD/MM/YYYY")}} 
-									<br>
+							<template slot="id" slot-scope="data">
+								<router-link v-if="data.item.id" :to="'/lista-de-potencial/'+ data.item.id"> 
 									Lista {{data.item.id}}
 								</router-link>
 							</template>
@@ -60,7 +58,7 @@ export default {
 			filters: { search: null },
 			total_qty: 0,
 			table_fields: [
-				{ key: 'date', label: 'Data', sortable: true },
+				{ key: 'id', label: 'Lista', sortable: true },
 				{ key: 'collector', label: 'Coletor', sortable: true },
 				{ key: 'group', label: 'Grupo', sortable: true },
 				{ key: 'weight', label: 'Quantidade', sortable: true },

@@ -16,9 +16,6 @@
 								Lista de potencial {{ potential_list.id }}
 							</h1>
 							<p>
-								<span v-if="potential_list.date">Data: {{ potential_list.date | moment("DD/MM/YYYY") }}</span>
-							</p>
-							<p>
 								<router-link v-if="potential_list.group" :to="'/grupo-de-coletores/'+potential_list.group.id"> &bull; {{ potential_list.group.title }}</router-link>			
 								<router-link v-if="potential_list.collector" :to="'/coletor/'+potential_list.collector.id"> &bull; {{ potential_list.collector.title }}</router-link>			
 							</p>
