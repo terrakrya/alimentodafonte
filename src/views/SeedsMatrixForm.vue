@@ -18,7 +18,19 @@
 								<b-form-input v-model="form.field_seed_matrix_scient_name[0].value" />
 							</b-form-group>							
 						</div>
-					</div>						
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<b-form-group label="Grupo de coletores" >
+								<form-entity-select v-if="collectors_groups" :items="collectors_groups" :form="form" field="field_seed_matrix_group" />
+							</b-form-group>							
+						</div>					
+						<div class="col-sm-6">
+							<b-form-group label="Coletor" >
+								<form-entity-select v-if="collectors" :items="collectors" :form="form" field="field_seed_matrix_collector" />
+							</b-form-group>							
+						</div>					
+					</div>					
 					<div class="row gray">
 						<div class="col-sm-6">
 							<b-form-group label="Latitude" >
@@ -67,12 +79,14 @@ import axios from 'axios'
 import Breadcrumb from '@/components/Breadcrumb'
 import Loading from '@/components/Loading'
 import FormHeadline from '@/components/FormHeadline'
+import FormEntitySelect from '@/components/FormEntitySelect'
 import FormSubmit from '@/components/FormSubmit'
 import FieldError from '@/components/FieldError'
 import DocumentsUpload from '@/components/DocumentsUpload'
 import categorias_de_matrizes from '@/data/categorias_de_matrizes.json'
 import origens_de_matrizes from '@/data/origens_de_matrizes.json'
 import meses from '@/data/meses.json'
+
 
 export default {
 	
@@ -98,18 +112,30 @@ export default {
 				field_geolocation: [{ lat: '', lng: '' }],
 				field_seed_matrix_files: [],
 				field_seed_matrix_collec_month: [],
+				field_seed_matrix_group: [],
+				field_seed_matrix_collector: [],
 			},
 		}
 	},
 	
 	created () {
 
+		this.getList('collectors')
+		this.getList('collectors_groups')
+
 		if (this.isEditing()) {
 			this.edit(this.$route.params.id)
 		}
 
 	},
-	
+	computed: {
+		collectors () {
+			return this.$store.state.collectors
+		},
+		collectors_groups () {
+			return this.$store.state.collectors_groups
+		}
+	},
 	methods: {
 		edit (id) {
 			this.loading = true
@@ -142,6 +168,7 @@ export default {
 					}).then(resp => {
 						var seeds_matrix = resp.data
 						if (seeds_matrix && seeds_matrix.nid) {
+							this.loadList('seeds_matrixes')
 							this.$router.replace('/matriz-de-sementes/'+seeds_matrix.nid[0].value)
 						}
 						this.sending = false						
@@ -157,7 +184,8 @@ export default {
 		FormHeadline, 
 		FormSubmit, 
 		FieldError,
-		DocumentsUpload
+		DocumentsUpload,
+		FormEntitySelect
 	}
 
 };

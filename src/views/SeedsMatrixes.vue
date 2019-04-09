@@ -10,10 +10,18 @@
 					<div v-if="seeds_matrixes">
 						<b-table stacked="md" :fields="table_fields" :items="seeds_matrixes" :sort-by="'title'" :filter="filters.search">
 							<template slot="title" slot-scope="data">
-								<router-link :to="'/matriz-de-sementes/'+ data.item.nid">{{data.item.title}}</router-link>
+								<router-link :to="'/matriz-de-sementes/'+ data.item.id">{{data.item.title}}</router-link>
 								<p v-if="data.item.seed_matrix_scient_name">
 									<small>{{data.item.seed_matrix_scient_name}}</small>
 								</p>
+							</template>
+							<template slot="group_collector" slot-scope="data">
+								<router-link v-if="data.item.collectors_group" :to="'/grupo-de-coletores/'+ data.item.collectors_group.id">
+									{{data.item.collectors_group.title}}
+								</router-link>
+								<router-link v-if="data.item.collector" :to="'/coletor/'+ data.item.collector.id">
+									{{data.item.collector.title}}
+								</router-link>
 							</template>
 							<template slot="category" slot-scope="data">
 								<p v-if="data.item.category">
@@ -21,8 +29,8 @@
 								</p>
 							</template>
 							<template slot="actions" slot-scope="data">
-								<router-link :to="'/editar-matriz-de-sementes/'+ data.item.nid" class="fa fa-edit btn btn-primary btn-xs "></router-link>
-								<a @click="remove(data.item.nid)" class="fa fa-trash btn btn-danger btn-xs"></a>
+								<router-link :to="'/editar-matriz-de-sementes/'+ data.item.id" class="fa fa-edit btn btn-primary btn-xs "></router-link>
+								<a @click="remove(data.item.id)" class="fa fa-trash btn btn-danger btn-xs"></a>
 							</template>
 						</b-table>
 					</div>
@@ -51,35 +59,25 @@ export default {
 			origens_de_matrizes: origens_de_matrizes,
 			table_fields: [
 				{ key: 'title', label: 'Nome da matriz', sortable: true },
+				{ key: 'group_collector', label: 'Grupo / Coletor', sortable: true },
 				{ key: 'category', label: 'Origem / Categoria', sortable: true },
 				{ key: 'actions', label: 'Ações', 'class': 'actions' },
-			],
-			seeds_matrixes: null
+			]
 		}
 	},
-	
 	created () {
-		this.list()
+		this.loadList('seeds_matrixes')
 	},
-
-	methods: {
-		list () {
-			axios.get('rest/seeds-matrixes?_format=json').then(response => {
-				this.seeds_matrixes = response.data.map(seeds_matrix => {
-					return { 
-						nid: seeds_matrix.nid[0].value,
-						title: seeds_matrix.title[0].value,
-						seed_matrix_scient_name: seeds_matrix.field_seed_matrix_scient_name.length ? seeds_matrix.field_seed_matrix_scient_name[0].value : '',
-						category: seeds_matrix.field_seed_matrix_category[0].value,
-						source: seeds_matrix.field_seed_matrix_source[0].value
-					}
-				})
-			}).catch(error => { this.error = error.message })
+	computed: {
+		seeds_matrixes () {
+			return this.$store.state.seeds_matrixes
 		},
+	},
+	methods: {
 		remove (id) {
 			if (confirm("Tem certeza que deseja excluír?")) {
 				axios.delete('node/' + id + '?_format=json').then(() => {
-					this.list()
+					this.loadList('seeds_matrixes')
 				}).catch(error => { this.error = error.message })	
 			}
 		}
