@@ -408,6 +408,38 @@ async function getCollections (state) {
   })
 }
 
+async function getSeedsMatrixes (state) {
+  return await axios.get('rest/seeds-matrixes?_format=json').then(async response => {
+    if (!state.collectors.length) {
+      await getCollectors(state)
+    }
+    if (!state.collectors_groups.length) {
+      await getCollectorsGroups(state)
+    }
+    state.seeds_matrixes = response.data.map(item => {
+      if (present(item.field_seed_matrix_collector, 'target_id')) {
+        var collector = state.collectors.find(collector => collector.id == item.field_seed_matrix_collector[0].target_id)
+      }
+      if (present(item.field_seed_matrix_group, 'target_id')) {
+        var collectors_group = state.collectors_groups.find(collectors_group => collectors_group.id == item.field_seed_matrix_group[0].target_id)
+      }
+      return { 
+        id: item.nid[0].value,
+        title: item.title[0].value,
+        scient_name: item.field_seed_matrix_scient_name.length ? item.field_seed_matrix_scient_name[0].value : '',
+        collec_month: item.field_seed_matrix_collec_month.length ? item.field_seed_matrix_collec_month[0].value : '',
+        category: item.field_seed_matrix_category[0].value,
+        source: item.field_seed_matrix_source[0].value,
+        files: item.field_seed_matrix_files.map(file => (file.url)),
+        geolocation: item.field_geolocation[0],
+        collector: collector,        
+        collectors_group: collectors_group 
+      } 
+    })
+    return state.seeds_matrixes
+  })
+}
+
 export const mutations = {
   login (state, currentUser) {
     state.currentUser = currentUser
@@ -444,6 +476,8 @@ export const mutations = {
       getPotentialLists(state)
     } else if (type == 'collections') {
       getCollections(state)
+    } else if (type == 'seeds_matrixes') {
+      getSeedsMatrixes(state)
     } else if (type == 'stock') {
       getStock(state)
     } else if (type == 'lots') {
