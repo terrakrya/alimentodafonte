@@ -74,7 +74,7 @@
 					</div>
 					<div class="row">
 						<div class="col-sm-12">
-							<form-seeds-select :form="form" field="field_order_entry_seeds" fieldtype="order_entry_seeds" :parent="this.$route.params.id" fieldseed="field_order_entry_seed" fieldextra="field_order_entry_seeds_qty" :seeds="seeds" v-if="seeds.length" />
+							<form-seeds-select :form="form" field="field_order_entry_seeds" fieldtype="order_entry_seeds" :parent="this.$route.params.id" fieldseed="field_order_entry_seed" fieldqtd="field_order_entry_seeds_qty" :seeds="seeds" v-if="seeds.length" />
 						</div>					
 					</div>					
 					<form-submit :error="error" :sending="sending" />

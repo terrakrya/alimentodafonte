@@ -20,7 +20,10 @@
 					</div>		
 					<div class="row">
 						<div class="col-sm-12">
-							<form-seeds-select :form="form" field="field_paragraph_seeds" fieldtype="collectors_seeds_requests" :parent="this.$route.params.id" fieldseed="field_paragraph_seed" fieldextra="field_paragraph_weight" :seeds="seeds" v-if="seeds.length" :callback="seedsChanged" />
+							<form-seeds-select :form="form" field="field_paragraph_seeds" fieldtype="collectors_seeds_requests" :parent="this.$route.params.id" fieldseed="field_paragraph_seed" fieldqtd="field_paragraph_weight" :seeds="seeds" v-if="seeds.length" :callback="seedsChanged" />
+							<div v-for="(seeds_error, index) in seeds_errors" :key="index" class="alert alert-danger">
+								{{seeds_error}}
+							</div>
 						</div>
 					</div>								
 					<form-submit :error="error" :sending="sending" />
@@ -50,6 +53,8 @@ export default {
 			loading: false,
 			sending: false,
 			seeds_list: [],
+			seeds_errors: [],
+			seeds_checklist: {},
 			form: {
 				type: [{ target_id: "requests_for_collectors" }],
 				title: [{ value: 'pedido-' + Date.now() }],
@@ -120,44 +125,57 @@ export default {
 		}, 
 		seedsChanged (items) {
 			this.seeds_list = items
+			this.validateQty()
 		},
 		validateQty () {
-			this.qty_error = ''
+			this.seeds_errors = []
 			if ((this.form.field_requests_group.length || this.form.field_requests_collector.length) && this.form.field_paragraph_seeds.length && this.potential_lists) {
-				let potential_list = this.potential_lists.find(pl => {
-					
-					let collector = this.present(this.form.field_requests_collector, 'target_id') ? this.form.field_requests_collector[0].target_id : null
 
-					let group = this.present(this.form.field_requests_group, 'target_id') ? this.form.field_requests_group[0].target_id : null
-					return (
-						(
-							(collector && pl.collector && pl.collector.id == collector) ||
-							(group && pl.group && pl.group.id == group)
-						) &&
-						pl.seeds && pl.seeds.find(s => (s.id == this.form.field_paragraph_seeds[0].target_id))
-					)
+				this.seeds_checklist = {}
+
+				this.seeds_list.forEach(seed => {
+					this.seeds_checklist[seed.seed_id] = Number(this.seeds_checklist[seed.seed_id] || 0) + Number(seed.qtd)
 				})
+				
+				Object.keys(this.seeds_checklist).map(seed_id => {
+					let pls = this.potential_lists.filter(pl => {
 
-				if (potential_list) {
-					let seed = potential_list.seeds.find(s => (s.id == this.form.field_paragraph_seeds[0].target_id))
-					if (Number(seed.weight) < Number(this.form.field_qty[0].value)) {
-						this.qty_error = 'Quantidade maior que a solicitada no Pedido '+potential_list.id+': '+ seed.weight + ' kg de '+seed.title
-						return false
+						let collector = this.present(this.form.field_requests_collector, 'target_id') ? this.form.field_requests_collector[0].target_id : null
+
+						let group = this.present(this.form.field_requests_group, 'target_id') ? this.form.field_requests_group[0].target_id : null
+
+						return ((
+								(collector && pl.collector && pl.collector.id == collector) ||
+								(group && pl.group && pl.group.id == group)
+							) && pl.seeds && pl.seeds.find(s => (s.id == seed_id)))
+					})
+
+					if (pls && pls.length) { 
+						let seeds = pls.map(pl => pl.seeds)
+						if (seeds && seeds.length) {
+							seeds = seeds.reduce((acc, val) => acc.concat(val), []).filter(s => (s.id == seed_id))
+							var qtd = seeds.map((item) => Number(item.weight)).reduce((a, b) => a + b)
+							if (Number(qtd) < this.seeds_checklist[seed_id]) {
+								this.seeds_errors.push('A quantidade solicitada ('+this.seeds_checklist[seed_id]+' kg de '+this.seeds.find(s => s.id == seed_id).title+') é maior que o potencial de coleta ('+ qtd + ' kg) desse coletor/grupo ')
+							}							
+						}
 					} else {
-						return true
+						this.seeds_errors.push('Não existe potencial de coleta de '+this.seeds.find(s => s.id == seed_id).title+' para este coletor/grupo')
+						return false
 					}
-				} else {
-					this.qty_error = 'Não existe registro de pedido dessa semente para este coletor/grupo'
-					return false
-				}
+
+				})
 			}
 		}
 	},	
-	// watch: {
-	// 	'form.field_paragraph_seeds': function () {
-	// 		this.validateQty()
-	// 	}
-	// },
+	watch: {
+		'form.field_requests_group': function () {
+			this.validateQty()
+		},
+		'form.field_requests_collector': function () {
+			this.validateQty()
+		}
+	},
 	components: { 
 		Breadcrumb, 
 		Loading, 

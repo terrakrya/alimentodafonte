@@ -15,7 +15,7 @@
           </template>
         </cool-select>
         <div class="col-sm-6">
-          <input v-model="seed_form[fieldextra][0].value" class="weight" placeholder="Quantidade" type="number" /> Kg
+          <input v-model="seed_form[fieldqtd][0].value" class="weight" placeholder="Quantidade" type="number" /> Kg
           <b-button class="btn btn-primary fa fa-plus pull-right" @click="addSeed()">Adicionar</b-button>
         </div>
         <br>
@@ -44,10 +44,10 @@
               {{item_preview.price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
             </td>
             <td>
-              {{item_preview.extra | currency('', 0, { thousandsSeparator: '' })}} kg
+              {{item_preview.qtd | currency('', 0, { thousandsSeparator: '' })}} kg
             </td>
             <td>
-              {{item_preview.price * item_preview.extra | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+              {{item_preview.price * item_preview.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
             </td>
             <td class="text-right">
               <b-button v-if="item_preview" class="btn btn-xs btn-danger fa fa-trash" @click="removeItem(item_preview.id)"></b-button>
@@ -79,7 +79,7 @@ import Loading from '@/components/Loading'
 
 export default {
   name: 'form-entities-select',
-  props: ['form', 'field', 'fieldtype', 'parent', 'fieldseed', 'fieldextra', 'seeds', 'basecalc', 'callback'],
+  props: ['form', 'field', 'fieldtype', 'parent', 'fieldseed', 'fieldqtd', 'seeds', 'basecalc', 'callback'],
   inject: ['$validator'],
   data () {
     var seed_form = {
@@ -89,7 +89,7 @@ export default {
         parent_field_name: [{ value: this.field }]
       }   
     seed_form[this.fieldseed] = [{ target_id: '' }]
-    seed_form[this.fieldextra] = [{ value: '' }]
+    seed_form[this.fieldqtd] = [{ value: '' }]
 
     return { 
       error: false,      
@@ -114,14 +114,14 @@ export default {
     },
     totalQty () {
       if (this.preview) {
-        return this.preview.map((item) => Number(item.extra)).reduce((a, b) => a + b)
+        return this.preview.map((item) => Number(item.qtd)).reduce((a, b) => a + b)
       } else {
         return 0
       }
     },
     totalPrice () {
       if (this.preview) {
-        return this.preview.map((item) => Number(item.price) * Number(item.extra)).reduce((a, b) => a + b)
+        return this.preview.map((item) => Number(item.price) * Number(item.qtd)).reduce((a, b) => a + b)
       } else {
         return 0
       }
@@ -141,7 +141,7 @@ export default {
         this.form[this.field].push({ target_id: paragraph.id[0].value, target_revision_id: paragraph.revision_id[0].value })
 
         this.seed_form[this.fieldseed] = [{ target_id: '' }]
-        this.seed_form[this.fieldextra] = [{ value: '' }]
+        this.seed_form[this.fieldqtd] = [{ value: '' }]
         this.addItem(paragraph)
         this.sending = false
       }).catch(error => { this.error = error.message; this.sending = false })
@@ -163,8 +163,9 @@ export default {
         this.items.push({ 
           id: paragraph.id[0].value, 
           name: seed.title, 
-          extra: paragraph[this.fieldextra][0].value,
-          price: seed[this.basecalc || 'price'] 
+          qtd: paragraph[this.fieldqtd][0].value,
+          price: seed[this.basecalc || 'price'],
+          seed_id: seed.id
         })
         if (this.callback) {
           this.callback(this.items)  
