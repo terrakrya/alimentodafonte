@@ -79,7 +79,7 @@ import Loading from '@/components/Loading'
 
 export default {
   name: 'form-entities-select',
-  props: ['form', 'field', 'fieldtype', 'parent', 'fieldseed', 'fieldextra', 'seeds', 'basecalc'],
+  props: ['form', 'field', 'fieldtype', 'parent', 'fieldseed', 'fieldextra', 'seeds', 'basecalc', 'callback'],
   inject: ['$validator'],
   data () {
     var seed_form = {
@@ -166,6 +166,10 @@ export default {
           extra: paragraph[this.fieldextra][0].value,
           price: seed[this.basecalc || 'price'] 
         })
+        if (this.callback) {
+          this.callback(this.items)  
+        }
+        
       }
     },
     edit () {
