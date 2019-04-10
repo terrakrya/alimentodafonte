@@ -149,6 +149,9 @@ export default {
 
     removeItem (id) {
       this.form[this.field] = this.form[this.field].filter(item => (item.target_id != id))
+      if (this.callback) {
+        this.callback(this.items)  
+      }
     }, 
     getItem (id) {
       return this.items.find(i => {
@@ -170,7 +173,6 @@ export default {
         if (this.callback) {
           this.callback(this.items)  
         }
-        
       }
     },
     edit () {
