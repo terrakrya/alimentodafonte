@@ -30,3 +30,9 @@ stage-run:
 
 stage-stop:
 	docker-compose -f docker-compose-stage.yml stop
+
+prod-run:
+	docker-compose -f docker-compose-prod.yml up -d
+
+prod-stop:
+	docker-compose -f docker-compose-prod.yml stop
