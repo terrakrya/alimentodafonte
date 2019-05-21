@@ -2,7 +2,7 @@ version: "3"
 
 services:
 
-  nginx:
+  nginx_front:
     image: wodby/nginx:1.15-5.0.5
     container_name: "frontend_sementes_nginx"
     environment:
@@ -22,28 +22,29 @@ services:
       - 'traefik.port=80'
       - 'traefik.frontend.rule=Host:frontend-sementes.docker.localhost'
 
-  portainer:
-    image: portainer/portainer
-    container_name: "frontend_sementes_portainer"
-    command: --no-auth -H unix:///var/run/docker.sock
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    labels:
-      - 'traefik.backend=portainer'
-      - "traefik.docker.network=frontend"
-      - 'traefik.port=9000'
-      - 'traefik.frontend.rule=Host:frontend-sementes-portainer.docker.localhost'
-
-  traefik:
-    image: traefik
-    command: -c /dev/null --web --docker --logLevel=INFO
-    ports:
-      - '8000:80'
-      - '8080:8080' # Dashboard
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    labels:
-      - "traefik.docker.network=frontend"
+# Only local environment
+#  portainer:
+#    image: portainer/portainer
+#    container_name: "frontend_sementes_portainer"
+#    command: --no-auth -H unix:///var/run/docker.sock
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    labels:
+#      - 'traefik.backend=portainer'
+#      - "traefik.docker.network=frontend"
+#      - 'traefik.port=9000'
+#      - 'traefik.frontend.rule=Host:frontend-sementes-portainer.docker.localhost'
+#
+#  traefik:
+#    image: traefik
+#    command: -c /dev/null --web --docker --logLevel=INFO
+#    ports:
+#      - '8000:80'
+#      - '8080:8080' # Dashboard
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    labels:
+#      - "traefik.docker.network=frontend"
 
 volumes:
   codebase:
