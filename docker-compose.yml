@@ -12,7 +12,6 @@ services:
       NGINX_USER: wodby
     volumes:
       - ./:/var/www/html
-      - ./docker/conf.d/:/etc/nginx/conf.d
       # Options for macOS users (https://docker4drupal.readthedocs.io/en/latest/macos)
       #      - ./:/var/www/html:cached # User-guided caching
       #      - docker-sync:/var/www/html # Docker-sync
