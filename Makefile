@@ -11,10 +11,10 @@ run:
 	docker-compose up -d
 
 in:
-	docker-compose exec nginx /bin/bash
+	docker-compose exec nginx_front /bin/bash
 
 in-with-root:
-	docker-compose exec --user root nginx /bin/bash
+	docker-compose exec --user root nginx_front /bin/bash
 
 stop:
 	docker-compose stop
@@ -30,9 +30,3 @@ stage-run:
 
 stage-stop:
 	docker-compose -f docker-compose-stage.yml stop
-
-prod-run:
-	docker-compose -f docker-compose-prod.yml up -d
-
-prod-stop:
-	docker-compose -f docker-compose-prod.yml stop
