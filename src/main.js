@@ -20,7 +20,7 @@ axios.defaults.headers.common['Authorization'] = 'Basic c2VtZW50ZXMtYWRtaW46bjNq
 axios.defaults.headers.common['Content-Type'] = 'application/json'
 axios.defaults.baseURL = (process.env.NODE_ENV == 'development')
   ? "http://sementes.docker.localhost:8000/"
-  : window.location.protocol + "//admin" + (window.location.hostname == "app.sementesdoxingu.org.br" ? "." : "") + window.location.hostname+"/"
+  : window.location.protocol + "//admin" + window.location.hostname+"/"
 
 Vue.use(BootstrapVue)
 
