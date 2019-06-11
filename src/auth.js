@@ -12,8 +12,11 @@ export default {
         }
     })
     .then(function (response) {
-      localStorage.setItem('currentUser', JSON.stringify(response.data))
-      store.dispatch('login', response.data)
+      var currentUser = response.data
+      Object.assign(currentUser, { auth_token: btoa(email+':'+pass) })
+      localStorage.setItem('currentUser', JSON.stringify(currentUser))
+      axios.defaults.headers.common['Authorization'] = 'Basic '+currentUser.auth_token
+      store.dispatch('login', currentUser)
       cb({
         authenticated: true,
         currentUser: response.data

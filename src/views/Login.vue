@@ -35,8 +35,8 @@ export default {
   },
   data () {
     return {
-      email: 'terra krya',
-      pass: 'eusou',
+      email: '',
+      pass: '',
       error: false,
       loading: false
     }
