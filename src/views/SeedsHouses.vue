@@ -33,11 +33,11 @@ import ListHeadline from '@/components/ListHeadline'
 import Breadcrumb from '@/components/Breadcrumb'
 
 export default {
-	
-	name: 'SeedsHouses', 
-	
+
+	name: 'SeedsHouses',
+
 	data () {
-		return { 
+		return {
 			error: false,
 			filters: { search: null },
 			table_fields: [
@@ -48,7 +48,7 @@ export default {
 			seeds_houses: null
 		}
 	},
-	
+
 	created () {
 		this.list()
 	},
@@ -57,11 +57,11 @@ export default {
 		list () {
 			axios.get('rest/seeds-houses?_format=json').then(response => {
 				this.seeds_houses = response.data.map(seeds_house => {
-					return { 
+					return {
 						store_id: seeds_house.store_id[0].value,
 						name: seeds_house.name[0].value,
 						collectors: seeds_house.field_collectors,
-						city: seeds_house.field_address.length ? 
+						city: seeds_house.field_address && seeds_house.field_address.length ? 
 							[seeds_house.field_address[0].locality, seeds_house.field_address[0].administrative_area].filter(Boolean).join(' - ')
 							: ''
 					}
@@ -72,16 +72,16 @@ export default {
 			if (confirm("Tem certeza que deseja excluír?")) {
 				axios.delete('store/' + id + '?_format=json').then(() => {
 					this.list()
-				}).catch(error => { this.error = error.message })	
+				}).catch(error => { this.error = error.message })
 			}
 		}
 	},
 
-	components: { 
+	components: {
 		'loading': Loading,
 		'list-headline': ListHeadline,
 		'breadcrumb': Breadcrumb
 	}
-		
+
 };
 </script>

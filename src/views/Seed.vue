@@ -77,7 +77,7 @@
 											</dl>
 										</div>
 										<div class="col-sm-6">
-											<dl class="ecosystem" v-if="">
+											<dl class="ecosystem">
 												<dt>Ecossistemas</dt>
 												<dd>
 													<b-badge v-for="(ecosystem, index) in seed.field_ecosystem" :class="ecosystem.value" :key="index">{{ecossistemas.find((es) => (es.value.value == ecosystem.value)).text}}</b-badge>
