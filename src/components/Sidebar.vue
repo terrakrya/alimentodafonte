@@ -33,9 +33,6 @@
                 <router-link to="/clientes"><span>Clientes</span></router-link>
               </li>
               <li @click="toggleMenu">
-                <router-link to="/redes-de-sementes"><span>Redes de sementes</span></router-link>
-              </li>
-              <li @click="toggleMenu">
                 <router-link to="/sementes"><span>Sementes</span></router-link>
               </li>
               <li @click="toggleMenu">
@@ -82,6 +79,6 @@ export default {
     toggleMenu () {
       this.$store.dispatch('toggleMenu')
     }
-  } 
+  }
 };
 </script>
