@@ -11,7 +11,7 @@
 							<b-form-group label="Nome da espécie *">
 								<b-form-input v-model="form.title[0].value" v-validate="'required'" name="title"/>
 								<field-error :msg="veeErrors" field="title" />
-							</b-form-group>							
+							</b-form-group>
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Nome científico *">
@@ -19,7 +19,7 @@
 								<field-error :msg="veeErrors" field="field_scientific_name" />
 							</b-form-group>
 						</div>
-					</div>						
+					</div>
 					<div class="row gray">
 						<div class="col-md-12">
 							<b-form-group label="Nome(s) regional(is) *" description="Escreva todos os nome regionais que essa semente possa ter separado por virgula.">
@@ -27,16 +27,16 @@
 								<field-error :msg="veeErrors" field="field_local_name" />
 							</b-form-group>
 						</div>
-					</div>						
+					</div>
 					<div class="row">
 						<div class="col-md-12">
 							<b-form-group label="Descrição da semente">
 								<b-form-textarea v-model="form.body[0].value" :rows="3"></b-form-textarea>
-							</b-form-group>							
+							</b-form-group>
 						</div>
-					</div>						
+					</div>
 					<div class="row gray">
-						<div class="col-md-3 col-sm-6"> 
+						<div class="col-md-3 col-sm-6">
 							<b-form-group label="Preço *">
 								<money v-model="variations_form.price[0].number"></money>
 							</b-form-group>
@@ -47,16 +47,16 @@
 							</b-form-group>
 						</div>
 						<div class="col-md-3 col-sm-6">
-							<b-form-group label="Remuneração do coletor *"> 
+							<b-form-group label="Remuneração do coletor *">
 								<money v-model="form.field_compensation_collect[0].number"></money>
 							</b-form-group>
 						</div>
 						<div class="col-md-3 col-sm-6">
-							<b-form-group label="Qtd. em estoque (Kg)"> 
+							<b-form-group label="Qtd. em estoque (Kg)">
 								<b-form-input v-model="variations_form.field_stock[0].value" type="number" />
 							</b-form-group>
 						</div>
-					</div>				
+					</div>
 					<div class="row">
 						<div class="col-sm-4">
 							<b-form-group label="Qtd. de sementes / Kg *" :description="form.field_seeds_kg[0].value > 0 ? form.field_seeds_kg[0].value + ' sementes por quilo' : ''">
@@ -69,16 +69,15 @@
 							</b-form-group>
 						</div>
 						<div class="col-sm-4">
-							<b-form-group label="Limite de peso por lote (Kg)" :description="form.field_lot_limit[0].value > 0 ? 'Limite de '+ form.field_lot_limit[0].value + ' quilos por lote' : ''"> 
+							<b-form-group label="Limite de peso por lote (Kg)" :description="form.field_lot_limit[0].value > 0 ? 'Limite de '+ form.field_lot_limit[0].value + ' quilos por lote' : ''">
 								<b-form-input type="number" v-model="form.field_lot_limit[0].value" />
 							</b-form-group>
 						</div>
-					</div>						
+					</div>
 					<div class="row gray">
 						<div class="col-sm-6">
-							<loading :loading="!ecosystem_options" msg="Carregando lista de ecossistemas" />
-							<b-form-group label="Ecossistema *" v-if="ecosystem_options">
-								<b-form-checkbox-group v-model="form.field_ecosystem" :options="ecosystem_options"  v-validate="'required'" name="field_ecosystem" />
+							<b-form-group label="Ecossistema *">
+								<b-form-checkbox-group v-model="form.field_ecosystem" :options="ecossistemas"  v-validate="'required'" name="field_ecosystem" />
 								<field-error :msg="veeErrors" field="field_ecosystem" />
 							</b-form-group>
 						</div>
@@ -91,12 +90,12 @@
 					</div>
 					<div class="row">
 						<div class="col-md-12">
-							<pictures-upload :form="form" :preview="this.images_preview" :error="error" field="field_images" url="file/upload/commerce_product/seed/field_images?_format=json" :multiple="true"  />							
-						</div>					
-					</div>					
+							<pictures-upload :form="form" :preview="this.images_preview" :error="error" field="field_images" url="file/upload/commerce_product/seed/field_images?_format=json" :multiple="true"  />
+						</div>
+					</div>
 					<form-submit :error="error" :sending="sending"/>
 				</b-form>
-			</div>				
+			</div>
 		</div>
 	</div>
 </template>
@@ -110,16 +109,18 @@ import FormSubmit from '@/components/FormSubmit'
 import PicturesUpload from '@/components/PicturesUpload'
 import FieldError from '@/components/FieldError'
 import meses from '@/data/meses.json'
+import ecossistemas from '@/data/ecossistemas.json'
 
 export default {
-	
-	name: 'SeedForm', 
-	
+
+	name: 'SeedForm',
+
 	data () {
 
-		return { 
+		return {
 			error: false,
 			meses: meses,
+			ecossistemas: ecossistemas,
 			form: {
 				type:[{ target_id: "seed" }],
 				title: [{ value: '' }],
@@ -138,35 +139,26 @@ export default {
 			},
 			variations_form: {
 				type:[{ target_id: "default" }],
-				price: [{ number: 0, currency_code:	'BRL' }],				
-				field_wholesale_price: [{ number: 0, currency_code:	'BRL' }],				
+				price: [{ number: 0, currency_code:	'BRL' }],
+				field_wholesale_price: [{ number: 0, currency_code:	'BRL' }],
 				field_stock: [{ value: 0 }],
 				sku: [{ value: 0 }],
 				product_id: [{ target_id: 0 }]
 			},
 			showSkuInput: false,
-			ecosystem_options: null,
 			images_preview: [],
 			loading: false,
 			sending: false,
 		}
 	},
-	
-	created () {
 
-		axios.get('entity/field_storage_config/commerce_product.field_ecosystem?_format=json')
-		.then(response => {
-			let values = response.data.settings.allowed_values
-			this.ecosystem_options = Object.keys(values).map(function(key) {
-				return { text: values[key], value: { value: key } }
-			});
-		}).catch(error => { this.error = error.message });
+	created () {
 
 		if (this.isEditing()) {
 			this.edit(this.$route.params.id)
 		}
 	},
-	
+
 	methods: {
 		edit(id) {
 			this.loading = true
@@ -193,7 +185,7 @@ export default {
 					} else {
 						this.variations_form.sku[0].value = slugify(this.form.title[0].value.toLowerCase()) + "-" + Date.now()
 					}
-					
+
 					this.form.uid = [{ target_id: this.currentUser.current_user.uid }]
 					this.variations_form.uid = [{ target_id: this.currentUser.current_user.uid }]
 					axios({
@@ -204,7 +196,7 @@ export default {
 						this.form.variations = [{ target_id: response.data.variation_id[0].value }]
 						axios({
 							method: (this.isEditing() ? 'PATCH' : 'POST'),
-							url: (this.isEditing() ? 'product/'+ this.$route.params.id : 'entity/commerce_product')+'?_format=json', 
+							url: (this.isEditing() ? 'product/'+ this.$route.params.id : 'entity/commerce_product')+'?_format=json',
 							data: this.form
 						}).then(resp => {
 							var product = resp.data
@@ -213,7 +205,7 @@ export default {
 							}
 							this.sending = false
 						}).catch(error => { this.error = error.response.data.message; this.sending = false })
-					}).catch(error => { this.error = error.message; this.sending = false })				
+					}).catch(error => { this.error = error.message; this.sending = false })
 				}
 			})
 		},
@@ -239,11 +231,11 @@ export default {
 		}
 	},
 
-	components: { 
-		'breadcrumb': Breadcrumb, 
-		'loading': Loading, 
-		'form-headline': FormHeadline, 
-		'form-submit': FormSubmit, 
+	components: {
+		'breadcrumb': Breadcrumb,
+		'loading': Loading,
+		'form-headline': FormHeadline,
+		'form-submit': FormSubmit,
 		'field-error' : FieldError,
 		'pictures-upload' : PicturesUpload
 	}
