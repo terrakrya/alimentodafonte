@@ -32,8 +32,8 @@ async function getCollectorsRequests (state) {
           index = i
         }
       })
-      let seed = state.seeds.find(s => s.id == r.field_paragraph_seed) 
-       
+      let seed = state.seeds.find(s => s.id == r.field_paragraph_seed)
+
       var new_seed = Object.assign({}, seed)
 
       new_seed.weight = Number(r.field_paragraph_weight)
@@ -46,18 +46,18 @@ async function getCollectorsRequests (state) {
       }
     })
     state.collectors_requests = collectors_requests.map(item =>  {
-      return {  
+      return {
         id: item.nid,
         created: item.created,
         collector: item.field_requests_collector
-          ? state.collectors.find(c => c.id == item.field_requests_collector) 
+          ? state.collectors.find(c => c.id == item.field_requests_collector)
           : null,
         collectors_group: item.field_requests_group
           ? state.collectors_groups.find(c => c.id == item.field_requests_group)
           : null,
         seeds_house: item.field_requests_seeds_house
           ? state.seeds_houses.find(c => c.id == item.field_requests_seeds_house)
-          : null, 
+          : null,
         seeds: item.seeds,
         weight: item.seeds.map((i) => i.weight).reduce((a, b) => a + b) || 0,
         remaining_weight: item.seeds.map((i) => i.remaining_weight).reduce((a, b) => a + b) || 0,
@@ -72,7 +72,7 @@ async function getOrders (state) {
   return await axios.get('rest/orders-entries?_format=json').then(async response => {
     if (!state.clients.length) {
       await getClients(state)
-    }    
+    }
     if (!state.seeds.length) {
       await getSeeds(state)
     }
@@ -85,8 +85,8 @@ async function getOrders (state) {
           index = i
         }
       })
-      let seed = state.seeds.find(s => s.id == r.field_order_entry_seed) 
-       
+      let seed = state.seeds.find(s => s.id == r.field_order_entry_seed)
+
       var new_seed = Object.assign({}, seed)
 
       new_seed.weight = Number(r.field_order_entry_seeds_qty)
@@ -98,10 +98,10 @@ async function getOrders (state) {
       }
     })
     state.orders = orders.map(order => {
-      return { 
+      return {
         id: order.nid,
         title: order.title,
-        client: order.field_order_entry_clients.length 
+        client: order.field_order_entry_clients.length
           ? state.clients.find(c => c.id == order.field_order_entry_clients[0])
           : null,
         // total: Number(order.field_order_entry_total),
@@ -130,10 +130,10 @@ async function getPotentialLists (state) {
   return await axios.get('rest/potential-list?_format=json').then(async response => {
     if (!state.collectors.length) {
       await getCollectors(state)
-    }    
+    }
     if (!state.collectors_groups.length) {
       await getCollectorsGroups(state)
-    }    
+    }
     if (!state.seeds.length) {
       await getSeeds(state)
     }
@@ -146,8 +146,8 @@ async function getPotentialLists (state) {
           index = i
         }
       })
-      let seed = state.seeds.find(s => s.id == r.field_potential_seed) 
-       
+      let seed = state.seeds.find(s => s.id == r.field_potential_seed)
+
       var new_seed = Object.assign({}, seed)
 
       new_seed.weight = Number(r.field_potential_qty)
@@ -159,9 +159,9 @@ async function getPotentialLists (state) {
       }
     })
     state.potential_lists = potential_lists.map(potential_list => {
-      return { 
+      return {
         id: potential_list.nid,
-        collector: potential_list.field_potential_collector 
+        collector: potential_list.field_potential_collector
           ? state.collectors.find(c => c.id == potential_list.field_potential_collector)
           : null,
         group: potential_list.field_potential_group
@@ -182,10 +182,10 @@ async function getStock (state) {
   return await axios.get('rest/stock?_format=json').then(async response => {
     if (!state.collectors.length) {
       await getCollectors(state)
-    }    
+    }
     if (!state.collectors_groups.length) {
       await getCollectorsGroups(state)
-    }    
+    }
     if (!state.seeds.length) {
       await getSeeds(state)
     }
@@ -201,9 +201,9 @@ async function getStock (state) {
 
     state.stock = response.data.map(stock_movement => {
 
-      let type = stock_movement.type[0].target_id == 'stock_in' ? '' : '_out' 
+      let type = stock_movement.type[0].target_id == 'stock_in' ? '' : '_out'
 
-      let movement = { 
+      let movement = {
         nid: stock_movement.nid[0].value,
         created: stock_movement.created[0].value,
         type: stock_movement.type[0].target_id,
@@ -253,16 +253,16 @@ async function getStock (state) {
         } else {
           movement.qty = Number(stock_movement['field_qty'+type][0].value)
         }
-        
-      } 
+
+      }
 
       if (present(stock_movement['field_price'+type])) {
         movement.price = Number(stock_movement['field_price'+type][0].value)
-      } 
+      }
 
       if (present(stock_movement.field_out_modes)) {
         movement.out_mode = stock_movement.field_out_modes[0].value
-      } 
+      }
 
       return movement
     })
@@ -274,7 +274,7 @@ async function getStock (state) {
 async function getCollectors (state) {
   return await axios.get('rest/collectors?_format=json').then(response => {
     state.collectors = response.data.map(item => {
-      return { 
+      return {
         id: item.uid[0].value,
         title: item.field_name[0].value,
         description: item.field_nickname[0].value,
@@ -288,7 +288,7 @@ async function getCollectors (state) {
 async function getClients (state) {
   return await axios.get('rest/clients?_format=json').then(response => {
     state.clients = response.data.map(item => {
-      return { 
+      return {
         id: item.uid[0].value,
         title: item.field_name[0].value,
         description: item.field_nickname[0].value,
@@ -302,10 +302,10 @@ async function getClients (state) {
 async function getCollectorsGroups (state) {
   return await axios.get('rest/collectors-groups?_format=json').then(response => {
     state.collectors_groups = response.data.map(item => {
-      return { 
+      return {
         id: item.nid[0].value,
         title: item.title[0].value,
-        city: item.field_address.length ? 
+        city: item.field_address.length ?
         [item.field_address[0].locality, item.field_address[0].administrative_area].filter(Boolean).join(' - ') : ''
       }
     })
@@ -315,11 +315,11 @@ async function getCollectorsGroups (state) {
 async function getSeedsHouses (state) {
   return await axios.get('rest/seeds-houses?_format=json').then(response => {
     state.seeds_houses = response.data.map(item => {
-      return { 
+      return {
         id: item.store_id[0].value,
         title: item.name[0].value,
-        city: item.field_address.length ? 
-        [item.field_address[0].locality, item.field_address[0].administrative_area].filter(Boolean).join(' - ') : ''
+        city: item.address.length ? 
+        [item.address[0].locality, item.address[0].administrative_area].filter(Boolean).join(' - ') : ''
       }
     })
     return state.seeds_houses
@@ -332,7 +332,7 @@ async function getSeeds (state) {
     }
     state.seeds = response.data.map(item => {
       var product_variation = state.product_variations.find(variation => variation.variation_id[0].value == item.variations[0].target_id)
-      return { 
+      return {
         id: item.product_id[0].value,
         title: item.title[0].value,
         description: item.field_scientific_name[0].value,
@@ -356,7 +356,7 @@ async function getProductVariations (state) {
 async function getLots (state) {
   return await axios.get('rest/lots?_format=json').then(response => {
     state.lots = response.data.map(item => {
-      return { 
+      return {
         id: item.tid[0].value,
         title: item.name[0].value,
         seed: present(item.field_species, 'target_id') ? item.field_species[0].target_id : null,
@@ -388,7 +388,7 @@ async function getCollections (state) {
       if (present(item.field_seeds_collect_group, 'target_id')) {
         var collectors_group = state.collectors_groups.find(collectors_group => collectors_group.id == item.field_seeds_collect_group[0].target_id)
       }
-      return { 
+      return {
         id: item.nid[0].value,
         date_time: present(item.field_seeds_collect_date_time) ? item.field_seeds_collect_date_time[0].value : null,
         weight_gross: present(item.field_seeds_collect_weight_gross) ? item.field_seeds_collect_weight_gross[0].value : 0,
@@ -398,10 +398,10 @@ async function getCollections (state) {
         geolocation: present(item.field_seeds_collect_geolocation, 'lat') ? item.field_seeds_collect_geolocation[0] : {lat: null, lgn: null},
         photos: item.field_seeds_collect_photo.length ? item.field_seeds_collect_photo.map(p => p.url) : null,
         audio: item.field_seeds_collect_audio.length ? item.field_seeds_collect_audio[0].url : null,
-        seed: seed,        
-        collector: collector,        
-        collectors_group: collectors_group,        
-      } 
+        seed: seed,
+        collector: collector,
+        collectors_group: collectors_group,
+      }
     })
     return state.collections
   })
@@ -422,7 +422,7 @@ async function getSeedsMatrixes (state) {
       if (present(item.field_seed_matrix_group, 'target_id')) {
         var collectors_group = state.collectors_groups.find(collectors_group => collectors_group.id == item.field_seed_matrix_group[0].target_id)
       }
-      return { 
+      return {
         id: item.nid[0].value,
         title: item.title[0].value,
         scient_name: item.field_seed_matrix_scient_name.length ? item.field_seed_matrix_scient_name[0].value : '',
@@ -431,9 +431,9 @@ async function getSeedsMatrixes (state) {
         source: item.field_seed_matrix_source[0].value,
         files: item.field_seed_matrix_files.map(file => (file.url)),
         geolocation: item.field_geolocation[0],
-        collector: collector,        
-        collectors_group: collectors_group 
-      } 
+        collector: collector,
+        collectors_group: collectors_group
+      }
     })
     return state.seeds_matrixes
   })
@@ -454,19 +454,19 @@ async function getCollectionAreas (state) {
       if (present(item.field_collection_group, 'target_id')) {
         var collectors_group = state.collectors_groups.find(collectors_group => collectors_group.id == item.field_collection_group[0].target_id)
       }
-      return { 
+      return {
         id: item.nid[0].value,
         title: item.title[0].value,
         description: present(item.field_description) ? item.field_description[0].value : '',
         estimated_area: item.field_estimated_area.length ? item.field_estimated_area[0].value : '',
-        city: item.field_state.length ? 
+        city: item.field_state.length ?
           [item.field_state[0].locality, item.field_state[0].administrative_area].filter(Boolean).join(' - ')
           : '',
         geolocation: item.field_geolocation[0],
         file: present(item.field_upload, 'url') ? item.field_upload[0].url : '',
-        collector: collector,        
-        collectors_group: collectors_group 
-      } 
+        collector: collector,
+        collectors_group: collectors_group
+      }
     })
     return state.collection_areas
   })
@@ -517,7 +517,7 @@ export const mutations = {
     } else if (type == 'lots') {
       getLots(state)
     }
-    
+
   },
 
   removeTodo (state, todo) {
@@ -529,5 +529,5 @@ export const mutations = {
     todo.done = done
   },
 
-  
+
 }
