@@ -318,7 +318,7 @@ async function getSeedsHouses (state) {
       return {
         id: item.store_id[0].value,
         title: item.name[0].value,
-        city: item.address.length ? 
+        city: item.address.length ?
         [item.address[0].locality, item.address[0].administrative_area].filter(Boolean).join(' - ') : ''
       }
     })
@@ -326,23 +326,8 @@ async function getSeedsHouses (state) {
   })
 }
 async function getSeeds (state) {
-  return await axios.get('rest/seeds-list?_format=json').then(async response => {
-    if (!state.product_variations.length) {
-      await getProductVariations(state)
-    }
-    state.seeds = response.data.map(item => {
-      var product_variation = state.product_variations.find(variation => variation.variation_id[0].value == item.variations[0].target_id)
-      return {
-        id: item.product_id[0].value,
-        title: item.title[0].value,
-        description: item.field_scientific_name[0].value,
-        picture: present(item.field_images, 'url') ? item.field_images[0].url : null,
-        price: product_variation.price[0].number,
-        wholesale_price: present(product_variation.field_wholesale_price, 'number') ? product_variation.field_wholesale_price[0].number : 0,
-        compensation_collect: present(item.field_compensation_collect, 'number') ? item.field_compensation_collect[0].number : 0,
-        stock: present(product_variation.field_stock) ? product_variation.field_stock[0].value : 0,
-      }
-    })
+  return await axios.get('seeds').then(async response => {
+    state.seeds = response.data
     return state.seeds
   })
 }

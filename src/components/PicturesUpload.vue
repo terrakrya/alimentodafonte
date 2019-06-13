@@ -5,15 +5,15 @@
       <span class="text-danger" v-show="error">{{ error }}</span>
     </b-form-group>
     <div class="row images_preview" v-if="!loading && images_preview.length > 0">
-      <div class="col-xs-4" v-for="(image, index) in images_preview" :key="index">
-        <b-img :src="(image.uri ? baseURL() + image.uri[0].url : image.url)" fluid thumbnail />
+      <div class="col-xs-2" v-for="(image, index) in images_preview" :key="index">
+        <b-img :src="baseURL() + image.thumb" fluid thumbnail />
         <br>
         <br>
         <p class="text-center"><a class="btn btn-default btn-small" @click="deleteImage(index)"><i class="fa fa-trash"></i></a></p>
       </div>
     </div>
     <loading :loading="loading" msg="Enviando foto..."/>
-  </div>  
+  </div>
 </template>
 
 <script>
@@ -23,10 +23,10 @@ import Loading from './Loading'
 export default {
 
   name: 'pictures-upload',
-  props: ['form', 'preview', 'multiple', 'field', 'url'],  
+  props: ['form', 'preview', 'multiple', 'field', 'url'],
   inject: ['$validator'],
   data () {
-    return { 
+    return {
       error: false,
       loading: false,
       images_preview: this.preview
@@ -34,42 +34,38 @@ export default {
   },
   methods: {
     uploadImages(e) {
-      this.loading = true
-      let files = e.target.files || e.dataTransfer.files;
-      
-      for (var i = 0; i < files.length; i++) {
+      // this.loading = true
+      let files = e.target.files;
 
-        var reader  = new FileReader();
+      for (var i = 0; i < files.length; i++) {
         var file = files[i]
-        reader.onloadend = () => {
-          axios({
-            method  : 'POST',
-            url     : this.url,
-            headers : {
-              'Content-Type' : 'application/octet-stream',
-              'Content-Disposition': 'file; filename="' + file.name + '"',
-              'X-CSRF-Token': this.currentUser.csrf_token
-            },
-            data    : reader.result,
-          }).then(response => {
-            if (this.multiple) {
-              this.images_preview.push(response.data)
-              this.form[this.field].push({ target_id: response.data.fid[0].value })
-            } else {
-              this.images_preview = [response.data]
-              this.form[this.field] = [{ target_id: response.data.fid[0].value }]
-            }
-            this.loading = false
-          }).catch((error) => { 
-            this.loading = false
-            this.showError("Ocorreu um erro ao enviar: "+ file.name + ". Erro: "+ error.message)
-          }); 
-        }
-        reader.readAsArrayBuffer(files[i]);
+        var formData = new FormData();
+        formData.append('image', file, file.name);
+        axios.post(this.url, formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then(response => {
+          if (this.multiple) {
+            console.log('multiple')
+            console.log(this.form[this.field])
+            console.log(response.data)
+
+            this.images_preview.push(response.data)
+            this.form[this.field].push(response.data)
+            console.log(this.form[this.field])
+
+          } else {
+            console.log('single')
+
+            this.images_preview = [response.data]
+            this.form[this.field] = [response.data]
+          }
+          this.loading = false
+        }).catch((error) => {
+          this.loading = false
+          this.showError("Ocorreu um erro ao enviar: "+ file.name + ". Erro: "+ error.message)
+        });
       }
     },
     baseURL() {
-      return axios.defaults.baseURL
+      return axios.defaults.baseURL.replace('/api', '')
     },
     deleteImage(index) {
       this.$delete(this.images_preview, index)
@@ -79,17 +75,17 @@ export default {
       this.error = msg
     }
   },
-  components: { 
+  components: {
     'loading': Loading
   }
 };
 </script>
 
 <style lang="sass">
-.brand h1 
+.brand h1
   margin-top: 10px
   font-size: 31px
-  a 
+  a
   color: #fff
   span
   font-weight: 300

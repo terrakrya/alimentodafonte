@@ -21,7 +21,7 @@ if (store.state && store.state.currentUser) {
 }
 axios.defaults.headers.common['Content-Type'] = 'application/json'
 axios.defaults.baseURL = (process.env.NODE_ENV == 'development')
-  ? "http://sementes.docker.localhost:8000/"
+  ? "http://localhost:3000/api/"
   : window.location.protocol + "//admin" + window.location.hostname+"/"
 
 Vue.use(BootstrapVue)
