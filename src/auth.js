@@ -2,20 +2,14 @@ import axios from 'axios'
 import store from '@/store/'
 
 export default {
-  login (email, pass, cb) {
-    axios.post('user/login?_format=json', {
-      name: email,
-      pass: pass
-    }, {
-        headers: {
-            'Authorization': null,
-        }
-    })
-    .then(function (response) {
+  login (email, password, cb) {
+    axios.post('users/login', {
+      email: email,
+      password: password
+    }).then(function (response) {
       var currentUser = response.data
-      Object.assign(currentUser, { auth_token: btoa(email+':'+pass) })
       localStorage.setItem('currentUser', JSON.stringify(currentUser))
-      axios.defaults.headers.common['Authorization'] = 'Basic '+currentUser.auth_token
+      axios.defaults.headers.common['Authorization'] = 'Token '+currentUser.Ztoken
       store.dispatch('login', currentUser)
       cb({
         authenticated: true,

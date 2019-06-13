@@ -14,7 +14,7 @@
         </div>
         <div class="form-group">
           <label for="signin-password" class="control-label sr-only">Senha</label>
-          <input v-model="pass" type="password" class="form-control" id="signin-password" placeholder="Senha">
+          <input v-model="password" type="password" class="form-control" id="signin-password" placeholder="Senha">
         </div>
         <b-alert variant="danger" show v-if="error">{{error}}</b-alert>
         <button v-if="loading" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Fazendo login...</button>
@@ -36,7 +36,7 @@ export default {
   data () {
     return {
       email: '',
-      pass: '',
+      password: '',
       error: false,
       loading: false
     }
@@ -45,7 +45,7 @@ export default {
     login () {
       this.error = false
       this.loading = true
-      auth.login(this.email, this.pass, response => {
+      auth.login(this.email, this.password, response => {
         if (response.authenticated) {
           this.$router.replace(this.$route.query.redirect || '/sementes')
         } else {

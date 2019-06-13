@@ -1,14 +1,14 @@
-[ 
-	{ "text": "Janeiro", "value": { "value": "1" } }, 
-	{ "text": "Fevereiro", "value": { "value": "2" } }, 
-	{ "text": "Março", "value": { "value": "3" } }, 
-	{ "text": "Abril", "value": { "value": "4" } }, 
-	{ "text": "Maio", "value": { "value": "5" } }, 
-	{ "text": "Junho", "value": { "value": "6" } }, 
-	{ "text": "Julho", "value": { "value": "7" } }, 
-	{ "text": "Agosto", "value": { "value": "8" } }, 
-	{ "text": "Setembro", "value": { "value": "9" } }, 
-	{ "text": "Outubro", "value": { "value": "10" } }, 
-	{ "text": "Novembro", "value": { "value": "11" } }, 
-	{ "text": "Dezembro", "value": { "value": "12" } } 
+[
+	{ "text": "Janeiro", "value": "1" }, 
+	{ "text": "Fevereiro", "value": "2" }, 
+	{ "text": "Março", "value": "3" }, 
+	{ "text": "Abril", "value": "4" }, 
+	{ "text": "Maio", "value": "5" }, 
+	{ "text": "Junho", "value": "6" }, 
+	{ "text": "Julho", "value": "7" }, 
+	{ "text": "Agosto", "value": "8" }, 
+	{ "text": "Setembro", "value": "9" }, 
+	{ "text": "Outubro", "value": "10" }, 
+	{ "text": "Novembro", "value": "11" }, 
+	{ "text": "Dezembro", "value": "12" } 
 ]

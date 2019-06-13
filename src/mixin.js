@@ -1,9 +1,13 @@
 import { CPF, CNPJ } from 'cpf_cnpj'
+import axios from 'axios'
 
 export default {
   computed: {
     currentUser() {
       return this.$store.state.currentUser
+    },
+    baseUrl() {
+      return axios.defaults.baseURL.replace('/api', '')
     }
   },
   methods: {
@@ -12,28 +16,8 @@ export default {
     },
     apiDataToForm(form, data) {
       Object.keys(form).map((key) => {
-        var field = data[key]
-        if (field && field.length) {
-          form[key] = field.map((f) => {
-            if (f.value || f.value === false) {
-              return { value: f.value }
-            } else if (f.number) {
-              return { number: Number(f.number), currency_code: 'BRL' }
-            } else if (f.target_id) {
-              let target = { target_id: f.target_id }
-              if (f.target_revision_id) {
-                target.target_revision_id = f.target_revision_id
-              }
-              return target
-            } else if (f.target_revision_id) {
-              return { target_revision_id: f.target_revision_id }
-            } else if (f.lat) {
-              return { lat: f.lat, lng: f.lng }
-            } else if (key == 'field_address') {
-              return { address_line1: f.address_line1, locality: f.locality, administrative_area: f.administrative_area, postal_code: f.postal_code  }
-            }
-
-          })
+        if (data && data[key]) {
+          form[key] = data[key]
         }
       })
     },
@@ -63,12 +47,13 @@ export default {
     },
     address: function (address) {
       return address ? [
-        address[0].address_line1, 
-        address[0].locality, 
+        address[0].address_line1,
+        address[0].locality,
         address[0].administrative_area,
         address[0].postal_code
       ].filter(Boolean).join(' - ')
       : '';
     }
   }
+
 }
