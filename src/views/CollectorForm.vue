@@ -1,6 +1,6 @@
 <template>
 	<div class="collector-form">
-		<breadcrumb :links="[['Coletores', '/coletores']]" :active="isEditing() ? form.name[0].value : 'Cadastrar'" />
+		<breadcrumb :links="[['Coletores', '/coletores']]" :active="isEditing() ? form.name : 'Cadastrar'" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="coletor" />
@@ -8,95 +8,72 @@
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-6">
-							<b-form-group label="Nome do coletor *">
-								<b-form-input v-model="form.field_name[0].value" v-validate="'required'" name="field_name" />
-								<field-error :msg="veeErrors" field="field_name" />
-							</b-form-group>							
+							<b-form-group label="Nome *">
+								<b-form-input v-model="form.name" v-validate="'required'" name="name" />
+								<field-error :msg="veeErrors" field="name" />
+							</b-form-group>
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Apelido *">
-								<b-form-input v-model="form.field_nickname[0].value" v-validate="'required'" name="nickname" />
+								<b-form-input v-model="form.nickname" v-validate="'required'" name="nickname" />
 								<field-error :msg="veeErrors" field="nickname" />
-							</b-form-group>							
+							</b-form-group>
 						</div>
-					</div>						
+					</div>
 					<div class="row gray">
 						<div class="col-sm-6">
 							<b-form-group label="Telefone *">
-								<b-form-input v-model="form.field_contact[0].value" v-validate="'required'" name="contact" v-mask="['(##) ####-####', '(##) #####-####']" />
+								<b-form-input v-model="form.contact" v-validate="'required'" name="contact" v-mask="['(##) ####-####', '(##) #####-####']" />
 								<field-error :msg="veeErrors" field="contact" />
-							</b-form-group>							
+							</b-form-group>
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="CPF">
-								<the-mask  v-model="form.field_cpf[0].value" :mask="['###.###.###-##']" />
-							</b-form-group>							
+								<the-mask  v-model="form.cpf" :mask="['###.###.###-##']" />
+							</b-form-group>
 						</div>
-					</div>						
+					</div>
 					<form-address :form="form" />
-					<div class="row gray">
-						<div class="col-md-3 col-sm-6">
-							<b-form-group label="Banco">
-								<b-form-select v-model="form.field_bank_number[0].value" :options="bancos" />
-							</b-form-group>							
-						</div>
-						<div class="col-md-3 col-sm-6">
-							<b-form-group label="Agência">
-								<b-form-input v-model="form.field_agency[0].value" />
-							</b-form-group>							
-						</div>
-						<div class="col-md-3 col-sm-6">
-							<b-form-group label="Conta">
-								<b-form-input v-model="form.field_bank_account[0].value" />
-							</b-form-group>							
-						</div>
-						<div class="col-md-3 col-sm-6">
-							<b-form-group label="Tipo de conta">
-								<b-form-radio-group v-model="form.field_type_account[0].value" :options="tipos_de_conta" stacked >
-								</b-form-radio-group>
-							</b-form-group>							
-						</div>
-					</div>		
+					<form-bank-account :form="form" :gray="true" />
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Nome de usuário *" description="Nome que será usado para acessar o sistema">
-								<b-form-input v-model="form.name[0].value" v-validate="'required'" name="name" />
-								<field-error :msg="veeErrors" field="name" />
-							</b-form-group>							
+								<b-form-input v-model="form.username" v-validate="'required'" name="username" />
+								<field-error :msg="veeErrors" field="username" />
+							</b-form-group>
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Email">
-								<b-form-input v-model="form.mail[0].value" v-validate="'required|email'" name="mail" />
-								<field-error :msg="veeErrors" field="mail" />
+								<b-form-input v-model="form.email" v-validate="'required|email'" name="email" />
+								<field-error :msg="veeErrors" field="email" />
 								<div class="text-right" v-if="isEditing()">
 									<a class="pointer" @click="changePassword">Alterar senha</a>
 								</div>
-							</b-form-group>							
+							</b-form-group>
 						</div>
 					</div>
 					<div class="row gray" v-if="showPasswordFields">
 						<div class="col-sm-6">
 							<b-form-group label="Senha *">
-								<b-form-input v-model="form.pass[0].value" type="password" v-validate="'required'" name="pass" />
+								<b-form-input v-model="form.password" type="password" v-validate="'required'" name="pass" />
 								<field-error :msg="veeErrors" field="pass" />
-							</b-form-group>							
+							</b-form-group>
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Confirmar senha *">
-								<b-form-input v-model="form.pass[0].confirmation" type="password" v-validate="'required'" name="pass_confirmation" />
+								<b-form-input v-model="form.password_confirmation" type="password" v-validate="'required'" name="pass_confirmation" />
 								<field-error :msg="veeErrors" field="pass_confirmation" />
-							</b-form-group>							
+							</b-form-group>
 						</div>
-					</div>						
-					
+					</div>
 					<div class="row">
 						<div class="col-md-12">
-							<pictures-upload :form="form" :preview="images_preview" :error="error" field="user_picture" url="file/upload/user/user/user_picture?_format=json" /> 
-						</div>					
-					</div>					
+							<pictures-upload :form="form" :preview="images_preview" :error="error" field="image" url="uploads/images" />
+						</div>
+					</div>
 					<form-submit :error="error" :sending="sending" />
 				</b-form>
-			</div>				
+			</div>
 		</div>
 	</div>
 </template>
@@ -106,72 +83,68 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Loading from '@/components/Loading'
 import FormHeadline from '@/components/FormHeadline'
 import FormAddress from '@/components/FormAddress'
+import FormBankAccount from '@/components/FormBankAccount'
 import FormSubmit from '@/components/FormSubmit'
 import PicturesUpload from '@/components/PicturesUpload'
 import FieldError from '@/components/FieldError'
-import bancos from '@/data/bancos.json';
-import tipos_de_conta from '@/data/tipos-de-conta.json';
+import tipos_de_usuario from '@/data/tipos-de-usuario.json'
 
 export default {
-	
-	name: 'CollectorForm', 
-	
+
+	name: 'CollectorForm',
 	computed: {
 		showPasswordFields () {
 			return !this.isEditing() || this.show_password
 		}
 	},
-
 	data () {
-
-		return { 
+		return {
 			error: false,
 			loading: false,
 			sending: false,
 			images_preview: [],
 			log: false,
 			show_password: false,
-			bancos: bancos,
-			tipos_de_conta: tipos_de_conta,
+			tipos_de_usuario: tipos_de_usuario,
 			form: {
-				timezone: [{ value: "America/Sao_Paulo" }],
-				status: [{ value: true }],
-				roles: [{ target_id: "collector" }],
-				name: [{ value: '' }],
-				mail: [{ value: '' }],
-				pass: [{ value: '' }],
-				field_address: [{
-					country_code: "BR",
-					administrative_area: "",
-					locality: "",
+				username: '',
+				email: '',
+				password: '',
+				password_confirmation: '',
+				cpf: '',
+				name: '',
+				nickname: '',
+				contact: '',
+				image: {},
+				address: {
+					uf: "",
+					city: "",
 					postal_code: "",
-					address_line1: ""
-				}],
-				field_bank_number: [{ value: '' }],
-				field_agency: [{ value: '' }],
-				field_bank_account: [{ value: '' }],
-				field_type_account: [{ value: 'corrente' }],
-				field_contact: [{ value: '' }],
-				field_cpf: [{ value: '' }],
-				field_name: [{ value: '' }],
-				field_nickname: [{ value: '' }],
-				user_picture: [],
+					address: ""
+				},
+				bank_account: {
+					bank_number: '',
+					agency: '',
+					account: '',
+					type: 'corrente',
+				},
+				roles: [],
 			},
 		}
 	},
-	
 	created () {
 		if (this.isEditing()) {
 			this.edit(this.$route.params.id)
 		}
 	},
-	
 	methods: {
 		edit (id) {
 			this.loading = true
-			axios.get('user/' + id + '?_format=json').then(response => {
+			axios.get('users/' + id).then(response => {
 				this.apiDataToForm(this.form, response.data)
-				this.images_preview = response.data.user_picture
+				if (response.data.image) {
+					this.images_preview = [response.data.image]
+				}
 				this.loading = false
 			}).catch(error => { this.error = error.message; this.loading = false });
 		},
@@ -182,31 +155,33 @@ export default {
 					this.error = false
 
 					axios({
-						method: (this.isEditing() ? 'PATCH' : 'POST'),
-						url: (this.isEditing() ? 'user/'+ this.$route.params.id : 'entity/user')+'?_format=json', 
+						method: (this.isEditing() ? 'PUT' : 'POST'),
+						url: (this.isEditing() ? 'users/'+ this.$route.params.id : 'users'),
 						data: this.form
 					}).then(resp => {
-						var collector = resp.data
-						if (collector && collector.uid) {
-							this.$router.replace('/coletor/'+collector.uid[0].value)
+						var user = resp.data
+						if (user && user._id) {
+							if (user._id == this.currentUser._id) {
+								this.$store.dispatch('login', user)
+							}
+							this.$router.replace('/coletor/'+user._id)
 						}
 						this.sending = false
-					}).catch(error => { this.error = error.response.data.message; this.sending = false })
+					}).catch(error => { this.error = error.response.data.errors; this.sending = false })
 				}
 			})
 		},
 		changePassword () {
 			this.show_password = !this.show_password
 		}
-
 	},
-
-	components: { 
-		Breadcrumb, 
-		Loading, 
-		FormHeadline, 
-		FormAddress, 
-		FormSubmit, 
+	components: {
+		Breadcrumb,
+		Loading,
+		FormHeadline,
+		FormAddress,
+		FormBankAccount,
+		FormSubmit,
 		FieldError,
 		PicturesUpload
 	}
