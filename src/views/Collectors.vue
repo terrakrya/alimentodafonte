@@ -16,6 +16,11 @@
 									<small v-if="data.item.nickname != data.item.name"><br>{{data.item.name}}</small>
 								</router-link>
 							</template>
+							<template slot="collectors_group" slot-scope="data">
+								<router-link  v-for="(collectors_group, index) in data.value" :to="'/grupo-de-coletores/'+ collectors_group._id">
+									{{collectors_group.name}}
+								</router-link>
+							</template>
 							<template slot="actions" slot-scope="data">
 								<router-link :to="'/editar-coletor/'+ data.item._id" class="fa fa-edit btn btn-primary btn-xs "></router-link>
 								<a @click="remove(data.item._id)" class="fa fa-trash btn btn-danger btn-xs"></a>
@@ -40,11 +45,12 @@ export default {
 
 	data () {
 		return {
-			
+
 			filters: { search: null },
 			table_fields: [
 				{ key: 'name', label: 'Nome', sortable: true },
 				{ key: 'address.city', label: 'Localidade', sortable: true },
+				{ key: 'collectors_group', label: 'Grupo', sortable: true },
 				{ key: 'actions', label: 'Ações', 'class': 'actions' },
 			],
 			users: null

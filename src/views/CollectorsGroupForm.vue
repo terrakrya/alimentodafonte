@@ -46,7 +46,7 @@
             </b-form-group>
           </div>
         </div>
-        <form-submit :errors="error" :isSending="isSending" />
+        <form-submit :errors="error" :sending="isSending" />
       </b-form>
     </div>
   </div>
@@ -107,7 +107,7 @@ export default {
   methods: {
     edit(id) {
       this.isLoading = true
-      axios.get('node/' + id + '?_format=json').then(response => {
+      axios.get('collectors_groups/' + id).then(response => {
         var data = response.data
         this.apiDataToForm(this.form, data)
         this.isLoading = false

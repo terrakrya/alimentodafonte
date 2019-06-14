@@ -26,7 +26,7 @@
 							</div>
 						</div>
 					</div>								
-					<form-submit :errors="error" :isSending="isSending" />
+					<form-submit :errors="error" :sending="isSending" />
 				</b-form>
 			</div>				
 		</div>

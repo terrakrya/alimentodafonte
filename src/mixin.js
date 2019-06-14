@@ -8,7 +8,7 @@ export default {
 		return {
       error: false,
       isLoading: false,
-      sending: false,
+      isSending: false,
 			tipos_de_usuario: tipos_de_usuario
 		}
 	},

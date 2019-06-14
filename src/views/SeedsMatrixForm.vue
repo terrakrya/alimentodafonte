@@ -67,7 +67,7 @@
 							<documents-upload :form="form" :multiple="true" :preview="documents_preview" :error="error" field="field_seed_matrix_files" url="file/upload/node/seed_matrix/field_seed_matrix_files?_format=json" /> 
 						</div>
 					</div>	
-					<form-submit :errors="error" :isSending="isSending" />
+					<form-submit :errors="error" :sending="isSending" />
 				</b-form>
 			</div>				
 		</div>

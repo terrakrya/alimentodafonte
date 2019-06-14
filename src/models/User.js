@@ -5,6 +5,8 @@ var jwt = require('jsonwebtoken');
 var secret = require('../config').secret;
 var AddressSchema = require('./Address');
 var BankAccountSchema = require('./BankAccount');
+var CollectorsGroupSchema = require('./CollectorsGroup').schema;
+var ObjectId = mongoose.Schema.Types.ObjectId;
 
 var UserSchema = new mongoose.Schema({
   username: {
@@ -31,9 +33,11 @@ var UserSchema = new mongoose.Schema({
   roles: [String],
   image: Object,
   address: AddressSchema,
-  bank_account: BankAccountSchema
+  bank_account: BankAccountSchema,
+  // collectors_group: [{ type: ObjectId, ref: 'CollectorsGroup' }]
 }, {
-  timestamps: true
+  timestamps: true,
+  toJSON: { virtuals: true }
 });
 
 UserSchema.plugin(uniqueValidator, {
@@ -75,13 +79,10 @@ UserSchema.methods.toAuthJSON = function() {
   };
 };
 
-UserSchema.methods.toProfileJSONFor = function(user) {
-  return {
-    username: this.username,
-    bio: this.bio,
-    image: this.image || 'https://static.productionready.io/images/smiley-cyrus.jpg',
-    following: user ? user.isFollowing(this._id) : false
-  };
-};
+UserSchema.virtual('collectors_group', {
+  ref: 'CollectorsGroup',
+  localField: '_id',
+  foreignField: 'collectors'
+});
 
 mongoose.model('User', UserSchema);

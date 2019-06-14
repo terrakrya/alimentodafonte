@@ -77,7 +77,7 @@
 							<form-seeds-select :form="form" field="field_order_entry_seeds" fieldtype="order_entry_seeds" :parent="this.$route.params.id" fieldseed="field_order_entry_seed" fieldqtd="field_order_entry_seeds_qty" :seeds="seeds" v-if="seeds.length" />
 						</div>					
 					</div>					
-					<form-submit :errors="error" :isSending="isSending" />
+					<form-submit :errors="error" :sending="isSending" />
 				</b-form>
 			</div>				
 		</div>

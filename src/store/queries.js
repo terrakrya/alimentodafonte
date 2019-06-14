@@ -6,23 +6,21 @@ var getSeeds = async function() {
   })
 }
 
-var getCollectors = async function(state) {
+var getCollectors = async function() {
   return await axios.get('users', { params: { role: 'collector'} }).then(response => {
     return response.data
   })
 }
 
-var getClients = async function(state) {
-  return await axios.get('rest/clients?_format=json').then(response => {
-    state.clients = response.data.map(item => {
-      return {
-        id: item.uid[0].value,
-        title: item.field_name[0].value,
-        description: item.field_nickname[0].value,
-        picture: present(item.user_picture, 'url') ? item.user_picture[0].url : null,
-      }
-    })
-    return state.clients
+var getClients = async function() {
+  return await axios.get('users', { params: { role: 'client'} }).then(response => {
+    return response.data
+  })
+}
+
+var getCollectorsGroups = async function() {
+  return await axios.get('collectors_groups').then(response => {
+    return response.data
   })
 }
 
@@ -287,18 +285,6 @@ var getStock = async function(state) {
   })
 }
 
-var getCollectorsGroups = async function(state) {
-  return await axios.get('rest/collectors-groups?_format=json').then(response => {
-    state.collectors_groups = response.data.map(item => {
-      return {
-        id: item.nid[0].value,
-        title: item.title[0].value,
-        city: item.field_address.length ? [item.field_address[0].locality, item.field_address[0].administrative_area].filter(Boolean).join(' - ') : ''
-      }
-    })
-    return state.collectors_groups
-  })
-}
 var getSeedsHouses = async function(state) {
   return await axios.get('rest/seeds-houses?_format=json').then(response => {
     state.seeds_houses = response.data.map(item => {
