@@ -7,6 +7,7 @@
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
 					<loading :loading="!users && !error" msg="Carregando lista de usuarios" />
+					<no-item :list="users" />
 					<div v-if="users">
 						<b-table stacked="md" :fields="table_fields" :items="users" :sort-by="'name'" :filter="filters.search">
 							<template slot="name" slot-scope="data">
@@ -32,6 +33,7 @@
 <script>
 import axios from 'axios'
 import Loading from '@/components/Loading'
+import NoItem from '@/components/NoItem'
 import ListHeadline from '@/components/ListHeadline'
 import Breadcrumb from '@/components/Breadcrumb'
 
@@ -70,9 +72,10 @@ export default {
 		}
 	},
 	components: {
-		'loading': Loading,
-		'list-headline': ListHeadline,
-		'breadcrumb': Breadcrumb
+		Loading,
+		NoItem,
+		ListHeadline,
+		Breadcrumb
 	}
 
 };

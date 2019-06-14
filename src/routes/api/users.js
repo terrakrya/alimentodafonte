@@ -7,7 +7,7 @@ var auth = require('../auth');
 router.get('/users', auth.required, function(req, res){
     var filters = {}
     if (req.query.role && req.query.role != 'user') {
-      filters = { role: req.query.role}
+      filters = { roles: req.query.role}
     }
     console.log(req.query.role);
     console.log(filters);
