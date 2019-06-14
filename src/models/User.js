@@ -3,19 +3,26 @@ var uniqueValidator = require('mongoose-unique-validator');
 var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 var secret = require('../config').secret;
+var AddressSchema = require('./Address');
+var BankAccountSchema = require('./BankAccount');
 
 var UserSchema = new mongoose.Schema({
-  username: {type: String, lowercase: true, unique: true, required: [true, "can't be blank"], match: [/^[a-zA-Z0-9]+$/, 'is invalid'], index: true},
-  email: {type: String, lowercase: true, unique: true, required: [true, "can't be blank"], match: [/\S+@\S+\.\S+/, 'is invalid'], index: true},
-  bio: String,
-  image: String,
-  favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Article' }],
-  following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  username: {type: String, lowercase: true, unique: true, required: [true, "é obrigatório"], match: [/^[a-zA-Z0-9]+$/, 'inválido'], index: true},
+  email: {type: String, lowercase: true, unique: true, required: [true, "é obrigatório"], match: [/\S+@\S+\.\S+/, 'inválido'], index: true},
   hash: String,
-  salt: String
+  salt: String,
+  name: String,
+  nickname: String,
+  cpf: String,
+  contact: String,
+  roles: [String],
+  image: Object,
+  address: AddressSchema,
+  bank_account: BankAccountSchema
+
 }, {timestamps: true});
 
-UserSchema.plugin(uniqueValidator, {message: 'is already taken.'});
+UserSchema.plugin(uniqueValidator, { message: 'já está sendo usado' });
 
 UserSchema.methods.validPassword = function(password) {
   var hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
@@ -35,16 +42,19 @@ UserSchema.methods.generateJWT = function() {
   return jwt.sign({
     id: this._id,
     username: this.username,
+    roles: this.roles,
     exp: parseInt(exp.getTime() / 1000),
   }, secret);
 };
 
 UserSchema.methods.toAuthJSON = function(){
   return {
+    _id: this._id,
     username: this.username,
     email: this.email,
     token: this.generateJWT(),
-    bio: this.bio,
+    roles: this.roles,
+    name: this.name,
     image: this.image
   };
 };
@@ -56,44 +66,6 @@ UserSchema.methods.toProfileJSONFor = function(user){
     image: this.image || 'https://static.productionready.io/images/smiley-cyrus.jpg',
     following: user ? user.isFollowing(this._id) : false
   };
-};
-
-UserSchema.methods.favorite = function(id){
-  if(this.favorites.indexOf(id) === -1){
-    this.favorites.push(id);
-  }
-
-  return this.save();
-};
-
-UserSchema.methods.unfavorite = function(id){
-  this.favorites.remove(id);
-  return this.save();
-};
-
-UserSchema.methods.isFavorite = function(id){
-  return this.favorites.some(function(favoriteId){
-    return favoriteId.toString() === id.toString();
-  });
-};
-
-UserSchema.methods.follow = function(id){
-  if(this.following.indexOf(id) === -1){
-    this.following.push(id);
-  }
-
-  return this.save();
-};
-
-UserSchema.methods.unfollow = function(id){
-  this.following.remove(id);
-  return this.save();
-};
-
-UserSchema.methods.isFollowing = function(id){
-  return this.following.some(function(followId){
-    return followId.toString() === id.toString();
-  });
 };
 
 mongoose.model('User', UserSchema);

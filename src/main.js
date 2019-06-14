@@ -17,7 +17,7 @@ import App from './App.vue'
 Vue.config.productionTip = false
 
 if (store.state && store.state.currentUser) {
-  axios.defaults.headers.common['Authorization'] = 'Basic '+store.state.currentUser.auth_token
+  axios.defaults.headers.common['Authorization'] = 'Token '+store.state.currentUser.token
 }
 axios.defaults.headers.common['Content-Type'] = 'application/json'
 axios.defaults.baseURL = (process.env.NODE_ENV == 'development')

@@ -6,6 +6,9 @@ import store from '@/store/'
 import About from '@/views/About.vue'
 import Login from '@/views/Login.vue'
 import Dashboard from '@/views/Dashboard.vue'
+import Users from '@/views/Users.vue'
+import UserForm from '@/views/UserForm.vue'
+import User from '@/views/User.vue'
 import Seeds from '@/views/Seeds.vue'
 import SeedForm from '@/views/SeedForm.vue'
 import Seed from '@/views/Seed.vue'
@@ -69,11 +72,16 @@ export default new Router({
         auth.logout(() => {
             store.dispatch('logout')
             next('/')
-        })      
+        })
       }
     },
     { path: '/painel', component: Dashboard, beforeEnter: requireAuth },
-    
+
+    { path: '/usuarios', component: Users, beforeEnter: requireAuth },
+    { path: '/cadastrar-usuario', component: UserForm, beforeEnter: requireAuth },
+    { path: '/editar-usuario/:id', component: UserForm, beforeEnter: requireAuth },
+    { path: '/usuario/:id', component: User, beforeEnter: requireAuth },
+
     { path: '/sementes', component: Seeds, beforeEnter: requireAuth },
     { path: '/cadastrar-semente', component: SeedForm, beforeEnter: requireAuth },
     { path: '/editar-semente/:id', component: SeedForm, beforeEnter: requireAuth },

@@ -1,9 +1,10 @@
 var express = require('express'),
     mongoose = require('mongoose'),
     router = express.Router(),
+    auth = require('../auth'),
     Seed = mongoose.model('Seed');
 
-router.get('/', function(req, res){
+router.get('/', auth.required, function(req, res){
     Seed.find({}).exec(function(err, seeds){
         if(err) {
             res.status(422).send('Ocorreu um erro ao carregar a lista: '+err);
@@ -13,7 +14,7 @@ router.get('/', function(req, res){
     });
 });
 
-router.get('/:id', function(req, res){
+router.get('/:id', auth.required, function(req, res){
     Seed.findOne({
         _id: req.params.id
     }).exec(function(err, seed){
@@ -25,7 +26,7 @@ router.get('/:id', function(req, res){
     });
 });
 
-router.post('/', function(req, res){
+router.post('/', auth.required, function(req, res){
     var newSeed = new Seed(req.body);
     newSeed.save(function(err, seed){
         if(err) {
@@ -36,7 +37,7 @@ router.post('/', function(req, res){
     });
 });
 
-router.put('/:id', function(req, res){
+router.put('/:id', auth.required, function(req, res){
     Seed.findOneAndUpdate({
         _id: req.params.id
     },{
@@ -52,7 +53,7 @@ router.put('/:id', function(req, res){
     });
 });
 
-router.delete('/:id', function(req, res){
+router.delete('/:id', auth.required, function(req, res){
     Seed.findByIdAndRemove({
         _id: req.params.id
     },function(err, seed){

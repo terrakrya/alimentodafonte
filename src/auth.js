@@ -9,7 +9,7 @@ export default {
     }).then(function (response) {
       var currentUser = response.data
       localStorage.setItem('currentUser', JSON.stringify(currentUser))
-      axios.defaults.headers.common['Authorization'] = 'Token '+currentUser.Ztoken
+      axios.defaults.headers.common['Authorization'] = 'Token '+currentUser.token
       store.dispatch('login', currentUser)
       cb({
         authenticated: true,
@@ -29,6 +29,7 @@ export default {
   logout (cb) {
     localStorage.removeItem('currentUser')
     store.dispatch('login', null)
+    axios.defaults.headers.common['Authorization'] = undefined
     if (cb) cb()
     this.onChange(false)
   },
