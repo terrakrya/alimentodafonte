@@ -11,7 +11,7 @@ router.get('/users', auth.manager, function(req, res) {
       roles: req.query.role
     }
   }
-  User.find(filters).exec(function(err, seeds) {
+  User.find(filters).populate('collectors_group').exec(function(err, seeds) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err);
     } else {

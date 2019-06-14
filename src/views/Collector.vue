@@ -55,7 +55,14 @@
 							</div>
 						</div>
 						<div class="col-sm-6" >
-							<bank-account :bank_account="user.bank_account" />
+							<div class="list-group entity-select-preview">
+						    <div class="list-group-item active">
+						      <strong>Dados bancários</strong>
+						    </div>
+						    <div class="list-group-item">
+									<bank-account :bank_account="user.bank_account" />
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -76,8 +83,8 @@ export default {
 	data () {
 		return {
 			user: null,
-			
-			
+
+
 		}
 	},
 

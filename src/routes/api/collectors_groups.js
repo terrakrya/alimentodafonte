@@ -2,7 +2,8 @@ var express = require('express'),
   mongoose = require('mongoose'),
   router = express.Router(),
   auth = require('../auth'),
-  CollectorsGroup = mongoose.model('CollectorsGroup');
+  CollectorsGroup = mongoose.model('CollectorsGroup'),
+  User = mongoose.model('User');
 
 router.get('/', auth.manager, function(req, res) {
   CollectorsGroup.find({}).exec(function(err, seeds) {
@@ -17,7 +18,7 @@ router.get('/', auth.manager, function(req, res) {
 router.get('/:id', auth.manager, function(req, res) {
   CollectorsGroup.findOne({
     _id: req.params.id
-  }).exec(function(err, seed) {
+  }).populate(req.query.populate || '').exec(function(err, seed) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
@@ -49,6 +50,7 @@ router.put('/:id', auth.manager, function(req, res) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao atualizar: ' + err.message);
     } else {
+      // updateCollectors(newCollectorsGroup)
       res.send(newCollectorsGroup);
     }
   });
@@ -65,5 +67,25 @@ router.delete('/:id', auth.manager, function(req, res) {
     }
   });
 });
+
+function updateCollectors(collectorsGroup) {
+  collectorsGroup.collectors.forEach(id => {
+    User.findOneAndUpdate({
+      _id: id
+    }, {
+      $set: {
+        collectors_group: undefined
+      }
+    }, {
+      upsert: true
+    }, function(err, newCollector) {
+      if (err) {
+        console.log(err)
+      } else {
+        console.log(newCollector)
+      }
+    });
+  })
+}
 
 module.exports = router;

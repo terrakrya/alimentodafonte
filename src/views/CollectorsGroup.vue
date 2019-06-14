@@ -9,10 +9,10 @@
 					<div class="row item-title">
 						<div class="col-md-10">
 							<h1>
-								{{ collectors_group.title[0].value }}								
+								{{ collectors_group.name }}
 							</h1>
-							<p v-if="present(collectors_group.field_cnpj)">
-								<span>CNPJ: {{ collectors_group.field_cnpj[0].value | cnpj }}</span>
+							<p v-if="collectors_group.cnpj">
+								<span>CNPJ: {{ collectors_group.cnpj | cnpj }}</span>
 							</p>
 						</div>
 					</div>
@@ -25,139 +25,98 @@
 									<i @click="edit" class="pull-right fa fa-pencil"></i>
 								</div>
 								<div class="list-group-item">
-									<div class="row" v-if="present(collectors_group.body)"> 
+									<div class="row" v-if="collectors_group.body">
 										<div class="col-sm-12">
-											<p class="details" colspan="2" v-html="collectors_group.body[0].processed"></p>
+											<p class="details" colspan="2" v-html="collectors_group.body"></p>
 										</div>
 									</div>
-									<div class="row"> 
+									<div class="row">
 										<div class="col-sm-6">
-											<dl v-if="present(collectors_group.field_contact)">
+											<dl v-if="collectors_group.contact">
 												<dt>Contatos</dt>
-												<dd>{{ collectors_group.field_contact[0].value }}</dd>
+												<dd>{{ collectors_group.contact }}</dd>
 											</dl>
-											<dl v-if="present(collectors_group.name)">
-												<dt>Nome de usuário</dt>
-												<dd>{{ collectors_group.name[0].value }}</dd>
-											</dl>
-											<dl v-if="present(collectors_group.field_cnpj)">
-												<dt>CNPJ</dt>
-												<dd>{{ collectors_group.field_cnpj[0].value | cnpj }}</dd>
+											<dl v-if="collectors_group.address">
+												<dt>Endereço</dt>
+												<dd>{{ collectors_group.address | address }}</dd>
 											</dl>
 										</div>
 										<div class="col-sm-6">
-											<dl v-if="present(collectors_group.field_bank_number)">
-												<dt>Banco</dt>
-												<dd>{{ bancos.find((banco) => banco.value == collectors_group.field_bank_number[0].value ).text }}</dd>
-											</dl>
-											<dl v-if="present(collectors_group.field_agency_number)">
-												<dt>Agência</dt>
-												<dd>{{ collectors_group.field_agency_number[0].value }}</dd>
-											</dl>
-											<dl v-if="present(collectors_group.field_account_number)">
-												<dt>Conta {{ collectors_group.field_account_type[0].value }}</dt>
-												<dd>{{ collectors_group.field_account_number[0].value }}</dd>
-											</dl>
+											<bank-account :bank_account="collectors_group.bank_account" />
 										</div>
-									</div>									
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-sm-6" v-if="collectors && collectors.length">
+						<div class="col-sm-6" v-if="collectors_group.collectors && collectors_group.collectors.length">
 							<div class="list-group entity-select-preview">
 								<div class="list-group-item active">
 									<strong>Coletores</strong>
 								</div>
-								<div class="list-group-item" v-for="(collector, index) in collectors" :key="index" >
-									<router-link :to="'/coletor/'+collector.uid[0].value">
-										<img v-if="present(collector.user_picture, 'url')" :src="collector.user_picture[0].url" />
-										<span v-if="present(collector.field_name)">{{collector.field_name[0].value}}</span>
+								<div class="list-group-item" v-for="(collector, index) in collectors_group.collectors" :key="index" >
+									<router-link :to="'/coletor/'+collector._id">
+										<img v-if="collector.image" :src="baseUrl + collector.image.thumb" />
+										<span v-if="collector.name">{{collector.name}}</span>
 									</router-link>
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-6" v-if="seeds && seeds.length">
+						<!-- <div class="col-sm-6" v-if="collectors_group.seeds && collectors_group.seeds.length">
 							<div class="list-group entity-select-preview">
 								<div class="list-group-item active">
 									<strong>Sementes</strong>
 								</div>
-								<div class="list-group-item" v-for="(seed, index) in seeds" :key="index" >
-									<router-link :to="'/semente/'+seed.product_id[0].value">
-										<img v-if="present(seed.field_images, 'url')" :src="seed.field_images[0].url" />
-										<span v-if="present(seed.title)">{{seed.title[0].value}}</span>
+								<div class="list-group-item" v-for="(seed, index) in collectors_group.seeds" :key="index" >
+									<router-link :to="'/semente/'+seed.product_id">
+										<img v-if="present(seed.images, 'url')" :src="seed.images[0].url" />
+										<span v-if="present(seed.name)">{{seed.name}}</span>
 									</router-link>
 								</div>
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</div>
 			</div>
 		</div>
+		<pre>{{collectors_group}}</pre>
 	</div>
 </template>
 <script>
 import axios from 'axios'
 import Loading from '@/components/Loading'
 import Breadcrumb from '@/components/Breadcrumb'
-import bancos from '@/data/bancos.json';
-import tipos_de_conta from '@/data/tipos-de-conta.json';
+import BankAccount from '@/components/BankAccount'
 
 export default {
 
-	name: 'CollectorsGroup', 
+	name: 'CollectorsGroup',
 
 	data () {
-		return { 
+		return {
 			collectors_group: null,
-			collectors: null,
-			seeds: null,
-			
-			
-			bancos: bancos,
-			tipos_de_conta: tipos_de_conta
 		}
 	},
 
 	created () {
-		
 		this.isLoading = true
-		
-		axios.get('node/' + this.$route.params.id + '?_format=json').then(collectors_group => {
-			this.collectors_group = collectors_group.data 
+		axios.get('collectors_groups/' + this.$route.params.id, { params: { populate: 'collectors seeds'} }).then(collectors_group => {
+			this.collectors_group = collectors_group.data
 			this.isLoading = false
-
-			axios.get('rest/collectors?_format=json').then(response => {
-				this.collectors = response.data.filter(collector => {
-					return this.collectors_group.field_collectors.find(item => {
-						return collector.uid[0].value == item.target_id
-					})
-				})
-			}).catch(this.showError)
-
-			axios.get('rest/seeds-list?_format=json').then(response => {
-				this.seeds = response.data.filter(seed => {
-					return this.collectors_group.field_seeds.find(item => {
-						return seed.product_id[0].value == item.target_id
-					})
-				})
-
-			}).catch(this.showError)
-
 		}).catch(this.showError);
-
 	},
 
 	methods: {
 		edit () {
-			this.$router.replace('/editar-grupo-de-coletores/'+this.collectors_group.nid[0].value)
+			this.$router.replace('/editar-grupo-de-coletores/'+this.collectors_group._id)
 		}
 	},
 
-	components: { 
-		'loading': Loading,
-		'breadcrumb': Breadcrumb
+	components: {
+		Loading,
+		Breadcrumb,
+		BankAccount
 	}
 
 };

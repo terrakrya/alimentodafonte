@@ -71,7 +71,7 @@
 							<pictures-upload :form="form" :preview="images_preview" :error="error" field="image" url="uploads/images" />
 						</div>
 					</div>
-					<form-submit :errors="error" :isSending="isSending" />
+					<form-submit :errors="error" :sending="isSending" />
 				</b-form>
 			</div>
 		</div>

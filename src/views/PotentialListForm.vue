@@ -23,7 +23,7 @@
 							<form-seeds-select :form="form" field="field_potential_seeds" fieldtype="potential_seeds" :parent="this.$route.params.id" fieldseed="field_potential_seed" fieldqtd="field_potential_qty" :seeds="seeds" v-if="seeds.length" basecalc="compensation_collect" /> 
 						</div>					
 					</div>		
-					<form-submit :errors="error" :isSending="isSending" />
+					<form-submit :errors="error" :sending="isSending" />
 				</b-form>
 			</div>				
 		</div>
