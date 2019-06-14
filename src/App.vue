@@ -45,12 +45,12 @@ export default {
 
 <style lang='sass'>
   @import "./assets/css/template.sass"
-  #wrapper.boxview .main 
+  #wrapper.boxview .main
     padding: 0
     margin: auto
     width: 35%
     height: 450px
     float: none
 
-    
+
 </style>

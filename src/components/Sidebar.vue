@@ -30,6 +30,9 @@
             <a><i class="fa fa-list-alt"></i><span>Cadastros</span><i class="fa fa-chevron-down"></i></a>
             <ul class="nav">
               <li @click="toggleMenu">
+                <router-link to="/usuarios"><span>Usuários</span></router-link>
+              </li>
+              <li @click="toggleMenu">
                 <router-link to="/clientes"><span>Clientes</span></router-link>
               </li>
               <li @click="toggleMenu">
@@ -53,7 +56,7 @@
             </ul>
           </li>
           <li class="profile">
-            <a><i class="fa fa-user"></i><span>{{currentUser.current_user.name}}</span><i class="fa fa-chevron-down"></i></a>
+            <a><i class="fa fa-user"></i><span>{{currentUser.name}}</span><i class="fa fa-chevron-down"></i></a>
             <ul class="nav">
               <li @click="toggleMenu">
                 <router-link v-if="currentUser" to="/logout">Sair</router-link>

@@ -9,8 +9,8 @@
       </p>
       <form @submit.prevent="login" class="form-auth-small">
         <div class="form-group">
-          <label for="signin-email" class="control-label sr-only">Nome de usuário</label>
-          <input v-model="email" type="text" class="form-control" id="signin-email" placeholder="Nome de usuário">
+          <label for="signin-email" class="control-label sr-only">Nome de usuário ou e-mail</label>
+          <input v-model="email" type="text" class="form-control" id="signin-email" placeholder="Nome de usuário ou e-mail">
         </div>
         <div class="form-group">
           <label for="signin-password" class="control-label sr-only">Senha</label>

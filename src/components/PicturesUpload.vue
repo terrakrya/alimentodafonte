@@ -43,19 +43,11 @@ export default {
         formData.append('image', file, file.name);
         axios.post(this.url, formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then(response => {
           if (this.multiple) {
-            console.log('multiple')
-            console.log(this.form[this.field])
-            console.log(response.data)
-
             this.images_preview.push(response.data)
             this.form[this.field].push(response.data)
-            console.log(this.form[this.field])
-
           } else {
-            console.log('single')
-
             this.images_preview = [response.data]
-            this.form[this.field] = [response.data]
+            this.form[this.field] = response.data
           }
           this.loading = false
         }).catch((error) => {
