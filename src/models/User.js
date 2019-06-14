@@ -7,8 +7,21 @@ var AddressSchema = require('./Address');
 var BankAccountSchema = require('./BankAccount');
 
 var UserSchema = new mongoose.Schema({
-  username: {type: String, lowercase: true, unique: true, required: [true, "é obrigatório"], match: [/^[a-zA-Z0-9]+$/, 'inválido'], index: true},
-  email: {type: String, lowercase: true, unique: true, match: [/\S+@\S+\.\S+/, 'inválido'], index: true},
+  username: {
+    type: String,
+    lowercase: true,
+    unique: true,
+    required: [true, "é obrigatório"],
+    match: [/^[a-zA-Z0-9]+$/, 'inválido'],
+    index: true
+  },
+  email: {
+    type: String,
+    lowercase: true,
+    unique: true,
+    match: [/\S+@\S+\.\S+/, 'inválido'],
+    index: true
+  },
   hash: String,
   salt: String,
   name: String,
@@ -19,17 +32,20 @@ var UserSchema = new mongoose.Schema({
   image: Object,
   address: AddressSchema,
   bank_account: BankAccountSchema
+}, {
+  timestamps: true
+});
 
-}, {timestamps: true});
-
-UserSchema.plugin(uniqueValidator, { message: 'já está sendo usado' });
+UserSchema.plugin(uniqueValidator, {
+  message: 'já está sendo usado'
+});
 
 UserSchema.methods.validPassword = function(password) {
   var hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
   return this.hash === hash;
 };
 
-UserSchema.methods.setPassword = function(password){
+UserSchema.methods.setPassword = function(password) {
   this.salt = crypto.randomBytes(16).toString('hex');
   this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
 };
@@ -47,7 +63,7 @@ UserSchema.methods.generateJWT = function() {
   }, secret);
 };
 
-UserSchema.methods.toAuthJSON = function(){
+UserSchema.methods.toAuthJSON = function() {
   return {
     _id: this._id,
     username: this.username,
@@ -59,7 +75,7 @@ UserSchema.methods.toAuthJSON = function(){
   };
 };
 
-UserSchema.methods.toProfileJSONFor = function(user){
+UserSchema.methods.toProfileJSONFor = function(user) {
   return {
     username: this.username,
     bio: this.bio,

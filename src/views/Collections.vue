@@ -6,7 +6,7 @@
 				<list-headline name="Coletas de sementes" addUrl="/cadastrar-coleta" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading :isLoading="!collections && !error" msg="Carregando lista de coletas" />
+					<loading :loading="!collections && !error" msg="Carregando lista de coletas" />
 					<div v-if="collections">
 						<b-table stacked="md" :fields="table_fields" :items="collections" :sort-by="'title'" :filter="filters.search">
 							<template slot="date_time" slot-scope="data">

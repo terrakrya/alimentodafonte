@@ -7,7 +7,7 @@ export default {
   data () {
 		return {
       error: false,
-      loading: false,
+      isLoading: false,
       sending: false,
 			tipos_de_usuario: tipos_de_usuario
 		}
@@ -39,6 +39,7 @@ export default {
       })
     },
     present (field, item) {
+      console.log(field, item);
       if (item) {
         return !!field[item]
       } else {

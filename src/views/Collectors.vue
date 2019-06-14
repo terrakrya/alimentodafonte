@@ -6,7 +6,7 @@
 				<list-headline name="Coletores" addUrl="/cadastrar-coletor" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading :isLoading="!users && !error" msg="Carregando lista de coletores" />
+					<loading :loading="!users && !error" msg="Carregando lista de coletores" />
 					<no-item :list="users" />
 					<div v-if="users && users.length">
 						<b-table stacked="md" :fields="table_fields" :items="users" :sort-by="'name'" :filter="filters.search">

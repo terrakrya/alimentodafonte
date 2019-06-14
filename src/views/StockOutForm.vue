@@ -7,8 +7,8 @@
 					Cadastrar saída
 				</h1>
 				<br>
-				<loading :isLoading="loading" />
-				<b-form @submit.prevent="save" v-if="!loading">
+				<loading :loading="isLoading" />
+				<b-form @submit.prevent="save" v-if="!isLoading">
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Casa de sementes *" >
@@ -52,7 +52,7 @@
 							</b-form-group>
 						</div>
 					</div>
-					<form-submit :errors="error" :sending="sending" />
+					<form-submit :errors="error" :isSending="isSending" />
 				</b-form>
 			</div>
 		</div>
@@ -153,7 +153,7 @@ export default {
 		save () {
 			this.$validator.validate().then(isValid => {
 				if (isValid) {
-					this.sending = true
+					this.isSending = true
 					this.error = false
 
 					if (this.present(this.form.field_qty_out)) {
@@ -203,13 +203,13 @@ export default {
 								variation_form.field_stock = [{value: Number(stock_out.field_qty_out[0].value)}]
 							}
 							axios.patch('/entity/commerce_product_variation/'+seed.data.variations[0].target_id+'?_format=json', variation_form).then(() => {
-								this.sending = false
+								this.isSending = false
 								this.$router.replace('/estoque')
 							})
 						})
 					}).catch(this.showError);
 				}
-				this.sending = false
+				this.isSending = false
 			}).catch(this.showError)
 		},
 		seedSelected (seed) {

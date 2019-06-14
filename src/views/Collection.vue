@@ -4,8 +4,8 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-				<loading :isLoading="loading" />
-				<div v-if="collection && !loading">
+				<loading :loading="isLoading" />
+				<div v-if="collection && !isLoading">
 					<div class="row item-title">
 						<div class="col-md-2" v-if="collection.photos && collection.photos.length">
 							<img :src="collection.photos[0]" class="img-responsive item-img" />
@@ -106,9 +106,6 @@ export default {
 		}
 	},
 	computed: {
-		loading () {
-			return !this.collection
-		},
 		collection () {
 			if (this.$store.state.collections) {
 				return this.$store.state.collections.find(c => c.id == this.$route.params.id)

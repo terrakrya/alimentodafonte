@@ -4,8 +4,8 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="pedido para coletores" />
-				<loading :isLoading="loading" />
-				<b-form @submit.prevent="save" v-if="!loading">
+				<loading :loading="isLoading" />
+				<b-form @submit.prevent="save" v-if="!isLoading">
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Grupo de coletores" >
@@ -26,7 +26,7 @@
 							</div>
 						</div>
 					</div>								
-					<form-submit :errors="error" :sending="sending" />
+					<form-submit :errors="error" :isSending="isSending" />
 				</b-form>
 			</div>				
 		</div>
@@ -96,17 +96,17 @@ export default {
 	},
 	methods: {
 		edit (id) {
-			this.loading = true
+			this.isLoading = true
 			axios.get('node/' + id + '?_format=json').then(response => {
 				var data = response.data
 				this.apiDataToForm(this.form, data)
-				this.loading = false
+				this.isLoading = false
 			}).catch(this.showError);
 		},
 		save () {
 			this.$validator.validate().then(isValid => {
 				if (isValid) {
-					this.sending = true
+					this.isSending = true
 					this.error = false
 					axios({
 						method: (this.isEditing() ? 'PATCH' : 'POST'),
@@ -118,7 +118,7 @@ export default {
 							this.loadList('collectors_requests')
 							this.$router.replace('/pedido-para-coletores/'+collectors_request.nid[0].value)
 						}
-						this.sending = false						
+						this.isSending = false						
 					}).catch(this.showError)
 				}
 			})

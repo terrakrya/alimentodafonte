@@ -21,7 +21,7 @@
         <br>
         <br>
         <b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-        <loading :isLoading="sending" msg="Adicionando semente" />
+        <loading :loading="isSending" msg="Adicionando semente" />
       </b-form-group>
     </div>
     <div class="entity-select-preview" v-if="preview && preview.length > 0">
@@ -129,7 +129,7 @@ export default {
   },
   methods: {
     addSeed () {
-      this.sending = true
+      this.isSending = true
       this.error = false
 
       axios({
@@ -143,7 +143,7 @@ export default {
         this.seed_form[this.fieldseed] = [{ target_id: '' }]
         this.seed_form[this.fieldqtd] = [{ value: '' }]
         this.addItem(paragraph)
-        this.sending = false
+        this.isSending = false
       }).catch(this.showError);
     },
 
@@ -176,7 +176,7 @@ export default {
       }
     },
     edit () {
-      this.loading = true
+      this.isLoading = true
       if (this.form[this.field]) {
         this.form[this.field].forEach(item => {
           axios.get('entity/paragraph/' + item.target_id + '?_format=json').then(response => {

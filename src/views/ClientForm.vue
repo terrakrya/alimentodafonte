@@ -4,8 +4,8 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="cliente" />
-				<loading :isLoading="loading" />
-				<b-form @submit.prevent="save" v-if="!loading">
+				<loading :loading="isLoading" />
+				<b-form @submit.prevent="save" v-if="!isLoading">
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Nome *">
@@ -71,7 +71,7 @@
 							<pictures-upload :form="form" :preview="images_preview" :error="error" field="image" url="uploads/images" />
 						</div>
 					</div>
-					<form-submit :errors="error" :sending="sending" />
+					<form-submit :errors="error" :isSending="isSending" />
 				</b-form>
 			</div>
 		</div>
@@ -136,19 +136,19 @@ export default {
 	},
 	methods: {
 		edit (id) {
-			this.loading = true
+			this.isLoading = true
 			axios.get('users/' + id).then(response => {
 				this.apiDataToForm(this.form, response.data)
 				if (response.data.image) {
 					this.images_preview = [response.data.image]
 				}
-				this.loading = false
+				this.isLoading = false
 			}).catch(this.showError);
 		},
 		save () {
 			this.$validator.validate().then(isValid => {
 				if (isValid) {
-					this.sending = true
+					this.isSending = true
 					this.error = false
 
 					axios({
@@ -163,7 +163,7 @@ export default {
 							}
 							this.$router.replace('/cliente/'+user._id)
 						}
-						this.sending = false
+						this.isSending = false
 					}).catch(this.showError)
 				}
 			})

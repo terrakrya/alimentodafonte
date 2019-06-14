@@ -6,7 +6,7 @@
 				<list-headline name="Redes de sementes" addUrl="/cadastrar-rede-de-sementes" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading :isLoading="!seeds_networks && !error" msg="Carregando lista de redes" />
+					<loading :loading="!seeds_networks && !error" msg="Carregando lista de redes" />
 					<div v-if="seeds_networks">
 						<b-table stacked="md" :fields="table_fields" :items="seeds_networks" :sort-by="'title'" :filter="filters.search">
 							<template slot="title" slot-scope="data">

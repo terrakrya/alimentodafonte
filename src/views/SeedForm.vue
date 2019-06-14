@@ -4,8 +4,8 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="semente" />
-				<loading :isLoading="loading" />
-				<b-form @submit.prevent="save" v-if="!loading">
+				<loading :loading="isLoading" />
+				<b-form @submit.prevent="save" v-if="!isLoading">
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Nome da espécie *">
@@ -95,7 +95,7 @@
 							<pictures-upload :form="form" :preview="this.images_preview" :error="error" field="images" url="uploads/images" :multiple="true"  />
 						</div>
 					</div>
-					<form-submit :errors="error" :sending="sending"/>
+					<form-submit :errors="error" :isSending="isSending"/>
 				</b-form>
 			</div>
 		</div>
@@ -149,18 +149,18 @@ export default {
 
 	methods: {
 		edit(id) {
-			this.loading = true
+			this.isLoading = true
 			axios.get('seeds/' + id).then(response => {
 				var data = response.data
 				this.apiDataToForm(this.form, data)
 				Object.assign(this.images_preview, data.images)
-				this.loading = false
+				this.isLoading = false
 			}).catch(this.showError);
 		},
 		save() {
 			this.$validator.validate().then(isValid => {
 				if (isValid) {
-					this.sending = true
+					this.isSending = true
 					this.error = false
 					this.form.user = this.currentUser._id
 					axios({
@@ -174,7 +174,7 @@ export default {
 						} else {
 							this.error = seed
 						}
-						this.sending = false
+						this.isSending = false
 					}).catch(this.showError)
 
 				}

@@ -4,8 +4,8 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-				<loading :isLoading="loading" />
-				<div v-if="seed && !loading">
+				<loading :loading="isLoading" />
+				<div v-if="seed && !isLoading">
 					<div class="row item-title">
 						<div class="col-md-2" v-if="present(seed.images, 'url')">
 							<img :src="baseUrl + seed.images[0].url" class="img-responsive item-img" />
@@ -128,11 +128,11 @@ export default {
 
 	created () {
 
-		this.loading = true
+		this.isLoading = true
 
 		axios.get('seeds/' + this.$route.params.id).then(resp => {
 			this.seed = resp.data
-			this.loading = false
+			this.isLoading = false
 		}).catch(this.showError);
 
 	},

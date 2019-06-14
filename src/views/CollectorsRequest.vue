@@ -4,8 +4,8 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-				<loading :isLoading="loading" />
-				<div v-if="collectors_request && !loading">
+				<loading :loading="isLoading" />
+				<div v-if="collectors_request && !isLoading">
 					<div class="row item-title">
 						<div class="col-md-12">
 							<router-link :to="'/editar-pedido-para-coletores/'+collectors_request.id" class="btn btn-default btn-xs pull-right">

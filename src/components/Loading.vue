@@ -5,6 +5,6 @@
 <script>
 export default {
   name: 'loading',
-  props: ['isLoading', 'msg']
+  props: ['loading', 'msg']
 };
 </script>

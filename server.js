@@ -40,9 +40,8 @@ if(isProduction){
 }
 
 require('./src/models/User');
-require('./src/models/Article');
-require('./src/models/Comment');
 require('./src/models/Seed');
+require('./src/models/CollectorsGroup');
 require('./src/config/passport');
 
 app.use(require('./src/routes'));

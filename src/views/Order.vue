@@ -4,8 +4,8 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-				<loading :isLoading="loading" />
-				<div v-if="order && !loading">
+				<loading :loading="isLoading" />
+				<div v-if="order && !isLoading">
 					<div class="row item-title">
 						<div class="col-md-12">
 							<router-link :to="'/editar-encomenda/'+order.id" class="btn btn-default btn-xs pull-right">
@@ -22,7 +22,7 @@
 								<span v-if="order.deadline">Prazo final: {{ order.deadline | moment("DD/MM/YYYY") }}</span>
 							</p>
 							<p>
-								<router-link v-if="order.client" :to="'/cliente/'+order.client.id"> &bull; {{ order.client.title }}</router-link>			
+								<router-link v-if="order.client" :to="'/cliente/'+order.client.id"> &bull; {{ order.client.title }}</router-link>
 							</p>
 							<p>
 								<span v-if="order.area">{{order.area}} hectares</span>
@@ -103,28 +103,25 @@ import Breadcrumb from '@/components/Breadcrumb'
 
 export default {
 
-	name: 'CollectorsRequest', 
+	name: 'CollectorsRequest',
 
 	data () {
-		return { 
-			
+		return {
+
 		}
 	},
 	created () {
 		this.getList('orders')
 	},
 	computed: {
-		loading () {
-			return !this.order
-		},
 		order () {
 			if (this.$store.state.orders) {
-				return this.$store.state.orders.find(cr => cr.id == this.$route.params.id)	
+				return this.$store.state.orders.find(cr => cr.id == this.$route.params.id)
 			}
 			return null
 		}
 	},
-	components: { 
+	components: {
 		'loading': Loading,
 		'breadcrumb': Breadcrumb
 	}

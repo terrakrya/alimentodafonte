@@ -4,8 +4,8 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-				<loading :isLoading="loading" />
-				<div v-if="seeds_network && !loading">
+				<loading :loading="isLoading" />
+				<div v-if="seeds_network && !isLoading">
 					<div class="row item-title">
 						<div class="col-md-10">
 							<h1>
@@ -78,11 +78,11 @@ export default {
 
 	created () {
 		
-		this.loading = true
+		this.isLoading = true
 		
 		axios.get('node/' + this.$route.params.id + '?_format=json').then(seeds_network => {
 			this.seeds_network = seeds_network.data 
-			this.loading = false
+			this.isLoading = false
 
 			axios.get('rest/seeds-houses?_format=json').then(response => {
 				this.seeds_houses = response.data.filter(seeds_house => {
