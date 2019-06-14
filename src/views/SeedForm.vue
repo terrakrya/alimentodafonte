@@ -60,12 +60,14 @@
 					<div class="row">
 						<div class="col-sm-4">
 							<b-form-group label="Qtd. de sementes / Kg *" :description="form.seeds_kg > 0 ? form.seeds_kg + ' sementes por quilo' : ''">
-								<b-form-input v-model="form.seeds_kg" type="number" />
+								<b-form-input v-model="form.seeds_kg" type="number" v-validate="'required'" name="seeds_kg"  />
+								<field-error :msg="veeErrors" field="seeds_kg" />
 							</b-form-group>
 						</div>
 						<div class="col-sm-4">
 							<b-form-group label="Taxa de viabilidade *" :description="(form.viability_rate || 0) + '% de viabilidade'">
-								<b-form-input v-model="form.viability_rate" type="range" />
+								<b-form-input v-model="form.viability_rate" type="range" v-validate="'required'" name="viability_rate" />
+								<field-error :msg="veeErrors" field="viability_rate" />
 							</b-form-group>
 						</div>
 						<div class="col-sm-4">
@@ -77,7 +79,7 @@
 					<div class="row gray">
 						<div class="col-sm-6">
 							<b-form-group label="Ecossistema *">
-								<b-form-checkbox-group v-model="form.ecosystem" :options="ecossistemas"  v-validate="'required'" name="ecosystem" />
+								<b-form-checkbox-group v-model="form.ecosystem" :options="ecossistemas" v-validate="'required'" name="ecosystem" />
 								<field-error :msg="veeErrors" field="ecosystem" />
 							</b-form-group>
 						</div>
@@ -97,7 +99,6 @@
 				</b-form>
 			</div>
 		</div>
-		<pre>{{form}}</pre>
 	</div>
 </template>
 <script>

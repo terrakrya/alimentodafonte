@@ -3,7 +3,7 @@ var router = require('express').Router();
 var passport = require('passport');
 var User = mongoose.model('User');
 var auth = require('../auth');
- 
+
 router.get('/users', auth.manager, function(req, res){
     var filters = {}
     if (req.query.role && req.query.role != 'user') {
@@ -17,7 +17,7 @@ router.get('/users', auth.manager, function(req, res){
         }
     });
 });
- 
+
 router.get('/users/:id', auth.manager, function(req, res, next){
   User.findById(req.params.id).then(function(user){
     if(!user){ return res.sendStatus(401); }
@@ -25,7 +25,7 @@ router.get('/users/:id', auth.manager, function(req, res, next){
     return res.json(user);
   }).catch(next);
 });
- 
+
 router.get('/user', auth.manager, function(req, res, next){
   User.findById(req.payload.id).then(function(user){
     if(!user){ return res.sendStatus(401); }
@@ -33,7 +33,7 @@ router.get('/user', auth.manager, function(req, res, next){
     return res.json(user);
   }).catch(next);
 });
- 
+
 router.put('/user', auth.manager, function(req, res, next){
   User.findById(req.payload.id).then(function(user){
     if(!user){ return res.sendStatus(401); }
@@ -81,7 +81,7 @@ router.post('/users/login', function(req, res, next){
     }
   })(req, res, next);
 });
- 
+
 router.post('/users', auth.manager, function(req, res, next){
   var user = new User();
 
@@ -107,7 +107,7 @@ router.post('/users', auth.manager, function(req, res, next){
     return res.send(user);
   }).catch(next);
 });
- 
+
 router.put('/users/:id', auth.manager, function(req, res, next){
   User.findById(req.params.id).then(function(user){
 
@@ -134,7 +134,7 @@ router.put('/users/:id', auth.manager, function(req, res, next){
     }).catch(next);
   })
 });
- 
+
 router.delete('/users/:id', auth.manager, function(req, res){
     User.findByIdAndRemove({
         _id: req.params.id

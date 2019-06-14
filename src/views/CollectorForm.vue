@@ -44,7 +44,7 @@
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Email">
-								<b-form-input v-model="form.email" v-validate="'required|email'" name="email" />
+								<b-form-input v-model="form.email" v-validate="'email'" name="email" />
 								<field-error :msg="veeErrors" field="email" />
 								<div class="text-right" v-if="isEditing()">
 									<a class="pointer" @click="changePassword">Alterar senha</a>
@@ -99,9 +99,9 @@ export default {
 	},
 	data () {
 		return {
-			
-			
-			
+
+
+
 			images_preview: [],
 			log: false,
 			show_password: false,

@@ -8,7 +8,7 @@ var BankAccountSchema = require('./BankAccount');
 
 var UserSchema = new mongoose.Schema({
   username: {type: String, lowercase: true, unique: true, required: [true, "é obrigatório"], match: [/^[a-zA-Z0-9]+$/, 'inválido'], index: true},
-  email: {type: String, lowercase: true, unique: true, required: [true, "é obrigatório"], match: [/\S+@\S+\.\S+/, 'inválido'], index: true},
+  email: {type: String, lowercase: true, unique: true, match: [/\S+@\S+\.\S+/, 'inválido'], index: true},
   hash: String,
   salt: String,
   name: String,
