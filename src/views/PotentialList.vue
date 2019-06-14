@@ -4,8 +4,8 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-				<loading :isLoading="loading" />
-				<div v-if="potential_list && !loading">
+				<loading :loading="isLoading" />
+				<div v-if="potential_list && !isLoading">
 					<div class="row item-title">
 						<div class="col-md-12">
 							<router-link :to="'/editar-lista-de-potencial/'+potential_list.id" class="btn btn-default btn-xs pull-right">

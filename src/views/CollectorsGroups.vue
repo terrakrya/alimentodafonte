@@ -6,7 +6,7 @@
 				<list-headline name="Grupos de coletores" addUrl="/cadastrar-grupo-de-coletores" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading :isLoading="!collectors_groups && !error" msg="Carregando lista de grupos" />
+					<loading :loading="!collectors_groups && !error" msg="Carregando lista de grupos" />
 					<div v-if="collectors_groups">
 						<b-table stacked="md" :fields="table_fields" :items="collectors_groups" :sort-by="'title'" :filter="filters.search">
 							<template slot="title" slot-scope="data">

@@ -6,7 +6,7 @@
 				<list-headline name="Listas de potencial" addUrl="/cadastrar-lista-de-potencial" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading :isLoading="!potential_lists && !error" msg="Carregando lista de potencial" />
+					<loading :loading="!potential_lists && !error" msg="Carregando lista de potencial" />
 					<div v-if="potential_lists">
 						<b-table  @filtered="onFiltered" stacked="md" :fields="table_fields" :items="potential_lists" :sort-by="'title'" :filter="filters.search">
 							<template slot="id" slot-scope="data">

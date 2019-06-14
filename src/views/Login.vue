@@ -17,7 +17,7 @@
           <input v-model="password" type="password" class="form-control" id="signin-password" placeholder="Senha">
         </div>
         <b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-        <button v-if="loading" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Fazendo login...</button>
+        <button v-if="isLoading" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Fazendo login...</button>
         <button type="submit" class="btn btn-primary btn-lg btn-block">ENTRAR</button>
       </form>
     </div>
@@ -44,14 +44,14 @@ export default {
   methods: {
     login () {
       this.error = false
-      this.loading = true
+      this.isLoading = true
       auth.login(this.email, this.password, response => {
         if (response.authenticated) {
           this.$router.replace(this.$route.query.redirect || '/sementes')
         } else {
           this.error = response.error
         }
-        this.loading = false
+        this.isLoading = false
       })
     }
   }

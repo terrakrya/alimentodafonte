@@ -4,8 +4,8 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-				<loading :isLoading="loading" />
-				<div v-if="user && !loading">
+				<loading :loading="isLoading" />
+				<div v-if="user && !isLoading">
 					<div class="row item-title">
 						<div class="col-md-2" v-if="user.image && user.image.thumb">
 							<img :src="baseUrl + user.image.thumb" class="img-responsive item-img" />
@@ -83,11 +83,11 @@ export default {
 
 	created () {
 
-		this.loading = true
+		this.isLoading = true
 
 		axios.get('users/' + this.$route.params.id).then(user => {
 			this.user = user.data
-			this.loading = false
+			this.isLoading = false
 		}).catch(this.showError);
 
 	},

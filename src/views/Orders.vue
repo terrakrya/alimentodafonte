@@ -6,7 +6,7 @@
 				<list-headline name="Encomendas" addUrl="/cadastrar-encomenda" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading :isLoading="!orders && !error" msg="Carregando lista de encomendas" />
+					<loading :loading="!orders && !error" msg="Carregando lista de encomendas" />
 					<div v-if="orders">
 						<b-table stacked="md" :fields="table_fields" :items="orders" :sort-by="'date_receiving'" :sort-desc="true" :filter="filters.search">
 							<template slot="date_receiving" slot-scope="data">

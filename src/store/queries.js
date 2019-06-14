@@ -1,5 +1,32 @@
 import axios from 'axios'
-var getCollectorsRequests = async function (state) {
+
+var getSeeds = async function() {
+  return await axios.get('seeds').then(async response => {
+    return response.data
+  })
+}
+
+var getCollectors = async function(state) {
+  return await axios.get('users', { params: { role: 'collector'} }).then(response => {
+    return response.data
+  })
+}
+
+var getClients = async function(state) {
+  return await axios.get('rest/clients?_format=json').then(response => {
+    state.clients = response.data.map(item => {
+      return {
+        id: item.uid[0].value,
+        title: item.field_name[0].value,
+        description: item.field_nickname[0].value,
+        picture: present(item.user_picture, 'url') ? item.user_picture[0].url : null,
+      }
+    })
+    return state.clients
+  })
+}
+
+var getCollectorsRequests = async function(state) {
   return await axios.get('rest/collectors-requests?_format=json').then(async response => {
     if (!state.collectors.length) {
       await getCollectors(state)
@@ -34,19 +61,19 @@ var getCollectorsRequests = async function (state) {
         collectors_requests.push(r)
       }
     })
-    state.collectors_requests = collectors_requests.map(item =>  {
+    state.collectors_requests = collectors_requests.map(item => {
       return {
         id: item.nid,
         created: item.created,
-        collector: item.field_requests_collector
-          ? state.collectors.find(c => c.id == item.field_requests_collector)
-          : null,
-        collectors_group: item.field_requests_group
-          ? state.collectors_groups.find(c => c.id == item.field_requests_group)
-          : null,
-        seeds_house: item.field_requests_seeds_house
-          ? state.seeds_houses.find(c => c.id == item.field_requests_seeds_house)
-          : null,
+        collector: item.field_requests_collector ?
+          state.collectors.find(c => c.id == item.field_requests_collector) :
+          null,
+        collectors_group: item.field_requests_group ?
+          state.collectors_groups.find(c => c.id == item.field_requests_group) :
+          null,
+        seeds_house: item.field_requests_seeds_house ?
+          state.seeds_houses.find(c => c.id == item.field_requests_seeds_house) :
+          null,
         seeds: item.seeds,
         weight: item.seeds.map((i) => i.weight).reduce((a, b) => a + b) || 0,
         remaining_weight: item.seeds.map((i) => i.remaining_weight).reduce((a, b) => a + b) || 0,
@@ -57,7 +84,7 @@ var getCollectorsRequests = async function (state) {
   })
 }
 
-var getOrders = async function (state) {
+var getOrders = async function(state) {
   return await axios.get('rest/orders-entries?_format=json').then(async response => {
     if (!state.clients.length) {
       await getClients(state)
@@ -90,9 +117,9 @@ var getOrders = async function (state) {
       return {
         id: order.nid,
         title: order.title,
-        client: order.field_order_entry_clients.length
-          ? state.clients.find(c => c.id == order.field_order_entry_clients[0])
-          : null,
+        client: order.field_order_entry_clients.length ?
+          state.clients.find(c => c.id == order.field_order_entry_clients[0]) :
+          null,
         // total: Number(order.field_order_entry_total),
         total: order.seeds.map((i) => i.price * i.weight).reduce((a, b) => a + b) || 0,
         status: order.field_order_entry_contract,
@@ -115,7 +142,7 @@ var getOrders = async function (state) {
   })
 }
 
-var getPotentialLists = async function (state) {
+var getPotentialLists = async function(state) {
   return await axios.get('rest/potential-list?_format=json').then(async response => {
     if (!state.collectors.length) {
       await getCollectors(state)
@@ -150,12 +177,12 @@ var getPotentialLists = async function (state) {
     state.potential_lists = potential_lists.map(potential_list => {
       return {
         id: potential_list.nid,
-        collector: potential_list.field_potential_collector
-          ? state.collectors.find(c => c.id == potential_list.field_potential_collector)
-          : null,
-        group: potential_list.field_potential_group
-          ? state.collectors_groups.find(c => c.id == potential_list.field_potential_group)
-          : null,
+        collector: potential_list.field_potential_collector ?
+          state.collectors.find(c => c.id == potential_list.field_potential_collector) :
+          null,
+        group: potential_list.field_potential_group ?
+          state.collectors_groups.find(c => c.id == potential_list.field_potential_group) :
+          null,
         weight: potential_list.seeds.map((i) => i.weight).reduce((a, b) => a + b) || 0,
         price: potential_list.seeds.map((i) => i.price * i.weight).reduce((a, b) => a + b) || 0,
         compensation_collect: potential_list.seeds.map((i) => i.compensation_collect * i.weight).reduce((a, b) => a + b) || 0,
@@ -167,7 +194,7 @@ var getPotentialLists = async function (state) {
   })
 }
 
-var getStock = async function (state) {
+var getStock = async function(state) {
   return await axios.get('rest/stock?_format=json').then(async response => {
     if (!state.collectors.length) {
       await getCollectors(state)
@@ -198,9 +225,9 @@ var getStock = async function (state) {
         type: stock_movement.type[0].target_id,
       }
 
-      if (present(stock_movement['field_seeds_house'+type], 'target_id')) {
+      if (present(stock_movement['field_seeds_house' + type], 'target_id')) {
         movement.seeds_house = state.seeds_houses.find(item => {
-          return item.id == stock_movement['field_seeds_house'+type][0].target_id
+          return item.id == stock_movement['field_seeds_house' + type][0].target_id
         })
       }
 
@@ -224,29 +251,29 @@ var getStock = async function (state) {
           movement.group_collector_client.type = 'buyer'
       }
 
-      if (present(stock_movement['field_seed'+type], 'target_id')) {
+      if (present(stock_movement['field_seed' + type], 'target_id')) {
         movement.seed = state.seeds.find(item => {
-          return item.id == stock_movement['field_seed'+type][0].target_id
+          return item.id == stock_movement['field_seed' + type][0].target_id
         })
       }
 
-      if (present(stock_movement['field_lot'+type], 'target_id')) {
+      if (present(stock_movement['field_lot' + type], 'target_id')) {
         movement.lot = state.lots.find(item => {
-          return item.id == stock_movement['field_lot'+type][0].target_id
+          return item.id == stock_movement['field_lot' + type][0].target_id
         })
       }
 
-      if (present(stock_movement['field_qty'+type])) {
-        if (type == '_out' && Number(stock_movement['field_qty'+type][0].value) > 0) {
-          movement.qty = Number(stock_movement['field_qty'+type][0].value) * - 1
+      if (present(stock_movement['field_qty' + type])) {
+        if (type == '_out' && Number(stock_movement['field_qty' + type][0].value) > 0) {
+          movement.qty = Number(stock_movement['field_qty' + type][0].value) * -1
         } else {
-          movement.qty = Number(stock_movement['field_qty'+type][0].value)
+          movement.qty = Number(stock_movement['field_qty' + type][0].value)
         }
 
       }
 
-      if (present(stock_movement['field_price'+type])) {
-        movement.price = Number(stock_movement['field_price'+type][0].value)
+      if (present(stock_movement['field_price' + type])) {
+        movement.price = Number(stock_movement['field_price' + type][0].value)
       }
 
       if (present(stock_movement.field_out_modes)) {
@@ -260,74 +287,32 @@ var getStock = async function (state) {
   })
 }
 
-var getCollectors = async function (state) {
-  return await axios.get('rest/collectors?_format=json').then(response => {
-    state.collectors = response.data.map(item => {
-      return {
-        id: item.uid[0].value,
-        title: item.field_name[0].value,
-        description: item.field_nickname[0].value,
-        picture: present(item.user_picture, 'url') ? item.user_picture[0].url : null,
-      }
-    })
-    return state.collectors
-  })
-}
-
-var getClients = async function (state) {
-  return await axios.get('rest/clients?_format=json').then(response => {
-    state.clients = response.data.map(item => {
-      return {
-        id: item.uid[0].value,
-        title: item.field_name[0].value,
-        description: item.field_nickname[0].value,
-        picture: present(item.user_picture, 'url') ? item.user_picture[0].url : null,
-      }
-    })
-    return state.clients
-  })
-}
-
-var getCollectorsGroups = async function (state) {
+var getCollectorsGroups = async function(state) {
   return await axios.get('rest/collectors-groups?_format=json').then(response => {
     state.collectors_groups = response.data.map(item => {
       return {
         id: item.nid[0].value,
         title: item.title[0].value,
-        city: item.field_address.length ?
-        [item.field_address[0].locality, item.field_address[0].administrative_area].filter(Boolean).join(' - ') : ''
+        city: item.field_address.length ? [item.field_address[0].locality, item.field_address[0].administrative_area].filter(Boolean).join(' - ') : ''
       }
     })
     return state.collectors_groups
   })
 }
-var getSeedsHouses = async function (state) {
+var getSeedsHouses = async function(state) {
   return await axios.get('rest/seeds-houses?_format=json').then(response => {
     state.seeds_houses = response.data.map(item => {
       return {
         id: item.store_id[0].value,
         title: item.name[0].value,
-        city: item.address.length ?
-        [item.address[0].locality, item.address[0].administrative_area].filter(Boolean).join(' - ') : ''
+        city: item.address.length ? [item.address[0].locality, item.address[0].administrative_area].filter(Boolean).join(' - ') : ''
       }
     })
     return state.seeds_houses
   })
 }
 
-var getSeeds = async function () {
-  return await axios.get('seeds').then(async response => {
-    return response.data
-  })
-}
-
-var getProductVariations = async function (state) {
-  return await axios.get('rest/product-variations?_format=json').then(resp => {
-    state.product_variations = resp.data
-  })
-}
-
-var getLots = async function (state) {
+var getLots = async function(state) {
   return await axios.get('rest/lots?_format=json').then(response => {
     state.lots = response.data.map(item => {
       return {
@@ -341,7 +326,7 @@ var getLots = async function (state) {
   })
 }
 
-var getCollections = async function (state) {
+var getCollections = async function(state) {
   return await axios.get('rest/collections?_format=json').then(async response => {
     if (!state.seeds.length) {
       await getSeeds(state)
@@ -369,7 +354,10 @@ var getCollections = async function (state) {
         weight_benef: present(item.field_seeds_collect_weight_benef) ? item.field_seeds_collect_weight_benef[0].value : 0,
         flowering: present(item.field_seeds_collect_flowering) ? item.field_seeds_collect_flowering[0].value : null,
         commentary: present(item.field_seeds_collect_commentary) ? item.field_seeds_collect_commentary[0].value : null,
-        geolocation: present(item.field_seeds_collect_geolocation, 'lat') ? item.field_seeds_collect_geolocation[0] : {lat: null, lgn: null},
+        geolocation: present(item.field_seeds_collect_geolocation, 'lat') ? item.field_seeds_collect_geolocation[0] : {
+          lat: null,
+          lgn: null
+        },
         photos: item.field_seeds_collect_photo.length ? item.field_seeds_collect_photo.map(p => p.url) : null,
         audio: item.field_seeds_collect_audio.length ? item.field_seeds_collect_audio[0].url : null,
         seed: seed,
@@ -381,7 +369,7 @@ var getCollections = async function (state) {
   })
 }
 
-var getSeedsMatrixes = async function (state) {
+var getSeedsMatrixes = async function(state) {
   return await axios.get('rest/seeds-matrixes?_format=json').then(async response => {
     if (!state.collectors.length) {
       await getCollectors(state)
@@ -413,7 +401,7 @@ var getSeedsMatrixes = async function (state) {
   })
 }
 
-var getCollectionAreas = async function (state) {
+var getCollectionAreas = async function(state) {
   return await axios.get('rest/collection-areas?_format=json').then(async response => {
     if (!state.collectors.length) {
       await getCollectors(state)
@@ -433,9 +421,8 @@ var getCollectionAreas = async function (state) {
         title: item.title[0].value,
         description: present(item.field_description) ? item.field_description[0].value : '',
         estimated_area: item.field_estimated_area.length ? item.field_estimated_area[0].value : '',
-        city: item.field_state.length ?
-          [item.field_state[0].locality, item.field_state[0].administrative_area].filter(Boolean).join(' - ')
-          : '',
+        city: item.field_state.length ? [item.field_state[0].locality, item.field_state[0].administrative_area].filter(Boolean).join(' - ') :
+          '',
         geolocation: item.field_geolocation[0],
         file: present(item.field_upload, 'url') ? item.field_upload[0].url : '',
         collector: collector,
@@ -446,7 +433,7 @@ var getCollectionAreas = async function (state) {
   })
 }
 
-var loadList = async function (type) {
+var loadList = async function(type) {
   console.log('list', type);
   if (type == 'collectors_requests') {
     return await getCollectorsRequests()

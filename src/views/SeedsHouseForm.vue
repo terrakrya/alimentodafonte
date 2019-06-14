@@ -4,8 +4,8 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="casa de sementes" />
-				<loading :isLoading="loading" />
-				<b-form @submit.prevent="save" v-if="!loading">
+				<loading :loading="isLoading" />
+				<b-form @submit.prevent="save" v-if="!isLoading">
 					<div class="row">
 						<div class="col-sm-12">
 							<b-form-group label="Nome da casa *">
@@ -39,7 +39,7 @@
 							</b-form-group>
 						</div>
 					</div>
-					<form-submit :errors="error" :sending="sending" />
+					<form-submit :errors="error" :isSending="isSending" />
 				</b-form>
 			</div>
 		</div>
@@ -136,7 +136,7 @@ export default {
 
 	methods: {
 		edit (id) {
-			this.loading = true
+			this.isLoading = true
 			axios.get('store/' + id + '?_format=json').then(response => {
 				var data = response.data
 				data.field_address = data.address
@@ -144,13 +144,13 @@ export default {
 				this.apiDataToForm(this.form, data)
 				console.log(this.form)
 
-				this.loading = false
+				this.isLoading = false
 			}).catch(this.showError);
 		},
 		save () {
 			this.$validator.validate().then(isValid => {
 				if (isValid) {
-					this.sending = true
+					this.isSending = true
 					this.error = false
 
 					var finalForm = Object.assign({}, this.form)
@@ -176,7 +176,7 @@ export default {
 						if (seeds_house && seeds_house.store_id) {
 							this.$router.replace('/casa-de-sementes/'+seeds_house.store_id[0].value)
 						}
-						this.sending = false
+						this.isSending = false
 					}).catch(this.showError)
 				}
 			})

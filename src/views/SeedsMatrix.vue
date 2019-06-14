@@ -4,8 +4,8 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-				<loading :isLoading="loading" />
-				<div v-if="seeds_matrix && !loading">
+				<loading :loading="isLoading" />
+				<div v-if="seeds_matrix && !isLoading">
 					<div class="row item-title">
 						<div class="col-md-10">
 							<h1>

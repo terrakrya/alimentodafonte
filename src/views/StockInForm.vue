@@ -4,35 +4,35 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<h1>
-					Cadastrar entrada	
+					Cadastrar entrada
 				</h1>
 				<br>
-				<loading :isLoading="loading" />
-				<b-form @submit.prevent="save" v-if="!loading">
+				<loading :loading="isLoading" />
+				<b-form @submit.prevent="save" v-if="!isLoading">
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Casa de sementes *" >
 								<form-entity-select :input="seedsHouseSelected" v-if="seeds_houses" :items="seeds_houses" :form="form" field="field_seeds_house" />
-							</b-form-group>							
-						</div>					
+							</b-form-group>
+						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Semente *" >
 								<form-entity-select :input="seedSelected" v-if="seeds" :items="seeds" :form="form" field="field_seed" />
-							</b-form-group>							
-						</div>					
-					</div>					
+							</b-form-group>
+						</div>
+					</div>
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Coletor" >
 								<form-entity-select v-if="collectors" :items="collectors" :form="form" field="field_collector" />
-							</b-form-group>							
-						</div>					
+							</b-form-group>
+						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Grupo de coletores" >
 								<form-entity-select v-if="collectors_groups" :items="collectors_groups" :form="form" field="field_group" />
-							</b-form-group>							
-						</div>					
-					</div>					
+							</b-form-group>
+						</div>
+					</div>
 					<div class="row">
 						<div class="col-sm-4">
 							<b-form-group label="Quantidade (Kg) *">
@@ -46,24 +46,24 @@
 							</b-form-group>
 						</div>
 						<div class="col-sm-4">
-							<b-form-group label="Lote *" v-if="lot_filtered_options.length && !add_new_lot"> 
+							<b-form-group label="Lote *" v-if="lot_filtered_options.length && !add_new_lot">
 								<form-entity-select :items="lot_filtered_options" :form="form" field="field_lot" />
 								<a @click="newLot" class="pull-right pointer">Adicionar novo lote</a>
 							</b-form-group>
-							<b-form-group label="Novo lote *" v-if="!lot_filtered_options.length || add_new_lot" description="Um novo lote será criado com esse código"> 
+							<b-form-group label="Novo lote *" v-if="!lot_filtered_options.length || add_new_lot" description="Um novo lote será criado com esse código">
 								<b-form-input v-model="new_lot" v-validate="'required'" name="new_lot" />
 								<field-error :msg="veeErrors" field="new_lot" />
 							</b-form-group>
 						</div>
-					</div>						
+					</div>
 					<div class="row" v-if="qty_error">
 						<div class="col-sm-12 text-center">
 							<b-alert variant="danger" show >{{qty_error}}</b-alert>
 						</div>
 					</div>
-					<form-submit :errors="error" :sending="sending" />
+					<form-submit :errors="error" :isSending="isSending" />
 				</b-form>
-			</div>				
+			</div>
 		</div>
 	</div>
 </template>
@@ -77,16 +77,16 @@ import FormSubmit from '@/components/FormSubmit'
 import FieldError from '@/components/FieldError'
 
 export default {
-	
-	name: 'StockInForm', 
-	
+
+	name: 'StockInForm',
+
 	data () {
 
-		return { 
-			
-			
-			
-			sending_seed: false,
+		return {
+
+
+
+			isSending_seed: false,
 			qty_error: null,
 			seed: null,
 			lot_filtered_options: [],
@@ -95,7 +95,7 @@ export default {
 			price: null,
 			form: {
 				type: [{ target_id: "stock_in" }],
-				title: [{ value: 'entrada-'+Date.now() }], 
+				title: [{ value: 'entrada-'+Date.now() }],
 				field_price: [{ value: 0 }],
 				field_seeds_house: [],
 				field_group: [],
@@ -118,7 +118,7 @@ export default {
 		if (this.isEditing()) {
 			this.edit(this.$route.params.id)
 		}
-		
+
 	},
 	computed: {
 		collectors () {
@@ -143,17 +143,17 @@ export default {
 	},
 	methods: {
 		edit (id) {
-			this.loading = true
+			this.isLoading = true
 			axios.get('node/' + id + '?_format=json').then(response => {
 				var data = response.data
 				this.apiDataToForm(this.form, data)
-				this.loading = false
+				this.isLoading = false
 			}).catch(this.showError);
 		},
 		save () {
 			this.$validator.validate().then(isValid => {
 				if (isValid && this.validateQty()) {
-					this.sending = true
+					this.isSending = true
 					this.error = false
 
 					if (this.present(this.form.field_qty)) {
@@ -166,11 +166,11 @@ export default {
 
 					if (!this.present(this.form.field_lot) && this.new_lot) {
 						axios.post('taxonomy/term', {
-							vid: [{ target_id: 'seed_lot' }], 
-							name: [{ value: this.new_lot }], 
-							field_code: [{ value: this.new_lot }], 
-							field_seeds_house: this.form.field_seeds_house, 
-							field_species: this.form.field_seed, 
+							vid: [{ target_id: 'seed_lot' }],
+							name: [{ value: this.new_lot }],
+							field_code: [{ value: this.new_lot }],
+							field_seeds_house: this.form.field_seeds_house,
+							field_species: this.form.field_seed,
 						}).then(resp => {
 							this.form.field_lot = [{ target_id: resp.data.tid[0].value }]
 							this.saveItem()
@@ -200,20 +200,20 @@ export default {
 								variation_form.field_stock = [{value: Number(stock_in.field_qty[0].value)}]
 							}
 							axios.patch('/entity/commerce_product_variation/'+seed.data.variations[0].target_id+'?_format=json', variation_form).then(() => {
-								this.sending = false
+								this.isSending = false
 								this.$router.replace('/estoque')
 							})
 						})
 					}).catch(this.showError);
 				}
-				
+
 			}).catch(this.showError)
 		},
 		seedSelected (seed) {
 			if (seed) {
 				this.price = Number(seed.compensation_collect)
-				this.filterOptions()		
-			}	
+				this.filterOptions()
+			}
 		},
 		seedsHouseSelected () {
 			this.filterOptions()
@@ -229,12 +229,12 @@ export default {
 				})
 				this.form.field_lot = [{ target_id: '' }]
 			}
-		}, 
+		},
 		validateQty () {
 			this.qty_error = ''
 			if ((this.form.field_group.length || this.form.field_collector.length) && this.form.field_seed.length && this.collectors_requests) {
 				let collectors_request = this.collectors_requests.find(cr => {
-					
+
 					let collector = this.present(this.form.field_collector, 'target_id') ? this.form.field_collector[0].target_id : null
 
 					let group = this.present(this.form.field_group, 'target_id') ? this.form.field_group[0].target_id : null
@@ -263,11 +263,11 @@ export default {
 			}
 		}
 	},
-	components: { 
-		Breadcrumb, 
-		Loading, 
-		FormEntitySelect, 
-		FormSubmit, 
+	components: {
+		Breadcrumb,
+		Loading,
+		FormEntitySelect,
+		FormSubmit,
 		FieldError,
 	}
 

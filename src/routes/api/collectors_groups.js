@@ -2,10 +2,10 @@ var express = require('express'),
   mongoose = require('mongoose'),
   router = express.Router(),
   auth = require('../auth'),
-  Seed = mongoose.model('Seed');
+  CollectorsGroup = mongoose.model('CollectorsGroup');
 
 router.get('/', auth.manager, function(req, res) {
-  Seed.find({}).exec(function(err, seeds) {
+  CollectorsGroup.find({}).exec(function(err, seeds) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
     } else {
@@ -15,7 +15,7 @@ router.get('/', auth.manager, function(req, res) {
 });
 
 router.get('/:id', auth.manager, function(req, res) {
-  Seed.findOne({
+  CollectorsGroup.findOne({
     _id: req.params.id
   }).exec(function(err, seed) {
     if (err) {
@@ -27,8 +27,8 @@ router.get('/:id', auth.manager, function(req, res) {
 });
 
 router.post('/', auth.manager, function(req, res) {
-  var newSeed = new Seed(req.body);
-  newSeed.save(function(err, seed) {
+  var newCollectorsGroup = new CollectorsGroup(req.body);
+  newCollectorsGroup.save(function(err, seed) {
     if (err) {
       console.log(err);
       res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
@@ -39,23 +39,23 @@ router.post('/', auth.manager, function(req, res) {
 });
 
 router.put('/:id', auth.manager, function(req, res) {
-  Seed.findOneAndUpdate({
+  CollectorsGroup.findOneAndUpdate({
     _id: req.params.id
   }, {
     $set: req.body
   }, {
     upsert: true
-  }, function(err, newSeed) {
+  }, function(err, newCollectorsGroup) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao atualizar: ' + err.message);
     } else {
-      res.send(newSeed);
+      res.send(newCollectorsGroup);
     }
   });
 });
 
 router.delete('/:id', auth.manager, function(req, res) {
-  Seed.findByIdAndRemove({
+  CollectorsGroup.findByIdAndRemove({
     _id: req.params.id
   }, function(err, seed) {
     if (err) {

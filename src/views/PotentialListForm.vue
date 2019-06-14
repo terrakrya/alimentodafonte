@@ -4,8 +4,8 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="lista de potencial" />
-				<loading :isLoading="loading" />
-				<b-form @submit.prevent="save" v-if="!loading">
+				<loading :loading="isLoading" />
+				<b-form @submit.prevent="save" v-if="!isLoading">
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Grupo de coletores" >
@@ -23,7 +23,7 @@
 							<form-seeds-select :form="form" field="field_potential_seeds" fieldtype="potential_seeds" :parent="this.$route.params.id" fieldseed="field_potential_seed" fieldqtd="field_potential_qty" :seeds="seeds" v-if="seeds.length" basecalc="compensation_collect" /> 
 						</div>					
 					</div>		
-					<form-submit :errors="error" :sending="sending" />
+					<form-submit :errors="error" :isSending="isSending" />
 				</b-form>
 			</div>				
 		</div>
@@ -86,17 +86,17 @@ export default {
 	
 	methods: {
 		edit (id) {
-			this.loading = true
+			this.isLoading = true
 			axios.get('node/' + id + '?_format=json').then(response => {
 				var data = response.data
 				this.apiDataToForm(this.form, data)
-				this.loading = false
+				this.isLoading = false
 			}).catch(this.showError);
 		},
 		save () {
 			this.$validator.validate().then(isValid => {
 				if (isValid) {
-					this.sending = true
+					this.isSending = true
 					this.error = false
 
 					axios({
@@ -109,7 +109,7 @@ export default {
 							this.loadList('potential_lists')
 							this.$router.replace('/lista-de-potencial/'+potential_list.nid[0].value)
 						}
-						this.sending = false						
+						this.isSending = false						
 					}).catch(this.showError)
 				}
 			})

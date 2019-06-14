@@ -6,7 +6,7 @@
 				<list-headline name="Áreas de coleta" addUrl="/cadastrar-area-de-coleta" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading :isLoading="!collection_areas && !error" msg="Carregando lista de áreas" />
+					<loading :loading="!collection_areas && !error" msg="Carregando lista de áreas" />
 					<div v-if="collection_areas">
 						<b-table stacked="md" :fields="table_fields" :items="collection_areas" :sort-by="'title'" :filter="filters.search">
 							<template slot="title" slot-scope="data">

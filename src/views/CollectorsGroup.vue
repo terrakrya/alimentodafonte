@@ -4,8 +4,8 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-				<loading :isLoading="loading" />
-				<div v-if="collectors_group && !loading">
+				<loading :loading="isLoading" />
+				<div v-if="collectors_group && !isLoading">
 					<div class="row item-title">
 						<div class="col-md-10">
 							<h1>
@@ -122,11 +122,11 @@ export default {
 
 	created () {
 		
-		this.loading = true
+		this.isLoading = true
 		
 		axios.get('node/' + this.$route.params.id + '?_format=json').then(collectors_group => {
 			this.collectors_group = collectors_group.data 
-			this.loading = false
+			this.isLoading = false
 
 			axios.get('rest/collectors?_format=json').then(response => {
 				this.collectors = response.data.filter(collector => {

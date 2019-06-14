@@ -4,8 +4,8 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="área de coleta" />
-				<loading :isLoading="loading" />
-				<b-form @submit.prevent="save" v-if="!loading">
+				<loading :loading="isLoading" />
+				<b-form @submit.prevent="save" v-if="!isLoading">
 					<div class="row">
 						<div class="col-sm-12">
 							<b-form-group label="Nome da área *">
@@ -48,7 +48,7 @@
 							</b-form-group>
 						</div>
 					</div>
-					<form-submit :errors="error" :sending="sending" />
+					<form-submit :errors="error" :isSending="isSending" />
 				</b-form>
 			</div>
 		</div>
@@ -109,18 +109,18 @@ export default {
 	},
 	methods: {
 		edit (id) {
-			this.loading = true
+			this.isLoading = true
 			axios.get('node/' + id + '?_format=json').then(response => {
 				var data = response.data
 				this.apiDataToForm(this.form, data)
 				this.documents_preview = response.data.field_upload
-				this.loading = false
+				this.isLoading = false
 			}).catch(this.showError);
 		},
 		save () {
 			this.$validator.validate().then(isValid => {
 				if (isValid) {
-					this.sending = true
+					this.isSending = true
 					this.error = false
 
 					this.form.field_location_name = this.form.title
@@ -135,7 +135,7 @@ export default {
 							this.loadList('collection_areas')
 							this.$router.replace('/area-de-coleta/'+collection_area.nid[0].value)
 						}
-						this.sending = false
+						this.isSending = false
 					}).catch(this.showError)
 				}
 			})

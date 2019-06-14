@@ -4,8 +4,8 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="matriz de sementes" />
-				<loading :isLoading="loading" />
-				<b-form @submit.prevent="save" v-if="!loading">
+				<loading :loading="isLoading" />
+				<b-form @submit.prevent="save" v-if="!isLoading">
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Nome da matriz *">
@@ -67,7 +67,7 @@
 							<documents-upload :form="form" :multiple="true" :preview="documents_preview" :error="error" field="field_seed_matrix_files" url="file/upload/node/seed_matrix/field_seed_matrix_files?_format=json" /> 
 						</div>
 					</div>	
-					<form-submit :errors="error" :sending="sending" />
+					<form-submit :errors="error" :isSending="isSending" />
 				</b-form>
 			</div>				
 		</div>
@@ -138,18 +138,18 @@ export default {
 	},
 	methods: {
 		edit (id) {
-			this.loading = true
+			this.isLoading = true
 			axios.get('node/' + id + '?_format=json').then(response => {
 				var data = response.data
 				this.apiDataToForm(this.form, data)
 				this.documents_preview = response.data.field_seed_matrix_files
-				this.loading = false
+				this.isLoading = false
 			}).catch(this.showError);
 		},
 		save () {
 			this.$validator.validate().then(isValid => {
 				if (isValid) {
-					this.sending = true
+					this.isSending = true
 					this.error = false
 					
 					this.form.field_seed_matrix_code = [{ value: 'teste' }]
@@ -171,7 +171,7 @@ export default {
 							this.loadList('seeds_matrixes')
 							this.$router.replace('/matriz-de-sementes/'+seeds_matrix.nid[0].value)
 						}
-						this.sending = false						
+						this.isSending = false						
 					}).catch(this.showError)
 				}
 			})

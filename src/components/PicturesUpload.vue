@@ -1,18 +1,18 @@
 <template>
   <div class="pictures-upload">
-    <b-form-group :label="'Foto' + (multiple ? 's' : '')" :description="'Selecione um '+ (multiple ? 'ou mais arquivos' : 'arquivo') +' no formato PNG, GIF, JPG ou JPEG, com no máximo 32 MB.'" v-show="!loading">
+    <b-form-group :label="'Foto' + (multiple ? 's' : '')" :description="'Selecione um '+ (multiple ? 'ou mais arquivos' : 'arquivo') +' no formato PNG, GIF, JPG ou JPEG, com no máximo 32 MB.'" v-show="!isLoading">
       <b-form-file ref="files" id="files" :multiple="multiple" accept="image/*" v-on:change="uploadImages"></b-form-file>
       <span class="text-danger" v-show="error">{{ error }}</span>
     </b-form-group>
-    <div class="row images_preview" v-if="!loading && images_preview.length > 0">
+    <div class="row images_preview" v-if="!isLoading && images_preview.length > 0">
       <div class="col-xs-2" v-for="(image, index) in images_preview" :key="index">
-        <b-img :src="baseURL() + image.thumb" fluid thumbnail />
+        <b-img :src="baseUrl + image.thumb" fluid thumbnail />
         <br>
         <br>
         <p class="text-center"><a class="btn btn-default btn-small" @click="deleteImage(index)"><i class="fa fa-trash"></i></a></p>
       </div>
     </div>
-    <loading :isLoading="loading" msg="Enviando foto..."/>
+    <loading :loading="isLoading" msg="Enviando foto..."/>
   </div>
 </template>
 
@@ -27,14 +27,14 @@ export default {
   inject: ['$validator'],
   data () {
     return {
-      
-      
+
+
       images_preview: this.preview
     }
   },
   methods: {
     uploadImages(e) {
-      // this.loading = true
+      // this.isLoading = true
       let files = e.target.files;
 
       for (var i = 0; i < files.length; i++) {
@@ -49,15 +49,12 @@ export default {
             this.images_preview = [response.data]
             this.form[this.field] = response.data
           }
-          this.loading = false
+          this.isLoading = false
         }).catch((error) => {
-          this.loading = false
+          this.isLoading = false
           this.showError("Ocorreu um erro ao enviar: "+ file.name + ". Erro: "+ error.message)
         });
       }
-    },
-    baseURL() {
-      return axios.defaults.baseURL.replace('/api', '')
     },
     deleteImage(index) {
       this.$delete(this.images_preview, index)

@@ -1,16 +1,16 @@
 <template>
   <div class="pictures-upload">
-    <b-form-group :label="'Áudio' + (multiple ? 's' : '')" :description="'Selecione um '+ (multiple ? 'ou mais arquivos' : 'arquivo') +' de áudio no formato MP3, MP4, WAV, com no máximo 32 MB.'" v-show="!loading">
+    <b-form-group :label="'Áudio' + (multiple ? 's' : '')" :description="'Selecione um '+ (multiple ? 'ou mais arquivos' : 'arquivo') +' de áudio no formato MP3, MP4, WAV, com no máximo 32 MB.'" v-show="!isLoading">
       <b-form-file ref="files" id="files" :multiple="multiple" accept="audio/mpeg, audio/mp4, audio/wav" v-on:change="uploadDocuments"></b-form-file>
       <span class="text-danger" v-show="error">{{ error }}</span>
     </b-form-group>
-    <div class="row" v-if="!loading && documents_preview.length > 0">
+    <div class="row" v-if="!isLoading && documents_preview.length > 0">
       <div class="col-xs-12" v-for="(doc, index) in documents_preview" :key="index">
-        <a :href="(doc.uri ? baseURL() + doc.uri[0].url : doc.url)" target="_blank"><i class="fa fa-download"></i> {{ fileName(doc) }}</a>
+        <a :href="(doc.uri ? baseUrl + doc.uri[0].url : doc.url)" target="_blank"><i class="fa fa-download"></i> {{ fileName(doc) }}</a>
         <a class="btn btn-danger btn-xs pull-right" @click="deleteDocument(index)"><i class="fa fa-trash"></i></a>
       </div>
     </div>
-    <loading :isLoading="loading" msg="Enviando áudio..."/>
+    <loading :loading="isLoading" msg="Enviando áudio..."/>
   </div>
 </template>
 
@@ -35,7 +35,7 @@ export default {
   methods: {
     uploadDocuments(e) {
       this.error = false
-      this.loading = true
+      this.isLoading = true
       let files = e.target.files || e.dataTransfer.files;
 
       for (var i = 0; i < files.length; i++) {
@@ -60,17 +60,14 @@ export default {
               this.documents_preview = [response.data]
               this.form[this.field] = [{ target_id: response.data.fid[0].value }]
             }
-            this.loading = false
+            this.isLoading = false
           }).catch((error) => {
-            this.loading = false
+            this.isLoading = false
             this.showError("Ocorreu um erro ao enviar: "+ file.name + ". Erro: "+ error.message)
           });
         }
         reader.readAsArrayBuffer(files[i]);
       }
-    },
-    baseURL() {
-      return axios.defaults.baseURL
     },
     deleteDocument(index) {
       this.$delete(this.documents_preview, index)

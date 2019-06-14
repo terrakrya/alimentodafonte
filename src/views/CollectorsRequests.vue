@@ -6,7 +6,7 @@
 				<list-headline name="Pedidos para coletores" addUrl="/cadastrar-pedido-para-coletores" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading :isLoading="!collectors_requests && !error" msg="Carregando lista de pedidos" />
+					<loading :loading="!collectors_requests && !error" msg="Carregando lista de pedidos" />
 					<div v-if="collectors_requests">
 						<b-table stacked="md" :fields="table_fields" :items="collectors_requests" :sort-by="'created'" :sort-desc="true" :filter="filters.search">
 							<template slot="created" slot-scope="data">

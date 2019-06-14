@@ -1,10 +1,8 @@
 var router = require('express').Router();
 
 router.use('/', require('./users'));
-router.use('/profiles', require('./profiles'));
-router.use('/articles', require('./articles'));
 router.use('/seeds', require('./seeds'));
-router.use('/tags', require('./tags'));
+router.use('/collectors_groups', require('./collectors_groups'));
 router.use('/uploads', require('./uploads'));
 
 router.use(function(err, req, res, next){

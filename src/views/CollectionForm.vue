@@ -4,8 +4,8 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="coleta" />
-				<loading :isLoading="loading" />
-				<b-form @submit.prevent="save" v-if="!loading">
+				<loading :loading="isLoading" />
+				<b-form @submit.prevent="save" v-if="!isLoading">
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Data e hora da coleta *" class="date_time">
@@ -72,7 +72,7 @@
 							</b-form-group>
 						</div>
 					</div>
-					<form-submit :errors="error" :sending="sending" />
+					<form-submit :errors="error" :isSending="isSending" />
 				</b-form>
 			</div>
 		</div>
@@ -145,7 +145,7 @@ export default {
 	},
 	methods: {
 		edit (id) {
-			this.loading = true
+			this.isLoading = true
 			axios.get('node/' + id + '?_format=json').then(response => {
 				var data = response.data
 				this.apiDataToForm(this.form, data)
@@ -158,13 +158,13 @@ export default {
 					this.date_time.date = dt[0]
 					this.date_time.time = dt[1]
 				}
-				this.loading = false
+				this.isLoading = false
 			}).catch(this.showError);
 		},
 		save () {
 			this.$validator.validate().then(isValid => {
 				if (isValid) {
-					this.sending = true
+					this.isSending = true
 					this.error = false
 					if (this.date_time.date && this.date_time.time) {
 						this.form.field_seeds_collect_date_time[0].value = this.date_time.date+'T'+this.date_time.time+':00'
@@ -180,7 +180,7 @@ export default {
 							this.loadList('collections')
 							this.$router.replace('/coleta/'+collection.nid[0].value)
 						}
-						this.sending = false
+						this.isSending = false
 					}).catch(this.showError)
 				}
 			})
