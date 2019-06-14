@@ -4,7 +4,7 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="pedido para coletores" />
-				<loading :loading="loading" />
+				<loading :isLoading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-6">
@@ -26,7 +26,7 @@
 							</div>
 						</div>
 					</div>								
-					<form-submit :error="error" :sending="sending" />
+					<form-submit :errors="error" :sending="sending" />
 				</b-form>
 			</div>				
 		</div>
@@ -49,9 +49,9 @@ export default {
 	data () {
 
 		return { 
-			error: false,
-			loading: false,
-			sending: false,
+			
+			
+			
 			seeds_list: [],
 			seeds_errors: [],
 			seeds_checklist: {},
@@ -101,7 +101,7 @@ export default {
 				var data = response.data
 				this.apiDataToForm(this.form, data)
 				this.loading = false
-			}).catch(error => { this.error = error.message; this.loading = false });
+			}).catch(this.showError);
 		},
 		save () {
 			this.$validator.validate().then(isValid => {
@@ -119,7 +119,7 @@ export default {
 							this.$router.replace('/pedido-para-coletores/'+collectors_request.nid[0].value)
 						}
 						this.sending = false						
-					}).catch(error => { this.error = error.response.data.message; this.sending = false })
+					}).catch(this.showError)
 				}
 			})
 		}, 

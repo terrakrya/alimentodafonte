@@ -6,7 +6,7 @@
 				<list-headline name="Pedidos para coletores" addUrl="/cadastrar-pedido-para-coletores" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading :loading="!collectors_requests && !error" msg="Carregando lista de pedidos" />
+					<loading :isLoading="!collectors_requests && !error" msg="Carregando lista de pedidos" />
 					<div v-if="collectors_requests">
 						<b-table stacked="md" :fields="table_fields" :items="collectors_requests" :sort-by="'created'" :sort-desc="true" :filter="filters.search">
 							<template slot="created" slot-scope="data">
@@ -58,7 +58,7 @@ export default {
 	
 	data () {
 		return { 
-			error: false,
+			
 			filters: { search: null },
 			table_fields: [
 			{ key: 'created', label: 'ID / Data', sortable: true },
@@ -92,7 +92,7 @@ export default {
 			if (confirm("Tem certeza que deseja excluír?")) {
 				axios.delete('node/' + id + '?_format=json').then(() => {
 					this.loadList('collectors_requests')
-				}).catch(error => { this.error = error.message })	
+				}).catch(this.showError)	
 			}
 		}
 	},

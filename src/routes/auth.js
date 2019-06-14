@@ -10,12 +10,31 @@ function getTokenFromHeader(req){
   return null;
 }
 
+function isManager(req, res, next) {
+  if (req.payload && req.payload.roles) {
+    var roles = req.payload.roles
+    if (roles.includes('admin') || roles.includes('manager')) {
+      next()
+    } else {
+      return res.status(403).json({
+        status: 403,
+        message: 'A permissão de gestor é necessária para acessar este recurso.'
+      })
+    }
+  }
+}
+
 var auth = {
-  required: jwt({
+  authenticated: jwt({
     secret: secret,
     userProperty: 'payload',
     getToken: getTokenFromHeader
   }),
+  manager: [jwt({
+    secret: secret,
+    userProperty: 'payload',
+    getToken: getTokenFromHeader
+  }), isManager],
   optional: jwt({
     secret: secret,
     userProperty: 'payload',

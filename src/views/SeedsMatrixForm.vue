@@ -4,7 +4,7 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="matriz de sementes" />
-				<loading :loading="loading" />
+				<loading :isLoading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-6">
@@ -67,7 +67,7 @@
 							<documents-upload :form="form" :multiple="true" :preview="documents_preview" :error="error" field="field_seed_matrix_files" url="file/upload/node/seed_matrix/field_seed_matrix_files?_format=json" /> 
 						</div>
 					</div>	
-					<form-submit :error="error" :sending="sending" />
+					<form-submit :errors="error" :sending="sending" />
 				</b-form>
 			</div>				
 		</div>
@@ -95,9 +95,9 @@ export default {
 	data () {
 
 		return { 
-			error: false,
-			loading: false,
-			sending: false,
+			
+			
+			
 			categorias_de_matrizes: categorias_de_matrizes,
 			origens_de_matrizes: origens_de_matrizes,
 			meses: meses,
@@ -144,7 +144,7 @@ export default {
 				this.apiDataToForm(this.form, data)
 				this.documents_preview = response.data.field_seed_matrix_files
 				this.loading = false
-			}).catch(error => { this.error = error.message; this.loading = false });
+			}).catch(this.showError);
 		},
 		save () {
 			this.$validator.validate().then(isValid => {
@@ -172,7 +172,7 @@ export default {
 							this.$router.replace('/matriz-de-sementes/'+seeds_matrix.nid[0].value)
 						}
 						this.sending = false						
-					}).catch(error => { this.error = error.response.data.message; this.sending = false })
+					}).catch(this.showError)
 				}
 			})
 		}

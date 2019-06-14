@@ -6,7 +6,7 @@
 				<list-headline name="Redes de sementes" addUrl="/cadastrar-rede-de-sementes" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading :loading="!seeds_networks && !error" msg="Carregando lista de redes" />
+					<loading :isLoading="!seeds_networks && !error" msg="Carregando lista de redes" />
 					<div v-if="seeds_networks">
 						<b-table stacked="md" :fields="table_fields" :items="seeds_networks" :sort-by="'title'" :filter="filters.search">
 							<template slot="title" slot-scope="data">
@@ -41,7 +41,7 @@ export default {
 	
 	data () {
 		return { 
-			error: false,
+			
 			filters: { search: null },
 			table_fields: [
 				{ key: 'title', label: 'Rede', sortable: true },
@@ -67,13 +67,13 @@ export default {
 						coverage_area: this.present(seeds_network.field_coverage_area) ? seeds_network.field_coverage_area[0].value : ''
 					}
 				})
-			}).catch(error => { this.error = error.message })
+			}).catch(this.showError)
 		},
 		remove (id) {
 			if (confirm("Tem certeza que deseja excluír?")) {
 				axios.delete('node/' + id + '?_format=json').then(() => {
 					this.list()
-				}).catch(error => { this.error = error.message })	
+				}).catch(this.showError)	
 			}
 		}
 	},

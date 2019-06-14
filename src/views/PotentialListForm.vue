@@ -4,7 +4,7 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="lista de potencial" />
-				<loading :loading="loading" />
+				<loading :isLoading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-6">
@@ -23,7 +23,7 @@
 							<form-seeds-select :form="form" field="field_potential_seeds" fieldtype="potential_seeds" :parent="this.$route.params.id" fieldseed="field_potential_seed" fieldqtd="field_potential_qty" :seeds="seeds" v-if="seeds.length" basecalc="compensation_collect" /> 
 						</div>					
 					</div>		
-					<form-submit :error="error" :sending="sending" />
+					<form-submit :errors="error" :sending="sending" />
 				</b-form>
 			</div>				
 		</div>
@@ -46,9 +46,9 @@ export default {
 	data () {
 
 		return { 
-			error: false,
-			loading: false,
-			sending: false,
+			
+			
+			
 			form: {
 				type:[{ target_id: "potential_collection" }],
 				title: [{ value: 'item-potencial-'+Date.now() }],
@@ -91,7 +91,7 @@ export default {
 				var data = response.data
 				this.apiDataToForm(this.form, data)
 				this.loading = false
-			}).catch(error => { this.error = error.message; this.loading = false });
+			}).catch(this.showError);
 		},
 		save () {
 			this.$validator.validate().then(isValid => {
@@ -110,7 +110,7 @@ export default {
 							this.$router.replace('/lista-de-potencial/'+potential_list.nid[0].value)
 						}
 						this.sending = false						
-					}).catch(error => { this.error = error.response.data.message; this.sending = false })
+					}).catch(this.showError)
 				}
 			})
 		}

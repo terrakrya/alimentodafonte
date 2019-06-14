@@ -4,40 +4,41 @@ var express = require('express'),
     auth = require('../auth'),
     Seed = mongoose.model('Seed');
 
-router.get('/', auth.required, function(req, res){
+router.get('/', auth.manager, function(req, res){
     Seed.find({}).exec(function(err, seeds){
         if(err) {
-            res.status(422).send('Ocorreu um erro ao carregar a lista: '+err);
+            res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
         } else {
             res.json(seeds);
         }
     });
 });
 
-router.get('/:id', auth.required, function(req, res){
+router.get('/:id', auth.manager, function(req, res){
     Seed.findOne({
         _id: req.params.id
     }).exec(function(err, seed){
         if(err) {
-            res.status(422).send('Ocorreu um erro ao carregar o item: '+err);
+            res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
         } else {
             res.json(seed);
         }
     });
 });
 
-router.post('/', auth.required, function(req, res){
+router.post('/', auth.manager, function(req, res){
     var newSeed = new Seed(req.body);
     newSeed.save(function(err, seed){
         if(err) {
-            res.status(422).send('Ocorreu um erro ao salvar: '+err);
+          console.log(err);
+            res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
         } else {
             res.send(seed);
         }
     });
 });
 
-router.put('/:id', auth.required, function(req, res){
+router.put('/:id', auth.manager, function(req, res){
     Seed.findOneAndUpdate({
         _id: req.params.id
     },{
@@ -46,19 +47,19 @@ router.put('/:id', auth.required, function(req, res){
         upsert: true
     },function(err, newSeed){
         if(err) {
-            res.status(422).send('Ocorreu um erro ao atualizar: '+err);
+            res.status(422).send('Ocorreu um erro ao atualizar: ' + err.message);
         } else {
             res.send(newSeed);
         }
     });
 });
 
-router.delete('/:id', auth.required, function(req, res){
+router.delete('/:id', auth.manager, function(req, res){
     Seed.findByIdAndRemove({
         _id: req.params.id
     },function(err, seed){
         if(err) {
-            res.status(422).send('Ocorreu um erro ao excluír: '+err);
+            res.status(422).send('Ocorreu um erro ao excluír: ' + err.message);
         } else {
             res.send(seed);
         }

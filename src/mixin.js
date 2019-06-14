@@ -1,10 +1,14 @@
 import { CPF, CNPJ } from 'cpf_cnpj'
 import axios from 'axios'
+import queries from '@/store/queries'
 import tipos_de_usuario from '@/data/tipos-de-usuario.json'
 
 export default {
   data () {
 		return {
+      error: false,
+      loading: false,
+      sending: false,
 			tipos_de_usuario: tipos_de_usuario
 		}
 	},
@@ -48,9 +52,26 @@ export default {
       }
       return list
     },
-    loadList (type) {
-      this.$store.dispatch('loadList', type)
-    }
+    async loadList (type) {
+      console.log(type);
+      return await queries.loadList(type).catch(this.showError)
+      // this.$store.dispatch('loadList', type)
+    },
+		showError(error) {
+      if (error.response) {
+  			if (error.response.data) {
+    			if (error.response.data.message) {
+    				this.error = error.response.data.message
+    			} else {
+            this.error = error.response.data
+          }
+  			} else {
+  					this.error = error.response
+  			}
+      }
+      this.loading = false
+      this.sending = false
+		}
   },
   filters: {
     cpf: function (value) {

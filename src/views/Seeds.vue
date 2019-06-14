@@ -6,7 +6,7 @@
 				<list-headline name="Sementes" addUrl="/cadastrar-semente" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading :loading="!seeds && !error" msg="Carregando lista de sementes" />
+					<loading :isLoading="!seeds && !error" msg="Carregando lista de sementes" />
 					<div v-if="seeds">
 						<b-table stacked="md" :fields="table_fields" :items="seeds" :sort-by="'name'" :filter="filters.search">
 							<template slot="name" slot-scope="data">
@@ -38,8 +38,8 @@ export default {
 
 	data () {
 		return {
-			error: false,
 			filters: { search: null },
+			seeds: null,
 			table_fields: [
 				{ key: 'name', label: 'Semente', sortable: true },
 				{ key: 'scientific_name', label: 'Nome científico', sortable: true },
@@ -50,20 +50,17 @@ export default {
 	},
 
 	created () {
-		this.loadList('seeds')
-	},
-	computed: {
-		seeds () {
-			console.log(this.$store.state.seeds);
-			return this.$store.state.seeds
-		}
+		this.list()
 	},
 	methods: {
+		async list () {
+			this.seeds = await this.loadList('seeds')
+		},
 		remove (id) {
 			if (confirm("Tem certeza que deseja excluír?")) {
-				axios.delete('product/' + id + '?_format=json').then(() => {
+				axios.delete('seeds/' + id).then(() => {
 					this.list()
-				}).catch(error => { this.error = error.message })
+				}).catch(this.showError)
 			}
 		}
 	},

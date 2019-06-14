@@ -6,7 +6,7 @@
 				<list-headline name="Encomendas" addUrl="/cadastrar-encomenda" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading :loading="!orders && !error" msg="Carregando lista de encomendas" />
+					<loading :isLoading="!orders && !error" msg="Carregando lista de encomendas" />
 					<div v-if="orders">
 						<b-table stacked="md" :fields="table_fields" :items="orders" :sort-by="'date_receiving'" :sort-desc="true" :filter="filters.search">
 							<template slot="date_receiving" slot-scope="data">
@@ -58,7 +58,7 @@ export default {
 	
 	data () {
 		return { 
-			error: false,
+			
 			filters: { search: null },
 			table_fields: [
 				{ key: 'date_receiving', label: 'Data / ID', sortable: true },
@@ -95,7 +95,7 @@ export default {
 			if (confirm("Tem certeza que deseja excluír?")) {
 				axios.delete('node/' + id + '?_format=json').then(() => {
 					this.loadList('orders')
-				}).catch(error => { this.error = error.message })	
+				}).catch(this.showError)	
 			}
 		}
 	},

@@ -6,7 +6,7 @@
 				<list-headline name="Coletores" addUrl="/cadastrar-coletor" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading :loading="!users && !error" msg="Carregando lista de coletores" />
+					<loading :isLoading="!users && !error" msg="Carregando lista de coletores" />
 					<no-item :list="users" />
 					<div v-if="users && users.length">
 						<b-table stacked="md" :fields="table_fields" :items="users" :sort-by="'name'" :filter="filters.search">
@@ -40,7 +40,7 @@ export default {
 
 	data () {
 		return {
-			error: false,
+			
 			filters: { search: null },
 			table_fields: [
 				{ key: 'name', label: 'Nome', sortable: true },
@@ -57,13 +57,13 @@ export default {
 		list () {
 			axios.get('users', { params: { role: 'collector'} }).then(response => {
 				this.users = response.data
-			}).catch(error => { this.error = error.message })
+			}).catch(this.showError)
 		},
 		remove (id) {
 			if (confirm("Tem certeza que deseja excluír?")) {
 				axios.delete('users/' + id).then(() => {
 					this.list()
-				}).catch(error => { this.error = error.message })
+				}).catch(this.showError)
 			}
 		}
 	},

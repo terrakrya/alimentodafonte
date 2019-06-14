@@ -4,7 +4,7 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="casa de sementes" />
-				<loading :loading="loading" />
+				<loading :isLoading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-12">
@@ -39,7 +39,7 @@
 							</b-form-group>
 						</div>
 					</div>
-					<form-submit :error="error" :sending="sending" />
+					<form-submit :errors="error" :sending="sending" />
 				</b-form>
 			</div>
 		</div>
@@ -64,9 +64,9 @@ export default {
 	data () {
 
 		return {
-			error: false,
-			loading: false,
-			sending: false,
+			
+			
+			
 			seed: null,
 			user_options: [],
 			collectors_group_options: [],
@@ -107,7 +107,7 @@ export default {
 							[collectors_group.field_address[0].locality, collectors_group.field_address[0].administrative_area].filter(Boolean).join(' - ') : ''
 				}
 			})
-		}).catch(error => { this.error = error.message })
+		}).catch(this.showError)
 
 		axios.get('rest/collectors?_format=json').then(response => {
 			this.collector_options = response.data.map(collector => {
@@ -118,7 +118,7 @@ export default {
 					picture: this.present(collector.user_picture, 'url') ? collector.user_picture[0].url : null,
 				}
 			})
-		}).catch(error => { this.error = error.message })
+		}).catch(this.showError)
 
 		axios.get('rest/users?_format=json').then(response => {
 			this.user_options = response.data.map(user => {
@@ -130,7 +130,7 @@ export default {
 					picture: this.present(user.user_picture, 'url') ? user.user_picture[0].url : null,
 				}
 			})
-		}).catch(error => { this.error = error.message })
+		}).catch(this.showError)
 
 	},
 
@@ -145,7 +145,7 @@ export default {
 				console.log(this.form)
 
 				this.loading = false
-			}).catch(error => { this.error = error.message; this.loading = false });
+			}).catch(this.showError);
 		},
 		save () {
 			this.$validator.validate().then(isValid => {
@@ -177,7 +177,7 @@ export default {
 							this.$router.replace('/casa-de-sementes/'+seeds_house.store_id[0].value)
 						}
 						this.sending = false
-					}).catch(error => { this.error = error.response.data.message; this.sending = false })
+					}).catch(this.showError)
 				}
 			})
 		}

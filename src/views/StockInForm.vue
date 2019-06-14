@@ -7,7 +7,7 @@
 					Cadastrar entrada	
 				</h1>
 				<br>
-				<loading :loading="loading" />
+				<loading :isLoading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-6">
@@ -61,7 +61,7 @@
 							<b-alert variant="danger" show >{{qty_error}}</b-alert>
 						</div>
 					</div>
-					<form-submit :error="error" :sending="sending" />
+					<form-submit :errors="error" :sending="sending" />
 				</b-form>
 			</div>				
 		</div>
@@ -83,9 +83,9 @@ export default {
 	data () {
 
 		return { 
-			error: false,
-			loading: false,
-			sending: false,
+			
+			
+			
 			sending_seed: false,
 			qty_error: null,
 			seed: null,
@@ -148,7 +148,7 @@ export default {
 				var data = response.data
 				this.apiDataToForm(this.form, data)
 				this.loading = false
-			}).catch(error => { this.error = error.message; this.loading = false });
+			}).catch(this.showError);
 		},
 		save () {
 			this.$validator.validate().then(isValid => {
@@ -174,7 +174,7 @@ export default {
 						}).then(resp => {
 							this.form.field_lot = [{ target_id: resp.data.tid[0].value }]
 							this.saveItem()
-						}).catch(error => { this.error = error.message; this.sending = false })
+						}).catch(this.showError);
 					} else {
 						this.saveItem()
 					}
@@ -204,10 +204,10 @@ export default {
 								this.$router.replace('/estoque')
 							})
 						})
-					}).catch(error => { this.error = error.message; this.sending = false })
+					}).catch(this.showError);
 				}
 				
-			}).catch(error => { this.error = error.response.data.message; this.sending = false })
+			}).catch(this.showError)
 		},
 		seedSelected (seed) {
 			if (seed) {

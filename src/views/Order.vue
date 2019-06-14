@@ -4,7 +4,7 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-				<loading :loading="loading" />
+				<loading :isLoading="loading" />
 				<div v-if="order && !loading">
 					<div class="row item-title">
 						<div class="col-md-12">
@@ -107,7 +107,7 @@ export default {
 
 	data () {
 		return { 
-			error: false
+			
 		}
 	},
 	created () {

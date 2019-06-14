@@ -4,7 +4,7 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-				<loading :loading="loading" />
+				<loading :isLoading="loading" />
 				<div v-if="seed && !loading">
 					<div class="row item-title">
 						<div class="col-md-2" v-if="present(seed.images, 'url')">
@@ -121,8 +121,8 @@ export default {
 			meses: meses,
 			ecossistemas: ecossistemas,
 			seed: null,
-			error: false,
-			loading: false
+			
+			
 		}
 	},
 
@@ -133,7 +133,7 @@ export default {
 		axios.get('seeds/' + this.$route.params.id).then(resp => {
 			this.seed = resp.data
 			this.loading = false
-		}).catch(error => { this.error = error.message, this.loading = false })
+		}).catch(this.showError);
 
 	},
 

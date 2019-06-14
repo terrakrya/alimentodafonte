@@ -3,14 +3,12 @@ var router = require('express').Router();
 var passport = require('passport');
 var User = mongoose.model('User');
 var auth = require('../auth');
-
-router.get('/users', auth.required, function(req, res){
+ 
+router.get('/users', auth.manager, function(req, res){
     var filters = {}
     if (req.query.role && req.query.role != 'user') {
       filters = { roles: req.query.role}
     }
-    console.log(req.query.role);
-    console.log(filters);
     User.find(filters).exec(function(err, seeds){
         if(err) {
             res.status(422).send('Ocorreu um erro ao carregar a lista: '+err);
@@ -19,24 +17,24 @@ router.get('/users', auth.required, function(req, res){
         }
     });
 });
-
-router.get('/users/:id', auth.required, function(req, res, next){
+ 
+router.get('/users/:id', auth.manager, function(req, res, next){
   User.findById(req.params.id).then(function(user){
     if(!user){ return res.sendStatus(401); }
 
     return res.json(user);
   }).catch(next);
 });
-
-router.get('/user', auth.required, function(req, res, next){
+ 
+router.get('/user', auth.manager, function(req, res, next){
   User.findById(req.payload.id).then(function(user){
     if(!user){ return res.sendStatus(401); }
 
     return res.json(user);
   }).catch(next);
 });
-
-router.put('/user', auth.required, function(req, res, next){
+ 
+router.put('/user', auth.manager, function(req, res, next){
   User.findById(req.payload.id).then(function(user){
     if(!user){ return res.sendStatus(401); }
 
@@ -83,8 +81,8 @@ router.post('/users/login', function(req, res, next){
     }
   })(req, res, next);
 });
-
-router.post('/users', auth.required, function(req, res, next){
+ 
+router.post('/users', auth.manager, function(req, res, next){
   var user = new User();
 
   user.username = req.body.username
@@ -109,8 +107,8 @@ router.post('/users', auth.required, function(req, res, next){
     return res.send(user);
   }).catch(next);
 });
-
-router.put('/users/:id', auth.required, function(req, res, next){
+ 
+router.put('/users/:id', auth.manager, function(req, res, next){
   User.findById(req.params.id).then(function(user){
 
     user.username = req.body.username
@@ -136,8 +134,8 @@ router.put('/users/:id', auth.required, function(req, res, next){
     }).catch(next);
   })
 });
-
-router.delete('/users/:id', auth.required, function(req, res){
+ 
+router.delete('/users/:id', auth.manager, function(req, res){
     User.findByIdAndRemove({
         _id: req.params.id
     },function(err, user){

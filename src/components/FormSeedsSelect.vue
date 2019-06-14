@@ -1,5 +1,5 @@
 <template>
-  <div>  
+  <div>
     <div class="seeds-select">
       <b-form-group label="Adicionar semente">
         <cool-select v-if="seeds" v-model="seed_form[fieldseed][0].target_id" :arrowsDisableInstantSelection="true" placeholder="Selecione a semente" :items="seeds" item-text="title" item-value="id" class="col-sm-6">
@@ -21,8 +21,8 @@
         <br>
         <br>
         <b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-        <loading :loading="sending" msg="Adicionando semente" />
-      </b-form-group>             
+        <loading :isLoading="sending" msg="Adicionando semente" />
+      </b-form-group>
     </div>
     <div class="entity-select-preview" v-if="preview && preview.length > 0">
       <table class="table b-table b-table-stacked-md">
@@ -87,13 +87,13 @@ export default {
         parent_id: [{ value: this.parent }],
         parent_type: [{ value: "node" }],
         parent_field_name: [{ value: this.field }]
-      }   
+      }
     seed_form[this.fieldseed] = [{ target_id: '' }]
     seed_form[this.fieldqtd] = [{ value: '' }]
 
-    return { 
-      error: false,      
-      sending: false,      
+    return {
+
+
       items: [],
       seed_form: seed_form
     }
@@ -109,7 +109,7 @@ export default {
         return this.form[this.field].map(selected => {
           return this.getItem(selected.target_id)
         }).filter(preview => preview)
-      } 
+      }
       return []
     },
     totalQty () {
@@ -144,15 +144,15 @@ export default {
         this.seed_form[this.fieldqtd] = [{ value: '' }]
         this.addItem(paragraph)
         this.sending = false
-      }).catch(error => { this.error = error.message; this.sending = false })
+      }).catch(this.showError);
     },
 
     removeItem (id) {
       this.form[this.field] = this.form[this.field].filter(item => (item.target_id != id))
       if (this.callback) {
-        this.callback(this.items)  
+        this.callback(this.items)
       }
-    }, 
+    },
     getItem (id) {
       return this.items.find(i => {
         return i.id == id
@@ -163,15 +163,15 @@ export default {
         var seed = this.seeds.find(s => {
           return s.id == paragraph[this.fieldseed][0].target_id
         })
-        this.items.push({ 
-          id: paragraph.id[0].value, 
-          name: seed.title, 
+        this.items.push({
+          id: paragraph.id[0].value,
+          name: seed.title,
           qtd: paragraph[this.fieldqtd][0].value,
           price: seed[this.basecalc || 'price'],
           seed_id: seed.id
         })
         if (this.callback) {
-          this.callback(this.items)  
+          this.callback(this.items)
         }
       }
     },
@@ -181,8 +181,8 @@ export default {
         this.form[this.field].forEach(item => {
           axios.get('entity/paragraph/' + item.target_id + '?_format=json').then(response => {
             this.addItem(response.data)
-          }).catch(error => { this.error = error.message; this.loading = false });
-        })        
+          }).catch(this.showError);
+        })
       }
     }
   },
