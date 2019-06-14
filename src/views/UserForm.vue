@@ -4,7 +4,7 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="usuário" />
-				<loading :loading="loading" />
+				<loading :isLoading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-6">
@@ -79,7 +79,7 @@
 							</b-form-group>
 						</div>
 					</div>
-					<form-submit :error="error" :sending="sending" />
+					<form-submit :errors="error" :sending="sending" />
 				</b-form>
 			</div>
 		</div>
@@ -107,9 +107,9 @@ export default {
 	},
 	data () {
 		return {
-			error: false,
-			loading: false,
-			sending: false,
+			
+			
+			
 			images_preview: [],
 			log: false,
 			show_password: false,
@@ -154,7 +154,7 @@ export default {
 					this.images_preview = [response.data.image]
 				}
 				this.loading = false
-			}).catch(error => { this.error = error.message; this.loading = false });
+			}).catch(this.showError);
 		},
 		save () {
 			this.$validator.validate().then(isValid => {
@@ -175,7 +175,7 @@ export default {
 							this.$router.replace('/usuario/'+user._id)
 						}
 						this.sending = false
-					}).catch(error => { this.error = error.response.data.errors; this.sending = false })
+					}).catch(this.showError)
 				}
 			})
 		},

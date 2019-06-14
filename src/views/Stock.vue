@@ -52,7 +52,7 @@
 								</b-form-group>
 							</div>
 							<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-							<loading :loading="!filtered_stock && !error" msg="Carregando relatório movimentações" />
+							<loading :isLoading="!filtered_stock && !error" msg="Carregando relatório movimentações" />
 							<div v-if="filtered_stock && !filtered_stock.length">
 								<h4 class="text-center">Nenhuma movimentação encontrada</h4>
 							</div> 
@@ -109,7 +109,7 @@
 							</div>
 						</b-tab>
 						<b-tab title="Controle de sementes">
-							<loading :loading="!seeds && !error" msg="Carregando lista de sementes" />
+							<loading :isLoading="!seeds && !error" msg="Carregando lista de sementes" />
 							<div v-if="seeds">
 								<div class="row search">
 									<div class="col-sm-4 col-sm-offset-8">
@@ -153,7 +153,7 @@ export default {
 	
 	data () {
 		return { 
-			error: false,
+			
 			filters: { 
 				search: null, 
 				type: null, 

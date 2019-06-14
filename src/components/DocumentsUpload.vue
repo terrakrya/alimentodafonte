@@ -10,7 +10,7 @@
         <a class="btn btn-danger btn-xs pull-right" @click="deleteDocument(index)"><i class="fa fa-trash"></i></a>
       </div>
     </div>
-    <loading :loading="loading" msg="Enviando documento..."/>
+    <loading :isLoading="loading" msg="Enviando documento..."/>
   </div>  
 </template>
 
@@ -26,8 +26,8 @@ export default {
 
   data () {
     return { 
-      error: false,
-      loading: false,
+      
+      
       documents_preview: this.preview
     }
   },

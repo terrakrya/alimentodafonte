@@ -4,7 +4,7 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="grupo de coletores" />
-				<loading :loading="loading" />
+				<loading :isLoading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-6">
@@ -68,7 +68,7 @@
 							</b-form-group>							
 						</div>					
 					</div>					
-					<form-submit :error="error" :sending="sending" />
+					<form-submit :errors="error" :sending="sending" />
 				</b-form>
 			</div>				
 		</div>
@@ -92,9 +92,9 @@ export default {
 	name: 'CollectorsGroupForm', 
 	data () {
 		return { 
-			error: false,
-			loading: false,
-			sending: false,
+			
+			
+			
 			bancos: bancos.map(banco => ({ value: Number(banco.value), text: banco.text })),
 			tipos_de_conta: tipos_de_conta,
 			seed: null,
@@ -137,7 +137,7 @@ export default {
 					picture: this.present(seed.field_images, 'url') ? seed.field_images[0].url : null,
 				}
 			})
-		}).catch(error => { this.error = error.message })
+		}).catch(this.showError)
 
 
 		axios.get('rest/collectors?_format=json').then(response => {
@@ -149,7 +149,7 @@ export default {
 					picture: this.present(seed.user_picture, 'url') ? seed.user_picture[0].url : null,
 				}
 			})
-		}).catch(error => { this.error = error.message })
+		}).catch(this.showError)
 	},
 	methods: {
 		edit (id) {
@@ -158,7 +158,7 @@ export default {
 				var data = response.data
 				this.apiDataToForm(this.form, data)
 				this.loading = false
-			}).catch(error => { this.error = error.message; this.loading = false });
+			}).catch(this.showError);
 		},
 		save () {
 			this.$validator.validate().then(isValid => {
@@ -176,7 +176,7 @@ export default {
 							this.$router.replace('/grupo-de-coletores/'+collectors_group.nid[0].value)
 						}
 						this.sending = false						
-					}).catch(error => { this.error = error.response.data.message; this.sending = false })
+					}).catch(this.showError)
 				}
 			})
 		}

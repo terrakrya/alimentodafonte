@@ -29,7 +29,7 @@
           <li>
             <a><i class="fa fa-list-alt"></i><span>Cadastros</span><i class="fa fa-chevron-down"></i></a>
             <ul class="nav">
-              <li @click="toggleMenu">
+              <li @click="toggleMenu" v-if="isAdmin">
                 <router-link to="/usuarios"><span>Usuários</span></router-link>
               </li>
               <li @click="toggleMenu">

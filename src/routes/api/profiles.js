@@ -26,7 +26,7 @@ router.get('/:username', auth.optional, function(req, res, next){
   }
 });
 
-router.post('/:username/follow', auth.required, function(req, res, next){
+router.post('/:username/follow', auth.authenticated, function(req, res, next){
   var profileId = req.profile._id;
 
   User.findById(req.payload.id).then(function(user){
@@ -38,7 +38,7 @@ router.post('/:username/follow', auth.required, function(req, res, next){
   }).catch(next);
 });
 
-router.delete('/:username/follow', auth.required, function(req, res, next){
+router.delete('/:username/follow', auth.authenticated, function(req, res, next){
   var profileId = req.profile._id;
 
   User.findById(req.payload.id).then(function(user){

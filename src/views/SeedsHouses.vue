@@ -6,7 +6,7 @@
 				<list-headline name="Casas de semente" addUrl="/cadastrar-casa-de-sementes" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading :loading="!seeds_houses && !error" msg="Carregando lista de casas" />
+					<loading :isLoading="!seeds_houses && !error" msg="Carregando lista de casas" />
 					<div v-if="seeds_houses">
 						<b-table stacked="md" :fields="table_fields" :items="seeds_houses" :sort-by="'name'" :filter="filters.search">
 							<template slot="name" slot-scope="data">
@@ -38,7 +38,7 @@ export default {
 
 	data () {
 		return {
-			error: false,
+			
 			filters: { search: null },
 			table_fields: [
 				{ key: 'name', label: 'Nome da casa', sortable: true },
@@ -66,13 +66,13 @@ export default {
 							: ''
 					}
 				})
-			}).catch(error => { this.error = error.message })
+			}).catch(this.showError)
 		},
 		remove (id) {
 			if (confirm("Tem certeza que deseja excluír?")) {
 				axios.delete('store/' + id + '?_format=json').then(() => {
 					this.list()
-				}).catch(error => { this.error = error.message })
+				}).catch(this.showError)
 			}
 		}
 	},

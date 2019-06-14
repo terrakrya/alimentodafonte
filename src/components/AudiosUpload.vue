@@ -1,17 +1,17 @@
 <template>
   <div class="pictures-upload">
     <b-form-group :label="'Áudio' + (multiple ? 's' : '')" :description="'Selecione um '+ (multiple ? 'ou mais arquivos' : 'arquivo') +' de áudio no formato MP3, MP4, WAV, com no máximo 32 MB.'" v-show="!loading">
-      <b-form-file ref="files" id="files" :multiple="multiple" accept="audio/mpeg, audio/mp4, audio/wav" v-on:change="uploadDocuments"></b-form-file> 
+      <b-form-file ref="files" id="files" :multiple="multiple" accept="audio/mpeg, audio/mp4, audio/wav" v-on:change="uploadDocuments"></b-form-file>
       <span class="text-danger" v-show="error">{{ error }}</span>
-    </b-form-group> 
+    </b-form-group>
     <div class="row" v-if="!loading && documents_preview.length > 0">
       <div class="col-xs-12" v-for="(doc, index) in documents_preview" :key="index">
         <a :href="(doc.uri ? baseURL() + doc.uri[0].url : doc.url)" target="_blank"><i class="fa fa-download"></i> {{ fileName(doc) }}</a>
         <a class="btn btn-danger btn-xs pull-right" @click="deleteDocument(index)"><i class="fa fa-trash"></i></a>
       </div>
     </div>
-    <loading :loading="loading" msg="Enviando áudio..."/>
-  </div>  
+    <loading :isLoading="loading" msg="Enviando áudio..."/>
+  </div>
 </template>
 
 <script>
@@ -25,9 +25,9 @@ export default {
   props: ['form', 'preview', 'multiple', 'field', 'url'],
 
   data () {
-    return { 
-      error: false,
-      loading: false,
+    return {
+
+
       documents_preview: this.preview
     }
   },
@@ -37,7 +37,7 @@ export default {
       this.error = false
       this.loading = true
       let files = e.target.files || e.dataTransfer.files;
-      
+
       for (var i = 0; i < files.length; i++) {
 
         var reader  = new FileReader();
@@ -61,10 +61,10 @@ export default {
               this.form[this.field] = [{ target_id: response.data.fid[0].value }]
             }
             this.loading = false
-          }).catch((error) => { 
+          }).catch((error) => {
             this.loading = false
             this.showError("Ocorreu um erro ao enviar: "+ file.name + ". Erro: "+ error.message)
-          }); 
+          });
         }
         reader.readAsArrayBuffer(files[i]);
       }
@@ -85,7 +85,7 @@ export default {
     }
 
   },
-  components: { 
+  components: {
     'loading': Loading
   }
 
@@ -93,10 +93,10 @@ export default {
 </script>
 
 <style lang="sass">
-.brand h1 
+.brand h1
   margin-top: 10px
   font-size: 31px
-  a 
+  a
   color: #fff
   span
   font-weight: 300

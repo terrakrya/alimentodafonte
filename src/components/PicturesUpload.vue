@@ -12,7 +12,7 @@
         <p class="text-center"><a class="btn btn-default btn-small" @click="deleteImage(index)"><i class="fa fa-trash"></i></a></p>
       </div>
     </div>
-    <loading :loading="loading" msg="Enviando foto..."/>
+    <loading :isLoading="loading" msg="Enviando foto..."/>
   </div>
 </template>
 
@@ -27,8 +27,8 @@ export default {
   inject: ['$validator'],
   data () {
     return {
-      error: false,
-      loading: false,
+      
+      
       images_preview: this.preview
     }
   },

@@ -4,7 +4,7 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-				<loading :loading="loading" />
+				<loading :isLoading="loading" />
 				<div v-if="seeds_matrix && !loading">
 					<div class="row item-title">
 						<div class="col-md-10">
@@ -88,7 +88,7 @@ export default {
 
 	data () {
 		return { 
-			error: false,
+			
 			categorias_de_matrizes: categorias_de_matrizes,
 			origens_de_matrizes: origens_de_matrizes,
 			meses: meses,

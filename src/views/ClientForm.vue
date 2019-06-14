@@ -4,7 +4,7 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="cliente" />
-				<loading :loading="loading" />
+				<loading :isLoading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-6">
@@ -71,7 +71,7 @@
 							<pictures-upload :form="form" :preview="images_preview" :error="error" field="image" url="uploads/images" />
 						</div>
 					</div>
-					<form-submit :error="error" :sending="sending" />
+					<form-submit :errors="error" :sending="sending" />
 				</b-form>
 			</div>
 		</div>
@@ -99,9 +99,9 @@ export default {
 	},
 	data () {
 		return {
-			error: false,
-			loading: false,
-			sending: false,
+
+
+
 			images_preview: [],
 			log: false,
 			show_password: false,
@@ -128,7 +128,7 @@ export default {
 					account: '',
 					type: 'corrente',
 				},
-				roles: [],
+				roles: ['client'],
 			},
 		}
 	},
@@ -146,7 +146,7 @@ export default {
 					this.images_preview = [response.data.image]
 				}
 				this.loading = false
-			}).catch(error => { this.error = error.message; this.loading = false });
+			}).catch(this.showError);
 		},
 		save () {
 			this.$validator.validate().then(isValid => {
@@ -167,7 +167,7 @@ export default {
 							this.$router.replace('/cliente/'+user._id)
 						}
 						this.sending = false
-					}).catch(error => { this.error = error.response.data.errors; this.sending = false })
+					}).catch(this.showError)
 				}
 			})
 		},

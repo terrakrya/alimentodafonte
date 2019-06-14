@@ -6,7 +6,7 @@
 				<list-headline name="Matrizes de sementes" addUrl="/cadastrar-matriz-de-sementes" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading :loading="!seeds_matrixes && !error" msg="Carregando lista de matrizes" />
+					<loading :isLoading="!seeds_matrixes && !error" msg="Carregando lista de matrizes" />
 					<div v-if="seeds_matrixes">
 						<b-table stacked="md" :fields="table_fields" :items="seeds_matrixes" :sort-by="'title'" :filter="filters.search">
 							<template slot="title" slot-scope="data">
@@ -53,7 +53,7 @@ export default {
 	
 	data () {
 		return { 
-			error: false,
+			
 			filters: { search: null },
 			categorias_de_matrizes: categorias_de_matrizes,
 			origens_de_matrizes: origens_de_matrizes,
@@ -78,7 +78,7 @@ export default {
 			if (confirm("Tem certeza que deseja excluír?")) {
 				axios.delete('node/' + id + '?_format=json').then(() => {
 					this.loadList('seeds_matrixes')
-				}).catch(error => { this.error = error.message })	
+				}).catch(this.showError)	
 			}
 		}
 	},

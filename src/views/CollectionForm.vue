@@ -4,7 +4,7 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="coleta" />
-				<loading :loading="loading" />
+				<loading :isLoading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-6">
@@ -12,69 +12,69 @@
 								<b-form-input class="date" v-model="date_time.date" type="date" v-validate="'required'" name="date_time"/>
 								<b-form-input class="time" v-model="date_time.time" placeholder="00:00" type="text" v-mask="['##:##']" />
 								<field-error :msg="veeErrors" field="field_seeds_collect_date_time" />
-							</b-form-group>							
-						</div>					
+							</b-form-group>
+						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Semente" >
 								<form-entity-select v-if="seeds" :items="seeds" :form="form" field="field_seeds_collect_seed" />
-							</b-form-group>							
-						</div>					
-					</div>					
+							</b-form-group>
+						</div>
+					</div>
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Grupo de coletores" >
 								<form-entity-select v-if="collectors_groups" :items="collectors_groups" :form="form" field="field_seeds_collect_group" />
-							</b-form-group>							
-						</div>					
+							</b-form-group>
+						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Coletor" >
 								<form-entity-select v-if="collectors" :items="collectors" :form="form" field="field_seeds_collect_collector" />
-							</b-form-group>							
-						</div>					
-					</div>					
+							</b-form-group>
+						</div>
+					</div>
 					<div class="row gray">
 						<div class="col-sm-4">
 							<b-form-group label="Peso bruto (Kg)" >
 								<b-form-input v-model="form.field_seeds_collect_weight_gross[0].value" type="number" />
-							</b-form-group>							
+							</b-form-group>
 						</div>
 						<div class="col-sm-4">
 							<b-form-group label="Peso beneficiado (Kg)" >
 								<b-form-input v-model="form.field_seeds_collect_weight_benef[0].value" type="number" />
-							</b-form-group>							
-						</div>					
+							</b-form-group>
+						</div>
 						<div class="col-sm-4">
 							<b-form-group label="Período de florescimento" >
 								<b-form-input v-model="form.field_seeds_collect_flowering[0].value" type="date" />
-							</b-form-group>							
-						</div>					
-					</div>					
+							</b-form-group>
+						</div>
+					</div>
 					<div class="row">
 						<div class="col-sm-6">
-							<pictures-upload :form="form" :preview="pictures_preview" :error="error" field="field_seeds_collect_photo" url="file/upload/node/seeds_collection/field_seeds_collect_photo?_format=json" :multiple="true" /> 
+							<pictures-upload :form="form" :preview="pictures_preview" :error="error" field="field_seeds_collect_photo" url="file/upload/node/seeds_collection/field_seeds_collect_photo?_format=json" :multiple="true" />
 						</div>
 						<div class="col-sm-6">
-							<audios-upload :form="form" :preview="audios_preview" :error="error" field="field_seeds_collect_audio" url="file/upload/node/seeds_collection/field_seeds_collect_audio?_format=json" /> 
+							<audios-upload :form="form" :preview="audios_preview" :error="error" field="field_seeds_collect_audio" url="file/upload/node/seeds_collection/field_seeds_collect_audio?_format=json" />
 						</div>
-					</div>	
+					</div>
 					<div class="row gray">
 						<div class="col-sm-6">
 							<b-form-group label="Comentários" description="Insira aqui os comentários sobre esta coleta">
 								<b-form-textarea v-model="form.field_seeds_collect_commentary[0].value" :rows="3" />
-							</b-form-group>							
+							</b-form-group>
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Latitude" >
 								<b-form-input v-model="form.field_seeds_collect_geolocation[0].lat" />
-							</b-form-group>							
+							</b-form-group>
 							<b-form-group label="Longitude" >
 								<b-form-input v-model="form.field_seeds_collect_geolocation[0].lng" />
-							</b-form-group>							
-						</div>					
-					</div>					
-					<form-submit :error="error" :sending="sending" />
+							</b-form-group>
+						</div>
+					</div>
+					<form-submit :errors="error" :sending="sending" />
 				</b-form>
-			</div>				
+			</div>
 		</div>
 	</div>
 </template>
@@ -91,15 +91,15 @@ import AudiosUpload from '@/components/AudiosUpload'
 import PicturesUpload from '@/components/PicturesUpload'
 
 export default {
-	
-	name: 'CollectionForm', 
-	
+
+	name: 'CollectionForm',
+
 	data () {
 
-		return { 
-			error: false,
-			loading: false,
-			sending: false,
+		return {
+
+
+
 			pictures_preview: [],
 			audios_preview: [],
 			date_time: { date: '', time: '' },
@@ -120,7 +120,7 @@ export default {
 			},
 		}
 	},
-	
+
 	created () {
 
 		this.getList('collectors')
@@ -159,7 +159,7 @@ export default {
 					this.date_time.time = dt[1]
 				}
 				this.loading = false
-			}).catch(error => { this.error = error.message; this.loading = false });
+			}).catch(this.showError);
 		},
 		save () {
 			this.$validator.validate().then(isValid => {
@@ -167,7 +167,7 @@ export default {
 					this.sending = true
 					this.error = false
 					if (this.date_time.date && this.date_time.time) {
-						this.form.field_seeds_collect_date_time[0].value = this.date_time.date+'T'+this.date_time.time+':00'						
+						this.form.field_seeds_collect_date_time[0].value = this.date_time.date+'T'+this.date_time.time+':00'
 					}
 
 					axios({
@@ -180,18 +180,18 @@ export default {
 							this.loadList('collections')
 							this.$router.replace('/coleta/'+collection.nid[0].value)
 						}
-						this.sending = false						
-					}).catch(error => { this.error = error.response; this.sending = false })
+						this.sending = false
+					}).catch(this.showError)
 				}
 			})
 		}
 	},
 
-	components: { 
-		Breadcrumb, 
-		Loading, 
-		FormHeadline, 
-		FormEntitySelect, 
+	components: {
+		Breadcrumb,
+		Loading,
+		FormHeadline,
+		FormEntitySelect,
 		FormSubmit,
 		FieldError,
 		AudiosUpload,

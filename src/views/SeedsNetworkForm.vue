@@ -4,7 +4,7 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="rede de sementes" />
-				<loading :loading="loading" />
+				<loading :isLoading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-12">
@@ -34,7 +34,7 @@
 							</b-form-group>							
 						</div>					
 					</div>					
-					<form-submit :error="error" :sending="sending" />
+					<form-submit :errors="error" :sending="sending" />
 				</b-form>
 			</div>				
 		</div>
@@ -57,9 +57,9 @@ export default {
 	data () {
 
 		return { 
-			error: false,
-			loading: false,
-			sending: false,
+			
+			
+			
 			seed: null,
 			seeds_house_options: [],
 			form: {
@@ -87,7 +87,7 @@ export default {
 					picture: ''
 				}
 			})
-		}).catch(error => { this.error = error.message })
+		}).catch(this.showError)
 
 	},
 	
@@ -98,7 +98,7 @@ export default {
 				var data = response.data
 				this.apiDataToForm(this.form, data)
 				this.loading = false
-			}).catch(error => { this.error = error.message; this.loading = false });
+			}).catch(this.showError);
 		},
 		save () {
 			this.$validator.validate().then(isValid => {
@@ -115,7 +115,7 @@ export default {
 							this.$router.replace('/rede-de-sementes/'+seeds_house.nid[0].value)
 						}
 						this.sending = false						
-					}).catch(error => { this.error = error.response.data.message; this.sending = false })
+					}).catch(this.showError)
 				}
 			})
 		}

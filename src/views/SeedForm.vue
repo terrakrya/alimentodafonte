@@ -4,7 +4,7 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<form-headline name="semente" />
-				<loading :loading="loading" />
+				<loading :isLoading="loading" />
 				<b-form @submit.prevent="save" v-if="!loading">
 					<div class="row">
 						<div class="col-sm-6">
@@ -93,7 +93,7 @@
 							<pictures-upload :form="form" :preview="this.images_preview" :error="error" field="images" url="uploads/images" :multiple="true"  />
 						</div>
 					</div>
-					<form-submit :error="error" :sending="sending"/>
+					<form-submit :errors="error" :sending="sending"/>
 				</b-form>
 			</div>
 		</div>
@@ -102,7 +102,6 @@
 </template>
 <script>
 import axios from 'axios'
-import slugify from '@sindresorhus/slugify'
 import Breadcrumb from '@/components/Breadcrumb'
 import Loading from '@/components/Loading'
 import FormHeadline from '@/components/FormHeadline'
@@ -119,7 +118,6 @@ export default {
 	data () {
 
 		return {
-			error: false,
 			meses: meses,
 			ecossistemas: ecossistemas,
 			form: {
@@ -139,13 +137,10 @@ export default {
 				images: []
 			},
 			images_preview: [],
-			loading: false,
-			sending: false,
 		}
 	},
 
 	created () {
-
 		if (this.isEditing()) {
 			this.edit(this.$route.params.id)
 		}
@@ -159,14 +154,14 @@ export default {
 				this.apiDataToForm(this.form, data)
 				Object.assign(this.images_preview, data.images)
 				this.loading = false
-			}).catch(error => { this.error = error.message; this.loading = false });
+			}).catch(this.showError);
 		},
 		save() {
 			this.$validator.validate().then(isValid => {
 				if (isValid) {
 					this.sending = true
 					this.error = false
-					this.form.user = this.currentUser.username
+					this.form.user = this.currentUser._id
 					axios({
 						method: (this.isEditing() ? 'PUT' : 'POST'),
 						url: (this.isEditing() ? 'seeds/'+ this.$route.params.id : 'seeds'),
@@ -179,7 +174,7 @@ export default {
 							this.error = seed
 						}
 						this.sending = false
-					}).catch(error => { this.error = error.response.data.message; this.sending = false })
+					}).catch(this.showError)
 
 				}
 			})

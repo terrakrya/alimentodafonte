@@ -4,7 +4,7 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-				<loading :loading="loading" />
+				<loading :isLoading="loading" />
 				<div v-if="collection && !loading">
 					<div class="row item-title">
 						<div class="col-md-2" v-if="collection.photos && collection.photos.length">
@@ -12,14 +12,14 @@
 						</div>
 						<div class="col-md-10">
 							<h1>
-								<span v-if="collection.seed">Coleta de {{ collection.seed.title }}</span>				
+								<span v-if="collection.seed">Coleta de {{ collection.seed.title }}</span>
 								<small v-if="collection.date_time"><br>{{collection.date_time | moment("DD/MM/YYYY H:mm:ss")}}</small>
 							</h1>
 							<p>
 								<router-link v-if="collection.collectors_group" :to="'/grupo-de-coletores/'+ collection.collectors_group.id">
 									&bull; {{collection.collectors_group.title}}
 								</router-link>
-								<router-link v-if="collection.collector" :to="'/coletor/'+ collection.collector.id">	
+								<router-link v-if="collection.collector" :to="'/coletor/'+ collection.collector.id">
 									&bull; {{collection.collector.title}}
 								</router-link>
 							</p>
@@ -51,12 +51,12 @@
 									<strong>Detalhes</strong>
 								</div>
 								<div class="list-group-item">
-									<div class="row" v-if="collection.commentary"> 
+									<div class="row" v-if="collection.commentary">
 										<div class="col-sm-12">
 											<p class="details" colspan="2" v-html="collection.commentary"></p>
 										</div>
 									</div>
-									<div class="row"> 
+									<div class="row">
 										<div class="col-sm-6">
 											<dl v-if="collection.flowering">
 												<dt>Período de florescimento</dt>
@@ -98,11 +98,11 @@ import Breadcrumb from '@/components/Breadcrumb'
 
 export default {
 
-	name: 'Collection', 
+	name: 'Collection',
 
 	data () {
-		return { 
-			error: false
+		return {
+
 		}
 	},
 	computed: {
@@ -111,7 +111,7 @@ export default {
 		},
 		collection () {
 			if (this.$store.state.collections) {
-				return this.$store.state.collections.find(c => c.id == this.$route.params.id)	
+				return this.$store.state.collections.find(c => c.id == this.$route.params.id)
 			}
 			return null
 		}
@@ -130,7 +130,7 @@ export default {
 			}
 		}
 	},
-	components: { 
+	components: {
 		'loading': Loading,
 		'breadcrumb': Breadcrumb
 	}

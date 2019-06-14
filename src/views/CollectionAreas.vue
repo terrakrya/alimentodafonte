@@ -6,7 +6,7 @@
 				<list-headline name="Áreas de coleta" addUrl="/cadastrar-area-de-coleta" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-					<loading :loading="!collection_areas && !error" msg="Carregando lista de áreas" />
+					<loading :isLoading="!collection_areas && !error" msg="Carregando lista de áreas" />
 					<div v-if="collection_areas">
 						<b-table stacked="md" :fields="table_fields" :items="collection_areas" :sort-by="'title'" :filter="filters.search">
 							<template slot="title" slot-scope="data">
@@ -49,7 +49,7 @@ export default {
 	
 	data () {
 		return { 
-			error: false,
+			
 			filters: { search: null },
 			table_fields: [
 				{ key: 'title', label: 'Nome da área', sortable: true },
@@ -72,7 +72,7 @@ export default {
 			if (confirm("Tem certeza que deseja excluír?")) {
 				axios.delete('node/' + id + '?_format=json').then(() => {
 					this.loadList('collection_areas')
-				}).catch(error => { this.error = error.message })	
+				}).catch(this.showError)	
 			}
 		}
 	},

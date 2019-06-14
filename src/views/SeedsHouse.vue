@@ -4,7 +4,7 @@
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-				<loading :loading="loading" />
+				<loading :isLoading="loading" />
 				<div v-if="seeds_house && !loading">
 					<div class="row item-title">
 						<div class="col-md-10">
@@ -72,8 +72,8 @@ export default {
 			collectors: [],
 			collectors_groups: [],
 			user: null,
-			error: false,
-			loading: false
+			
+			
 		}
 	},
 
@@ -91,7 +91,7 @@ export default {
 						return collectors_group.nid[0].value == item.target_id
 					})
 				})
-			}).catch(error => { this.error = error.message })
+			}).catch(this.showError)
 
 			axios.get('rest/collectors?_format=json').then(response => {
 				this.collectors = response.data.filter(collector => {
@@ -99,14 +99,14 @@ export default {
 						return collector.uid[0].value == item.target_id
 					})
 				})
-			}).catch(error => { this.error = error.message })
+			}).catch(this.showError)
 
 			if (this.present(this.seeds_house.uid, 'target_id')) {			
 				axios.get('user/' + this.seeds_house.uid[0].target_id + '?_format=json').then(response => {
 					this.user = response.data
-				}).catch(error => { this.error = error.message })
+				}).catch(this.showError)
 			}
-		}).catch(error => { this.error = error.message, this.loading = false })
+		}).catch(this.showError);
 
 	},
 

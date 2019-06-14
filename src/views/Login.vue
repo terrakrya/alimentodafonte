@@ -37,8 +37,8 @@ export default {
     return {
       email: '',
       password: '',
-      error: false,
-      loading: false
+
+
     }
   },
   methods: {
