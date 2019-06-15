@@ -42,6 +42,7 @@ if(isProduction){
 require('./src/models/User');
 require('./src/models/Seed');
 require('./src/models/CollectorsGroup');
+require('./src/models/SeedsHouse');
 require('./src/config/passport');
 
 app.use(require('./src/routes'));

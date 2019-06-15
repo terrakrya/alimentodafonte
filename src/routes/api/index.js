@@ -3,6 +3,7 @@ var router = require('express').Router();
 router.use('/', require('./users'));
 router.use('/seeds', require('./seeds'));
 router.use('/collectors_groups', require('./collectors_groups'));
+router.use('/seeds_houses', require('./seeds_houses'));
 router.use('/uploads', require('./uploads'));
 
 router.use(function(err, req, res, next){
