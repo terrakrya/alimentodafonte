@@ -7,7 +7,7 @@
 				<loading :loading="isLoading" />
 				<div v-if="seed && !isLoading">
 					<div class="row item-title">
-						<div class="col-md-2" v-if="present(seed.images, 'url')">
+						<div class="col-md-2" v-if="seed.images && seed.images.length">
 							<img :src="baseUrl + seed.images[0].url" class="img-responsive item-img" />
 						</div>
 						<div class="col-md-10">
@@ -121,8 +121,8 @@ export default {
 			meses: meses,
 			ecossistemas: ecossistemas,
 			seed: null,
-			
-			
+
+
 		}
 	},
 
