@@ -47,8 +47,6 @@ export default {
     }
   },
   async created() {
-    console.log(this.items);
-    console.log(this.list);
     if (this.items) {
       this.list = this.items
     } else {

@@ -80,7 +80,6 @@
 				</div>
 			</div>
 		</div>
-		<pre>{{collectors_group}}</pre>
 	</div>
 </template>
 <script>

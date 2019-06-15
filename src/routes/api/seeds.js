@@ -30,7 +30,6 @@ router.post('/', auth.manager, function(req, res) {
   var newSeed = new Seed(req.body);
   newSeed.save(function(err, seed) {
     if (err) {
-      console.log(err);
       res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
     } else {
       res.send(seed);

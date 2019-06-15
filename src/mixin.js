@@ -39,7 +39,6 @@ export default {
       })
     },
     present (field, item) {
-      console.log(field, item);
       if (item) {
         return !!field[item]
       } else {
@@ -54,7 +53,6 @@ export default {
       return list
     },
     async loadList (type) {
-      console.log(type);
       return await queries.loadList(type).catch(this.showError)
       // this.$store.dispatch('loadList', type)
     },
