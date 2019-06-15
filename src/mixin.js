@@ -107,6 +107,13 @@ export default {
         ].filter(Boolean).join(' - ') :
         '';
     },
+    filename: function(fileUrl) {
+      if (fileUrl) {
+        let urlArr = fileUrl.split('/')
+        return urlArr[urlArr.length - 1]
+      }
+      return ''
+    },
     roles: function(roles) {
       return roles.map(r => tipos_de_usuario.find(e => e.value == r)).filter(n => n).map(v => v.text).join(', ')
     }

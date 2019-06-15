@@ -20,7 +20,7 @@
               </router-link>
             </template>
             <template slot="address" slot-scope="data">
-              <span>{{[data.value.city, data.value.uf].filter(v => v).join(' - ')}}</span>
+              <span>{{data.value | city}}</span> 
             </template>
             <template slot="actions" slot-scope="data">
               <router-link :to="'/editar-grupo-de-coletores/'+ data.item._id" class="fa fa-edit btn btn-primary btn-xs "></router-link>
