@@ -3,6 +3,7 @@ var router = require('express').Router();
 var passport = require('passport');
 var User = mongoose.model('User');
 var auth = require('../auth');
+var populate = require('../utils').populate;
 
 router.get('/users', auth.manager, function(req, res) {
   var filters = {}
@@ -11,11 +12,8 @@ router.get('/users', auth.manager, function(req, res) {
       roles: req.query.role
     }
   }
-  var populate = req.query.populate
-  if (populate && populate.search('{') != -1) {
-    populate = JSON.parse(req.query.populate)
-  }
-  User.find(filters).populate(populate).exec(function(err, seeds) {
+
+  User.find(filters).populate(populate(req)).exec(function(err, seeds) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err);
     } else {
