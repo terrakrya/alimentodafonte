@@ -67,6 +67,13 @@ export default {
             picture: collector.image ? collector.image.thumb : '',
           }))
           break;
+        case 'collectors_groups':
+          this.list = (await this.loadList('collectors_groups')).map(collectors_group => ({
+            id: collectors_group._id,
+            title: collectors_group.name,
+            description: this.formatCity(collectors_group.address)
+          }))
+          break;
       }
     }
   },

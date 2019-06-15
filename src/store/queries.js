@@ -18,6 +18,12 @@ var getClients = async function() {
   })
 }
 
+var getUsers = async function() {
+  return await axios.get('users').then(response => {
+    return response.data
+  })
+}
+
 var getCollectorsGroups = async function() {
   return await axios.get('collectors_groups').then(response => {
     return response.data
@@ -434,6 +440,8 @@ var loadList = async function(type) {
     return await getOrders()
   } else if (type == 'clients') {
     return await getClients()
+  } else if (type == 'users') {
+    return await getUsers()
   } else if (type == 'potential_lists') {
     return await getPotentialLists()
   } else if (type == 'collections') {

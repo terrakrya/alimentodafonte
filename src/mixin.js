@@ -1,17 +1,20 @@
-import { CPF, CNPJ } from 'cpf_cnpj'
+import {
+  CPF,
+  CNPJ
+} from 'cpf_cnpj'
 import axios from 'axios'
 import queries from '@/store/queries'
 import tipos_de_usuario from '@/data/tipos-de-usuario.json'
 
 export default {
-  data () {
-		return {
+  data() {
+    return {
       error: false,
       isLoading: false,
       isSending: false,
-			tipos_de_usuario: tipos_de_usuario
-		}
-	},
+      tipos_de_usuario: tipos_de_usuario
+    }
+  },
   computed: {
     currentUser() {
       return this.$store.state.currentUser
@@ -38,62 +41,75 @@ export default {
         }
       })
     },
-    present (field, item) {
+    present(field, item) {
       if (item) {
         return !!field[item]
       } else {
         return !!field
       }
     },
-    getList (type) {
+    getList(type) {
       var list = this.$store.state[type]
       if (!list || !list.length) {
         this.loadList(type)
       }
       return list
     },
-    async loadList (type) {
+    async loadList(type) {
       return await queries.loadList(type).catch(this.showError)
-      // this.$store.dispatch('loadList', type)
     },
-		showError(error) {
+    showError(error) {
       if (error.response) {
-  			if (error.response.data) {
-    			if (error.response.data.message) {
-    				this.error = error.response.data.message
-    			} else {
+        if (error.response.data) {
+          if (error.response.data.message) {
+            this.error = error.response.data.message
+          } else {
             this.error = error.response.data
           }
-  			} else {
-  					this.error = error.response
-  			}
+        } else {
+          this.error = error.response
+        }
       }
-      this.loading = false
-      this.sending = false
-		}
+      this.isLoading = false
+      this.isSending = false
+    },
+    formatCity(address) {
+      return address ? [
+          address.city,
+          address.uf,
+        ].filter(Boolean).join(' - ') :
+        '';
+    }
   },
   filters: {
-    cpf: function (value) {
+    cpf: function(value) {
       return CPF.format(value);
     },
-    cnpj: function (value) {
+    cnpj: function(value) {
       return CNPJ.format(value);
     },
-    data: function (value) {
+    data: function(value) {
       return value.toLocaleDateString('pt-BR');
     },
-    address: function (address) {
+    address: function(address) {
       return address ? [
-        address.address,
-        address.city,
-        address.uf,
-        address.postal_code
-      ].filter(Boolean).join(' - ')
-      : '';
+          address.address,
+          address.city,
+          address.uf,
+          address.postal_code
+        ].filter(Boolean).join(' - ') :
+        '';
     },
-    roles: function (roles) {
-			return roles.map(r => tipos_de_usuario.find(e => e.value == r)).filter(n => n).map(v => v.text).join(', ')
-		}
+    city: function(address) {
+      return address ? [
+          address.city,
+          address.uf,
+        ].filter(Boolean).join(' - ') :
+        '';
+    },
+    roles: function(roles) {
+      return roles.map(r => tipos_de_usuario.find(e => e.value == r)).filter(n => n).map(v => v.text).join(', ')
+    }
   }
 
 }
