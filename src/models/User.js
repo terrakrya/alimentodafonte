@@ -82,7 +82,8 @@ UserSchema.methods.toAuthJSON = function() {
 UserSchema.virtual('collectors_group', {
   ref: 'CollectorsGroup',
   localField: '_id',
-  foreignField: 'collectors'
+  foreignField: 'collectors',
+  justOne: true
 });
 
 mongoose.model('User', UserSchema);

@@ -13,6 +13,11 @@
               </div>
             </div>
           </template>
+          <template slot="no-data">
+            <br>
+            <h5 class="text-center">Nenhum item encontrado</h5>
+            <br>
+          </template>
         </cool-select>
         <div class="col-sm-6">
           <input v-model="seed_form[fieldqtd][0].value" class="weight" placeholder="Quantidade" type="number" /> Kg

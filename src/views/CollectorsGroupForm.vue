@@ -42,7 +42,7 @@
           </div>
           <div class="col-sm-6">
             <b-form-group label="Coletores">
-              <form-entities-select type="collectors" :form="form" field="collectors" />
+              <form-entities-select :items="collectors" type="collectors" :form="form" field="collectors" />
             </b-form-group>
           </div>
         </div>
@@ -50,7 +50,7 @@
       </b-form>
     </div>
   </div>
-  <pre>{{form}}</pre>
+  <pre>{{collectors}}</pre>
 </div>
 </template>
 
@@ -77,6 +77,7 @@ export default {
         text: banco.text
       })),
       tipos_de_conta: tipos_de_conta,
+      collectors: [],
       form: {
         name: '',
         body: '',
@@ -110,7 +111,22 @@ export default {
       axios.get('collectors_groups/' + id).then(response => {
         var data = response.data
         this.apiDataToForm(this.form, data)
-        this.isLoading = false
+
+        axios.get('users', { params: { role: 'collector', populate: { path: 'collectors_group', select: '_id' } } }).then(resp => {
+          this.collectors = resp.data.filter(collector => {
+            return !collector.collectors_group || collector.collectors_group._id == id
+          }).map(collector => {
+            return {
+              id: collector._id,
+              title: collector.name,
+              description: collector.nickname,
+              picture: collector.image ? collector.image.thumb : '',
+            }
+          });
+
+          this.isLoading = false
+
+        }).catch(this.showError);
       }).catch(this.showError);
     },
     save() {

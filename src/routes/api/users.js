@@ -11,7 +11,11 @@ router.get('/users', auth.manager, function(req, res) {
       roles: req.query.role
     }
   }
-  User.find(filters).populate('collectors_group').exec(function(err, seeds) {
+  var populate = req.query.populate
+  if (populate && populate.search('{') != -1) {
+    populate = JSON.parse(req.query.populate)
+  }
+  User.find(filters).populate(populate).exec(function(err, seeds) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err);
     } else {

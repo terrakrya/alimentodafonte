@@ -1,6 +1,6 @@
 <template>
 <div>
-  <cool-select :arrowsDisableInstantSelection="true" placeholder="Busque pelo nome clique para adicionar à lista" v-model="entity" :items="items" item-text="title" @select="addItem()">
+  <cool-select :arrowsDisableInstantSelection="true" placeholder="Busque pelo nome clique para adicionar à lista" v-model="entity" :items="list" item-text="title" @select="addItem()">
     <template slot="item" slot-scope="{ item: option }">
       <div style="display: flex; align-items: center;">
         <img v-if="option.picture" :src="baseUrl + option.picture">
@@ -10,6 +10,11 @@
           <small>{{ option.description }}</small>
         </div>
       </div>
+    </template>
+    <template slot="no-data">
+      <br>
+      <h5 class="text-center">Nenhum item encontrado</h5>
+      <br>
     </template>
   </cool-select>
   <div class="entity-select-preview" v-if="preview && preview.length > 0">
@@ -33,37 +38,43 @@ import {
 } from 'vue-cool-select'
 export default {
   name: 'form-entities-select',
-  props: ['type', 'form', 'field'],
+  props: ['items', 'type', 'form', 'field'],
   inject: ['$validator'],
   data() {
     return {
-      items: [],
+      list: [],
       entity: null
     }
   },
   async created() {
-    switch (this.type) {
-      case 'seeds':
-        this.items = (await this.loadList('seeds')).map(seed => ({
-          id: seed._id,
-          title: seed.name,
-          description: seed.scientific_name,
-          picture: seed.images && seed.images.length ? seed.images[0].thumb : '',
-        }))
-        break;
-      case 'collectors':
-        this.items = (await this.loadList('collectors')).map(collector => ({
-          id: collector._id,
-          title: collector.name,
-          description: collector.nickname,
-          picture: collector.image ? collector.image.thumb : '',
-        }))
-        break;
+    console.log(this.items);
+    console.log(this.list);
+    if (this.items) {
+      this.list = this.items
+    } else {
+      switch (this.type) {
+        case 'seeds':
+          this.list = (await this.loadList('seeds')).map(seed => ({
+            id: seed._id,
+            title: seed.name,
+            description: seed.scientific_name,
+            picture: seed.images && seed.images.length ? seed.images[0].thumb : '',
+          }))
+          break;
+        case 'collectors':
+          this.list = (await this.loadList('collectors')).map(collector => ({
+            id: collector._id,
+            title: collector.name,
+            description: collector.nickname,
+            picture: collector.image ? collector.image.thumb : '',
+          }))
+          break;
+      }
     }
   },
   computed: {
     preview() {
-      if (this.form && this.form[this.field] && this.items) {
+      if (this.form && this.form[this.field] && this.list) {
         return this.form[this.field].map(selected => {
           return this.getItem(selected)
         }).filter(preview => preview)
@@ -82,7 +93,7 @@ export default {
       this.form[this.field] = this.form[this.field].filter(item => (item != id))
     },
     getItem(id) {
-      return this.items.find(i => {
+      return this.list.find(i => {
         return i.id == id
       })
     }
