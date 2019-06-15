@@ -48,6 +48,21 @@ export default {
             picture: user.image ? user.image.thumb : '',
           }))
           break;
+        case 'collectors':
+          this.list = (await this.loadList('collectors')).map(collector => ({
+            id: collector._id,
+            title: collector.name,
+            description: collector.nickname,
+            picture: collector.image ? collector.image.thumb : '',
+          }))
+          break;
+        case 'collectors_groups':
+          this.list = (await this.loadList('collectors_groups')).map(collectors_group => ({
+            id: collectors_group._id,
+            title: collectors_group.name,
+            description: this.formatCity(collectors_group.address)
+          }))
+          break;
       }
     }
     if (this.form[this.field] && this.form[this.field].length) {
