@@ -1,5 +1,5 @@
 <template>
-  <div>  
+  <div>
     <cool-select :arrowsDisableInstantSelection="true" placeholder="Busque pelo nome clique para selecionar" v-model="entity" :items="items" item-text="title" @select="addItem(); callback(entity)">
       <template slot="item" slot-scope="{ item: option }">
         <div style="display: flex; align-items: center;">
@@ -10,6 +10,11 @@
             <small>{{ option.description }}</small>
           </div>
         </div>
+      </template>
+      <template slot="no-data">
+        <br>
+        <h5 class="text-center">Nenhum item encontrado</h5>
+        <br>
       </template>
     </cool-select>
   </div>
@@ -22,19 +27,19 @@ export default {
   props: ['items', 'form', 'field', 'input'],
   inject: ['$validator'],
   data () {
-    return { 
+    return {
       entity: [],
     }
   },
   created: function () {
     if (this.form[this.field] && this.form[this.field].length) {
-      this.entity = this.items.find(item => { return item.id == this.form[this.field][0].target_id })  
+      this.entity = this.items.find(item => { return item.id == this.form[this.field][0].target_id })
     }
   },
   methods: {
     addItem () {
       this.form[this.field] = [{ target_id: this.entity.id }]
-    }, 
+    },
     removeItem (id) {
       this.form[this.field] = this.form[this.field].filter(item => (item.target_id != id))
     },

@@ -11,6 +11,11 @@
           </div>
         </div>
       </template>
+      <template slot="no-data">
+        <br>
+        <h5 class="text-center">Nenhum item encontrado</h5>
+        <br>
+      </template>
     </cool-select>
     <i class="fa fa-trash" v-if="form[field]" @click="clear()"></i>
   </div>
@@ -26,7 +31,7 @@ export default {
       if (this.input) {
         this.input()
       }
-    }, 
+    },
     clear () {
       this.form[this.field] = null
       this.callback()
