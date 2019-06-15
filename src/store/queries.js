@@ -420,7 +420,6 @@ var getCollectionAreas = async function(state) {
 }
 
 var loadList = async function(type) {
-  console.log('list', type);
   if (type == 'collectors_requests') {
     return await getCollectorsRequests()
   } else if (type == 'collectors') {
@@ -430,7 +429,6 @@ var loadList = async function(type) {
   } else if (type == 'seeds_houses') {
     return await getSeedsHouses()
   } else if (type == 'seeds') {
-    console.log('qsss');
     return await getSeeds()
   } else if (type == 'orders') {
     return await getOrders()

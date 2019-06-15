@@ -31,7 +31,6 @@ router.post('/', auth.manager, function(req, res) {
   var newCollectorsGroup = new CollectorsGroup(req.body);
   newCollectorsGroup.save(function(err, seed) {
     if (err) {
-      console.log(err);
       res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
     } else {
       res.send(seed);
@@ -50,7 +49,6 @@ router.put('/:id', auth.manager, function(req, res) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao atualizar: ' + err.message);
     } else {
-      // updateCollectors(newCollectorsGroup)
       res.send(newCollectorsGroup);
     }
   });
@@ -67,25 +65,5 @@ router.delete('/:id', auth.manager, function(req, res) {
     }
   });
 });
-
-function updateCollectors(collectorsGroup) {
-  collectorsGroup.collectors.forEach(id => {
-    User.findOneAndUpdate({
-      _id: id
-    }, {
-      $set: {
-        collectors_group: undefined
-      }
-    }, {
-      upsert: true
-    }, function(err, newCollector) {
-      if (err) {
-        console.log(err)
-      } else {
-        console.log(newCollector)
-      }
-    });
-  })
-}
 
 module.exports = router;

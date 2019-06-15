@@ -64,9 +64,9 @@ export default {
 	data () {
 
 		return {
-			
-			
-			
+
+
+
 			seed: null,
 			user_options: [],
 			collectors_group_options: [],
@@ -140,10 +140,7 @@ export default {
 			axios.get('store/' + id + '?_format=json').then(response => {
 				var data = response.data
 				data.field_address = data.address
-				console.log(data)
 				this.apiDataToForm(this.form, data)
-				console.log(this.form)
-
 				this.isLoading = false
 			}).catch(this.showError);
 		},
