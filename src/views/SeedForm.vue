@@ -125,7 +125,7 @@ export default {
 				name: '',
 				scientific_name: '',
 				local_name: '',
-				body: '',
+				description: '',
 				seeds_kg: 0,
 				viability_rate: 50,
 				lot_limit: 0,

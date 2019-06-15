@@ -18,7 +18,7 @@ router.get('/', auth.manager, function(req, res) {
 router.get('/:id', auth.manager, function(req, res) {
   CollectionArea.findOne({
     _id: req.params.id
-  }).populate(req.query.populate || '').exec(function(err, seed) {
+  }).populate(populate(req)).exec(function(err, seed) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {

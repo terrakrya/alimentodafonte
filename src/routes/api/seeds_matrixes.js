@@ -3,10 +3,10 @@ var express = require('express'),
   router = express.Router(),
   auth = require('../auth'),
   populate = require('../utils').populate,
-  SeedsHouse = mongoose.model('SeedsHouse');
+  SeedsMatrix = mongoose.model('SeedsMatrix');
 
 router.get('/', auth.manager, function(req, res) {
-  SeedsHouse.find({}).populate(populate(req)).exec(function(err, seeds) {
+  SeedsMatrix.find({}).populate(populate(req)).exec(function(err, seeds) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
     } else {
@@ -16,7 +16,7 @@ router.get('/', auth.manager, function(req, res) {
 });
 
 router.get('/:id', auth.manager, function(req, res) {
-  SeedsHouse.findOne({
+  SeedsMatrix.findOne({
     _id: req.params.id
   }).populate(populate(req)).exec(function(err, seed) {
     if (err) {
@@ -28,8 +28,8 @@ router.get('/:id', auth.manager, function(req, res) {
 });
 
 router.post('/', auth.manager, function(req, res) {
-  var newSeedsHouse = new SeedsHouse(req.body);
-  newSeedsHouse.save(function(err, seed) {
+  var newSeedsMatrix = new SeedsMatrix(req.body);
+  newSeedsMatrix.save(function(err, seed) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
     } else {
@@ -39,23 +39,23 @@ router.post('/', auth.manager, function(req, res) {
 });
 
 router.put('/:id', auth.manager, function(req, res) {
-  SeedsHouse.findOneAndUpdate({
+  SeedsMatrix.findOneAndUpdate({
     _id: req.params.id
   }, {
     $set: req.body
   }, {
     upsert: true
-  }, function(err, newSeedsHouse) {
+  }, function(err, newSeedsMatrix) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao atualizar: ' + err.message);
     } else {
-      res.send(newSeedsHouse);
+      res.send(newSeedsMatrix);
     }
   });
 });
 
 router.delete('/:id', auth.manager, function(req, res) {
-  SeedsHouse.findByIdAndRemove({
+  SeedsMatrix.findByIdAndRemove({
     _id: req.params.id
   }, function(err, seed) {
     if (err) {
