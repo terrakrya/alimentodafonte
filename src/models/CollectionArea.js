@@ -1,6 +1,6 @@
 const mongoose = require('mongoose'),
   ObjectId = mongoose.Schema.Types.ObjectId,
-  GeolocationSchema = require('./Geolocation');
+  GeolocationSchema = require('./Geolocation'),
   AddressSchema = require('./Address');
 
 const CollectionAreaSchema = mongoose.Schema({

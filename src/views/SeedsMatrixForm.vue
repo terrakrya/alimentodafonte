@@ -1,77 +1,78 @@
 <template>
-	<div class="seeds-matrix-form">
-		<breadcrumb :links="[['Matrizes de semente', '/matrizes-de-sementes']]" :active="isEditing() ? form.title[0].value : 'Cadastrar'" />
-		<div class="panel panel-headline data-list">
-			<div class="panel-body">
-				<form-headline name="matriz de sementes" />
-				<loading :loading="isLoading" />
-				<b-form @submit.prevent="save" v-if="!isLoading">
-					<div class="row">
-						<div class="col-sm-6">
-							<b-form-group label="Nome da matriz *">
-								<b-form-input v-model="form.title[0].value" v-validate="'required'" name="title" />
-								<field-error :msg="veeErrors" field="title" />
-							</b-form-group>							
-						</div>
-						<div class="col-sm-6">
-							<b-form-group label="Nome científico">
-								<b-form-input v-model="form.field_seed_matrix_scient_name[0].value" />
-							</b-form-group>							
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-6">
-							<b-form-group label="Grupo de coletores" >
-								<form-entity-select v-if="collectors_groups" :items="collectors_groups" :form="form" field="field_seed_matrix_group" />
-							</b-form-group>							
-						</div>					
-						<div class="col-sm-6">
-							<b-form-group label="Coletor" >
-								<form-entity-select v-if="collectors" :items="collectors" :form="form" field="field_seed_matrix_collector" />
-							</b-form-group>							
-						</div>					
-					</div>					
-					<div class="row gray">
-						<div class="col-sm-6">
-							<b-form-group label="Latitude" >
-								<b-form-input v-model="form.field_geolocation[0].lat" />
-							</b-form-group>							
-						</div>
-						<div class="col-sm-6">
-							<b-form-group label="Longitude" >
-								<b-form-input v-model="form.field_geolocation[0].lng" />
-							</b-form-group>							
-						</div>					
-					</div>					
-					<div class="row">
-						<div class="col-sm-4">
-							<b-form-group label="Categoria *">
-								<b-form-radio-group v-model="form.field_seed_matrix_category[0].value" :options="categorias_de_matrizes" stacked v-validate="'required'" name="field_seed_matrix_category" />
-								<field-error :msg="veeErrors" field="field_seed_matrix_category" />
-							</b-form-group>
-						</div>
-						<div class="col-sm-4">
-							<b-form-group label="Origem *">
-								<b-form-radio-group v-model="form.field_seed_matrix_source[0].value" :options="origens_de_matrizes" stacked v-validate="'required'" name="field_seed_matrix_source" />
-								<field-error :msg="veeErrors" field="field_seed_matrix_source" />
-							</b-form-group>
-						</div>
-						<div class="col-sm-4">
-							<b-form-group label="Meses prováveis de coleta">
-								<b-form-checkbox-group v-model="form.field_seed_matrix_collec_month" :options="meses" stacked />
-							</b-form-group>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-12">
-							<documents-upload :form="form" :multiple="true" :preview="documents_preview" :error="error" field="field_seed_matrix_files" url="file/upload/node/seed_matrix/field_seed_matrix_files?_format=json" /> 
-						</div>
-					</div>	
-					<form-submit :errors="error" :sending="isSending" />
-				</b-form>
-			</div>				
-		</div>
-	</div>
+<div class="seeds-matrix-form">
+  <breadcrumb :links="[['Matrizes de semente', '/matrizes-de-sementes']]" :active="isEditing() ? form.name : 'Cadastrar'" />
+  <div class="panel panel-headline data-list">
+    <div class="panel-body">
+      <form-headline name="matriz de sementes" />
+      <loading :loading="isLoading" />
+      <b-form @submit.prevent="save" v-if="!isLoading">
+        <div class="row">
+          <div class="col-sm-6">
+            <b-form-group label="Nome da matriz *">
+              <b-form-input v-model="form.name" v-validate="'required'" name="name" />
+              <field-error :msg="veeErrors" field="name" />
+            </b-form-group>
+          </div>
+          <div class="col-sm-6">
+            <b-form-group label="Nome científico">
+              <b-form-input v-model="form.scientific_name" />
+            </b-form-group>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <b-form-group label="Grupo de coletores">
+              <form-entity-select type="collectors_groups" :form="form" field="collectors_group" />
+            </b-form-group>
+          </div>
+          <div class="col-sm-6">
+            <b-form-group label="Coletor">
+              <form-entity-select type="collectors" :form="form" field="collector" />
+            </b-form-group>
+          </div>
+        </div>
+        <div class="row gray">
+          <div class="col-sm-6">
+            <b-form-group label="Latitude">
+              <b-form-input v-model="form.geolocation.lat" />
+            </b-form-group>
+          </div>
+          <div class="col-sm-6">
+            <b-form-group label="Longitude">
+              <b-form-input v-model="form.geolocation.lng" />
+            </b-form-group>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            <b-form-group label="Categoria *">
+              <b-form-radio-group v-model="form.category" :options="categorias_de_matrizes" stacked v-validate="'required'" name="category" />
+              <field-error :msg="veeErrors" field="category" />
+            </b-form-group>
+          </div>
+          <div class="col-sm-4">
+            <b-form-group label="Origem *">
+              <b-form-radio-group v-model="form.source" :options="origens_de_matrizes" stacked v-validate="'required'" name="source" />
+              <field-error :msg="veeErrors" field="source" />
+            </b-form-group>
+          </div>
+          <div class="col-sm-4">
+            <b-form-group label="Meses prováveis de coleta">
+              <b-form-checkbox-group v-model="form.collec_months" :options="meses" stacked />
+            </b-form-group>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <documents-upload :form="form" :multiple="true" :preview="documents_preview" :error="error" field="documents" url="uploads/documents" />
+          </div>
+        </div>
+        <form-submit :errors="error" :sending="isSending" />
+      </b-form>
+    </div>
+  </div>
+  <pre>{{form}}</pre>
+</div>
 </template>
 
 <script>
@@ -87,106 +88,73 @@ import categorias_de_matrizes from '@/data/categorias_de_matrizes.json'
 import origens_de_matrizes from '@/data/origens_de_matrizes.json'
 import meses from '@/data/meses.json'
 
-
 export default {
-	
-	name: 'SeedsMatrixForm', 
-	
-	data () {
 
-		return { 
-			
-			
-			
-			categorias_de_matrizes: categorias_de_matrizes,
-			origens_de_matrizes: origens_de_matrizes,
-			meses: meses,
-			documents_preview: [],
-			form: {
-				type:[{ target_id: "seed_matrix" }],
-				title: [{ value: '' }],
-				field_seed_matrix_scient_name: [{ value: '' }],
-				field_seed_matrix_category: [{ value: '' }],
-				field_seed_matrix_source: [{ value: '' }],
-				field_seed_matrix_code: [{ value: '' }],
-				field_geolocation: [{ lat: '', lng: '' }],
-				field_seed_matrix_files: [],
-				field_seed_matrix_collec_month: [],
-				field_seed_matrix_group: [],
-				field_seed_matrix_collector: [],
-			},
-		}
-	},
-	
-	created () {
-
-		this.getList('collectors')
-		this.getList('collectors_groups')
-
-		if (this.isEditing()) {
-			this.edit(this.$route.params.id)
-		}
-
-	},
-	computed: {
-		collectors () {
-			return this.$store.state.collectors
-		},
-		collectors_groups () {
-			return this.$store.state.collectors_groups
-		}
-	},
-	methods: {
-		edit (id) {
-			this.isLoading = true
-			axios.get('node/' + id + '?_format=json').then(response => {
-				var data = response.data
-				this.apiDataToForm(this.form, data)
-				this.documents_preview = response.data.field_seed_matrix_files
-				this.isLoading = false
-			}).catch(this.showError);
-		},
-		save () {
-			this.$validator.validate().then(isValid => {
-				if (isValid) {
-					this.isSending = true
-					this.error = false
-					
-					this.form.field_seed_matrix_code = [{ value: 'teste' }]
-					
-					if (this.present(this.form.geolocation, 'lat')) {
-						this.form.geolocation[0].lat = Number(this.form.geolocation[0].lat)
-					}
-					if (this.present(this.form.geolocation, 'lng')) {
-						this.form.geolocation[0].lng = Number(this.form.geolocation[0].lng)
-					}
-					
-					axios({
-						method: (this.isEditing() ? 'PATCH' : 'POST'),
-						url: 'node' + (this.isEditing() ? '/' + this.$route.params.id : '')+'?_format=json',
-						data: this.form
-					}).then(resp => {
-						var seeds_matrix = resp.data
-						if (seeds_matrix && seeds_matrix.nid) {
-							this.loadList('seeds_matrixes')
-							this.$router.replace('/matriz-de-sementes/'+seeds_matrix.nid[0].value)
-						}
-						this.isSending = false						
-					}).catch(this.showError)
-				}
-			})
-		}
-	},
-
-	components: { 
-		Breadcrumb, 
-		Loading, 
-		FormHeadline,
-		FormEntitySelect, 
-		FormSubmit, 
-		FieldError,
-		DocumentsUpload
-	}
-
+  name: 'SeedsMatrixForm',
+  data() {
+    return {
+      categorias_de_matrizes: categorias_de_matrizes,
+      origens_de_matrizes: origens_de_matrizes,
+      meses: meses,
+      documents_preview: [],
+      form: {
+        name: '',
+        scientific_name: '',
+        category: '',
+        source: '',
+        collec_months: [],
+        geolocation: {
+          lat: "",
+          lng: ""
+        },
+        collectors_group: [],
+        collector: [],
+        documents: []
+      },
+    }
+  },
+  created() {
+    if (this.isEditing()) {
+      this.edit(this.$route.params.id)
+    }
+  },
+  methods: {
+    edit(id) {
+      this.isLoading = true
+      axios.get('seeds_matrixes/' + id).then(response => {
+        this.apiDataToForm(this.form, response.data)
+        Object.assign(this.documents_preview, response.data.documents)
+        this.isLoading = false
+      }).catch(this.showError);
+    },
+    save() {
+      this.$validator.validate().then(isValid => {
+        if (isValid) {
+          this.isSending = true
+          this.error = false
+          axios({
+            method: (this.isEditing() ? 'PUT' : 'POST'),
+            url: 'seeds_matrixes' + (this.isEditing() ? '/' + this.$route.params.id : ''),
+            data: this.form
+          }).then(resp => {
+            var seeds_matrix = resp.data
+            if (seeds_matrix && seeds_matrix._id) {
+              this.$router.replace('/matriz-de-sementes/' + seeds_matrix._id)
+            }
+            this.isSending = false
+          }).catch(this.showError)
+        }
+      })
+    }
+  },
+  components: {
+    Breadcrumb,
+    Loading,
+    FormHeadline,
+    FormEntitySelect,
+    FormSubmit,
+    FieldError,
+    DocumentsUpload
+  }
 };
 </script>

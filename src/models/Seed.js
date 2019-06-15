@@ -14,7 +14,7 @@ const SeedSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  body: String,
+  description: String,
   price: {
     type: Number,
     required: true

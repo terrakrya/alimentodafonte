@@ -28,7 +28,7 @@
           </div>
           <div class="col-sm-6">
             <b-form-group label="Descrição do grupo" description="Descreva aqui um pouco do trabalho do grupo de coletores">
-              <b-form-textarea v-model="form.body" :rows="3" name="body" />
+              <b-form-textarea v-model="form.description" :rows="3" name="body" />
             </b-form-group>
           </div>
         </div>
@@ -79,7 +79,7 @@ export default {
       collectors: [],
       form: {
         name: '',
-        body: '',
+        description: '',
         cnpj: '',
         contact: '',
         address: {

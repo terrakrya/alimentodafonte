@@ -5,6 +5,7 @@ router.use('/seeds', require('./seeds'));
 router.use('/collectors_groups', require('./collectors_groups'));
 router.use('/seeds_houses', require('./seeds_houses'));
 router.use('/collection_areas', require('./collection_areas'));
+router.use('/seeds_matrixes', require('./seeds_matrixes'));
 router.use('/uploads', require('./uploads'));
 
 router.use(function(err, req, res, next){

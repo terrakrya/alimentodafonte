@@ -411,7 +411,7 @@ async function getSeedsMatrixes (state) {
         id: item.nid[0].value,
         title: item.title[0].value,
         scient_name: item.field_seed_matrix_scient_name.length ? item.field_seed_matrix_scient_name[0].value : '',
-        collec_month: item.field_seed_matrix_collec_month.length ? item.field_seed_matrix_collec_month[0].value : '',
+        collec_months: item.field_seed_matrix_collec_months.length ? item.field_seed_matrix_collec_months[0].value : '',
         category: item.field_seed_matrix_category[0].value,
         source: item.field_seed_matrix_source[0].value,
         files: item.field_seed_matrix_files.map(file => (file.url)),

@@ -9,7 +9,7 @@ const CollectorsGroupSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  body: String,
+  description: String,
   cnpj: String,
   contact: {
     type: String,

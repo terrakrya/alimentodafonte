@@ -25,9 +25,9 @@
 									<i @click="edit" class="pull-right fa fa-pencil"></i>
 								</div>
 								<div class="list-group-item">
-									<div class="row" v-if="collectors_group.body">
+									<div class="row" v-if="collectors_group.description">
 										<div class="col-sm-12">
-											<p class="details" colspan="2" v-html="collectors_group.body"></p>
+											<p class="details" colspan="2" v-html="collectors_group.description"></p>
 										</div>
 									</div>
 									<div class="row">

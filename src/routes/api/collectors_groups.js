@@ -2,9 +2,9 @@ var express = require('express'),
   mongoose = require('mongoose'),
   router = express.Router(),
   auth = require('../auth'),
-  CollectorsGroup = mongoose.model('CollectorsGroup'),
-  User = mongoose.model('User');
-
+  populate = require('../utils').populate,
+  CollectorsGroup = mongoose.model('CollectorsGroup');
+  
 router.get('/', auth.manager, function(req, res) {
   CollectorsGroup.find({}).exec(function(err, seeds) {
     if (err) {
@@ -18,7 +18,7 @@ router.get('/', auth.manager, function(req, res) {
 router.get('/:id', auth.manager, function(req, res) {
   CollectorsGroup.findOne({
     _id: req.params.id
-  }).populate(req.query.populate || '').exec(function(err, seed) {
+  }).populate(populate(req)).exec(function(err, seed) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {

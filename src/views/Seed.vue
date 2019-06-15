@@ -12,10 +12,9 @@
 						</div>
 						<div class="col-md-10">
 							<h1>
-								{{ seed.title }}
+								{{ seed.name }}
 							</h1>
 							<p><span>{{ seed.scientific_name }}</span> &bull; <span>{{ seed.local_name }}</span></p>
-
 							<router-link :to="'/editar-semente/'+seed._id" class="btn btn-default btn-xs">
 								<i class="fa fa-edit" aria-hidden="true"></i>
 								Editar semente
@@ -24,25 +23,25 @@
 					</div>
 					<hr class="clearfix">
 					<div class="row">
-						<div class="col-sm-6 col-md-3" v-if="present(seed.price, 'number')">
+						<div class="col-sm-6 col-md-3" v-if="seed.price">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Preço</span>
 								<span class="number">{{ seed.price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-3" v-if="present(seed.wholesale_price, 'number')">
+						<div class="col-sm-6 col-md-3" v-if="seed.wholesale_price">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Preço no atacado</span>
 								<span class="number">{{ seed.wholesale_price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-3" v-if="present(seed.compensation_collect, 'number')">
+						<div class="col-sm-6 col-md-3" v-if="seed.compensation_collect">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Remuneração do coletor</span>
 								<span class="number">{{ seed.compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-3" v-if="present(seed.stock)">
+						<div class="col-sm-6 col-md-3" v-if="seed.stock">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Quantidade em estoque</span>
 								<span class="number" :class="{red: seed.stock <= 0}">{{ seed.stock | currency('', 0, { thousandsSeparator: '' }) }}</span>
@@ -56,9 +55,9 @@
 									<strong>Detalhes</strong>
 								</div>
 								<div class="list-group-item">
-									<div class="row" v-if="present(seed.body)">
+									<div class="row" v-if="seed.description">
 										<div class="col-sm-12">
-											<p class="details" colspan="2" v-html="seed.body"></p>
+											<p class="details" colspan="2" v-html="seed.description"></p>
 										</div>
 									</div>
 									<div class="row">
@@ -86,13 +85,13 @@
 											<dl class="fruiting_season">
 												<dt>Época da frutificação</dt>
 												<dd>
-													<b-badge v-for="(fruiting_season_option, index) in meses" :class="{ 'btn-success': !!seed.fruiting_season.find((fs) => (fs == fruiting_season_option.value))}" :key="month">{{fruiting_season_option.text}}</b-badge>
+													<b-badge v-for="(fruiting_season_option, index) in meses" :class="{ 'btn-success': !!seed.fruiting_season.find((fs) => (fs == fruiting_season_option.value))}" :key="index">{{fruiting_season_option.text}}</b-badge>
 												</dd>
 											</dl>
 										</div>
 									</div>
 									<div class="row" v-if="seed.images && seed.images.length > 1">
-										<div class="col-sm-4" v-for="(image, index) in seed.images" :key="index">
+										<div class="col-sm-3" v-for="(image, index) in seed.images" :key="index">
 											<b-img :src="baseUrl+image.thumb" fluid thumbnail :key="index" />
 										</div>
 									</div>

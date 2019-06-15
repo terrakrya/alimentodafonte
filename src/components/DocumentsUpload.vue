@@ -6,7 +6,7 @@
   </b-form-group>
   <div class="row" v-if="!isLoading && documents_preview.length > 0">
     <div class="col-xs-12" v-for="(doc, index) in documents_preview" :key="index">
-      <a :href="(baseUrl + doc)" target="_blank"><i class="fa fa-download"></i> {{ fileName(doc) }}</a>
+      <a :href="(baseUrl + doc)" target="_blank"><i class="fa fa-download"></i> {{ doc | filename }}</a>
       <a class="btn btn-danger btn-xs pull-right" @click="deleteDocument(index)"><i class="fa fa-trash"></i></a>
     </div>
   </div>
@@ -41,9 +41,6 @@ export default {
             'Content-Type': 'multipart/form-data'
           }
         }).then(response => {
-          console.log(response.data);
-          console.log(this.form);
-          console.log(this.documents_preview);
           if (this.multiple) {
             this.documents_preview.push(response.data)
             this.form[this.field].push(response.data)

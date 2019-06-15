@@ -1,9 +1,9 @@
-var mongoose = require('mongoose');
-var router = require('express').Router();
-var passport = require('passport');
-var User = mongoose.model('User');
-var auth = require('../auth');
-var populate = require('../utils').populate;
+var mongoose = require('mongoose'),
+  router = require('express').Router(),
+  passport = require('passport'),
+  auth = require('../auth'),
+  populate = require('../utils').populate,
+  User = mongoose.model('User');
 
 router.get('/users', auth.manager, function(req, res) {
   var filters = {}
