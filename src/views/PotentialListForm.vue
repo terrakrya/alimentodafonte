@@ -20,7 +20,7 @@
         </div>
         <div class="row">
           <div class="col-sm-12">
-            <form-seeds-select :form="form" field="seed_items" fieldtype="potential_seeds" basecalc="compensation_collect" />
+            <form-seeds-select :form="form" field="seed_items" basecalc="compensation_collect" />
           </div>
         </div>
         <form-submit v-if="form.seed_items && form.seed_items.length" :errors="error" :sending="isSending" />
