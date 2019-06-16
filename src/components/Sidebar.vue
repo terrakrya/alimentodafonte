@@ -7,6 +7,26 @@
             <router-link to="/painel"><i class="fa fa-home"></i> <span>Início</span></router-link>
           </li>
           <li>
+            <a><i class="fa fa-cogs"></i><span>Operacional</span><i class="fa fa-chevron-down"></i></a>
+            <ul class="nav">
+              <li @click="toggleMenu">
+                <router-link to="/estoque"><span>Estoque</span></router-link>
+              </li>
+              <li @click="toggleMenu">
+                <router-link to="/listas-de-potencial"><span>Potencial de coleta</span></router-link>
+              </li>
+              <li @click="toggleMenu">
+                <router-link to="/pedidos-para-coletores"><span>Pedidos para coletores</span></router-link>
+              </li>
+              <li @click="toggleMenu">
+                <router-link to="/encomendas"><span>Encomendas</span></router-link>
+              </li>
+              <li @click="toggleMenu">
+                <router-link to="/coletas"><span>Coleta de sementes</span></router-link>
+              </li>
+            </ul>
+          </li>
+          <li>
             <a><i class="fa fa-list-alt"></i><span>Cadastros</span><i class="fa fa-chevron-down"></i></a>
             <ul class="nav">
               <li @click="toggleMenu" v-if="isAdmin">
@@ -35,27 +55,6 @@
               </li>
             </ul>
           </li>
-          <li>
-            <a><i class="fa fa-cogs"></i><span>Operacional</span><i class="fa fa-chevron-down"></i></a>
-            <ul class="nav">
-              <li @click="toggleMenu">
-                <router-link to="/estoque"><span>Estoque</span></router-link>
-              </li>
-              <li @click="toggleMenu">
-                <router-link to="/listas-de-potencial"><span>Potencial de coleta</span></router-link>
-              </li>
-              <li @click="toggleMenu">
-                <router-link to="/pedidos-para-coletores"><span>Pedidos para coletores</span></router-link>
-              </li>
-              <li @click="toggleMenu">
-                <router-link to="/encomendas"><span>Encomendas</span></router-link>
-              </li>
-              <li @click="toggleMenu">
-                <router-link to="/coletas"><span>Coleta de sementes</span></router-link>
-              </li>
-            </ul>
-          </li>
-
           <li class="profile">
             <a><i class="fa fa-user"></i><span>{{currentUser.name}}</span><i class="fa fa-chevron-down"></i></a>
             <ul class="nav">
