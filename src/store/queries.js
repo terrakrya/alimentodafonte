@@ -30,6 +30,12 @@ var getCollectorsGroups = async function() {
   })
 }
 
+var getSeedsHouses = async function(state) {
+  return await axios.get('seeds_houses').then(response => {
+    return response.data
+  })
+}
+
 var getCollectorsRequests = async function(state) {
   return await axios.get('rest/collectors-requests?_format=json').then(async response => {
     if (!state.collectors.length) {
@@ -288,19 +294,6 @@ var getStock = async function(state) {
     })
 
     return state.stock
-  })
-}
-
-var getSeedsHouses = async function(state) {
-  return await axios.get('rest/seeds-houses?_format=json').then(response => {
-    state.seeds_houses = response.data.map(item => {
-      return {
-        id: item.store_id[0].value,
-        title: item.name[0].value,
-        city: item.address.length ? [item.address[0].locality, item.address[0].administrative_area].filter(Boolean).join(' - ') : ''
-      }
-    })
-    return state.seeds_houses
   })
 }
 

@@ -8,56 +8,48 @@
 				<div v-if="potential_list && !isLoading">
 					<div class="row item-title">
 						<div class="col-md-12">
-							<router-link :to="'/editar-lista-de-potencial/'+potential_list.id" class="btn btn-default btn-xs pull-right">
+							<router-link :to="'/editar-lista-de-potencial/'+potential_list._id" class="btn btn-default btn-xs pull-right">
 								<i class="fa fa-edit" aria-hidden="true"></i>
 								Editar lista
 							</router-link>
 							<h1>
-								Lista de potencial {{ potential_list.id }}
+								Lista {{ potential_list.code }}
 							</h1>
 							<p>
-								<router-link v-if="potential_list.group" :to="'/grupo-de-coletores/'+potential_list.group.id"> &bull; {{ potential_list.group.title }}</router-link>			
-								<router-link v-if="potential_list.collector" :to="'/coletor/'+potential_list.collector.id"> &bull; {{ potential_list.collector.title }}</router-link>			
+								<router-link v-if="potential_list.collectors_group" :to="'/grupo-de-coletores/'+potential_list.collectors_group._id"> &bull; {{ potential_list.collectors_group.name }}</router-link>
+								<router-link v-if="potential_list.collector" :to="'/coletor/'+potential_list.collector._id"> &bull; {{ potential_list.collector.name }}</router-link>
 							</p>
-							<p>
-								<span v-if="potential_list.area">{{potential_list.area}} hectares</span>
-								<span v-if="potential_list.vegetation">{{potential_list.vegetation}}</span>
-							</p>
-							<div>
-								<b-badge v-if="potential_list.flood" pill><i class="fa fa-check"></i> Alaga</b-badge>
-								<b-badge v-if="potential_list.bog" pill><i class="fa fa-check"></i> Brejo</b-badge>
-							</div>
 						</div>
 					</div>
 					<hr class="clearfix">
-					<div class="row">
-						<div class="col-sm-3" v-if="potential_list.weight">
+					<div class="row" v-if="potential_list.seed_items && potential_list.seed_items.length">
+						<div class="col-sm-3">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Quantidade</span>
-								<span class="number">{{ potential_list.weight }} Kg</span>
+								<span class="number">{{ potential_list.seed_items.map(item => item.qtd).reduce((a,b) => a + b) }} Kg</span>
 							</div>
 						</div>
-						<div class="col-sm-3" v-if="potential_list.compensation_collect">
+						<div class="col-sm-3">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Remuneração</span>
-								<span class="number">{{ potential_list.compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+								<span class="number">{{ potential_list.seed_items.map(item => item.compensation_collect * item.qtd).reduce((a,b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
 							</div>
 						</div>
-						<div class="col-sm-3" v-if="potential_list.wholesale_price">
+						<div class="col-sm-3">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Potencial atacado</span>
-								<span class="number">{{ potential_list.wholesale_price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+								<span class="number">{{ potential_list.seed_items.map(item => item.wholesale_price * item.qtd).reduce((a,b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
 							</div>
 						</div>
-						<div class="col-sm-3" v-if="potential_list.price">
+						<div class="col-sm-3">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Potencial varejo</span>
-								<span class="number">{{ potential_list.price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+								<span class="number">{{ potential_list.seed_items.map(item => item.price * item.qtd).reduce((a,b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
 							</div>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-sm-12" v-if="potential_list">
+						<div class="col-sm-12" v-if="potential_list.seed_items">
 							<table class="table b-table b-table-stacked-md">
 								<thead>
 									<tr>
@@ -70,22 +62,22 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr v-for="(seed, index) in potential_list.seeds" :key="index">
+									<tr v-for="(seed_item, index) in potential_list.seed_items" :key="index">
 										<td>
-											<router-link :to="'/semente/'+seed.id">{{seed.title}}</router-link>
+											<router-link :to="'/semente/'+seed_item._id">{{seed_item.seed.name}}</router-link>
 										</td>
 										<td>
-											{{seed.weight | currency('', 0, { thousandsSeparator: '' })}} kg
+											{{seed_item.qtd | currency('', 0, { thousandsSeparator: '' })}} kg
 										</td>
 										<td>
-											{{seed.compensation_collect * seed.weight | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+											{{seed_item.compensation_collect * seed_item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
 										</td>
 										<td>
-											{{seed.wholesale_price * seed.weight | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+											{{seed_item.wholesale_price * seed_item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
 										</td>
 										<td>
-											{{seed.price * seed.weight | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
-										</td>										
+											{{seed_item.price * seed_item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+										</td>
 									</tr>
 								</tbody>
 							</table>
@@ -97,33 +89,31 @@
 	</div>
 </template>
 <script>
+import axios from 'axios'
 import Loading from '@/components/Loading'
 import Breadcrumb from '@/components/Breadcrumb'
 
 export default {
 
-	name: 'PotentialList', 
+	name: 'PotentialList',
 
 	data () {
-		return { 
-			
+		return {
+			potential_list: null
 		}
 	},
 	created () {
-		this.getList('potential_lists')
-	},
-	computed: {
-		loading () {
-			return !this.potential_list
-		},
-		potential_list () {
-			if (this.$store.state.potential_lists) {
-				return this.$store.state.potential_lists.find(cr => cr.id == this.$route.params.id)	
+		this.isLoading = true
+		axios.get('potential_lists/' + this.$route.params.id, {
+			params: {
+				populate: 'collectors_group collector seed_items.seed'
 			}
-			return null
-		}
+		}).then(response => {
+			this.potential_list = response.data
+			this.isLoading = false
+		}).catch(this.showError);
 	},
-	components: { 
+	components: {
 		'loading': Loading,
 		'breadcrumb': Breadcrumb
 	}

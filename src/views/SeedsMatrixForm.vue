@@ -107,8 +107,8 @@ export default {
           lat: "",
           lng: ""
         },
-        collectors_group: [],
-        collector: [],
+        collectors_group: null,
+        collector: null,
         documents: []
       },
     }

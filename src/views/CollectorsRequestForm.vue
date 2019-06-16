@@ -9,26 +9,26 @@
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Grupo de coletores" >
-								<form-entity-select v-if="collectors_groups.length" :items="collectors_groups" :form="form" field="field_requests_group" />
-							</b-form-group>							
-						</div>					
+								<form-entity-select v-if="collectors_groups.length" :items="collectors_groups" :form="form" field="group" />
+							</b-form-group>
+						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Coletor" >
-								<form-entity-select v-if="collectors" :items="collectors" :form="form" field="field_requests_collector" />
-							</b-form-group>							
-						</div>					
-					</div>		
+								<form-entity-select v-if="collectors" :items="collectors" :form="form" field="collector" />
+							</b-form-group>
+						</div>
+					</div>
 					<div class="row">
 						<div class="col-sm-12">
-							<form-seeds-select :form="form" field="field_paragraph_seeds" fieldtype="collectors_seeds_requests" :parent="this.$route.params.id" fieldseed="field_paragraph_seed" fieldqtd="field_paragraph_weight" :seeds="seeds" v-if="seeds.length" :callback="seedsChanged" />
+							<form-seeds-select :form="form" field="field_paragraph_seeds" fieldtype="collectors_seeds_requests" :parent="this.$route.params.id" fieldseed="field_paragraph_seed" fieldqtd="field_paragraph_weight" v-if="seeds.length" :callback="seedsChanged" />
 							<div v-for="(seeds_error, index) in seeds_errors" :key="index" class="alert alert-danger">
 								{{seeds_error}}
 							</div>
 						</div>
-					</div>								
+					</div>
 					<form-submit :errors="error" :sending="isSending" />
 				</b-form>
-			</div>				
+			</div>
 		</div>
 	</div>
 </template>
@@ -43,24 +43,20 @@ import FormSeedsSelect from '@/components/FormSeedsSelect'
 import FormSubmit from '@/components/FormSubmit'
 
 export default {
-	
-	name: 'CollectorsRequestForm', 
-	
+
+	name: 'CollectorsRequestForm',
+
 	data () {
 
-		return { 
-			
-			
-			
+		return {
 			seeds_list: [],
 			seeds_errors: [],
 			seeds_checklist: {},
 			form: {
-				type: [{ target_id: "requests_for_collectors" }],
-				title: [{ value: 'pedido-' + Date.now() }],
-				field_requests_seeds_house: [],
-				field_requests_group: [],
-				field_requests_collector: [],
+				code: '',
+				seeds_house: null,
+				collectors_group: null,
+				collector: null,
 				field_paragraph_seeds: [],
 			}
 		}
@@ -72,7 +68,7 @@ export default {
 		this.getList('seeds_houses')
 		this.getList('potential_lists')
 		this.getList('seeds')
- 
+
 		if (this.isEditing()) {
 			this.edit(this.$route.params.id)
 		}
@@ -118,31 +114,31 @@ export default {
 							this.loadList('collectors_requests')
 							this.$router.replace('/pedido-para-coletores/'+collectors_request.nid[0].value)
 						}
-						this.isSending = false						
+						this.isSending = false
 					}).catch(this.showError)
 				}
 			})
-		}, 
+		},
 		seedsChanged (items) {
 			this.seeds_list = items
 			this.validateQty()
 		},
 		validateQty () {
 			this.seeds_errors = []
-			if ((this.form.field_requests_group.length || this.form.field_requests_collector.length) && this.form.field_paragraph_seeds.length && this.potential_lists) {
+			if ((this.form.group.length || this.form.collector.length) && this.form.field_paragraph_seeds.length && this.potential_lists) {
 
 				this.seeds_checklist = {}
 
 				this.seeds_list.forEach(seed => {
 					this.seeds_checklist[seed.seed_id] = Number(this.seeds_checklist[seed.seed_id] || 0) + Number(seed.qtd)
 				})
-				
+
 				Object.keys(this.seeds_checklist).map(seed_id => {
 					let pls = this.potential_lists.filter(pl => {
 
-						let collector = this.present(this.form.field_requests_collector, 'target_id') ? this.form.field_requests_collector[0].target_id : null
+						let collector = this.present(this.form.collector, 'target_id') ? this.form.collector[0].target_id : null
 
-						let group = this.present(this.form.field_requests_group, 'target_id') ? this.form.field_requests_group[0].target_id : null
+						let group = this.present(this.form.group, 'target_id') ? this.form.group[0].target_id : null
 
 						return ((
 								(collector && pl.collector && pl.collector.id == collector) ||
@@ -150,14 +146,14 @@ export default {
 							) && pl.seeds && pl.seeds.find(s => (s.id == seed_id)))
 					})
 
-					if (pls && pls.length) { 
+					if (pls && pls.length) {
 						let seeds = pls.map(pl => pl.seeds)
 						if (seeds && seeds.length) {
 							seeds = seeds.reduce((acc, val) => acc.concat(val), []).filter(s => (s.id == seed_id))
 							var qtd = seeds.map((item) => Number(item.weight)).reduce((a, b) => a + b)
 							if (Number(qtd) < this.seeds_checklist[seed_id]) {
 								this.seeds_errors.push('A quantidade solicitada ('+this.seeds_checklist[seed_id]+' kg de '+this.seeds.find(s => s.id == seed_id).title+') é maior que o potencial de coleta ('+ qtd + ' kg) desse coletor/grupo ')
-							}							
+							}
 						}
 					} else {
 						this.seeds_errors.push('Não existe potencial de coleta de '+this.seeds.find(s => s.id == seed_id).title+' para este coletor/grupo')
@@ -167,21 +163,21 @@ export default {
 				})
 			}
 		}
-	},	
+	},
 	watch: {
-		'form.field_requests_group': function () {
+		'form.group': function () {
 			this.validateQty()
 		},
-		'form.field_requests_collector': function () {
+		'form.collector': function () {
 			this.validateQty()
 		}
 	},
-	components: { 
-		Breadcrumb, 
-		Loading, 
-		FormHeadline, 
-		FormEntitySelect, 
-		FormSeedsSelect, 
+	components: {
+		Breadcrumb,
+		Loading,
+		FormHeadline,
+		FormEntitySelect,
+		FormSeedsSelect,
 		FormSubmit
 	}
 

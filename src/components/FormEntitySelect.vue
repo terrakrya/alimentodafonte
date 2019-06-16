@@ -39,6 +39,14 @@ export default {
       this.list = this.items
     } else {
       switch (this.type) {
+        case 'seeds':
+          this.list = (await this.loadList('seeds')).map(seed => ({
+            id: seed._id,
+            title: seed.name,
+            description: seed.scientific_name,
+            picture: seed.images && seed.images.length ? seed.images[0].thumb : '',
+          }))
+          break;
         case 'users':
           this.list = (await this.loadList('users')).map(user => ({
             id: user._id,
@@ -61,6 +69,13 @@ export default {
             id: collectors_group._id,
             title: collectors_group.name,
             description: this.formatCity(collectors_group.address)
+          }))
+          break;
+        case 'seeds_houses':
+          this.list = (await this.loadList('seeds_houses')).map(seeds_house => ({
+            id: seeds_house._id,
+            title: seeds_house.name,
+            description: this.formatCity(seeds_house.address)
           }))
           break;
       }

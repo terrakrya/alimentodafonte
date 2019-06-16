@@ -2,14 +2,14 @@
   <div>
     <div class="seeds-select">
       <b-form-group label="Adicionar semente">
-        <cool-select v-if="seeds" v-model="seed_form[fieldseed][0].target_id" :arrowsDisableInstantSelection="true" placeholder="Selecione a semente" :items="seeds" item-text="title" item-value="id" class="col-sm-6">
+        <cool-select v-if="seeds" v-model="item_form.seed" :arrowsDisableInstantSelection="true" placeholder="Selecione a semente" :items="seeds" item-text="name" item-value="_id" class="col-sm-6" @keypress.13.prevent="addItem">
           <template slot="item" slot-scope="{ item: option }">
             <div style="display: flex; align-items: center;">
-              <img v-if="option.picture" :src="option.picture">
+              <img v-if="option.images && option.images.length" :src="baseUrl + option.images[0].thumb">
               <div>
-                <strong>{{ option.title }}</strong>
+                <strong>{{ option.name }}</strong>
                 <br>
-                <small>{{ option.description }}</small>
+                <small>{{ option.scientific_name }}</small>
               </div>
             </div>
           </template>
@@ -20,8 +20,8 @@
           </template>
         </cool-select>
         <div class="col-sm-6">
-          <input v-model="seed_form[fieldqtd][0].value" class="weight" placeholder="Quantidade" type="number" /> Kg
-          <b-button class="btn btn-primary fa fa-plus pull-right" @click="addSeed()">Adicionar</b-button>
+          <input @keypress.13.prevent="addItem" v-model="item_form.qtd" class="weight" placeholder="Quantidade" type="number" /> Kg
+          <b-button class="btn btn-primary fa fa-plus pull-right" @click="addItem()">Adicionar</b-button>
         </div>
         <br>
         <br>
@@ -29,7 +29,7 @@
         <loading :loading="isSending" msg="Adicionando semente" />
       </b-form-group>
     </div>
-    <div class="entity-select-preview" v-if="preview && preview.length > 0">
+    <div class="entity-select-preview" v-if="seeds && seeds.length && preview && preview.length > 0">
       <table class="table b-table b-table-stacked-md">
         <thead>
           <tr>
@@ -43,19 +43,19 @@
         <tbody>
           <tr v-for="(item_preview, index) in preview" :key="index">
             <td>
-              {{item_preview.name}}
+              {{item_preview.seed.name}}
             </td>
             <td>
-              {{item_preview.price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+              {{item_preview.value | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
             </td>
             <td>
-              {{item_preview.qtd | currency('', 0, { thousandsSeparator: '' })}} kg
+              {{item_preview.qtd}} kg
             </td>
             <td>
-              {{item_preview.price * item_preview.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+              {{item_preview.value * item_preview.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
             </td>
             <td class="text-right">
-              <b-button v-if="item_preview" class="btn btn-xs btn-danger fa fa-trash" @click="removeItem(item_preview.id)"></b-button>
+              <b-button v-if="item_preview" class="btn btn-xs btn-danger fa fa-trash" @click="removeItem(index)"></b-button>
             </td>
           </tr>
           <tr class="b-table-bottom-row">
@@ -84,35 +84,22 @@ import Loading from '@/components/Loading'
 
 export default {
   name: 'form-entities-select',
-  props: ['form', 'field', 'fieldtype', 'parent', 'fieldseed', 'fieldqtd', 'seeds', 'basecalc', 'callback'],
+  props: ['form', 'field', 'basecalc', 'callback'],
   inject: ['$validator'],
   data () {
-    var seed_form = {
-        type: [{ target_id: this.fieldtype }],
-        parent_id: [{ value: this.parent }],
-        parent_type: [{ value: "node" }],
-        parent_field_name: [{ value: this.field }]
-      }
-    seed_form[this.fieldseed] = [{ target_id: '' }]
-    seed_form[this.fieldqtd] = [{ value: '' }]
-
-    return {
-
-
-      items: [],
-      seed_form: seed_form
-    }
+    return this.emptyForm()
   },
   created () {
+    this.list()
     if (this.isEditing()) {
       this.edit()
     }
   },
   computed: {
     preview () {
-      if (this.form && this.form[this.field] && this.items) {
+      if (this.form && this.form[this.field]) {
         return this.form[this.field].map(selected => {
-          return this.getItem(selected.target_id)
+          return this.previewItem(selected)
         }).filter(preview => preview)
       }
       return []
@@ -126,68 +113,65 @@ export default {
     },
     totalPrice () {
       if (this.preview) {
-        return this.preview.map((item) => Number(item.price) * Number(item.qtd)).reduce((a, b) => a + b)
+        return this.preview.map((item) => Number(item.value) * Number(item.qtd)).reduce((a, b) => a + b)
       } else {
         return 0
       }
     }
   },
   methods: {
-    addSeed () {
-      this.isSending = true
-      this.error = false
-
-      axios({
-        method: 'POST',
-        url: '/entity/paragraph?_format=json',
-        data: this.seed_form
-      }).then((response) => {
-        var paragraph = response.data
-        this.form[this.field].push({ target_id: paragraph.id[0].value, target_revision_id: paragraph.revision_id[0].value })
-
-        this.seed_form[this.fieldseed] = [{ target_id: '' }]
-        this.seed_form[this.fieldqtd] = [{ value: '' }]
-        this.addItem(paragraph)
-        this.isSending = false
-      }).catch(this.showError);
-    },
-
-    removeItem (id) {
-      this.form[this.field] = this.form[this.field].filter(item => (item.target_id != id))
-      if (this.callback) {
-        this.callback(this.items)
+    emptyForm () {
+      return {
+        seeds: [],
+        form_field: [],
+        item_form: {
+          seed: null,
+          qtd: null,
+          compensation_collect: null,
+          price: null,
+          wholesale_price: null
+        }
       }
     },
-    getItem (id) {
-      return this.items.find(i => {
-        return i.id == id
-      })
+    async list () {
+      this.seeds = (await this.loadList('seeds'))
     },
-    addItem(paragraph) {
-      if (this.seeds) {
+    removeItem (index) {
+      this.form[this.field] = this.form[this.field].filter((item, i) => i != index)
+      if (this.callback) {
+        this.callback(this.form[this.field])
+      }
+    },
+    previewItem (item) {
+      var seed = this.seeds.find(s => {
+        return s._id == item.seed
+      })
+      return {
+        qtd: item.qtd,
+        value: item[this.basecalc],
+        seed: seed
+      }
+    },
+    addItem() {
+      if (this.item_form.seed && this.item_form.qtd) {
         var seed = this.seeds.find(s => {
-          return s.id == paragraph[this.fieldseed][0].target_id
+          return s._id == this.item_form.seed
         })
-        this.items.push({
-          id: paragraph.id[0].value,
-          name: seed.title,
-          qtd: paragraph[this.fieldqtd][0].value,
-          price: seed[this.basecalc || 'price'],
-          seed_id: seed.id
-        })
+        this.item_form.compensation_collect = seed.compensation_collect
+        this.item_form.price = seed.price
+        this.item_form.wholesale_price = seed.wholesale_price
+        this.form[this.field].push(Object.assign({}, this.item_form))
+        this.item_form = this.emptyForm()
+
         if (this.callback) {
-          this.callback(this.items)
+          this.callback(this.form[this.field])
         }
       }
     },
     edit () {
       this.isLoading = true
       if (this.form[this.field]) {
-        this.form[this.field].forEach(item => {
-          axios.get('entity/paragraph/' + item.target_id + '?_format=json').then(response => {
-            this.addItem(response.data)
-          }).catch(this.showError);
-        })
+        this.form[this.field]
       }
     }
   },

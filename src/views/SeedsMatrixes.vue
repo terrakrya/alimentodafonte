@@ -7,7 +7,8 @@
       <div class="info-content">
         <b-alert variant="danger" show v-if="error">{{error}}</b-alert>
         <loading :loading="!seeds_matrixes && !error" msg="Carregando lista de matrizes" />
-        <div v-if="seeds_matrixes">
+        <no-item :list="seeds_matrixes" />
+        <div v-if="seeds_matrixes && seeds_matrixes.length">
           <b-table stacked="md" :fields="table_fields" :items="seeds_matrixes" :sort-by="'name'" :filter="filters.search">
             <template slot="name" slot-scope="data">
               <router-link :to="'/matriz-de-sementes/'+ data.item._id">{{data.item.name}}</router-link>
@@ -42,6 +43,7 @@
 <script>
 import axios from 'axios'
 import Loading from '@/components/Loading'
+import NoItem from '@/components/NoItem'
 import ListHeadline from '@/components/ListHeadline'
 import Breadcrumb from '@/components/Breadcrumb'
 import categorias_de_matrizes from '@/data/categorias_de_matrizes.json'
@@ -103,9 +105,10 @@ export default {
     }
   },
   components: {
-    'loading': Loading,
-    'list-headline': ListHeadline,
-    'breadcrumb': Breadcrumb
+    Loading,
+    NoItem,
+    ListHeadline,
+    Breadcrumb
   }
 };
 </script>

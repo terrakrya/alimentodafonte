@@ -332,12 +332,6 @@ async function getSeeds (state) {
   })
 }
 
-async function getProductVariations (state) {
-  return await axios.get('rest/product-variations?_format=json').then(resp => {
-    state.product_variations = resp.data
-  })
-}
-
 async function getLots (state) {
   return await axios.get('rest/lots?_format=json').then(response => {
     state.lots = response.data.map(item => {
