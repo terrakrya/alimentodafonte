@@ -46,6 +46,7 @@ require('./src/models/SeedsHouse');
 require('./src/models/CollectionArea');
 require('./src/models/SeedsMatrix');
 require('./src/models/PotentialList');
+require('./src/models/CollectorsRequest');
 require('./src/config/passport');
 
 app.use(require('./src/routes'));

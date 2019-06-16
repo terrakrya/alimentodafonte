@@ -148,7 +148,7 @@ export default {
       })
       return {
         qtd: item.qtd,
-        value: item[this.basecalc],
+        value: item[this.basecalc || 'price'],
         seed: seed
       }
     },
