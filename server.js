@@ -49,6 +49,7 @@ require('./src/models/PotentialList');
 require('./src/models/CollectorsRequest');
 require('./src/models/Lot');
 require('./src/models/StockIn');
+require('./src/models/StockOut');
 require('./src/config/passport');
 
 app.use(require('./src/routes'));

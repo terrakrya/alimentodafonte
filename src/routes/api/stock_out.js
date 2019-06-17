@@ -3,34 +3,34 @@ var express = require('express'),
   router = express.Router(),
   auth = require('../auth'),
   Seed = mongoose.model('Seed'),
-  StockIn = mongoose.model('StockIn');
+  StockOut = mongoose.model('StockOut');
 
 router.get('/', auth.manager, function(req, res) {
-  StockIn.find({}).exec(function(err, stock_ins) {
+  StockOut.find({}).exec(function(err, stock_outs) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
     } else {
-      res.json(stock_ins);
+      res.json(stock_outs);
     }
   });
 });
 
 router.post('/', auth.manager, function(req, res) {
-  var newStockIn = new StockIn(req.body);
+  var newStockOut = new StockOut(req.body);
   Seed.findOne({
-    _id: newStockIn.seed
+    _id: newStockOut.seed
   }).exec(function(err, seed) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
     } else {
-      newStockIn.price = seed.price
-      newStockIn.save(function(err, stock_in) {
+      newStockOut.price = seed.price
+      newStockOut.save(function(err, stock_out) {
         if (err) {
           res.status(422).send('Ocorreu um erro ao salvar o item: ' + err.message);
         } else {
-          seed.stock += stock_in.qtd
+          seed.stock -= stock_out.qtd
           seed.save()
-          res.json(stock_in);
+          res.json(stock_out);
         }
       });
     }

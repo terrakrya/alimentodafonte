@@ -1,7 +1,7 @@
 const mongoose = require('mongoose'),
   ObjectId = mongoose.Schema.Types.ObjectId;
 
-const StockInSchema = mongoose.Schema({
+const StockOutSchema = mongoose.Schema({
   price: {
     type: Number,
     required: true
@@ -10,16 +10,12 @@ const StockInSchema = mongoose.Schema({
     type: Number,
     required: true
   },
-  collection_date: Date,
+  out_mode: String,
   seeds_house: {
     type: ObjectId,
     ref: 'SeedsHouse'
   },
-  collectors_group: {
-    type: ObjectId,
-    ref: 'CollectorsGroup'
-  },
-  collector: {
+  buyer: {
     type: ObjectId,
     ref: 'User'
   },
@@ -35,4 +31,4 @@ const StockInSchema = mongoose.Schema({
   timestamps: true
 });
 
-mongoose.model('StockIn', StockInSchema);
+mongoose.model('StockOut', StockOutSchema);

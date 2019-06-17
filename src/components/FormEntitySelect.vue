@@ -56,6 +56,13 @@ export default {
             picture: user.image ? user.image.thumb : '',
           }))
           break;
+        case 'collectors_groups':
+          this.list = (await this.loadList('collectors_groups')).map(collectors_group => ({
+            id: collectors_group._id,
+            title: collectors_group.name,
+            description: this.formatCity(collectors_group.address)
+          }))
+          break;
         case 'collectors':
           this.list = (await this.loadList('collectors')).map(collector => ({
             id: collector._id,
@@ -64,11 +71,12 @@ export default {
             picture: collector.image ? collector.image.thumb : '',
           }))
           break;
-        case 'collectors_groups':
-          this.list = (await this.loadList('collectors_groups')).map(collectors_group => ({
-            id: collectors_group._id,
-            title: collectors_group.name,
-            description: this.formatCity(collectors_group.address)
+        case 'clients':
+          this.list = (await this.loadList('clients')).map(client => ({
+            id: client._id,
+            title: client.name,
+            description: client.nickname,
+            picture: client.image ? client.image.thumb : '',
           }))
           break;
         case 'seeds_houses':
