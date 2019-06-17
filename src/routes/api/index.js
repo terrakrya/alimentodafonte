@@ -10,6 +10,8 @@ router.use('/potential_lists', require('./potential_lists'));
 router.use('/collectors_requests', require('./collectors_requests'));
 router.use('/lots', require('./lots'));
 router.use('/stock_in', require('./stock_in'));
+router.use('/stock_out', require('./stock_out'));
+router.use('/stock', require('./stock'));
 router.use('/uploads', require('./uploads'));
 
 router.use(function(err, req, res, next){

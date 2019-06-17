@@ -260,8 +260,8 @@ async function getStock (state) {
         movement.price = Number(stock_movement['field_price'+type][0].value)
       }
 
-      if (present(stock_movement.field_out_modes)) {
-        movement.out_mode = stock_movement.field_out_modes[0].value
+      if (present(stock_movement.field_out_mode)) {
+        movement.out_mode = stock_movement.field_out_mode[0].value
       }
 
       return movement

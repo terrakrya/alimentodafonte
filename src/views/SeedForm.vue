@@ -31,7 +31,7 @@
 					<div class="row">
 						<div class="col-md-12">
 							<b-form-group label="Descrição da semente">
-								<b-form-textarea v-model="form.body" :rows="3"></b-form-textarea>
+								<b-form-textarea v-model="form.description" :rows="3"></b-form-textarea>
 							</b-form-group>
 						</div>
 					</div>

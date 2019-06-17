@@ -30,8 +30,6 @@
 				</b-form>
 			</div>
 		</div>
-		<pre>{{form}}</pre>
-		<pre>{{seeds}}a</pre>
 	</div>
 </template>
 

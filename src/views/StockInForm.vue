@@ -65,7 +65,6 @@
       </b-form>
     </div>
   </div>
-  <pre>{{form}}</pre>
 </div>
 </template>
 
@@ -93,13 +92,13 @@ export default {
       lots: [],
       form: {
         price: 0,
+        qtd: 0,
+        collection_date: "",
         seeds_house: null,
         collectors_group: null,
         collector: null,
         seed: null,
-        qtd: 0,
-        lot: null,
-        collection_date: ""
+        lot: null
       }
     }
   },
@@ -115,10 +114,6 @@ export default {
     axios.get('lots').then(response => {
       this.lots = response.data
     }).catch(this.showError)
-
-    if (this.isEditing()) {
-      this.edit(this.$route.params.id)
-    }
 
   },
   methods: {
@@ -162,7 +157,7 @@ export default {
     saveItem() {
       axios({
         method: 'POST',
-        url: 'stock_in' + (this.isEditing() ? '/' + this.$route.params.id : ''),
+        url: 'stock_in',
         data: this.form
       }).then(resp => {
         var stock_in = resp.data
@@ -170,6 +165,7 @@ export default {
           this.isSending = false
           this.$router.replace('/estoque')
         }
+        this.isSending = false
       }).catch(this.showError)
     },
     seedSelected(seed) {
