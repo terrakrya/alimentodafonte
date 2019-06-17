@@ -120,9 +120,7 @@ export default {
 
 				Object.keys(this.seeds_checklist).map(seed_id => {
 					let pls = this.potential_lists.filter(pl => {
-
 						let collector = this.form.collector
-
 						let group = this.form.collectors_group
 						return ((
 								(collector && pl.collector && pl.collector == collector) ||

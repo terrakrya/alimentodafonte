@@ -23,7 +23,10 @@ const SeedSchema = mongoose.Schema({
     type: Number,
     required: true
   },
-  stock: Number,
+  stock: {
+    type: Number,
+    default: 0
+  },
   seeds_kg: {
     type: Number,
     required: true
