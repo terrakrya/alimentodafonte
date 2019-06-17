@@ -29,15 +29,15 @@
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Grupo de coletores" >
-								<form-entity-select type="collectors_groups" :form="form" field="group" />
+								<form-entity-select type="collectors_groups" :form="form" field="collectors_group" />
 							</b-form-group>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-sm-4">
 							<b-form-group label="Quantidade (Kg) *">
-								<b-form-input v-model="form.qty" type="number" v-validate="'required'" name="qty" />
-								<field-error :msg="veeErrors" field="qty" />
+								<b-form-input v-model="form.qtd" type="number" v-validate="'required'" name="qtd" />
+								<field-error :msg="veeErrors" field="qtd" />
 							</b-form-group>
 						</div>
 						<div class="col-sm-4">
@@ -56,9 +56,9 @@
 							</b-form-group>
 						</div>
 					</div>
-					<div class="row" v-if="qty_error">
+					<div class="row" v-if="qtd_error">
 						<div class="col-sm-12 text-center">
-							<b-alert variant="danger" show >{{qty_error}}</b-alert>
+							<b-alert variant="danger" show >{{qtd_error}}</b-alert>
 						</div>
 					</div>
 					<form-submit :errors="error" :sending="isSending" />
@@ -84,52 +84,47 @@ export default {
 	data () {
 
 		return {
-			qty_error: null,
-			seed: null,
+			qtd_error: null,
 			lot_filtered_options: [],
 			new_lot: null,
 			add_new_lot: false,
 			price: null,
+			collectors_requests: [],
+			lots: [],
 			form: {
 				price: 0,
-				seeds_house: [],
-				collectors_group: [],
-				collector: [],
-				seed: [],
-				qty: 0,
+				seeds_house: null,
+				collectors_group: null,
+				collector: null,
+				seed: null,
+				qtd: 0,
 				lot: null,
 				collection_date: ""
 			}
 		}
 	},
 	created () {
-		this.getList('lots')
-		this.getList('collectors_requests')
+		axios.get('collectors_requests', {
+			params: {
+				populate: 'seed_items.seed'
+			}
+		}).then(response => {
+			this.collectors_requests = response.data
+		}).catch(this.showError)
+
+		axios.get('lots').then(response => {
+			this.lots = response.data
+		}).catch(this.showError)
 
 		if (this.isEditing()) {
 			this.edit(this.$route.params.id)
 		}
 
 	},
-	computed: {
-    seeds_houses () {
-      return this.$store.state.seeds_houses
-    },
-    seeds () {
-      return this.$store.state.seeds
-    },
-    lots () {
-      return this.$store.state.lots
-    },
-    collectors_requests () {
-      return this.$store.state.collectors_requests
-    }
-
-	},
 	methods: {
 		edit (id) {
 			this.isLoading = true
-			axios.get('node/' + id + '?_format=json').then(response => {
+			axios.get('stock_in/' + id).then(response => {
 				var data = response.data
 				this.apiDataToForm(this.form, data)
 				this.isLoading = false
@@ -141,25 +136,29 @@ export default {
 					this.isSending = true
 					this.error = false
 
-					if (this.present(this.form.qty)) {
-						this.form.qty = Number(this.form.qty)
+					if (this.present(this.form.qtd)) {
+						this.form.qtd = this.form.qtd
 
 						if (this.price) {
-							this.form.price = [{ value: this.price * this.form.qty }]
+							this.form.price = this.price * this.form.qtd
 						}
 					}
 
-					if (!this.present(this.form.lot) && this.new_lot) {
-						axios.post('taxonomy/term', {
-							vid: [{ target_id: 'seed_lot' }],
-							name: [{ value: this.new_lot }],
-							code: [{ value: this.new_lot }],
+					if (!this.form.lot && this.new_lot) {
+						this.form.lot = {
+							code: this.new_lot,
 							seeds_house: this.form.seeds_house,
-							species: this.form.seed,
-						}).then(resp => {
-							this.form.lot = [{ target_id: resp.data.tid[0].value }]
-							this.saveItem()
-						}).catch(this.showError);
+							seed: this.form.seed,
+						}
+						this.saveItem()
+						// axios.post('lots', {
+						// 	code: this.new_lot,
+						// 	seeds_house: this.form.seeds_house,
+						// 	seed: this.form.seed,
+						// }).then(resp => {
+						// 	this.form.lot = resp.data._id
+						// 	this.saveItem()
+						// }).catch(this.showError);
 					} else {
 						this.saveItem()
 					}
@@ -168,35 +167,20 @@ export default {
 		},
 		saveItem () {
 			axios({
-				method: (this.isEditing() ? 'PATCH' : 'POST'),
-				url: 'node' + (this.isEditing() ? '/' + this.$route.params.id : '')+'?_format=json',
+				method: 'POST',
+				url: 'stock_in' + (this.isEditing() ? '/' + this.$route.params.id : ''),
 				data: this.form
 			}).then(resp => {
 				var stock_in = resp.data
-				if (stock_in && stock_in.nid) {
-					axios.get('product/'+stock_in.seed[0].target_id+'?_format=json').then(seed => {
-						axios.get('/entity/commerce_product_variation/'+seed.data.variations[0].target_id+'?_format=json').then(variation => {
-
-							let variation_form = { type:[{ target_id: "default" }] }
-
-							if (this.present(variation.data.stock)){
-								variation_form.stock = [{value: Number(variation.data.stock[0].value) + Number(stock_in.qty)}]
-							} else {
-								variation_form.stock = [{value: Number(stock_in.qty)}]
-							}
-							axios.patch('/entity/commerce_product_variation/'+seed.data.variations[0].target_id+'?_format=json', variation_form).then(() => {
-								this.isSending = false
-								this.$router.replace('/estoque')
-							})
-						})
-					}).catch(this.showError);
+				if (stock_in && stock_in._id) {
+					this.isSending = false
+					this.$router.replace('/estoque')
 				}
-
 			}).catch(this.showError)
 		},
 		seedSelected (seed) {
 			if (seed) {
-				this.price = Number(seed.compensation_collect)
+				this.price = seed.compensation_collect
 				this.filterOptions()
 			}
 		},
@@ -208,41 +192,39 @@ export default {
 			this.form.lot = [{ target_id: '' }]
 		},
 		filterOptions () {
-			if (this.present(this.form.seed, 'target_id') && this.present(this.form.seeds_house, 'target_id')) {
+			if (this.form.seed && this.form.seeds_house) {
 				this.lot_filtered_options = this.lots.filter(lot => {
-					return lot.seed == this.form.seed[0].target_id && lot.seeds_house == this.form.seeds_house[0].target_id
+					return lot.seed == this.form.seed && lot.seeds_house == this.form.seeds_house
 				})
-				this.form.lot = [{ target_id: '' }]
+				this.form.lot = null
 			}
 		},
 		validateQty () {
-			this.qty_error = ''
-			if ((this.form.group.length || this.form.collector.length) && this.form.seed.length && this.collectors_requests) {
+			this.qtd_error = ''
+			if ((this.form.collectors_group || this.form.collector) && this.form.seed && this.collectors_requests) {
 				let collectors_request = this.collectors_requests.find(cr => {
-
-					let collector = this.present(this.form.collector, 'target_id') ? this.form.collector[0].target_id : null
-
-					let group = this.present(this.form.group, 'target_id') ? this.form.group[0].target_id : null
-
+					let collector = this.form.collector
+					let group = this.form.collectors_group
 					return (
 						(
-							(collector && cr.collector && cr.collector.id == collector) ||
-							(group && cr.collectors_group && cr.collectors_group.id == group)
+							(collector && cr.collector && cr.collector == collector) ||
+							(group && cr.collectors_group && cr.collectors_group == group)
 						) &&
-						cr.seeds && cr.seeds.find(s => (s.id == this.form.seed[0].target_id))
+						cr.seed_items && cr.seed_items.find(s => (s.seed._id == this.form.seed))
 					)
 				})
-
+				console.log('collectors_request');
+				console.log(collectors_request);
 				if (collectors_request) {
-					let seed = collectors_request.seeds.find(s => (s.id == this.form.seed[0].target_id))
-					if (Number(seed.weight) < Number(this.form.qty)) {
-						this.qty_error = 'Quantidade maior que a solicitada no Pedido '+collectors_request.id+': '+ seed.weight + ' kg de '+seed.title
+					let seed_item = collectors_request.seed_items.find(s => (s.seed._id == this.form.seed))
+					if (Number(seed_item.qtd) < Number(this.form.qtd)) {
+						this.qtd_error = 'Quantidade maior que a solicitada no Pedido '+collectors_request.code+': '+ seed_item.qtd + ' kg de '+seed_item.seed.name
 						return false
 					} else {
 						return true
 					}
 				} else {
-					this.qty_error = 'Não existe registro de pedido dessa semente para este coletor/grupo'
+					this.qtd_error = 'Não existe registro de pedido dessa semente para este coletor/grupo'
 					return false
 				}
 			}
