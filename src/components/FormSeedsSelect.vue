@@ -153,13 +153,23 @@ export default {
     },
     addItem() {
       if (this.item_form.seed && this.item_form.qtd) {
-        var seed = this.seeds.find(s => {
-          return s._id == this.item_form.seed
+        var currentItem = this.form[this.field].find(s => {
+          return s.seed == this.item_form.seed
         })
-        this.item_form.compensation_collect = seed.compensation_collect
-        this.item_form.price = seed.price
-        this.item_form.wholesale_price = seed.wholesale_price
-        this.form[this.field].push(Object.assign({}, this.item_form))
+
+        if (currentItem) {
+          console.log(typeof currentItem.qtd);
+          currentItem.qtd = Number(this.item_form.qtd) + Number(currentItem.qtd)
+        } else {
+          var seed = this.seeds.find(s => {
+            return s._id == this.item_form.seed
+          })
+          this.item_form.compensation_collect = seed.compensation_collect
+          this.item_form.price = seed.price
+          this.item_form.wholesale_price = seed.wholesale_price
+          this.form[this.field].push(Object.assign({}, this.item_form))
+        }
+
         this.item_form = this.emptyForm()
 
         if (this.callback) {

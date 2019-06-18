@@ -63,19 +63,19 @@
 								</div>
 							</div>
 						</div>
-						<!-- <div class="col-sm-6" v-if="collectors_group.seeds && collectors_group.seeds.length">
+						<div class="col-sm-6" v-if="collectors_group.seeds && collectors_group.seeds.length">
 							<div class="list-group entity-select-preview">
 								<div class="list-group-item active">
 									<strong>Sementes</strong>
 								</div>
 								<div class="list-group-item" v-for="(seed, index) in collectors_group.seeds" :key="index" >
-									<router-link :to="'/semente/'+seed.product_id">
-										<img v-if="present(seed.images, 'url')" :src="seed.images[0].url" />
-										<span v-if="present(seed.name)">{{seed.name}}</span>
+									<router-link :to="'/semente/'+seed._id">
+										<img v-if="seed.images && seed.images.length" :src="baseUrl + seed.images[0].thumb" />
+										<span v-if="seed.name">{{seed.name}}</span>
 									</router-link>
 								</div>
 							</div>
-						</div> -->
+						</div>
 					</div>
 				</div>
 			</div>
