@@ -112,7 +112,7 @@ export default {
       tipos_de_usuario: tipos_de_usuario,
       form: {
         username: '',
-        email: '',
+        email: null,
         password: '',
         password_confirmation: '',
         cpf: '',

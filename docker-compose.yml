@@ -1,49 +1,21 @@
-version: "3"
-
+version: '3'
 services:
-
-  nginx_front:
-    image: wodby/nginx:1.15-5.0.5
-    container_name: "frontend_sementes_nginx"
+  sementes:
+    container_name: sementes
+    restart: always
+    build: .
+    ports:
+      - '3000:3000'
+    links:
+      - mongo
     environment:
-      NGINX_STATIC_CONTENT_OPEN_FILE_CACHE: "off"
-      NGINX_ERROR_LOG_LEVEL: debug
-      NGINX_SERVER_ROOT: /var/www/html/dist
-      NGINX_USER: wodby
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongo:27017/sementes
+      - SECRET=LBHbQJpuZT
     volumes:
-      - ./:/var/www/html
-      # Options for macOS users (https://docker4drupal.readthedocs.io/en/latest/macos)
-      #      - ./:/var/www/html:cached # User-guided caching
-      #      - docker-sync:/var/www/html # Docker-sync
-    labels:
-      - 'traefik.docker.network=frontend'
-      - 'traefik.backend=sementes_nginx'
-      - 'traefik.port=80'
-      - 'traefik.frontend.rule=Host:frontend-sementes.docker.localhost'
-
-# Only local environment
-#  portainer:
-#    image: portainer/portainer
-#    container_name: "frontend_sementes_portainer"
-#    command: --no-auth -H unix:///var/run/docker.sock
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock
-#    labels:
-#      - 'traefik.backend=portainer'
-#      - "traefik.docker.network=frontend"
-#      - 'traefik.port=9000'
-#      - 'traefik.frontend.rule=Host:frontend-sementes-portainer.docker.localhost'
-#
-#  traefik:
-#    image: traefik
-#    command: -c /dev/null --web --docker --logLevel=INFO
-#    ports:
-#      - '8000:80'
-#      - '8080:8080' # Dashboard
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock
-#    labels:
-#      - "traefik.docker.network=frontend"
-
-volumes:
-  codebase:
+      - ./uploads:/app/uploads
+  mongo:
+    container_name: sementes-mongo
+    image: 'mongo:4'
+    volumes:
+      - ./data:/data/db

@@ -1,10 +1,8 @@
-import {
-  CPF,
-  CNPJ
-} from 'cpf_cnpj'
 import axios from 'axios'
 import queries from '@/store/queries'
 import tipos_de_usuario from '@/data/tipos-de-usuario.json'
+import * as cpf from "@fnando/cpf"
+import * as cnpj from "@fnando/cnpj"
 
 export default {
   data() {
@@ -83,10 +81,10 @@ export default {
   },
   filters: {
     cpf: function(value) {
-      return CPF.format(value);
+      return cpf.format(value);
     },
     cnpj: function(value) {
-      return CNPJ.format(value);
+      return cnpj.format(value);
     },
     data: function(value) {
       return value.toLocaleDateString('pt-BR');
