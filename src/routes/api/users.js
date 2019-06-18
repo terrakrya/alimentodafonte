@@ -151,7 +151,9 @@ router.get('/init', function(req, res) {
 
         user.save().then(function() {
           return res.send(user);
-        }).catch(e => console.log(e));
+        }).catch(e => {
+          return res.send(e)
+        });
       } else {
         res.send('Admin já cadastrado')
       }

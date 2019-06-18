@@ -1,12 +1,12 @@
-var mongoose = require('mongoose');
-var uniqueValidator = require('mongoose-unique-validator');
-var crypto = require('crypto');
-var jwt = require('jsonwebtoken');
-var secret = require('../config').secret;
-var AddressSchema = require('./Address');
-var BankAccountSchema = require('./BankAccount');
-var CollectorsGroupSchema = require('./CollectorsGroup').schema;
-var ObjectId = mongoose.Schema.Types.ObjectId;
+var mongoose = require('mongoose'),
+  uniqueValidator = require('mongoose-unique-validator'),
+  crypto = require('crypto'),
+  jwt = require('jsonwebtoken'),
+  secret = require('../config').secret,
+  AddressSchema = require('./Address'),
+  BankAccountSchema = require('./BankAccount');
+
+mongoose.set('useCreateIndex', true)
 
 var UserSchema = new mongoose.Schema({
   username: {
@@ -37,7 +37,6 @@ var UserSchema = new mongoose.Schema({
   image: Object,
   address: AddressSchema,
   bank_account: BankAccountSchema,
-  // collectors_group: [{ type: ObjectId, ref: 'CollectorsGroup' }]
 }, {
   timestamps: true,
   toJSON: { virtuals: true }

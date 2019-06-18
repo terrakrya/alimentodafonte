@@ -18,10 +18,9 @@ var imageStorage = multer.diskStorage({
     cb(null, IMAGES_PATH)
   },
   filename: function(req, file, cb) {
-    console.log(file.originalname);
     var filename = file.originalname
     if (fs.existsSync(IMAGES_PATH+filename)){
-      nameArr = filename.split('.')
+      var nameArr = filename.split('.')
       nameArr[0] += '-' + Date.now()
       filename = nameArr.join('.')
     }
@@ -35,22 +34,20 @@ var imageUploader = multer({
   }
 })
 
-router.post('/images', imageUploader.single('image'), (req, res, next) => {
+router.post('/images', imageUploader.single('image'), (req, res) => {
   var url = req.file.filename
   var original = IMAGES_PATH + url
   var thumb = THUMBS_PATH + url
 
-  console.log('Generating thumb: ' + thumb)
   sharp(original)
     .resize(250)
     .toFile(thumb, function(err) {
-      if (err) {
-        console.log("File upload error: ", err)
-      };
-      res.status(201).send({
-        url: original,
-        thumb: thumb
-      });
+      if (!err) {
+        res.status(201).send({
+          url: original,
+          thumb: thumb
+        });
+      }
     });
 });
 
@@ -59,10 +56,9 @@ var documentStorage = multer.diskStorage({
     cb(null, DOCUMENTS_PATH)
   },
   filename: function(req, file, cb) {
-    console.log(file.originalname);
     var filename = file.originalname
     if (fs.existsSync(DOCUMENTS_PATH+filename)){
-      nameArr = filename.split('.')
+      var nameArr = filename.split('.')
       nameArr[0] += '-' + Date.now()
       filename = nameArr.join('.')
     }
@@ -75,9 +71,8 @@ var documentUploader = multer({
     fileSize: 50 * 1024 * 1024
   }
 })
-router.post('/documents', documentUploader.single('document'), (req, res, next) => {
+router.post('/documents', documentUploader.single('document'), (req, res) => {
   var url = req.file.filename
-  console.log(req.file);
   res.status(201).send(DOCUMENTS_PATH + url);
 });
 

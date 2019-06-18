@@ -103,7 +103,7 @@ export default {
 				}
 			})
 		},
-		seedsChanged (items) {
+		seedsChanged () {
 			this.validateQty()
 		},
 		validateQty () {
