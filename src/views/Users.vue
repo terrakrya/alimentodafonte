@@ -8,7 +8,7 @@
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
 					<loading :loading="!users && !error" msg="Carregando lista de usuarios" />
 					<no-item :list="users" />
-					<div v-if="users">
+					<div v-if="users && users.length">
 						<b-table stacked="md" :fields="table_fields" :items="users" :sort-by="'name'" :filter="filters.search">
 							<template slot="name" slot-scope="data">
 								<router-link :to="'/usuario/'+ data.item._id">
@@ -43,7 +43,7 @@ export default {
 
 	data () {
 		return {
-			
+
 			filters: { search: null },
 			table_fields: [
 				{ key: 'name', label: 'Nome', sortable: true },

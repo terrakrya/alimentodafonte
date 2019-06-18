@@ -132,4 +132,31 @@ router.post('/users/login', function(req, res, next) {
   })(req, res, next);
 });
 
+router.get('/init', function(req, res) {
+  User.find({
+    roles: 'admin'
+  }).populate(populate(req)).exec(function(err, users) {
+    if (err) {
+      res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err);
+    } else {
+      if (users && users.length == 0) {
+        var user = new User();
+
+        user.name = 'Administrador do sistema'
+        user.nickname = 'Admin'
+        user.username = 'admin'
+        user.roles = ['admin']
+
+        user.setPassword('zyY5TeRl8k');
+
+        user.save().then(function() {
+          return res.send(user);
+        }).catch(e => console.log(e));
+      } else {
+        res.send('Admin já cadastrado')
+      }
+    }
+  });
+});
+
 module.exports = router;

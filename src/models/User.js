@@ -20,9 +20,12 @@ var UserSchema = new mongoose.Schema({
   email: {
     type: String,
     lowercase: true,
-    unique: true,
     match: [/\S+@\S+\.\S+/, 'inválido'],
-    index: true
+    index: {
+      unique: true,
+      partialFilterExpression: { email: { $type: 'string' } },
+    },
+    default: null
   },
   hash: String,
   salt: String,
