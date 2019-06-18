@@ -7,7 +7,8 @@
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
 					<loading :loading="!seeds && !error" msg="Carregando lista de sementes" />
-					<div v-if="seeds">
+					<no-item :list="seeds" />
+					<div v-if="seeds && seeds.length">
 						<b-table stacked="md" :fields="table_fields" :items="seeds" :sort-by="'name'" :filter="filters.search">
 							<template slot="name" slot-scope="data">
 								<router-link :to="'/semente/'+ data.item._id">{{data.item.name}}</router-link>
@@ -29,6 +30,7 @@
 <script>
 import axios from 'axios'
 import Loading from '@/components/Loading'
+import NoItem from '@/components/NoItem'
 import ListHeadline from '@/components/ListHeadline'
 import Breadcrumb from '@/components/Breadcrumb'
 
@@ -66,9 +68,10 @@ export default {
 	},
 
 	components: {
-		'loading': Loading,
-		'list-headline': ListHeadline,
-		'breadcrumb': Breadcrumb
+		Loading,
+		NoItem,
+		ListHeadline,
+		Breadcrumb
 	}
 
 };

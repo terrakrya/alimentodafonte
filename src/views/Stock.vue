@@ -86,9 +86,11 @@
 										</a>
 									</template>
 									<template slot="group_collector_buyer" slot-scope="data">
-										<a v-for="(type, index) in ['group_collector', 'collector', 'buyer']" :key="index" @click="setFilter(type, data.item[type]._id)">
-											{{data.item[type].name}}
-										</a>
+										<div v-for="(type, index) in ['group_collector', 'collector', 'buyer']" :key="index" >
+											<a @click="setFilter(type, data.item[type]._id)" v-if="data.item[type]">
+												{{data.item[type].name}}
+											</a>
+										</div>
 									</template>
 									<template slot="seed" slot-scope="data">
 										<a @click="setFilter(data.field.key, data.value._id)" v-if="data.value">
