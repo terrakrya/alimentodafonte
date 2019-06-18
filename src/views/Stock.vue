@@ -28,24 +28,24 @@
 								<b-form-group label="Filtrar por:" >
 									<div class="row">
 										<div class="col-sm-4">
-											<filter-entity-select :items="collectors_groups" :form="filters" field="collectors_group" :input="applyFilters" placeholder="Grupo de coletores" item-text="title" item-value="id" />
+											<filter-entity-select v-if="collectors_groups && collectors_groups.length" :items="collectors_groups" :form="filters" field="collectors_group" :input="applyFilters" placeholder="Grupo de coletores" item-text="title" item-value="id" />
 										</div>
 										<div class="col-sm-4">
-											<filter-entity-select :items="collectors" :form="filters" field="collector" :input="applyFilters" placeholder="Coletor" item-text="title" item-value="id" />
+											<filter-entity-select v-if="collectors && collectors.length" :items="collectors" :form="filters" field="collector" :input="applyFilters" placeholder="Coletor" item-text="title" item-value="id" />
 										</div>
 										<div class="col-sm-4">
-											<filter-entity-select :items="buyers" :form="filters" field="buyer" :input="applyFilters" placeholder="Cliente" item-text="title" item-value="id" />
+											<filter-entity-select v-if="buyers && buyers.length" :items="buyers" :form="filters" field="buyer" :input="applyFilters" placeholder="Cliente" item-text="title" item-value="id" />
 										</div>
 									</div>
 									<div class="row">
 										<div class="col-sm-4">
-											<filter-entity-select :items="seeds_houses" :form="filters" field="seeds_house" :input="applyFilters" placeholder="Casa de sementes" item-text="title" item-value="id" />
+											<filter-entity-select v-if="seeds_houses && seeds_houses.length" :items="seeds_houses" :form="filters" field="seeds_house" :input="applyFilters" placeholder="Casa de sementes" item-text="title" item-value="id" />
 										</div>
 										<div class="col-sm-4">
-											<filter-entity-select :items="seeds" :form="filters" field="seed" :input="applyFilters" placeholder="Semente" item-text="title" item-value="id" />
+											<filter-entity-select v-if="seeds && seeds.length" :items="seeds" :form="filters" field="seed" :input="applyFilters" placeholder="Semente" item-text="title" item-value="id" />
 										</div>
 										<div class="col-sm-4">
-											<filter-entity-select :items="lots" :form="filters" field="lot" :input="applyFilters" placeholder="Lote" item-text="title" item-value="id" />
+											<filter-entity-select v-if="lots && lots.length" :items="lots" :form="filters" field="lot" :input="applyFilters" placeholder="Lote" item-text="title" item-value="id" />
 										</div>
 									</div>
 									<div class="row">
@@ -247,16 +247,20 @@ export default {
 			}
 		},
 		onFiltered(filteredItems) {
-			this.total_qtd = 0
-			this.total_price = 0
-			filteredItems.map(item => {
-				if (item.price) {
-					this.total_price += Number(item.price)
-				}
-				if (item.qtd) {
-					this.total_qtd += Number(item.qtd)
-				}
-			})
+			console.log(filteredItems.length);
+			if (filteredItems) {
+				this.total_qtd = 0
+				this.total_price = 0
+				filteredItems.map(item => {
+					if (item.price) {
+						this.total_price += Number(item.price) * Number(item.qtd)
+					}
+					if (item.qtd) {
+						this.total_qtd += Number(item.qtd)
+					}
+				})
+			}
+
 		},
 		onFilteredSeed(filteredItems) {
 			this.total_seeds_qtd = 0
@@ -286,6 +290,7 @@ export default {
 					})
 				}
 			})
+			this.onFiltered(this.filtered_stock)
 		},
 		clearFilter(filter) {
 			this.filters[filter] = null

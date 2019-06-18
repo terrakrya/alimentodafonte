@@ -42,7 +42,7 @@
           </div>
           <div class="col-sm-6">
             <b-form-group label="Coletores">
-              <form-entities-select :items="collectors" type="collectors" :form="form" field="collectors" />
+              <form-entities-select v-if="collectors && collectors.length" :items="collectors" type="collectors" :form="form" field="collectors" />
             </b-form-group>
           </div>
         </div>
@@ -50,6 +50,7 @@
       </b-form>
     </div>
   </div>
+  <pre>{{collectors}}</pre>
 </div>
 </template>
 
@@ -103,6 +104,25 @@ export default {
     if (this.isEditing()) {
       this.edit(this.$route.params.id)
     }
+
+    axios.get('users', { params: { role: 'collector', populate: { path: 'collectors_group', select: '_id' } } }).then(resp => {
+      this.collectors = resp.data
+      console.log(this.collectors);
+      this.collectors = this.collectors.filter(collector => {
+        return !collector.collectors_group || collector.collectors_group._id == id
+      })
+      console.log(this.collectors);
+      this.collectors = this.collectors.map(collector => {
+        return {
+          id: collector._id,
+          title: collector.name,
+          description: collector.nickname,
+          picture: collector.image ? collector.image.thumb : '',
+        }
+      });
+
+    }).catch(this.showError);
+
   },
   methods: {
     edit(id) {
@@ -110,22 +130,7 @@ export default {
       axios.get('collectors_groups/' + id).then(response => {
         var data = response.data
         this.apiDataToForm(this.form, data)
-
-        axios.get('users', { params: { role: 'collector', populate: { path: 'collectors_group', select: '_id' } } }).then(resp => {
-          this.collectors = resp.data.filter(collector => {
-            return !collector.collectors_group || collector.collectors_group._id == id
-          }).map(collector => {
-            return {
-              id: collector._id,
-              title: collector.name,
-              description: collector.nickname,
-              picture: collector.image ? collector.image.thumb : '',
-            }
-          });
-
-          this.isLoading = false
-
-        }).catch(this.showError);
+        this.isLoading = false
       }).catch(this.showError);
     },
     save() {
