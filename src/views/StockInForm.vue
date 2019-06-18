@@ -141,12 +141,12 @@ export default {
 
           if (!this.form.lot && this.new_lot) {
             axios.post('lots', {
-            	code: this.new_lot,
-            	seeds_house: this.form.seeds_house,
-            	seed: this.form.seed,
+              code: this.new_lot,
+              seeds_house: this.form.seeds_house,
+              seed: this.form.seed,
             }).then(resp => {
-            	this.form.lot = resp.data._id
-            	this.saveItem()
+              this.form.lot = resp.data._id
+              this.saveItem()
             }).catch(this.showError);
           } else {
             this.saveItem()
@@ -186,9 +186,9 @@ export default {
         this.lot_filtered_options = this.lots.filter(lot => {
           return lot.seed == this.form.seed && lot.seeds_house == this.form.seeds_house
         }).map(lot => ({
-					id: lot._id,
-					title: lot.code
-				}))
+          id: lot._id,
+          title: lot.code
+        }))
         this.form.lot = null
       }
     },
@@ -206,8 +206,6 @@ export default {
             cr.seed_items && cr.seed_items.find(s => (s.seed._id == this.form.seed))
           )
         })
-        console.log('collectors_requests');
-        console.log(collectors_requests);
         if (collectors_requests && collectors_requests.length) {
 
           let seed_items = collectors_requests.map(collectors_request => collectors_request.seed_items.find(seed_item => (seed_item.seed._id == this.form.seed)))

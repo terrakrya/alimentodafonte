@@ -38,24 +38,21 @@ var getCollectorsGroups = async function() {
   })
 }
 
-var getSeedsHouses = async function(state) {
+var getSeedsHouses = async function() {
   return await axios.get('seeds_houses').then(response => {
     return response.data
   })
 }
 
-var getStock = async function(state) {
+var getStock = async function() {
   return await axios.get('stock').then(async response => {
     return response.data.map(stock_movement => {
-      console.log('stock_movement');
-
       stock_movement.type = stock_movement.out_mode ? 'stock_out' : 'stock_in'
 
       if (stock_movement.qtd && stock_movement.type == 'stock_out' && stock_movement.qtd > 0) {
         stock_movement.qtd = stock_movement.qtd * -1
       }
 
-      console.log(stock_movement);
       return stock_movement
     }).sort((a, b) => a.createdAt < b.createdAt )
   })
@@ -230,8 +227,8 @@ var getLots = async function(state) {
       return {
         id: item.tid[0].value,
         title: item.name[0].value,
-        seed: present(item.species, 'target_id') ? item.species[0].target_id : null,
-        seeds_house: present(item.seeds_house, 'target_id') ? item.seeds_house[0].target_id : null
+        seed: item.species ? item.species[0].target_id : null,
+        seeds_house: item.seeds_house ? item.seeds_house[0].target_id : null
       }
     })
     return state.lots
@@ -250,23 +247,23 @@ var getCollections = async function(state) {
       await getCollectorsGroups(state)
     }
     state.collections = response.data.map(item => {
-      if (present(item.seeds_collect_seed, 'target_id')) {
+      if (item.seeds_collect_seed) {
         var seed = state.seeds.find(seed => seed.id == item.seeds_collect_seed[0].target_id)
       }
-      if (present(item.seeds_collect_collector, 'target_id')) {
+      if (item.seeds_collect_collector) {
         var collector = state.collectors.find(collector => collector.id == item.seeds_collect_collector[0].target_id)
       }
-      if (present(item.seeds_collect_group, 'target_id')) {
+      if (item.seeds_collect_group) {
         var collectors_group = state.collectors_groups.find(collectors_group => collectors_group.id == item.seeds_collect_group[0].target_id)
       }
       return {
         id: item.nid[0].value,
-        date_time: present(item.seeds_collect_date_time) ? item.seeds_collect_date_time[0].value : null,
-        weight_gross: present(item.seeds_collect_weight_gross) ? item.seeds_collect_weight_gross[0].value : 0,
-        weight_benef: present(item.seeds_collect_weight_benef) ? item.seeds_collect_weight_benef[0].value : 0,
-        flowering: present(item.seeds_collect_flowering) ? item.seeds_collect_flowering[0].value : null,
-        commentary: present(item.seeds_collect_commentary) ? item.seeds_collect_commentary[0].value : null,
-        geolocation: present(item.seeds_collect_geolocation, 'lat') ? item.seeds_collect_geolocation[0] : {
+        date_time: item.seeds_collect_date_time ? item.seeds_collect_date_time[0].value : null,
+        weight_gross: item.seeds_collect_weight_gross ? item.seeds_collect_weight_gross[0].value : 0,
+        weight_benef: item.seeds_collect_weight_benef ? item.seeds_collect_weight_benef[0].value : 0,
+        flowering: item.seeds_collect_flowering ? item.seeds_collect_flowering[0].value : null,
+        commentary: item.seeds_collect_commentary ? item.seeds_collect_commentary[0].value : null,
+        geolocation: item.seeds_collect_geolocation ? item.seeds_collect_geolocation[0] : {
           lat: null,
           lgn: null
         },
@@ -290,10 +287,10 @@ var getSeedsMatrixes = async function(state) {
       await getCollectorsGroups(state)
     }
     state.seeds_matrixes = response.data.map(item => {
-      if (present(item.seed_matrix_collector, 'target_id')) {
+      if (item.seed_matrix_collector) {
         var collector = state.collectors.find(collector => collector.id == item.seed_matrix_collector[0].target_id)
       }
-      if (present(item.seed_matrix_group, 'target_id')) {
+      if (item.seed_matrix_group) {
         var collectors_group = state.collectors_groups.find(collectors_group => collectors_group.id == item.seed_matrix_group[0].target_id)
       }
       return {
@@ -322,20 +319,20 @@ var getCollectionAreas = async function(state) {
       await getCollectorsGroups(state)
     }
     state.collection_areas = response.data.map(item => {
-      if (present(item.collection_collector, 'target_id')) {
+      if (item.collection_collector) {
         var collector = state.collectors.find(collector => collector.id == item.collection_collector[0].target_id)
       }
-      if (present(item.collection_group, 'target_id')) {
+      if (item.collection_group) {
         var collectors_group = state.collectors_groups.find(collectors_group => collectors_group.id == item.collection_group[0].target_id)
       }
       return {
         id: item.nid[0].value,
         title: item.title[0].value,
-        description: present(item.description) ? item.description[0].value : '',
+        description: item.description ? item.description[0].value : '',
         estimated_area: item.estimated_area.length ? item.estimated_area[0].value : '',
         city: item.state.length ? [item.state[0].locality, item.state[0].administrative_area].filter(Boolean).join(' - ') : '',
         geolocation: item.geolocation[0],
-        file: present(item.upload, 'url') ? item.upload[0].url : '',
+        file: item.upload ? item.upload[0].url : '',
         collector: collector,
         collectors_group: collectors_group
       }

@@ -6,11 +6,11 @@ var express = require('express'),
   CollectorsRequest = mongoose.model('CollectorsRequest');
 
 router.get('/', auth.manager, function(req, res) {
-  CollectorsRequest.find({}).populate(populate(req)).exec(function(err, seeds) {
+  CollectorsRequest.find({}).populate(populate(req)).exec(function(err, collector_requests) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
     } else {
-      res.json(seeds);
+      res.json(collector_requests);
     }
   });
 });
@@ -18,18 +18,17 @@ router.get('/', auth.manager, function(req, res) {
 router.get('/:id', auth.manager, function(req, res) {
   CollectorsRequest.findOne({
     _id: req.params.id
-  }).populate(populate(req)).exec(function(err, seed) {
+  }).populate(populate(req)).exec(function(err, collector_request) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
-      res.json(seed);
+      res.json(collector_request);
     }
   });
 });
 
 router.post('/', auth.manager, function(req, res) {
   var newCollectorsRequest = new CollectorsRequest(req.body);
-  console.log(newCollectorsRequest);
 
   CollectorsRequest.find().sort({ code: -1 }).limit(1).exec(function(err, latest) {
     if (!err) {
@@ -38,11 +37,11 @@ router.post('/', auth.manager, function(req, res) {
       } else {
         newCollectorsRequest.code = 1
       }
-      newCollectorsRequest.save(function(err, seed) {
+      newCollectorsRequest.save(function(err, collector_request) {
         if (err) {
           res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
         } else {
-          res.send(seed);
+          res.send(collector_request);
         }
       });
     }
@@ -68,11 +67,11 @@ router.put('/:id', auth.manager, function(req, res) {
 router.delete('/:id', auth.manager, function(req, res) {
   CollectorsRequest.findByIdAndRemove({
     _id: req.params.id
-  }, function(err, seed) {
+  }, function(err, collector_request) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao excluír: ' + err.message);
     } else {
-      res.send(seed);
+      res.send(collector_request);
     }
   });
 });

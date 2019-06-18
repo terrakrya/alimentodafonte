@@ -78,7 +78,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import { CoolSelect } from 'vue-cool-select'
 import Loading from '@/components/Loading'
 

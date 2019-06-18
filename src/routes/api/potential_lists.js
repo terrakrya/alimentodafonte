@@ -29,7 +29,6 @@ router.get('/:id', auth.manager, function(req, res) {
 
 router.post('/', auth.manager, function(req, res) {
   var newPotentialList = new PotentialList(req.body);
-  console.log(newPotentialList);
 
   PotentialList.find().sort({ code: -1 }).limit(1).exec(function(err, latest) {
     if (!err) {

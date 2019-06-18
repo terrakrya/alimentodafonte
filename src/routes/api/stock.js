@@ -3,7 +3,7 @@ var express = require('express'),
   router = express.Router(),
   auth = require('../auth'),
   Seed = mongoose.model('Seed'),
-  StockIn = mongoose.model('StockIn');
+  StockIn = mongoose.model('StockIn'),
   StockOut = mongoose.model('StockOut');
 
 router.get('/', auth.manager, function(req, res) {
