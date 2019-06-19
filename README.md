@@ -1,13 +1,18 @@
-# sementes-frontend
+# Rede de sementes
 
-## Project setup
+## Development
+
+### Project setup
 ```
 npm install
 ```
-
-### Compiles and hot-reloads for development
+### Run API server on port 3000
 ```
-npm run serve
+npm run api
+```
+### Compiles and hot-reloads frontend for development on port 8080
+```
+npm run frontend
 ```
 
 ### Compiles and minifies for production
@@ -25,5 +30,9 @@ npm run test
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Production
+
+### Run the docker compose in the production server root app folder
+```
+docker-compose up -d --build
+```

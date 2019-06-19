@@ -4,8 +4,6 @@ services:
     container_name: sementes
     restart: always
     build: .
-    ports:
-      - '3000:3000'
     links:
       - mongo
     environment:
@@ -14,8 +12,22 @@ services:
       - SECRET=LBHbQJpuZT
     volumes:
       - ./uploads:/app/uploads
+    labels:
+      - "traefik.backend=sementes"
+      - "traefik.frontend.rule=Host:sementes.docker.localhost"
+
   mongo:
     container_name: sementes-mongo
     image: 'mongo:4'
     volumes:
       - ./data:/data/db
+
+  traefik:
+    image: traefik
+    command: --web --docker --docker.domain=docker.localhost --logLevel=DEBUG
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /dev/null:/traefik.toml

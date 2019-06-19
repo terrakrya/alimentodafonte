@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "frontend": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "start": "nodemon ./server.js",
-    "dev": "nodemon ./server.js"
+    "api": "nodemon ./server.js"
   },
   "dependencies": {
     "@sindresorhus/slugify": "^0.8.0",
