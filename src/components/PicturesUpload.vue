@@ -61,7 +61,11 @@ export default {
     },
     deleteImage(index) {
       this.$delete(this.images_preview, index)
-      this.$delete(this.form[this.field], index)
+      if (this.multiple) {
+        this.$delete(this.form[this.field], index)
+      } else {
+        this.form[this.field] = null
+      }
     },
     showError(msg) {
       this.error = msg

@@ -103,7 +103,7 @@
 										</a>
 									</template>
 									<template slot="qtd" slot-scope="data">
-										{{data.value | currency('', 0, { thousandsSeparator: '' })}} Kg
+										{{data.value}} Kg
 									</template>
 									<template slot="price" slot-scope="data">
 										{{data.value * data.item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
@@ -137,7 +137,7 @@
 										{{data.value}}
 									</template>
 									<template slot="stock" slot-scope="data">
-										<span v-if="data.item.stock" :class="{'text-danger': data.item.stock < 1}">{{data.item.stock | currency('', 0, { thousandsSeparator: '' }) }} Kg</span>
+										<span v-if="data.item.stock" :class="{'text-danger': data.item.stock < 1}">{{data.item.stock }} Kg</span>
 									</template>
 									<!-- eslint-disable-next-line -->
 									<template slot="bottom-row" slot-scope="data">

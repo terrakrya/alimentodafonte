@@ -94,7 +94,7 @@ export default {
 	methods: {
 		edit (id) {
 			this.isLoading = true
-			axios.get('node/' + id + '?_format=json').then(response => {
+			axios.get('node/' + id).then(response => {
 				var data = response.data
 				this.apiDataToForm(this.form, data)
 				this.isLoading = false
@@ -107,7 +107,7 @@ export default {
 					this.error = false
 					axios({
 						method: (this.isEditing() ? 'PUT' : 'POST'),
-						url: 'node' + (this.isEditing() ? '/' + this.$route.params.id : '')+'?_format=json',
+						url: 'node' + (this.isEditing() ? '/' + this.$route.params.id : ''),
 						data: this.form
 					}).then(resp => {
 						var seeds_house = resp.data
