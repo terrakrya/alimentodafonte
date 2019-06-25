@@ -80,7 +80,7 @@ export default {
 		
 		this.isLoading = true
 		
-		axios.get('node/' + this.$route.params.id + '?_format=json').then(seeds_network => {
+		axios.get('node/' + this.$route.params.id).then(seeds_network => {
 			this.seeds_network = seeds_network.data 
 			this.isLoading = false
 

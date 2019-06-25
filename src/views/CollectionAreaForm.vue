@@ -121,7 +121,7 @@ export default {
           this.error = false
           axios({
             method: (this.isEditing() ? 'PUT' : 'POST'),
-            url: 'collection_areas' + (this.isEditing() ? '/' + this.$route.params.id : '') + '?_format=json',
+            url: 'collection_areas' + (this.isEditing() ? '/' + this.$route.params.id : ''),
             data: this.form
           }).then(resp => {
             var collection_area = resp.data

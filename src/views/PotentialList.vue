@@ -67,7 +67,7 @@
 											<router-link :to="'/semente/'+seed_item._id">{{seed_item.seed.name}}</router-link>
 										</td>
 										<td>
-											{{seed_item.qtd | currency('', 0, { thousandsSeparator: '' })}} kg
+											{{seed_item.qtd}} kg
 										</td>
 										<td>
 											{{seed_item.compensation_collect * seed_item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}

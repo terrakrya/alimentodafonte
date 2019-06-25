@@ -82,7 +82,7 @@
 											{{(order.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
 										</td>
 										<td>
-											{{seed_item.qtd | currency('', 0, { thousandsSeparator: '' })}} kg
+											{{seed_item.qtd}} kg
 										</td>
 										<td>
 											{{(order.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price) * seed_item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}

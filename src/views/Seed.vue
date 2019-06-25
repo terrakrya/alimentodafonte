@@ -44,7 +44,7 @@
           <div class="col-sm-6 col-md-3" v-if="seed.stock">
             <div class="weekly-summary text-center">
               <span class="info-label">Quantidade em estoque</span>
-              <span class="number" :class="{red: seed.stock <= 0}">{{ seed.stock | currency('', 0, { thousandsSeparator: '' }) }}</span>
+              <span class="number" :class="{red: seed.stock <= 0}">{{ seed.stock }}</span>
             </div>
           </div>
         </div>
@@ -64,15 +64,15 @@
                   <div class="col-sm-6">
                     <dl>
                       <dt>Qtd. de sementes / Kg</dt>
-                      <dd>{{ seed.seeds_kg | currency('', 0, { thousandsSeparator: '' }) }} sementes / Kg</dd>
+                      <dd>{{ seed.seeds_kg }} sementes / Kg</dd>
                     </dl>
                     <dl>
                       <dt>Taxa de viabilidade</dt>
-                      <dd>{{ seed.viability_rate | currency('', 0, { thousandsSeparator: '' }) }} % de viabilidade</dd>
+                      <dd>{{ seed.viability_rate }} % de viabilidade</dd>
                     </dl>
                     <dl>
                       <dt>Limite de peso por lote</dt>
-                      <dd>{{ seed.lot_limit | currency('', 0, { thousandsSeparator: '' }) }} kg por lote</dd>
+                      <dd>{{ seed.lot_limit }} kg por lote</dd>
                     </dl>
                   </div>
                   <div class="col-sm-6">

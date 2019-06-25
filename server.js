@@ -44,6 +44,7 @@ require('./src/models/SeedsMatrix');
 require('./src/models/PotentialList');
 require('./src/models/CollectorsRequest');
 require('./src/models/Order');
+require('./src/models/Collection');
 require('./src/models/Lot');
 require('./src/models/StockIn');
 require('./src/models/StockOut');
