@@ -10,10 +10,7 @@ const SeedSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  local_name: {
-    type: String,
-    required: true
-  },
+  local_name: String,
   description: String,
   price: {
     type: Number,
@@ -37,14 +34,8 @@ const SeedSchema = mongoose.Schema({
   },
   lot_limit: Number,
   compensation_collect: Number,
-  ecosystem: {
-    type: [String],
-    required: true
-  },
-  fruiting_season: {
-    type: [String],
-    required: true
-  },
+  ecosystem: [String],
+  fruiting_season: [String],
   images: [Object],
   user: {
     type: ObjectId,
