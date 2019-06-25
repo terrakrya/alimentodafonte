@@ -10,6 +10,9 @@
         <no-item :list="seeds_matrixes" />
         <div v-if="seeds_matrixes && seeds_matrixes.length">
           <b-table stacked="md" :fields="table_fields" :items="seeds_matrixes" :sort-by="'name'" :filter="filters.search">
+            <template slot="code" slot-scope="data">
+              <router-link :to="'/matriz-de-sementes/'+ data.item._id">{{data.item.code}}</router-link>
+            </template>
             <template slot="name" slot-scope="data">
               <router-link :to="'/matriz-de-sementes/'+ data.item._id">{{data.item.name}}</router-link>
               <p v-if="data.item.seed_matrix_scient_name">
@@ -61,9 +64,14 @@ export default {
       origens_de_matrizes: origens_de_matrizes,
       seeds_matrixes: null,
       table_fields: [{
-          key: 'name',
-          label: 'Nome da matriz',
+          key: 'code',
+          label: 'Código',
           sortable: true
+        },
+        {
+            key: 'name',
+            label: 'Nome da matriz',
+            sortable: true
         },
         {
           key: 'collectors_groups',

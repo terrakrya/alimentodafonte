@@ -14,6 +14,9 @@
 							<p v-if="seeds_matrix.scientific_name">
 								{{seeds_matrix.scientific_name}}
 							</p>
+							<p v-if="seeds_matrix.code">
+								<small>{{seeds_matrix.code}}</small>
+							</p>
 						</div>
 					</div>
 					<hr class="clearfix">
