@@ -22,9 +22,8 @@
 					</div>
 					<div class="row gray">
 						<div class="col-md-12">
-							<b-form-group label="Nome(s) regional(is) *" description="Escreva todos os nome regionais que essa semente possa ter separado por virgula.">
-								<b-form-input v-model="form.local_name" v-validate="'required'" name="local_name" />
-								<field-error :msg="veeErrors" field="local_name" />
+							<b-form-group label="Nome(s) regional(is)" description="Escreva todos os nome regionais que essa semente possa ter separado por virgula.">
+								<b-form-input v-model="form.local_name" name="local_name" />
 							</b-form-group>
 						</div>
 					</div>
@@ -78,15 +77,13 @@
 					</div>
 					<div class="row gray">
 						<div class="col-sm-6">
-							<b-form-group label="Ecossistema *">
-								<b-form-checkbox-group v-model="form.ecosystem" :options="ecossistemas" v-validate="'required'" name="ecosystem" />
-								<field-error :msg="veeErrors" field="ecosystem" />
+							<b-form-group label="Ecossistema">
+								<b-form-checkbox-group v-model="form.ecosystem" :options="ecossistemas" name="ecosystem" />
 							</b-form-group>
 						</div>
 						<div class="col-sm-6">
-							<b-form-group label="Época da frutificação *">
-								<b-form-checkbox-group  v-model="form.fruiting_season" :options="meses" v-validate="'required'" name="fruiting_season" />
-								<field-error :msg="veeErrors" field="fruiting_season" />
+							<b-form-group label="Época da frutificação">
+								<b-form-checkbox-group  v-model="form.fruiting_season" :options="meses" name="fruiting_season" />
 							</b-form-group>
 						</div>
 					</div>
