@@ -75,6 +75,7 @@ import Loading from '@/components/Loading'
 import FormEntitySelect from '@/components/FormEntitySelect'
 import FormSubmit from '@/components/FormSubmit'
 import FieldError from '@/components/FieldError'
+import utils from '@/views/utils'
 
 export default {
 
@@ -196,7 +197,7 @@ export default {
           title: lot.code
         }))
         if (!this.lot_filtered_options.length) {
-          this.new_lot = this.generateCode([this.seeds_house_name, this.seed_name])
+          this.new_lot = utils.generateCode([this.seeds_house_name, this.seed_name])
         }
         this.form.lot = null
       }
@@ -243,28 +244,6 @@ export default {
         this.qtd_error = 'Selecione um grupo ou coletor'
         return false
       }
-    },
-    generateCode (names) {
-      var initials = ''
-      names.forEach(name => {
-        var parts = name.split(' ')
-        var qtdChars = 4 - parts.length
-        if (qtdChars < 1) {
-          qtdChars = 1
-        }
-        for (var i = 0; i < parts.length; i++) {
-          if (parts[i].length > 0 && parts[i] !== '') {
-            initials += parts[i].substr(0,qtdChars)
-          }
-        }
-        initials += '-'
-      })
-      if (initials == '') {
-        initials = 'COD-'+Date.now()
-      } else {
-        initials += (new Date).getMilliseconds()
-      }
-      return initials.toUpperCase()
     }
   },
   components: {
