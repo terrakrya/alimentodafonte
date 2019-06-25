@@ -104,6 +104,11 @@ export default {
       }
     }
   },
+  watch: {
+    items: function(newVal) {
+      this.list = newVal
+    }
+  },
   components: {
     CoolSelect
   }
