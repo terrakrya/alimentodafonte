@@ -9,8 +9,9 @@
         <div class="row">
           <div class="col-sm-6">
             <b-form-group label="Nome da matriz *">
-              <b-form-input v-model="form.name" v-validate="'required'" name="name" />
+              <b-form-input v-model="form.name" v-validate="'required'" name="name" @input="generateCode" />
               <field-error :msg="veeErrors" field="name" />
+              <small v-if="this.form.code">Código: {{this.form.code}}</small>
             </b-form-group>
           </div>
           <div class="col-sm-6">
@@ -86,6 +87,7 @@ import DocumentsUpload from '@/components/DocumentsUpload'
 import categorias_de_matrizes from '@/data/categorias_de_matrizes.json'
 import origens_de_matrizes from '@/data/origens_de_matrizes.json'
 import meses from '@/data/meses.json'
+import utils from '@/views/utils'
 
 export default {
 
@@ -97,6 +99,7 @@ export default {
       meses: meses,
       documents_preview: [],
       form: {
+        code: '',
         name: '',
         scientific_name: '',
         category: '',
@@ -144,6 +147,11 @@ export default {
           }).catch(this.showError)
         }
       })
+    },
+    generateCode () {
+      if (!this.$route.params.id || !this.form.code) {
+        this.form.code = utils.generateCode(this.form.name.split(' '))        
+      }
     }
   },
   components: {

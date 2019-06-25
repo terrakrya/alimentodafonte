@@ -3,6 +3,10 @@ const mongoose = require('mongoose'),
   GeolocationSchema = require('./Geolocation');
 
 const SeedsMatrixSchema = mongoose.Schema({
+  code: {
+    type: String,
+    required: true
+  },
   name: {
     type: String,
     required: true
