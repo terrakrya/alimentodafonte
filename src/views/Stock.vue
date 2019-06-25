@@ -247,7 +247,6 @@ export default {
 			}
 		},
 		onFiltered(filteredItems) {
-			console.log(filteredItems.length);
 			if (filteredItems) {
 				this.total_qtd = 0
 				this.total_price = 0

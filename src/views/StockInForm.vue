@@ -90,6 +90,8 @@ export default {
       price: null,
       collectors_requests: [],
       lots: [],
+      seed_name: '',
+      seeds_house_name: '',
       form: {
         price: 0,
         qtd: 0,
@@ -171,10 +173,14 @@ export default {
     seedSelected(seed) {
       if (seed) {
         this.price = seed.compensation_collect
-        this.filterOptions()
+        this.seed_name = seed.title
       }
+      this.filterOptions()
     },
-    seedsHouseSelected() {
+    seedsHouseSelected(seeds_house) {
+      if (seeds_house) {
+        this.seeds_house_name = seeds_house.title
+      }
       this.filterOptions()
     },
     newLot() {
@@ -189,6 +195,9 @@ export default {
           id: lot._id,
           title: lot.code
         }))
+        if (!this.lot_filtered_options.length) {
+          this.new_lot = this.generateCode([this.seeds_house_name, this.seed_name])
+        }
         this.form.lot = null
       }
     },
@@ -230,7 +239,32 @@ export default {
           this.qtd_error = 'Não existe registro de pedido dessa semente para este coletor/grupo'
           return false
         }
+      } else {
+        this.qtd_error = 'Selecione um grupo ou coletor'
+        return false
       }
+    },
+    generateCode (names) {
+      var initials = ''
+      names.forEach(name => {
+        var parts = name.split(' ')
+        var qtdChars = 4 - parts.length
+        if (qtdChars < 1) {
+          qtdChars = 1
+        }
+        for (var i = 0; i < parts.length; i++) {
+          if (parts[i].length > 0 && parts[i] !== '') {
+            initials += parts[i].substr(0,qtdChars)
+          }
+        }
+        initials += '-'
+      })
+      if (initials == '') {
+        initials = 'COD-'+Date.now()
+      } else {
+        initials += (new Date).getMilliseconds()
+      }
+      return initials.toUpperCase()
     }
   },
   components: {
