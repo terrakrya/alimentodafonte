@@ -103,14 +103,11 @@ export default {
     if (this.isEditing()) {
       this.edit(this.$route.params.id)
     }
-
     axios.get('users', { params: { role: 'collector', populate: { path: 'collectors_group', select: '_id' } } }).then(resp => {
       this.collectors = resp.data
-      console.log(this.collectors);
       this.collectors = this.collectors.filter(collector => {
-        return !collector.collectors_group || collector.collectors_group._id == id
+        return !collector.collectors_group || collector.collectors_group._id == this.$route.params.id
       })
-      console.log(this.collectors);
       this.collectors = this.collectors.map(collector => {
         return {
           id: collector._id,
@@ -121,7 +118,6 @@ export default {
       });
 
     }).catch(this.showError);
-
   },
   methods: {
     edit(id) {

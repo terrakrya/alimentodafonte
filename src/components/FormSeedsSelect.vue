@@ -36,7 +36,9 @@
             <th>Espécie</th>
             <th>Valor / Kg</th>
             <th>Quantidade</th>
-            <th>{{basecalc == 'compensation_collect' ? 'Remuneração' : 'Valor total'}}</th>
+            <th v-if="!basecalc || basecalc == 'price'">Valor (varejo)</th>
+            <th v-if="basecalc == 'wholesale_price'">Valor (atacado)</th>
+            <th v-if="basecalc == 'compensation_collect'">Remuneração</th>
             <th></th>
           </tr>
         </thead>
@@ -158,7 +160,6 @@ export default {
         })
 
         if (currentItem) {
-          console.log(typeof currentItem.qtd);
           currentItem.qtd = Number(this.item_form.qtd) + Number(currentItem.qtd)
         } else {
           var seed = this.seeds.find(s => {

@@ -36,7 +36,11 @@ export default {
     apiDataToForm(form, data) {
       Object.keys(form).map((key) => {
         if (data && data[key]) {
-          form[key] = data[key]
+          if (typeof data[key] == 'string' && data[key].indexOf('T00:00:00.000Z') > -1) {
+            form[key] = data[key].replace(/T00:00:00.000Z/g, '')
+          } else {
+            form[key] = data[key]
+          }
         }
       })
     },

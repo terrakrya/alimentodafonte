@@ -11,32 +11,32 @@
 							<b-form-group label="Nome da rede *">
 								<b-form-input v-model="form.title[0].value" v-validate="'required'" name="title" />
 								<field-error :msg="veeErrors" field="title" />
-							</b-form-group>							
+							</b-form-group>
 						</div>
-					</div>						
+					</div>
 					<div class="row">
 						<div class="col-sm-6">
 							<b-form-group label="Contatos" description="Liste todas as formas de contato com a rede">
 								<b-form-textarea v-model="form.field_contact[0].value" :rows="3" />
 								<field-error :msg="veeErrors" field="contact" />
-							</b-form-group>							
+							</b-form-group>
 						</div>
 						<div class="col-sm-6">
 							<b-form-group label="Área de abrangência" description="Descreva aqui a área de abrangência da rede de sementes">
 								<b-form-textarea v-model="form.field_coverage_area[0].value" :rows="3" />
-							</b-form-group>							
+							</b-form-group>
 						</div>
-					</div>	
+					</div>
 					<div class="row">
 						<div class="col-sm-12">
 							<b-form-group label="Casas de sementes" >
 								<form-entities-select v-if="seeds_house_options && seeds_house_options.length" :items="seeds_house_options" :form="form" field="field_house_seed" />
-							</b-form-group>							
-						</div>					
-					</div>					
+							</b-form-group>
+						</div>
+					</div>
 					<form-submit :errors="error" :sending="isSending" />
 				</b-form>
-			</div>				
+			</div>
 		</div>
 	</div>
 </template>
@@ -51,15 +51,15 @@ import FormSubmit from '@/components/FormSubmit'
 import FieldError from '@/components/FieldError'
 
 export default {
-	
-	name: 'SeedsNetworkForm', 
-	
+
+	name: 'SeedsNetworkForm',
+
 	data () {
 
-		return { 
-			
-			
-			
+		return {
+
+
+
 			seed: null,
 			seeds_house_options: [],
 			form: {
@@ -71,7 +71,7 @@ export default {
 			},
 		}
 	},
-	
+
 	created () {
 
 		if (this.isEditing()) {
@@ -80,7 +80,7 @@ export default {
 
 		axios.get('rest/seeds-houses?_format=json').then(response => {
 			this.seeds_house_options = response.data.map(seeds_house => {
-				return { 
+				return {
 					id: seeds_house.store_id[0].value,
 					title: seeds_house.name[0].value,
 					description: '',
@@ -90,7 +90,7 @@ export default {
 		}).catch(this.showError)
 
 	},
-	
+
 	methods: {
 		edit (id) {
 			this.isLoading = true
@@ -106,7 +106,7 @@ export default {
 					this.isSending = true
 					this.error = false
 					axios({
-						method: (this.isEditing() ? 'PATCH' : 'POST'),
+						method: (this.isEditing() ? 'PUT' : 'POST'),
 						url: 'node' + (this.isEditing() ? '/' + this.$route.params.id : '')+'?_format=json',
 						data: this.form
 					}).then(resp => {
@@ -114,19 +114,19 @@ export default {
 						if (seeds_house && seeds_house.nid) {
 							this.$router.replace('/rede-de-sementes/'+seeds_house.nid[0].value)
 						}
-						this.isSending = false						
+						this.isSending = false
 					}).catch(this.showError)
 				}
 			})
 		}
 	},
 
-	components: { 
-		Breadcrumb, 
-		Loading, 
-		FormHeadline, 
-		FormEntitiesSelect, 
-		FormSubmit, 
+	components: {
+		Breadcrumb,
+		Loading,
+		FormHeadline,
+		FormEntitiesSelect,
+		FormSubmit,
 		FieldError
 	}
 

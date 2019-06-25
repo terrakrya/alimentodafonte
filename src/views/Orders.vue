@@ -7,29 +7,30 @@
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
 					<loading :loading="!orders && !error" msg="Carregando lista de encomendas" />
-					<div v-if="orders">
+					<no-item :list="orders" />
+					<div v-if="orders && orders.length">
 						<b-table stacked="md" :fields="table_fields" :items="orders" :sort-by="'date_receiving'" :sort-desc="true" :filter="filters.search">
 							<template slot="date_receiving" slot-scope="data">
-								<router-link v-if="data.item.date_receiving" :to="'/encomenda/'+ data.item.id"> 
-									{{data.item.date_receiving | moment("DD/MM/YYYY")}} 
+								<router-link :to="'/encomenda/'+ data.item._id">
+									Encomenda {{data.item.code}}
 									<br>
-									Encomenda {{data.item.id}}
+									<span v-if="data.item.date_receiving">{{data.item.date_receiving | moment("DD/MM/YYYY")}}</span>
 								</router-link>
 							</template>
 							<template slot="client" slot-scope="data">
-								<router-link v-if="data.item.client" :to="'/cliente/'+ data.item.client.id">{{data.item.client.title}}</router-link>
-								<small v-if="data.item.area">{{data.item.area}} hectares</small>
+								<router-link v-if="data.item.client" :to="'/cliente/'+ data.item.client._id">{{data.item.client.name}}</router-link>
+								<small v-if="data.item.restored_area">{{data.item.restored_area}} hectares</small>
 							</template>
 							<template slot="total" slot-scope="data">
-								{{data.item.total | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
-								<small v-if="data.item.total && data.item.purchase_type"><br/>({{data.item.purchase_type}})</small>
+								<span v-if="data.item.seed_items && data.item.seed_items.length">{{data.item.seed_items.map(seed_item => seed_item.qtd * (data.item.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price)).reduce((a,b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}</span>
+								<small v-if="data.item.purchase_type"><br/>({{data.item.purchase_type}})</small>
 							</template>
-							<template slot="weight" slot-scope="data">
-								{{data.item.weight}} kg
+							<template slot="qtd" slot-scope="data">
+								<span v-if="data.item.seed_items && data.item.seed_items.length">{{data.item.seed_items.map(seed_item => seed_item.qtd).reduce((a,b) => a + b)}} kg</span>
 							</template>
 							<template slot="actions" slot-scope="data">
-								<router-link :to="'/editar-encomenda/'+ data.item.id" class="fa fa-edit btn btn-primary btn-xs "></router-link>
-								<a @click="remove(data.item.id)" class="fa fa-trash btn btn-danger btn-xs"></a>
+								<router-link :to="'/editar-encomenda/'+ data.item._id" class="fa fa-edit btn btn-primary btn-xs "></router-link>
+								<a @click="remove(data.item._id)" class="fa fa-trash btn btn-danger btn-xs"></a>
 							</template>
 							<!-- eslint-disable-next-line -->
 							<template slot="bottom-row" slot-scope="data">
@@ -49,62 +50,77 @@
 <script>
 import axios from 'axios'
 import Loading from '@/components/Loading'
+import NoItem from '@/components/NoItem'
 import ListHeadline from '@/components/ListHeadline'
 import Breadcrumb from '@/components/Breadcrumb'
 
 export default {
-	
-	name: 'Orders', 
-	
+
+	name: 'Orders',
+
 	data () {
-		return { 
-			
+		return {
+			orders: null,
 			filters: { search: null },
 			table_fields: [
 				{ key: 'date_receiving', label: 'Data / ID', sortable: true },
 				{ key: 'client', label: 'Cliente', sortable: true },
-				{ key: 'weight', label: 'Quantidade', sortable: true },
+				{ key: 'qtd', label: 'Quantidade', sortable: true },
 				{ key: 'total', label: 'Total', sortable: true },
 				{ key: 'actions', label: 'Ações', 'class': 'actions' },
 			]
 		}
 	},
 	created () {
-		this.loadList('orders')
+		this.list()
 	},
 	computed: {
-		orders () {
-			return this.$store.state.orders
-		},
 		total_weight () {
 			let values = this.orders.map(order => {
-				return order.weight
+				if (order.seed_items && order.seed_items.length) {
+					return order.seed_items.map(seed_item => seed_item.qtd).reduce((a,b) => a + b)
+				} else {
+					return 0
+				}
 			})
 			return values.length ? values.reduce((a, b) => a + b) : 0
 		},
 		total_price () {
 			let values = this.orders.map(order => {
-				return order.total 
+				if (order.seed_items && order.seed_items.length) {
+					return order.seed_items.map(seed_item => seed_item.qtd * (order.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price)).reduce((a,b) => a + b)
+				} else {
+					return 0
+				}
 			})
-
 			return values.length ? values.reduce((a, b) => a + b) : 0
 		}
 	},
 	methods: {
+		list() {
+      axios.get('orders', {
+        params: {
+          populate: 'client'
+        }
+      }).then(response => {
+        this.orders = response.data
+      }).catch(this.showError)
+    },
 		remove (id) {
 			if (confirm("Tem certeza que deseja excluír?")) {
-				axios.delete('node/' + id + '?_format=json').then(() => {
-					this.loadList('orders')
-				}).catch(this.showError)	
+				axios.delete('orders/' + id).then(() => {
+					this.list()
+				}).catch(this.showError)
 			}
 		}
 	},
 
-	components: { 
-		'loading': Loading,
-		'list-headline': ListHeadline,
-		'breadcrumb': Breadcrumb
+	components: {
+			Loading,
+			NoItem,
+			ListHeadline,
+			Breadcrumb
 	}
-		
+
 };
 </script>
