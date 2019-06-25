@@ -50,7 +50,6 @@
       </b-form>
     </div>
   </div>
-  <pre>{{collectors}}</pre>
 </div>
 </template>
 
