@@ -1,6 +1,7 @@
 import axios from 'axios'
 import queries from '@/store/queries'
 import tipos_de_usuario from '@/data/tipos-de-usuario.json'
+import auth from '@/auth'
 import * as cpf from "@fnando/cpf"
 import * as cnpj from "@fnando/cnpj"
 
@@ -59,7 +60,12 @@ export default {
     showError(error) {
       if (error.response) {
         if (error.response.data) {
-          if (error.response.data.message) {
+          if (error.response.status == 401 && error.response.data.indexOf('invalid signature') > -1) {
+            this.error = 'Sessão expirada!'
+            auth.logout(function() {
+              this.$router.replace('/')
+            })
+          } else if (error.response.data.message) {
             this.error = error.response.data.message
           } else {
             this.error = error.response.data
