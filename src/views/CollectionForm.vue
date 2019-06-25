@@ -171,7 +171,7 @@ export default {
 					}
 
 					axios({
-						method: (this.isEditing() ? 'PATCH' : 'POST'),
+						method: (this.isEditing() ? 'PUT' : 'POST'),
 						url: 'node' + (this.isEditing() ? '/' + this.$route.params.id : '')+'?_format=json',
 						data: this.form
 					}).then(resp => {

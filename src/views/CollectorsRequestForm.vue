@@ -43,11 +43,8 @@ import FormSeedsSelect from '@/components/FormSeedsSelect'
 import FormSubmit from '@/components/FormSubmit'
 
 export default {
-
 	name: 'CollectorsRequestForm',
-
 	data () {
-
 		return {
 			seeds_errors: [],
 			seeds_checklist: {},

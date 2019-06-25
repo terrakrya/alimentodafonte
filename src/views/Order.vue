@@ -8,13 +8,13 @@
 				<div v-if="order && !isLoading">
 					<div class="row item-title">
 						<div class="col-md-12">
-							<router-link :to="'/editar-encomenda/'+order.id" class="btn btn-default btn-xs pull-right">
+							<router-link :to="'/editar-encomenda/'+order._id" class="btn btn-default btn-xs pull-right">
 								<i class="fa fa-edit" aria-hidden="true"></i>
 								Editar encomenda
 							</router-link>
 							<h1>
-								Encomenda {{ order.id }}
-								<small v-if="order.status && !order.close">(Contrato {{order.status.toLowerCase()}})</small>
+								Encomenda {{ order.code }}
+								<small v-if="order.contract && !order.close">(Contrato {{order.contract.toLowerCase()}})</small>
 								<small v-if="order.close">(Entrega concluída)</small>
 							</h1>
 							<p>
@@ -22,10 +22,10 @@
 								<span v-if="order.deadline">Prazo final: {{ order.deadline | moment("DD/MM/YYYY") }}</span>
 							</p>
 							<p>
-								<router-link v-if="order.client" :to="'/cliente/'+order.client.id"> &bull; {{ order.client.title }}</router-link>
+								<router-link v-if="order.client" :to="'/cliente/'+order.client._id"> &bull; {{ order.client.name }}</router-link>
 							</p>
 							<p>
-								<span v-if="order.area">{{order.area}} hectares</span>
+								<span v-if="order.restored_area">{{order.restored_area}} hectares</span>
 								<span v-if="order.vegetation">{{order.vegetation}}</span>
 							</p>
 							<div>
@@ -36,16 +36,16 @@
 					</div>
 					<hr class="clearfix">
 					<div class="row">
-						<div class="col-sm-3" v-if="order.weight >= 0">
+						<div class="col-sm-3" v-if="order.seed_items && order.seed_items.length">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Quantidade</span>
-								<span class="number">{{ order.weight }} Kg</span>
+								<span class="number">{{ order.seed_items.map(seed_item => seed_item.qtd).reduce((a,b) => a + b) }} Kg</span>
 							</div>
 						</div>
-						<div class="col-sm-3" v-if="order.price >= 0">
+						<div class="col-sm-3" v-if="order.seed_items && order.seed_items.length">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Total {{order.purchase_type.toLowerCase()}}</span>
-								<span class="number">{{ order.price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+								<span class="number">{{ order.seed_items.map(seed_item => seed_item.qtd * (order.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price)).reduce((a,b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
 							</div>
 						</div>
 						<div class="col-sm-3" v-if="order.amount_paid >= 0">
@@ -67,25 +67,25 @@
 								<thead>
 									<tr>
 										<th>Espécie</th>
-										<th>Valor / Kg</th>
+										<th>Valor <span v-if="order.purchase_type">{{order.purchase_type.toLowerCase()}}</span> / Kg</th>
 										<th>Quantidade</th>
-										<th>Total</th>
+										<th>Total <span v-if="order.purchase_type">{{order.purchase_type.toLowerCase()}}</span></th>
 										<th></th>
 									</tr>
 								</thead>
 								<tbody>
-									<tr v-for="(seed, index) in order.seeds" :key="index">
+									<tr v-for="(seed_item, index) in order.seed_items" :key="index">
 										<td>
-											<router-link :to="'/semente/'+seed.id">{{seed.title}}</router-link>
+											<router-link :to="'/semente/'+seed_item.seed._id">{{seed_item.seed.name}}</router-link>
 										</td>
 										<td>
-											{{seed.price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+											{{(order.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
 										</td>
 										<td>
-											{{seed.weight | currency('', 0, { thousandsSeparator: '' })}} kg
+											{{seed_item.qtd | currency('', 0, { thousandsSeparator: '' })}} kg
 										</td>
 										<td>
-											{{seed.price * seed.weight | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+											{{(order.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price) * seed_item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
 										</td>
 									</tr>
 								</tbody>
@@ -98,32 +98,33 @@
 	</div>
 </template>
 <script>
+import axios from 'axios'
 import Loading from '@/components/Loading'
 import Breadcrumb from '@/components/Breadcrumb'
 
 export default {
 
-	name: 'CollectorsRequest',
+	name: 'Order',
 
-	data () {
-		return {
-
-		}
-	},
-	created () {
-		this.getList('orders')
-	},
-	computed: {
-		order () {
-			if (this.$store.state.orders) {
-				return this.$store.state.orders.find(cr => cr.id == this.$route.params.id)
-			}
-			return null
-		}
-	},
+	data() {
+    return {
+      order: null
+    }
+  },
+  created() {
+    this.isLoading = true
+    axios.get('orders/' + this.$route.params.id, {
+      params: {
+        populate: 'client seed_items.seed'
+      }
+    }).then(response => {
+      this.order = response.data
+      this.isLoading = false
+    }).catch(this.showError);
+  },
 	components: {
-		'loading': Loading,
-		'breadcrumb': Breadcrumb
+		Loading,
+		Breadcrumb
 	}
 
 };
