@@ -33,6 +33,7 @@ export default {
   methods: {
     uploadImages(e) {
       this.isLoading = true
+      this.error = null
       let files = e.target.files;
 
       for (var i = 0; i < files.length; i++) {
