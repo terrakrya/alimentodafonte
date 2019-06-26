@@ -59,7 +59,7 @@ var getStock = async function() {
 }
 
 var loadList = async function(type) {
-  } else if (type == 'collectors') {
+  if (type == 'collectors') {
     return await getCollectors()
   } else if (type == 'collectors_groups') {
     return await getCollectorsGroups()

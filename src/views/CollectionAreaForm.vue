@@ -126,7 +126,6 @@ export default {
           }).then(resp => {
             var collection_area = resp.data
             if (collection_area && collection_area._id) {
-              this.loadList('collection_areas')
               this.$router.replace('/area-de-coleta/' + collection_area._id)
             }
             this.isSending = false

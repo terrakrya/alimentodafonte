@@ -76,7 +76,6 @@
 				</b-form>
 			</div>
 		</div>
-		<pre>{{form}}</pre>
 	</div>
 </template>
 
@@ -154,7 +153,6 @@ export default {
 					}).then(resp => {
 						var collection = resp.data
 						if (collection && collection._id) {
-							this.loadList('collections')
 							this.$router.replace('/coleta/'+collection._id)
 						}
 						this.isSending = false
