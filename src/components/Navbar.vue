@@ -8,11 +8,6 @@
     <div class="container-fluid">
       <div class="navbar-btn">
       </div>
-
-      <div class="navbar-btn">
-        <a class="btn btn-primary" href="" title="Nova pesca"><i class="fa fa-plus"   aria-hidden="true"></i> <span>NOVA PESCA</span></a>
-        <a class="btn btn-primary" href="" title="Criar grupo"><i class="fa fa-plus" aria-hidden="true"></i> <span>CRIAR GRUPO</span></a>
-      </div>
       <div id="navbar-menu">
         <ul class="nav navbar-nav navbar-right">
           <li class="dropdown" :class="{open: userDropdown }">
