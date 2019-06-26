@@ -134,7 +134,7 @@ export default {
           this.isSending = true
           this.error = false
 
-          if (this.present(this.form.qtd)) {
+          if (this.form.qtd) {
             this.form.qtd = this.form.qtd
 
             if (this.price) {

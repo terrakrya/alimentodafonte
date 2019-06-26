@@ -44,20 +44,6 @@ export default {
         }
       })
     },
-    present(field, item) {
-      if (item) {
-        return !!field[item]
-      } else {
-        return !!field
-      }
-    },
-    getList(type) {
-      var list = this.$store.state[type]
-      if (!list || !list.length) {
-        this.loadList(type)
-      }
-      return list
-    },
     async loadList(type) {
       return await queries.loadList(type).catch(this.showError)
     },

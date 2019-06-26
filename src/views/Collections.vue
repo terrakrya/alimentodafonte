@@ -93,7 +93,7 @@ export default {
     },
     remove (id) {
 			if (confirm("Tem certeza que deseja excluír?")) {
-				axios.delete('node/' + id + '?_format=json').then(() => {
+				axios.delete('collections/' + id).then(() => {
 					this.list()
 				}).catch(this.showError)
 			}
