@@ -45,9 +45,12 @@ docker-compose up -d --build
 
 In the first time you run the app you will need to generate the first admin user to access the panel. To do this access:
 
+```
 /api/init
+```
 
 It will generates an admin user with the the following credentials:
 
 User: admin
+
 Pass: zyY5TeRl8k (this should be changed after the first access in production)
