@@ -4,7 +4,7 @@ const mongoose = require('mongoose'),
 
 const CollectionSchema = mongoose.Schema({
   date_time: {
-    type: Date,
+    type: String,
     required: true
   },
   seed: {

@@ -51,10 +51,10 @@
 					</div>
 					<div class="row">
 						<div class="col-sm-6">
-							<pictures-upload :form="form" :preview="images_preview" :error="error" field="images" url="uploads/images" :multiple="true" />
+							<pictures-upload :form="form" :error="error" field="images" url="uploads/images" :multiple="true" />
 						</div>
 						<div class="col-sm-6">
-							<audios-upload :form="form" :preview="audios_preview" :error="error" field="audio" url="uploads/audios" />
+							<audios-upload :form="form" :error="error" field="audio" url="uploads/audios" />
 						</div>
 					</div>
 					<div class="row gray">
@@ -94,8 +94,6 @@ export default {
 	name: 'CollectionForm',
 	data () {
 		return {
-			images_preview: [],
-			audios_preview: [],
 			date_time: { date: '', time: '' },
 			form: {
 				date_time: '',
@@ -126,9 +124,6 @@ export default {
 			axios.get('collections/' + id).then(response => {
 				var data = response.data
 				this.apiDataToForm(this.form, data)
-
-				this.images_preview = response.data.images
-				this.audios_preview = response.data.audio
 
 				if (this.form.date_time){
 					var dt = this.form.date_time.split('T')

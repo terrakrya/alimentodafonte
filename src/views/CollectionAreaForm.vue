@@ -26,7 +26,7 @@
             </b-form-group>
           </div>
           <div class="col-sm-6">
-            <documents-upload :form="form" :preview="documents_preview" :error="error" field="documents" url="uploads/documents" />
+            <documents-upload :form="form" :error="error" field="documents" url="uploads/documents" />
           </div>
         </div>
         <form-address :form="form" />
@@ -78,7 +78,6 @@ export default {
 
   data() {
     return {
-      documents_preview: [],
       form: {
         name: "",
         description: "",
@@ -95,7 +94,7 @@ export default {
         },
 				collectors_group: null,
         collector: null,
-        documents: [],
+        documents: null,
       },
     }
   },
@@ -110,7 +109,6 @@ export default {
       axios.get('collection_areas/' + id).then(response => {
         var data = response.data
         this.apiDataToForm(this.form, data)
-        this.documents_preview = response.data.documents
         this.isLoading = false
       }).catch(this.showError);
     },

@@ -4,10 +4,18 @@
     <b-form-file ref="files" id="files" :multiple="multiple" accept="audio/*" v-on:change="uploadAudios"></b-form-file>
     <span class="text-danger" v-show="error">{{ error }}</span>
   </b-form-group>
-  <div class="row" v-if="!isLoading && audios_preview.length > 0">
-    <div class="col-xs-12" v-for="(audio, index) in audios_preview" :key="index">
-      <a :href="(baseUrl + audio)" target="_blank"><i class="fa fa-music"></i> &nbsp; {{ audio | filename }}</a>
-      <a class="btn btn-danger btn-xs pull-right" @click="deleteAudio(index)"><i class="fa fa-trash"></i></a>
+  <div class="row" v-if="!isLoading">
+    <div v-if="Array.isArray(form[field]) && form[field].length > 0">
+      <div class="col-xs-12" v-for="(audio, index) in form[field]" :key="index">
+        <a :href="(baseUrl + audio)" target="_blank"><i class="fa fa-music"></i> &nbsp; {{ audio | filename }}</a>
+        <a class="btn btn-danger btn-xs pull-right" @click="deleteAudio(index)"><i class="fa fa-trash"></i></a>
+      </div>
+    </div>
+    <div v-if="!Array.isArray(form[field]) && form[field]">
+      <div class="col-xs-12">
+        <a :href="(baseUrl + form[field])" target="_blank"><i class="fa fa-music"></i> &nbsp; {{ form[field] | filename }}</a>
+        <a class="btn btn-danger btn-xs pull-right" @click="deleteAudio()"><i class="fa fa-trash"></i></a>
+      </div>
     </div>
   </div>
   <loading :loading="isLoading" msg="Enviando áudio" />
@@ -21,13 +29,8 @@ import Loading from './Loading'
 export default {
 
   name: 'audios-upload',
-  props: ['form', 'preview', 'multiple', 'field', 'url'],
+  props: ['form', 'multiple', 'field', 'url'],
   inject: ['$validator'],
-  data() {
-    return {
-      audios_preview: typeof this.preview == 'string' ? [this.preview] : this.preview
-    }
-  },
   methods: {
     uploadAudios(e) {
       this.isLoading = true
@@ -44,10 +47,8 @@ export default {
           }
         }).then(response => {
           if (this.multiple) {
-            this.audios_preview.push(response.data)
             this.form[this.field].push(response.data)
           } else {
-            this.audios_preview = [response.data]
             this.form[this.field] = response.data
           }
           this.isLoading = false
@@ -58,7 +59,6 @@ export default {
       }
     },
     deleteAudio(index) {
-      this.$delete(this.audios_preview, index)
       if (this.multiple) {
         this.$delete(this.form[this.field], index)
       } else {

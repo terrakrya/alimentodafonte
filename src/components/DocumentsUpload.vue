@@ -1,13 +1,21 @@
 <template>
-<div class="pictures-upload">
+<div class="documents-upload">
   <b-form-group :label="'Documento' + (multiple ? 's' : '')" :description="'Selecione um '+ (multiple ? 'ou mais arquivos' : 'arquivo') +' no formato PDF, JPG, JPEG, KMZ ou DOC, com no máximo 32 MB.'" v-show="!isLoading">
     <b-form-file ref="files" id="files" :multiple="multiple" accept="application/msword, application/vnd.google-earth.kml+xml, image/*, application/pdf" v-on:change="uploadDocuments"></b-form-file>
     <span class="text-danger" v-show="error">{{ error }}</span>
   </b-form-group>
-  <div class="row" v-if="!isLoading && documents_preview.length > 0">
-    <div class="col-xs-12" v-for="(doc, index) in documents_preview" :key="index">
-      <a :href="(baseUrl + doc)" target="_blank"><i class="fa fa-download"></i> {{ doc | filename }}</a>
-      <a class="btn btn-danger btn-xs pull-right" @click="deleteDocument(index)"><i class="fa fa-trash"></i></a>
+  <div class="row" v-if="!isLoading">
+    <div v-if="Array.isArray(form[field]) && form[field].length > 0">
+      <div class="col-xs-12" v-for="(doc, index) in form[field]" :key="index">
+        <a :href="(baseUrl + doc)" target="_blank"><i class="fa fa-download"></i> {{ doc | filename }}</a>
+        <a class="btn btn-danger btn-xs pull-right" @click="deleteDocument(index)"><i class="fa fa-trash"></i></a>
+      </div>
+    </div>
+    <div v-if="!Array.isArray(form[field]) && form[field]">
+      <div class="col-xs-12">
+        <a :href="(baseUrl + form[field])" target="_blank"><i class="fa fa-download"></i> {{ form[field] | filename }}</a>
+        <a class="btn btn-danger btn-xs pull-right" @click="deleteDocument()"><i class="fa fa-trash"></i></a>
+      </div>
     </div>
   </div>
   <loading :loading="isLoading" msg="Enviando documento" />
@@ -21,12 +29,7 @@ import Loading from './Loading'
 export default {
 
   name: 'documents-upload',
-  props: ['form', 'preview', 'multiple', 'field', 'url'],
-  data() {
-    return {
-      documents_preview: this.preview
-    }
-  },
+  props: ['form', 'multiple', 'field', 'url'],
   methods: {
     uploadDocuments(e) {
       this.error = false
@@ -42,10 +45,8 @@ export default {
           }
         }).then(response => {
           if (this.multiple) {
-            this.documents_preview.push(response.data)
             this.form[this.field].push(response.data)
           } else {
-            this.documents_preview = [response.data]
             this.form[this.field] = response.data
           }
           this.isLoading = false
@@ -56,7 +57,6 @@ export default {
       }
     },
     deleteDocument(index) {
-      this.$delete(this.documents_preview, index)
       if (this.multiple) {
         this.$delete(this.form[this.field], index)
       } else {
