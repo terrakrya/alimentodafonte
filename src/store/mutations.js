@@ -1,4 +1,3 @@
-import axios from 'axios'
 export const STORAGE_KEY = 'todos-vuejs'
 
 // for testing

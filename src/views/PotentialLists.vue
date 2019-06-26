@@ -24,6 +24,9 @@
             <template slot="qtd" slot-scope="data">
               {{data.item.seed_items.map(seed_item => seed_item.qtd).reduce((a,b) => a + b)}} kg
             </template>
+            <template slot="compensation_collect" slot-scope="data">
+              {{data.item.seed_items.map(seed_item => seed_item.qtd * seed_item.compensation_collect).reduce((a,b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}
+            </template>
             <template slot="actions" slot-scope="data">
               <router-link :to="'/editar-lista-de-potencial/'+ data.item._id" class="fa fa-edit btn btn-primary btn-xs "></router-link>
               <a @click="remove(data.item._id)" class="fa fa-trash btn btn-danger btn-xs"></a>
@@ -34,6 +37,7 @@
               <td />
               <td><strong> Total</strong></td>
               <td><strong>{{total_qtd}} Kg</strong></td>
+              <td><strong>{{total_compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}</strong></td>
               <td />
             </template>
           </b-table>
@@ -81,6 +85,11 @@ export default {
           sortable: true
         },
         {
+          key: 'compensation_collect',
+          label: 'Remuneração',
+          sortable: true
+        },
+        {
           key: 'actions',
           label: 'Ações',
           'class': 'actions'
@@ -96,6 +105,11 @@ export default {
     total_qtd() {
       return this.potential_lists.map(potential_list => {
         return potential_list.seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b)
+      }).reduce((a, b) => a + b)
+    },
+    total_compensation_collect() {
+      return this.potential_lists.map(potential_list => {
+        return potential_list.seed_items.map(seed_item => seed_item.qtd * seed_item.compensation_collect).reduce((a, b) => a + b)
       }).reduce((a, b) => a + b)
     }
   },
