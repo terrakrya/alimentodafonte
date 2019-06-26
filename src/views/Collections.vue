@@ -7,7 +7,8 @@
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
 					<loading :loading="!collections && !error" msg="Carregando lista de coletas" />
-					<div v-if="collections">
+					<no-item :list="collections" />
+					<div v-if="collections && collections.length">
 						<b-table stacked="md" :fields="table_fields" :items="collections" :sort-by="'title'" :filter="filters.search">
 							<template slot="date_time" slot-scope="data">
 								<router-link v-if="data.item.date_time" :to="'/coleta/'+ data.item._id">
@@ -46,6 +47,7 @@
 <script>
 import axios from 'axios'
 import Loading from '@/components/Loading'
+import NoItem from '@/components/NoItem'
 import ListHeadline from '@/components/ListHeadline'
 import Breadcrumb from '@/components/Breadcrumb'
 
@@ -100,9 +102,10 @@ export default {
 		}
 	},
 	components: {
-		'loading': Loading,
-		'list-headline': ListHeadline,
-		'breadcrumb': Breadcrumb
+		Loading,
+		NoItem,
+		ListHeadline,
+		Breadcrumb
 	}
 
 };

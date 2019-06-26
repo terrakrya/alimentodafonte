@@ -64,7 +64,7 @@
 											</dl>
 											<dl v-if="collection.audio">
 												<dt>Áudio</dt>
-												<dd><a :href="baseUrl + collection.audio" target="_blank"><i class="fa fa-download"></i> {{ fileName(collection.audio) }}</a></dd>
+												<dd><a :href="baseUrl + collection.audio" target="_blank"><i class="fa fa-music"></i> {{ fileName(collection.audio) }}</a></dd>
 											</dl>
 										</div>
 										<div class="col-sm-6">

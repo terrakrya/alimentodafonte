@@ -136,7 +136,6 @@ router.get('/init', function(req, res) {
   User.find({
     roles: 'admin'
   }).populate(populate(req)).exec(function(err, users) {
-    console.log(users)
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err);
     } else {

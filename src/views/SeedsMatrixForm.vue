@@ -65,7 +65,7 @@
         </div>
         <div class="row">
           <div class="col-sm-12">
-            <documents-upload :form="form" :multiple="true" :preview="documents_preview" :error="error" field="documents" url="uploads/documents" />
+            <documents-upload :form="form" :multiple="true" :error="error" field="documents" url="uploads/documents" />
           </div>
         </div>
         <form-submit :errors="error" :sending="isSending" />
@@ -97,7 +97,6 @@ export default {
       categorias_de_matrizes: categorias_de_matrizes,
       origens_de_matrizes: origens_de_matrizes,
       meses: meses,
-      documents_preview: [],
       form: {
         code: '',
         name: '',
@@ -125,7 +124,6 @@ export default {
       this.isLoading = true
       axios.get('seeds_matrixes/' + id).then(response => {
         this.apiDataToForm(this.form, response.data)
-        Object.assign(this.documents_preview, response.data.documents)
         this.isLoading = false
       }).catch(this.showError);
     },
@@ -150,7 +148,7 @@ export default {
     },
     generateCode () {
       if (!this.$route.params.id || !this.form.code) {
-        this.form.code = utils.generateCode(this.form.name.split(' '))        
+        this.form.code = utils.generateCode(this.form.name.split(' '))
       }
     }
   },

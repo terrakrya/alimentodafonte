@@ -4,12 +4,22 @@
     <b-form-file ref="files" id="files" :multiple="multiple" accept="image/*" v-on:change="uploadImages"></b-form-file>
     <span class="text-danger" v-show="error">{{ error }}</span>
   </b-form-group>
-  <div class="row images_preview" v-if="!isLoading && images_preview.length > 0">
-    <div class="col-xs-2" v-for="(image, index) in images_preview" :key="index">
-      <b-img :src="baseUrl + image.thumb" fluid thumbnail />
-      <br>
-      <br>
-      <p class="text-center"><a class="btn btn-default btn-small" @click="deleteImage(index)"><i class="fa fa-trash"></i></a></p>
+  <div class="row images_preview" v-if="!isLoading">
+    <div v-if="Array.isArray(form[field]) && form[field].length > 0">
+      <div class="col-xs-2" v-for="(image, index) in form[field]" :key="index">
+        <b-img :src="baseUrl + image.thumb" fluid thumbnail />
+        <br>
+        <br>
+        <p class="text-center"><a class="btn btn-default btn-small" @click="deleteImage(index)"><i class="fa fa-trash"></i></a></p>
+      </div>
+    </div>
+    <div v-if="!Array.isArray(form[field]) && form[field] && form[field].thumb">
+      <div class="col-xs-2">
+        <b-img :src="baseUrl + form[field].thumb" fluid thumbnail />
+        <br>
+        <br>
+        <p class="text-center"><a class="btn btn-default btn-small" @click="deleteImage()"><i class="fa fa-trash"></i></a></p>
+      </div>
     </div>
   </div>
   <loading :loading="isLoading" msg="Enviando foto" />
@@ -23,13 +33,8 @@ import Loading from './Loading'
 export default {
 
   name: 'pictures-upload',
-  props: ['form', 'preview', 'multiple', 'field', 'url'],
+  props: ['form', 'multiple', 'field', 'url'],
   inject: ['$validator'],
-  data() {
-    return {
-      images_preview: this.preview
-    }
-  },
   methods: {
     uploadImages(e) {
       this.isLoading = true
@@ -46,10 +51,8 @@ export default {
           }
         }).then(response => {
           if (this.multiple) {
-            this.images_preview.push(response.data)
             this.form[this.field].push(response.data)
           } else {
-            this.images_preview = [response.data]
             this.form[this.field] = response.data
           }
           this.isLoading = false
@@ -60,7 +63,6 @@ export default {
       }
     },
     deleteImage(index) {
-      this.$delete(this.images_preview, index)
       if (this.multiple) {
         this.$delete(this.form[this.field], index)
       } else {
@@ -72,7 +74,7 @@ export default {
     }
   },
   components: {
-    'loading': Loading
+    Loading
   }
 };
 </script>
