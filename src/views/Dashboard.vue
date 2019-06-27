@@ -46,6 +46,8 @@
                   </div>
                 </div>
               </div>
+              <hr>
+              <br>
               <div class="text-center">
                 <h4><i class="fa fa-cogs"></i>&nbsp;&nbsp;<span>Operacional</span></h4>
                 <div class="nav-buttons">
