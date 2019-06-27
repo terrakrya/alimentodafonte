@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  sementes_xingu:
+  sementes_xingu_app:
     container_name: sementes_xingu
     restart: always
     build: .
@@ -28,7 +28,7 @@ services:
     volumes:
       - ./data/xingu:/data/db
 
-  sementes_cerrado:
+  sementes_cerrado_app:
     container_name: sementes_cerrado
     restart: always
     build: .
@@ -55,7 +55,7 @@ services:
     volumes:
       - ./data/cerrado:/data/db
 
-  sementes_teste:
+  sementes_teste_app:
     container_name: sementes_teste
     restart: always
     build: .
