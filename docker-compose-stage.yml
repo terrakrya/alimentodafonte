@@ -1,31 +1,33 @@
 version: "3"
 
 services:
-
-  nginx_front:
-    image: wodby/nginx:1.15-5.0.5
-    container_name: "frontend_sementes_nginx"
+  sementes:
+    container_name: sementes
+    restart: always
+    build: .
+    links:
+      - mongo_sementes
     environment:
-      NGINX_STATIC_CONTENT_OPEN_FILE_CACHE: "off"
-      NGINX_ERROR_LOG_LEVEL: debug
-      NGINX_SERVER_ROOT: /var/www/html/dist
-      NGINX_USER: wodby
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongo:27017/sementes
+      - SECRET=LBHbQJpuZT
     volumes:
-      - ./:/var/www/html
-      #- ./docker/conf.d/:/etc/nginx/conf.d
-      # Options for macOS users (https://docker4drupal.readthedocs.io/en/latest/macos)
-      #      - ./:/var/www/html:cached # User-guided caching
-      #      - docker-sync:/var/www/html # Docker-sync
+      - ./uploads:/app/uploads
     networks:
       sementes_sementes:
     labels:
       - 'traefik.docker.network=drupal'
-      - 'traefik.backend=frontend_sementes_nginx'
+      - 'traefik.backend=sementes'
       - 'traefik.port=80'
       - 'traefik.frontend.rule=Host:sementes.nyx.tc'
       - 'traefik.enable=true'
+      
+  mongo_sementes:
+    container_name: mongo_sementes
+    image: 'mongo:4'
+    volumes:
+      - ./data:/data/db
 
 networks:
   sementes_sementes:
     external: true
-
