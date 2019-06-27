@@ -9,7 +9,7 @@ services:
       - mongo_xingu
     environment:
       - NODE_ENV=production
-      - MONGODB_URI=mongodb://mongo_xingu:27017/sementes
+      - MONGODB_URI=mongodb://mongo:27017/sementes
       - SECRET=LBHbQJpuZT
       - PORT=80
     volumes:
@@ -23,7 +23,7 @@ services:
       - 'traefik.frontend.rule=Host:xingu.sementesdoxingu.org.br'
       - 'traefik.enable=true'
   mongo_xingu:
-    container_name: mongo_sementes_xingu
+    container_name: mongo_xingu
     image: 'mongo:4'
     volumes:
       - ./data/xingu:/data/db
@@ -36,7 +36,7 @@ services:
       - mongo_cerrado
     environment:
       - NODE_ENV=production
-      - MONGODB_URI=mongodb://mongo_cerrado:27017/sementes
+      - MONGODB_URI=mongodb://mongo:27017/sementes
       - SECRET=LBHbQJpuZT
       - PORT=80
     volumes:
@@ -50,7 +50,7 @@ services:
       - 'traefik.frontend.rule=Host:cerrado.sementesdoxingu.org.br'
       - 'traefik.enable=true'
   mongo_cerrado:
-    container_name: mongo_sementes_cerrado
+    container_name: mongo_cerrado
     image: 'mongo:4'
     volumes:
       - ./data/cerrado:/data/db
@@ -63,7 +63,7 @@ services:
       - mongo_teste
     environment:
       - NODE_ENV=production
-      - MONGODB_URI=mongodb://mongo_teste:27017/sementes
+      - MONGODB_URI=mongodb://mongo:27017/sementes
       - SECRET=LBHbQJpuZT
       - PORT=80
     volumes:
@@ -77,7 +77,7 @@ services:
       - 'traefik.frontend.rule=Host:teste.sementesdoxingu.org.br'
       - 'traefik.enable=true'
   mongo_teste:
-    container_name: mongo_sementes_teste
+    container_name: mongo_teste
     image: 'mongo:4'
     volumes:
       - ./data/teste:/data/db
