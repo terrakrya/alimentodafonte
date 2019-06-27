@@ -9,7 +9,7 @@ services:
       - mongo_xingu
     environment:
       - NODE_ENV=production
-      - MONGODB_URI=mongodb://mongo:27017/sementes
+      - MONGODB_URI=mongodb://mongo_xingu:27017/sementes
       - SECRET=LBHbQJpuZT
       - PORT=80
     volumes:
@@ -36,7 +36,7 @@ services:
       - mongo_cerrado
     environment:
       - NODE_ENV=production
-      - MONGODB_URI=mongodb://mongo:27017/sementes
+      - MONGODB_URI=mongodb://mongo_cerrado:27017/sementes
       - SECRET=LBHbQJpuZT
       - PORT=80
     volumes:
@@ -63,7 +63,7 @@ services:
       - mongo_teste
     environment:
       - NODE_ENV=production
-      - MONGODB_URI=mongodb://mongo:27017/sementes
+      - MONGODB_URI=mongodb://mongo_teste:27017/sementes
       - SECRET=LBHbQJpuZT
       - PORT=80
     volumes:
