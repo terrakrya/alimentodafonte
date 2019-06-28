@@ -15,7 +15,7 @@ services:
     volumes:
       - ./uploads/xingu:/app/uploads
     networks:
-      sementes_default:
+      rede-de-sementes_default:
     labels:
       - 'traefik.docker.network=sementes'
       - 'traefik.backend=sementes_xingu'
@@ -42,7 +42,7 @@ services:
     volumes:
       - ./uploads/cerrado:/app/uploads
     networks:
-      sementes_default:
+      rede-de-sementes_default:
     labels:
       - 'traefik.docker.network=sementes'
       - 'traefik.backend=sementes_cerrado'
@@ -69,7 +69,7 @@ services:
     volumes:
       - ./uploads/teste:/app/uploads
     networks:
-      sementes_default:
+      rede-de-sementes_default:
     labels:
       - 'traefik.docker.network=sementes'
       - 'traefik.backend=sementes_teste'
@@ -83,5 +83,5 @@ services:
       - ./data/teste:/data/db
 
 networks:
-  sementes_default:
+  rede-de-sementes_default:
     external: true
