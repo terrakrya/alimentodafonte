@@ -17,7 +17,7 @@ services:
     networks:
       rededesementes_default:
     labels:
-      - 'traefik.docker.network=sementes'
+      - 'traefik.docker.network=rededesementes_default'
       - 'traefik.backend=sementes_xingu'
       - 'traefik.port=80'
       - 'traefik.frontend.rule=Host:xingu.sementesdoxingu.org.br'
@@ -44,7 +44,7 @@ services:
     networks:
       rededesementes_default:
     labels:
-      - 'traefik.docker.network=sementes'
+      - 'traefik.docker.network=rededesementes_default'
       - 'traefik.backend=sementes_cerrado'
       - 'traefik.port=80'
       - 'traefik.frontend.rule=Host:cerrado.sementesdoxingu.org.br'
@@ -71,7 +71,7 @@ services:
     networks:
       rededesementes_default:
     labels:
-      - 'traefik.docker.network=sementes'
+      - 'traefik.docker.network=rededesementes_default'
       - 'traefik.backend=sementes_teste'
       - 'traefik.port=80'
       - 'traefik.frontend.rule=Host:teste.sementesdoxingu.org.br'
@@ -81,16 +81,6 @@ services:
     image: 'mongo:4'
     volumes:
       - ./data/teste:/data/db
-
-  traefik:
-    image: traefik
-    command: --web --docker --logLevel=DEBUG
-    ports:
-      - "80:80"
-      - "8080:8080"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /dev/null:/traefik.toml
 
 networks:
   rededesementes_default:
