@@ -20,6 +20,6 @@ yarn-error.log*
 *.sw*
 
 docker-compose.override.yml
-uploads/
-data/
-dist/
+/uploads/
+/data/
+/dist/

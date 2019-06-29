@@ -9,5 +9,16 @@ module.exports = {
       populate = ''
     }
     return populate
+  },
+  select (req) {
+    var select = req.query.select
+    if (select) {
+      if (select && select.search('{') != -1) {
+        select = JSON.parse(req.query.select)
+      }
+    } else {
+      select = ''
+    }
+    return select
   }
 }
