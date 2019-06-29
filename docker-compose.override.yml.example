@@ -15,9 +15,9 @@ services:
     volumes:
       - ./uploads/xingu:/app/uploads
     networks:
-      rededesementes_default:
+      sementes:
     labels:
-      - 'traefik.docker.network=rededesementes_default'
+      - 'traefik.docker.network=sementes'
       - 'traefik.backend=sementes_xingu'
       - 'traefik.port=80'
       - 'traefik.frontend.rule=Host:xingu.sementesdoxingu.org.br'
@@ -27,6 +27,9 @@ services:
     image: 'mongo:4'
     volumes:
       - ./data/xingu:/data/db
+    networks:
+      sementes:
+
 
   sementes_cerrado_app:
     container_name: sementes_cerrado
@@ -42,9 +45,9 @@ services:
     volumes:
       - ./uploads/cerrado:/app/uploads
     networks:
-      rededesementes_default:
+      sementes:
     labels:
-      - 'traefik.docker.network=rededesementes_default'
+      - 'traefik.docker.network=sementes'
       - 'traefik.backend=sementes_cerrado'
       - 'traefik.port=80'
       - 'traefik.frontend.rule=Host:cerrado.sementesdoxingu.org.br'
@@ -54,6 +57,9 @@ services:
     image: 'mongo:4'
     volumes:
       - ./data/cerrado:/data/db
+    networks:
+      sementes:
+
 
   sementes_teste_app:
     container_name: sementes_teste
@@ -69,9 +75,9 @@ services:
     volumes:
       - ./uploads/teste:/app/uploads
     networks:
-      rededesementes_default:
+      sementes:
     labels:
-      - 'traefik.docker.network=rededesementes_default'
+      - 'traefik.docker.network=sementes'
       - 'traefik.backend=sementes_teste'
       - 'traefik.port=80'
       - 'traefik.frontend.rule=Host:teste.sementesdoxingu.org.br'
@@ -81,7 +87,25 @@ services:
     image: 'mongo:4'
     volumes:
       - ./data/teste:/data/db
+    networks:
+      sementes:
+
+  traefik:
+    image: traefik
+    command: -c /dev/null --web --docker --logLevel=INFO
+    ports:
+      - '80:80'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      sementes:
+    labels:
+      - "traefik.docker.network=drupal"
 
 networks:
-  rededesementes_default:
-    external: true
+  sementes:
+    driver: bridge
+    ipam:
+      config:
+        -
+          subnet: 172.55.0.0/16
