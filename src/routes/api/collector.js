@@ -7,16 +7,6 @@ var express = require('express'),
   CollectorsRequest = mongoose.model('CollectorsRequest'),
   StockIn = mongoose.model('StockIn');
 
-router.get('/seeds', auth.collector, function(req, res) {
-  Seed.find({}, utils.select(req)).populate(utils.populate(req)).exec(function(err, seeds) {
-    if (err) {
-      res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
-    } else {
-      res.json(seeds);
-    }
-  });
-});
-
 router.get('/requests', auth.collector, function(req, res) {
   CollectorsRequest.find({
     collector: req.payload.id

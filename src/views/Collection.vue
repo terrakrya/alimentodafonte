@@ -15,7 +15,7 @@
 								<span v-if="collection.seed">Coleta de {{ collection.seed.name }}</span>
 								<small v-if="collection.date_time"><br>{{collection.date_time | moment("DD/MM/YYYY HH:mm")}}</small>
 							</h1>
-							<p>
+							<p v-if="isManager">
 								<router-link v-if="collection.collectors_group" :to="'/grupo-de-coletores/'+ collection.collectors_group._id">
 									&bull; {{collection.collectors_group.name}}
 								</router-link>
@@ -65,6 +65,10 @@
 											<dl v-if="collection.audio">
 												<dt>Áudio</dt>
 												<dd><a :href="baseUrl + collection.audio" target="_blank"><i class="fa fa-music"></i> {{ fileName(collection.audio) }}</a></dd>
+												<dd>
+													<br>
+													<audio :src="baseUrl + collection.audio" controls></audio>
+												</dd>
 											</dl>
 										</div>
 										<div class="col-sm-6">

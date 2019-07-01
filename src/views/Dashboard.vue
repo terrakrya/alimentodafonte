@@ -1,14 +1,52 @@
 <template>
   <div class="dashboard">
     <ol class="breadcrumb">
-      <li class="active">Painel do gestor</li>
+      <li class="active">Painel do {{currentRole.text | lowercase}}</li>
     </ol>
     <div class="panel panel-headline data-list">
       <div class="panel-body">
         <div class="row">
           <div class="col-md-12">
             <div class="info-content">
-              <div class="row">
+              <div class="row" v-if="isCollector && !isManager">
+                <div class="col-sm-4" v-if="collections">
+                  <div class="weekly-summary text-center">
+                    <router-link to="/coletas">
+                      <span class="info-label">Coletas</span>
+                      <span class="number">{{ total_collection_weight_gross }} kg</span>
+                      <br>
+                      <span>{{ total_collection_weight_benef }} kg beneficiado</span>
+                      <br>
+                      <small>{{ total_collection_species }} espécies</small>
+                    </router-link>
+                  </div>
+                </div>
+                <div class="col-sm-4" v-if="collectors_requests">
+                  <div class="weekly-summary text-center">
+                    <router-link to="/pedidos-do-coletor">
+                      <span class="info-label">Pedidos</span>
+                      <span class="number">{{ total_collectors_request | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+                      <br>
+                      <span>{{ total_collectors_request_qtd }} kg</span>
+                      <br>
+                      <small>{{ total_collectors_request_species }} espécies</small>
+                    </router-link>
+                  </div>
+                </div>
+                <div class="col-sm-4" v-if="stock_ins">
+                  <div class="weekly-summary text-center">
+                    <router-link to="/entregas-do-coletor">
+                      <span class="info-label">Entregas</span>
+                      <span class="number">{{ total_stock_in | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+                      <br>
+                      <span>{{ total_stock_in_qtd }} kg</span>
+                      <br>
+                      <small>{{ total_stock_in_species }} espécies</small>
+                    </router-link>
+                  </div>
+                </div>
+              </div>
+              <div class="row" v-if="isManager">
                 <div class="col-sm-4" v-if="potential_lists">
                   <div class="weekly-summary text-center">
                     <router-link to="/listas-de-potencial">
@@ -49,24 +87,32 @@
               <hr>
               <br>
               <div class="text-center">
-                <h4><i class="fa fa-cogs"></i>&nbsp;&nbsp;<span>Operacional</span></h4>
-                <div class="nav-buttons">
-                  <router-link class="btn btn-default" to="/estoque"><span>Estoque</span></router-link>
-                  <router-link class="btn btn-default" to="/listas-de-potencial"><span>Potencial de coleta</span></router-link>
-                  <router-link class="btn btn-default" to="/pedidos-para-coletores"><span>Pedidos para coletores</span></router-link>
-                  <router-link class="btn btn-default" to="/encomendas"><span>Encomendas</span></router-link>
-                  <router-link class="btn btn-default" to="/coletas"><span>Coleta de sementes</span></router-link>
+                <div v-if="isCollector && !isManager">
+                  <router-link class="btn btn-default" to="/sementes-do-coletor"><span>Sementes</span></router-link>
+                  <router-link class="btn btn-default" to="/pedidos-do-coletor"><span>Pedidos</span></router-link>
+                  <router-link class="btn btn-default" to="/entregas-do-coletor"><span>Entregas</span></router-link>
+                  <router-link class="btn btn-default" to="/coletas"><span>Coletas</span></router-link>
                 </div>
-                <h4><i class="fa fa-list-alt"></i>&nbsp;&nbsp;<span>Cadastros</span></h4>
-                <div class="nav-buttons">
-                  <router-link class="btn btn-default" to="/usuarios" v-if="isAdmin"><span>Usuários</span></router-link>
-                  <router-link class="btn btn-default" to="/clientes"><span>Clientes</span></router-link>
-                  <router-link class="btn btn-default" to="/sementes"><span>Sementes</span></router-link>
-                  <router-link class="btn btn-default" to="/coletores"><span>Coletores</span></router-link>
-                  <router-link class="btn btn-default" to="/grupos-de-coletores"><span>Grupos de coletores</span></router-link>
-                  <router-link class="btn btn-default" to="/casas-de-sementes"><span>Casas de sementes</span></router-link>
-                  <router-link class="btn btn-default" to="/areas-de-coleta"><span>Áreas de coleta</span></router-link>
-                  <router-link class="btn btn-default" to="/matrizes-de-sementes"><span>Matrizes</span></router-link>
+                <div v-if="isManager">
+                  <h4><i class="fa fa-cogs"></i>&nbsp;&nbsp;<span>Operacional</span></h4>
+                  <div class="nav-buttons">
+                    <router-link class="btn btn-default" to="/estoque"><span>Estoque</span></router-link>
+                    <router-link class="btn btn-default" to="/listas-de-potencial"><span>Potencial de coleta</span></router-link>
+                    <router-link class="btn btn-default" to="/pedidos-para-coletores"><span>Pedidos para coletores</span></router-link>
+                    <router-link class="btn btn-default" to="/encomendas"><span>Encomendas</span></router-link>
+                    <router-link class="btn btn-default" to="/coletas"><span>Coleta de sementes</span></router-link>
+                  </div>
+                  <h4><i class="fa fa-list-alt"></i>&nbsp;&nbsp;<span>Cadastros</span></h4>
+                  <div class="nav-buttons">
+                    <router-link class="btn btn-default" to="/usuarios" v-if="isAdmin"><span>Usuários</span></router-link>
+                    <router-link class="btn btn-default" to="/clientes"><span>Clientes</span></router-link>
+                    <router-link class="btn btn-default" to="/sementes"><span>Sementes</span></router-link>
+                    <router-link class="btn btn-default" to="/coletores"><span>Coletores</span></router-link>
+                    <router-link class="btn btn-default" to="/grupos-de-coletores"><span>Grupos de coletores</span></router-link>
+                    <router-link class="btn btn-default" to="/casas-de-sementes"><span>Casas de sementes</span></router-link>
+                    <router-link class="btn btn-default" to="/areas-de-coleta"><span>Áreas de coleta</span></router-link>
+                    <router-link class="btn btn-default" to="/matrizes-de-sementes"><span>Matrizes</span></router-link>
+                  </div>
                 </div>
               </div>
             </div>
@@ -86,6 +132,8 @@ export default {
     return {
       potential_lists: null,
       collectors_requests: null,
+      stock_ins: null,
+      collections: null,
       orders: null
     }
   },
@@ -186,17 +234,90 @@ export default {
       }
       return 0
     },
+    total_stock_in() {
+      if (this.stock_ins) {
+        var values = this.stock_ins.map(stock_in => {
+          return stock_in.qtd * stock_in.price
+        })
+        return values && values.length ? values.reduce((a, b) => a + b) : 0
+      }
+      return 0
+    },
+    total_stock_in_qtd() {
+      if (this.stock_ins) {
+        var values = this.stock_ins.map(stock_in => {
+          return stock_in.qtd
+        })
+        return values && values.length ? values.reduce((a, b) => a + b) : 0
+      }
+      return 0
+    },
+    total_stock_in_species() {
+      if (this.stock_ins) {
+        var seeds = []
+        this.stock_ins.forEach(stock_in => {
+          if (!seeds.includes(stock_in.seed)) {
+            seeds.push(stock_in.seed)
+          }
+        })
+        return seeds.length
+      }
+      return 0
+    },
+    total_collection_weight_gross() {
+      if (this.collections) {
+        var values = this.collections.map(collection => {
+          return collection.weight_gross
+        })
+        return values && values.length ? values.reduce((a, b) => a + b) : 0
+      }
+      return 0
+    },
+    total_collection_weight_benef() {
+      if (this.collections) {
+        var values = this.collections.map(collection => {
+          return collection.weight_benef
+        })
+        return values && values.length ? values.reduce((a, b) => a + b) : 0
+      }
+      return 0
+    },
+    total_collection_species() {
+      if (this.collections) {
+        var seeds = []
+        this.collections.forEach(collection => {
+          if (!seeds.includes(collection.seed)) {
+            seeds.push(collection.seed)
+          }
+        })
+        return seeds.length
+      }
+      return 0
+    },
   },
   created () {
-    axios.get('potential_lists').then(response => {
-      this.potential_lists = response.data
-    }).catch(this.showError)
-    axios.get('collectors_requests').then(response => {
-      this.collectors_requests = response.data
-    }).catch(this.showError)
-    axios.get('orders').then(response => {
-      this.orders = response.data
-    }).catch(this.showError)
+    if (this.isManager) {
+      axios.get('potential_lists').then(response => {
+        this.potential_lists = response.data
+      }).catch(this.showError)
+      axios.get('collectors_requests').then(response => {
+        this.collectors_requests = response.data
+      }).catch(this.showError)
+      axios.get('orders').then(response => {
+        this.orders = response.data
+      }).catch(this.showError)
+    } else if (this.isCollector) {
+      axios.get('collector/requests').then(response => {
+        this.collectors_requests = response.data
+      }).catch(this.showError)
+      axios.get('collector/stock_ins').then(response => {
+        this.stock_ins = response.data
+      }).catch(this.showError)
+      axios.get('collections').then(response => {
+        this.collections = response.data
+      }).catch(this.showError)
+
+    }
   }
 }
 </script>

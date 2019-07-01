@@ -20,7 +20,7 @@
 							</b-form-group>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row" v-if="isManager">
 						<div class="col-sm-6">
 							<b-form-group label="Grupo de coletores" >
 								<form-entity-select type="collectors_groups" :form="form" field="collectors_group" />
