@@ -58,7 +58,7 @@ export default {
           this.isLoading = false
         }).catch((error) => {
           this.isLoading = false
-          this.showError("Ocorreu um erro ao enviar: " + file.name + ". Erro: " + error.message)
+          this.showError(error)
         });
       }
     },
@@ -68,9 +68,6 @@ export default {
       } else {
         this.form[this.field] = null
       }
-    },
-    showError(msg) {
-      this.error = msg
     }
   },
   components: {
