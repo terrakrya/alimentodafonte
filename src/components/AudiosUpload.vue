@@ -8,12 +8,16 @@
     <div v-if="Array.isArray(form[field]) && form[field].length > 0">
       <div class="col-xs-12" v-for="(audio, index) in form[field]" :key="index">
         <a :href="(baseUrl + audio)" target="_blank"><i class="fa fa-music"></i> &nbsp; {{ audio | filename }}</a>
+        <br>
+        <audio :src="baseUrl + audio" controls></audio>
         <a class="btn btn-danger btn-xs pull-right" @click="deleteAudio(index)"><i class="fa fa-trash"></i></a>
       </div>
     </div>
     <div v-if="!Array.isArray(form[field]) && form[field]">
       <div class="col-xs-12">
         <a :href="(baseUrl + form[field])" target="_blank"><i class="fa fa-music"></i> &nbsp; {{ form[field] | filename }}</a>
+        <br>
+        <audio :src="baseUrl + form[field]" controls></audio>
         <a class="btn btn-danger btn-xs pull-right" @click="deleteAudio()"><i class="fa fa-trash"></i></a>
       </div>
     </div>
@@ -54,7 +58,7 @@ export default {
           this.isLoading = false
         }).catch((error) => {
           this.isLoading = false
-          this.showError("Ocorreu um erro ao enviar: " + file.name + ". Erro: " + error.message)
+          this.showError(error)
         });
       }
     },
@@ -65,9 +69,6 @@ export default {
         this.form[this.field] = null
       }
 
-    },
-    showError(msg) {
-      this.error = msg
     }
   },
   components: {

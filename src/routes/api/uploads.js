@@ -2,7 +2,8 @@ var express = require('express'),
   router = express.Router(),
   multer = require('multer'),
   fs = require('fs'),
-  sharp = require('sharp');
+  sharp = require('sharp'),
+  auth = require('../auth');
 
 const UPLOAD_PATH = 'uploads/';
 const IMAGES_PATH = UPLOAD_PATH + 'images/';
@@ -36,7 +37,7 @@ var imageUploader = multer({
   }
 })
 
-router.post('/images', imageUploader.single('image'), (req, res) => {
+router.post('/images', [auth.authenticated, imageUploader.single('image')], (req, res) => {
   var url = req.file.filename
   var original = IMAGES_PATH + url
   var thumb = THUMBS_PATH + url
@@ -73,7 +74,7 @@ var documentUploader = multer({
     fileSize: 32 * 1024 * 1024
   }
 })
-router.post('/documents', documentUploader.single('document'), (req, res) => {
+router.post('/documents', [auth.authenticated, documentUploader.single('document')], (req, res) => {
   var url = req.file.filename
   res.status(201).send(DOCUMENTS_PATH + url);
 });
@@ -98,7 +99,7 @@ var audioUploader = multer({
     fileSize: 32 * 1024 * 1024
   }
 })
-router.post('/audios', audioUploader.single('audio'), (req, res) => {
+router.post('/audios', [auth.authenticated, audioUploader.single('audio')], (req, res) => {
   var url = req.file.filename
   res.status(201).send(AUDIOS_PATH + url);
 });
