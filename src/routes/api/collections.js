@@ -6,7 +6,11 @@ var express = require('express'),
   Collection = mongoose.model('Collection');
 
 router.get('/', auth.collector, function(req, res) {
-  Collection.find({}).populate(populate(req)).exec(function(err, collections) {
+  var filters = {}
+  if (auth.isCollector(req) && !auth.isManager(req)) {
+    filters['collector'] = req.payload.id
+  }
+  Collection.find(filters).populate(populate(req)).exec(function(err, collections) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
     } else {
@@ -29,6 +33,9 @@ router.get('/:id', auth.collector, function(req, res) {
 
 router.post('/', auth.collector, function(req, res) {
   var newCollection = new Collection(req.body);
+  if (auth.isCollector(req) && !auth.isManager(req)) {
+    newCollection['collector'] = req.payload.id
+  }
   newCollection.save(function(err, collection) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
@@ -39,9 +46,15 @@ router.post('/', auth.collector, function(req, res) {
 });
 
 router.put('/:id', auth.collector, function(req, res) {
-  Collection.findOneAndUpdate({
+  var filters = {
     _id: req.params.id
-  }, {
+  }
+
+  if (auth.isCollector(req) && !auth.isManager(req)) {
+    filters['collector'] = req.payload.id
+  }
+
+  Collection.findOneAndUpdate(filters, {
     $set: req.body
   }, {
     upsert: true
@@ -55,9 +68,15 @@ router.put('/:id', auth.collector, function(req, res) {
 });
 
 router.delete('/:id', auth.collector, function(req, res) {
-  Collection.findByIdAndRemove({
+  var filters = {
     _id: req.params.id
-  }, function(err, collection) {
+  }
+
+  if (auth.isCollector(req) && !auth.isManager(req)) {
+    filters['collector'] = req.payload.id
+  }
+  
+  Collection.findOneAndRemove(filters, function(err, collection) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao excluír: ' + err.message);
     } else {

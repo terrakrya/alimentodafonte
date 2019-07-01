@@ -61,7 +61,7 @@ export default {
 	},
 	methods: {
 		list() {
-      axios.get('collector/seeds').then(response => {
+      axios.get('seeds').then(response => {
         this.seeds = response.data
       }).catch(this.showError)
     }

@@ -63,7 +63,7 @@
                 <router-link to="/entregas-do-coletor"><span>Entregas</span></router-link>
               </li>
               <li @click="toggleMenu" v-if="isCollector && !isManager">
-                <router-link to="/coletas-do-coletor"><span>Coletas</span></router-link>
+                <router-link to="/coletas"><span>Coletas</span></router-link>
               </li>
             </ul>
           </li>
