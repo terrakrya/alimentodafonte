@@ -27,7 +27,7 @@
             </ul>
           </li>
           <li>
-            <a><i class="fa fa-list-alt"></i><span>Cadastros</span><i class="fa fa-chevron-down"></i></a>
+            <a v-if="isManager"><i class="fa fa-list-alt"></i><span>Cadastros</span><i class="fa fa-chevron-down"></i></a>
             <ul class="nav">
               <li @click="toggleMenu" v-if="isAdmin">
                 <router-link to="/usuarios"><span>Usuários</span></router-link>
@@ -35,7 +35,7 @@
               <li @click="toggleMenu" v-if="isManager">
                 <router-link to="/clientes"><span>Clientes</span></router-link>
               </li>
-              <li @click="toggleMenu" v-if="isCollector">
+              <li @click="toggleMenu" v-if="isManager">
                 <router-link to="/sementes"><span>Sementes</span></router-link>
               </li>
               <li @click="toggleMenu" v-if="isManager">
@@ -52,6 +52,18 @@
               </li>
               <li @click="toggleMenu" v-if="isManager">
                 <router-link to="/matrizes-de-sementes"><span>Matrizes</span></router-link>
+              </li>
+              <li @click="toggleMenu" v-if="isCollector && !isManager">
+                <router-link to="/sementes-do-coletor"><span>Sementes</span></router-link>
+              </li>
+              <li @click="toggleMenu" v-if="isCollector && !isManager">
+                <router-link to="/pedidos-do-coletor"><span>Pedidos</span></router-link>
+              </li>
+              <li @click="toggleMenu" v-if="isCollector && !isManager">
+                <router-link to="/entregas-do-coletor"><span>Entregas</span></router-link>
+              </li>
+              <li @click="toggleMenu" v-if="isCollector && !isManager">
+                <router-link to="/coletas-do-coletor"><span>Coletas</span></router-link>
               </li>
             </ul>
           </li>
