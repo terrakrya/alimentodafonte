@@ -5,7 +5,7 @@ var express = require('express'),
   select = require('../utils').select,
   Seed = mongoose.model('Seed');
 
-router.get('/', auth.manager, function(req, res) {
+router.get('/', auth.collector, function(req, res) {
   Seed.find({}, select(req)).exec(function(err, seeds) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);

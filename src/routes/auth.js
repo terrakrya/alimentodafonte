@@ -13,12 +13,26 @@ function getTokenFromHeader(req){
 function isManager(req, res, next) {
   if (req.payload && req.payload.roles) {
     var roles = req.payload.roles
-    if (roles.includes('admin') || roles.includes('manager')) {
+    if (roles.includes('manager') || roles.includes('admin')) {
       next()
     } else {
       return res.status(403).json({
         status: 403,
-        message: 'A permissão de gestor é necessária para acessar este recurso.'
+        message: 'A permissão de gestor ou administrador é necessária para acessar este recurso.'
+      })
+    }
+  }
+}
+
+function isCollector(req, res, next) {
+  if (req.payload && req.payload.roles) {
+    var roles = req.payload.roles
+    if (roles.includes('collector') || roles.includes('manager') || roles.includes('admin')) {
+      next()
+    } else {
+      return res.status(403).json({
+        status: 403,
+        message: 'A permissão de coletor, gestor ou administrador é necessária para acessar este recurso.'
       })
     }
   }
@@ -35,6 +49,11 @@ var auth = {
     userProperty: 'payload',
     getToken: getTokenFromHeader
   }), isManager],
+  collector: [jwt({
+    secret: secret,
+    userProperty: 'payload',
+    getToken: getTokenFromHeader
+  }), isCollector],
   optional: jwt({
     secret: secret,
     userProperty: 'payload',
