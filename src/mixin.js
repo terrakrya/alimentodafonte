@@ -18,6 +18,18 @@ export default {
     currentUser() {
       return this.$store.state.currentUser
     },
+    currentRole() {
+      if (this.isClient) {
+        return tipos_de_usuario.find(e => e.value == 'client')
+      } else if (this.isCollector) {
+        return tipos_de_usuario.find(e => e.value == 'collector')
+      } else if (this.isManager) {
+        return tipos_de_usuario.find(e => e.value == 'manager')
+      } else if (this.isAdmin) {
+        return tipos_de_usuario.find(e => e.value == 'admin')
+      }
+      return { "text": "Usuário", "value": "user" }
+    },
     isAdmin() {
       return this.isA('admin')
     },

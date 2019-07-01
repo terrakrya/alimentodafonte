@@ -20,7 +20,7 @@
 					</div>
 					<div class="row">
 						<div class="col-sm-12">
-							<form-seeds-select :form="form" field="seed_items" :callback="seedsChanged" />
+							<form-seeds-select :form="form" field="seed_items" :callback="seedsChanged" basecalc="compensation_collect" />
 							<div v-for="(seeds_error, index) in seeds_errors" :key="index" class="alert alert-danger">
 								{{seeds_error}}
 							</div>

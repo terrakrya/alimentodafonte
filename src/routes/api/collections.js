@@ -5,7 +5,7 @@ var express = require('express'),
   populate = require('../utils').populate,
   Collection = mongoose.model('Collection');
 
-router.get('/', auth.manager, function(req, res) {
+router.get('/', auth.collector, function(req, res) {
   Collection.find({}).populate(populate(req)).exec(function(err, collections) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
@@ -15,7 +15,7 @@ router.get('/', auth.manager, function(req, res) {
   });
 });
 
-router.get('/:id', auth.manager, function(req, res) {
+router.get('/:id', auth.collector, function(req, res) {
   Collection.findOne({
     _id: req.params.id
   }).populate(populate(req)).exec(function(err, collection) {
@@ -27,7 +27,7 @@ router.get('/:id', auth.manager, function(req, res) {
   });
 });
 
-router.post('/', auth.manager, function(req, res) {
+router.post('/', auth.collector, function(req, res) {
   var newCollection = new Collection(req.body);
   newCollection.save(function(err, collection) {
     if (err) {
@@ -38,7 +38,7 @@ router.post('/', auth.manager, function(req, res) {
   });
 });
 
-router.put('/:id', auth.manager, function(req, res) {
+router.put('/:id', auth.collector, function(req, res) {
   Collection.findOneAndUpdate({
     _id: req.params.id
   }, {
@@ -54,7 +54,7 @@ router.put('/:id', auth.manager, function(req, res) {
   });
 });
 
-router.delete('/:id', auth.manager, function(req, res) {
+router.delete('/:id', auth.collector, function(req, res) {
   Collection.findByIdAndRemove({
     _id: req.params.id
   }, function(err, collection) {

@@ -34,8 +34,8 @@
           </div>
           <div class="col-sm-6 col-md-3">
             <div class="weekly-summary text-center">
-              <span class="info-label">Valor total</span>
-              <span class="number">{{ collectors_request.seed_items.map(seed_item =>  seed_item.price * seed_item.qtd).reduce((a,b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+              <span class="info-label">Remuneração total</span>
+              <span class="number">{{ collectors_request.seed_items.map(seed_item =>  seed_item.compensation_collect * seed_item.qtd).reduce((a,b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
             </div>
           </div>
         </div>
@@ -46,7 +46,7 @@
               <thead>
                 <tr>
                   <th>Espécie</th>
-                  <th>Valor / Kg</th>
+                  <th>Remuneração / Kg</th>
                   <th>Quantidade</th>
                   <th>Total</th>
                   <th></th>
@@ -58,13 +58,13 @@
                     <router-link :to="'/semente/'+seed_item.seed._id">{{seed_item.seed.name}}</router-link>
                   </td>
                   <td>
-                    {{seed_item.price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+                    {{seed_item.compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
                   </td>
                   <td>
                     {{seed_item.qtd}} kg
                   </td>
                   <td>
-                    {{seed_item.price * seed_item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+                    {{seed_item.compensation_collect * seed_item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
                   </td>
                 </tr>
               </tbody>

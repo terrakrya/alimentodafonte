@@ -1,9 +1,9 @@
 <template>
-<div class="collectors-requests">
-  <breadcrumb active="Pedidos para coletores" />
+<div class="collector-requests">
+  <breadcrumb :active="'Pedidos para '+currentUser.name" />
   <div class="panel panel-headline data-list">
     <div class="panel-body">
-      <list-headline name="Pedidos para coletores" addUrl="/cadastrar-pedido-para-coletores" :filters="filters" />
+      <list-headline name="Pedidos" :filters="filters" />
       <div class="info-content">
         <b-alert variant="danger" show v-if="error">{{error}}</b-alert>
         <loading :loading="!collectors_requests && !error" msg="Carregando lista de pedidos" />
@@ -11,33 +11,26 @@
         <div v-if="collectors_requests && collectors_requests.length">
           <b-table stacked="md" :fields="table_fields" :items="collectors_requests" :sort-by="'created'" :sort-desc="true" :filter="filters.search">
             <template slot="createdAt" slot-scope="data">
-              <router-link v-if="data.item.createdAt" :to="'/pedido-para-coletores/'+ data.item._id">
-                {{data.item.createdAt | moment("DD/MM/YYYY")}}
-                <br>
-                Pedido {{data.item.code}}
-              </router-link>
-            </template>
-            <template slot="collector" slot-scope="data">
-              <router-link v-if="data.item.collectors_group" :to="'/grupo-de-coletores/'+ data.item.collectors_group._id"> {{data.item.collectors_group.name}} </router-link>
-              <router-link v-if="data.item.collector" :to="'/coletor/'+ data.item.collector._id"> {{data.item.collector.name}} </router-link>
+              {{data.item.createdAt | moment("DD/MM/YYYY")}}
+              <br>
+              Pedido {{data.item.code}}
             </template>
             <template slot="qtd" slot-scope="data">
-              {{data.item.seed_items.map(seed_item => seed_item.qtd).reduce((a,b) => a + b)}} kg
+              <div class="seed_item" v-for="(seed_item, index) in data.item.seed_items" :ref="index" >
+                {{seed_item.qtd}} kg de {{seed_item.seed.name}}
+              </div>
+              <div class="seed_item" v-if="data.item.seed_items.length > 1" >
+                <strong>{{data.item.seed_items.map(seed_item => seed_item.qtd).reduce((a,b) => a + b)}} kg total</strong>
+              </div>
             </template>
             <template slot="compensation_collect" slot-scope="data">
 							{{data.item.seed_items.map(seed_item => seed_item.compensation_collect * seed_item.qtd).reduce((a,b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
             </template>
-						<template slot="actions" slot-scope="data">
-              <router-link :to="'/editar-pedido-para-coletores/'+ data.item._id" class="fa fa-edit btn btn-primary btn-xs "></router-link>
-              <a @click="remove(data.item._id)" class="fa fa-trash btn btn-danger btn-xs"></a>
-            </template>
             <!-- eslint-disable-next-line -->
             <template slot="bottom-row" slot-scope="data">
-              <td />
-              <td><strong> Total</strong></td>
+              <td></td>
               <td><strong>{{total_qtd}} Kg</strong></td>
               <td><strong>{{total_compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}</strong></td>
-              <td />
             </template>
           </b-table>
         </div>
@@ -55,7 +48,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 
 export default {
 
-  name: 'CollectorsRequests',
+  name: 'CollectorRequests',
   data() {
     return {
       filters: {
@@ -68,11 +61,6 @@ export default {
           sortable: true
         },
         {
-          key: 'collector',
-          label: 'Grupo / Coletor',
-          sortable: true
-        },
-        {
           key: 'qtd',
           label: 'Quantidade',
           sortable: true
@@ -81,12 +69,7 @@ export default {
           key: 'compensation_collect',
           label: 'Remuneração total',
           sortable: true
-        },
-        {
-          key: 'actions',
-          label: 'Ações',
-          'class': 'actions'
-        },
+        }
       ]
     }
   },
@@ -107,20 +90,13 @@ export default {
   },
   methods: {
 		list() {
-      axios.get('collectors_requests', {
+      axios.get('collector/requests', {
         params: {
-          populate: 'collectors_group collector'
+          populate: 'seed_items.seed'
         }
       }).then(response => {
         this.collectors_requests = response.data
       }).catch(this.showError)
-    },
-    remove(id) {
-      if (confirm("Tem certeza que deseja excluír?")) {
-        axios.delete('collectors_requests/' + id).then(() => {
-          this.list()
-        }).catch(this.showError)
-      }
     }
   },
   components: {
