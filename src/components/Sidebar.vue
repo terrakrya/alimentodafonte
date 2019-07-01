@@ -6,7 +6,7 @@
           <li @click="toggleMenu">
             <router-link to="/painel"><i class="fa fa-home"></i> <span>Início</span></router-link>
           </li>
-          <li>
+          <li v-if="isManager">
             <a><i class="fa fa-cogs"></i><span>Operacional</span><i class="fa fa-chevron-down"></i></a>
             <ul class="nav">
               <li @click="toggleMenu">
@@ -32,25 +32,25 @@
               <li @click="toggleMenu" v-if="isAdmin">
                 <router-link to="/usuarios"><span>Usuários</span></router-link>
               </li>
-              <li @click="toggleMenu">
+              <li @click="toggleMenu" v-if="isManager">
                 <router-link to="/clientes"><span>Clientes</span></router-link>
               </li>
-              <li @click="toggleMenu">
+              <li @click="toggleMenu" v-if="isCollector">
                 <router-link to="/sementes"><span>Sementes</span></router-link>
               </li>
-              <li @click="toggleMenu">
+              <li @click="toggleMenu" v-if="isManager">
                 <router-link to="/coletores"><span>Coletores</span></router-link>
               </li>
-              <li @click="toggleMenu">
+              <li @click="toggleMenu" v-if="isManager">
                 <router-link to="/grupos-de-coletores"><span>Grupos de coletores</span></router-link>
               </li>
-              <li @click="toggleMenu">
+              <li @click="toggleMenu" v-if="isManager">
                 <router-link to="/casas-de-sementes"><span>Casas de sementes</span></router-link>
               </li>
-              <li @click="toggleMenu">
+              <li @click="toggleMenu" v-if="isManager">
                 <router-link to="/areas-de-coleta"><span>Áreas de coleta</span></router-link>
               </li>
-              <li @click="toggleMenu">
+              <li @click="toggleMenu" v-if="isManager">
                 <router-link to="/matrizes-de-sementes"><span>Matrizes</span></router-link>
               </li>
             </ul>

@@ -19,17 +19,26 @@ export default {
       return this.$store.state.currentUser
     },
     isAdmin() {
-      var currentUser = this.$store.state.currentUser
-      if (currentUser && currentUser.roles) {
-        return currentUser.roles.includes('admin')
-      }
-      return false
+      return this.isA('admin')
+    },
+    isManager() {
+      return this.isA('manager') || this.isA('admin')
+    },
+    isCollector() {
+      return this.isA('collector') || this.isA('manager') || this.isA('admin')
     },
     baseUrl() {
       return axios.defaults.baseURL.replace('/api', '')
     }
   },
   methods: {
+    isA(role) {
+      var currentUser = this.$store.state.currentUser
+      if (currentUser && currentUser.roles) {
+        return currentUser.roles.includes(role)
+      }
+      return false
+    },
     isEditing() {
       return !!this.$route.params.id
     },
