@@ -34,7 +34,6 @@
 import axios from 'axios'
 import Loading from '@/components/Loading'
 import NoItem from '@/components/NoItem'
-import ListHeadline from '@/components/ListHeadline'
 import Breadcrumb from '@/components/Breadcrumb'
 import meses from '@/data/meses.json'
 
@@ -70,7 +69,6 @@ export default {
 	components: {
 		Loading,
 		NoItem,
-		ListHeadline,
 		Breadcrumb
 	}
 

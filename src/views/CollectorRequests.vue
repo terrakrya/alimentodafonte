@@ -16,7 +16,7 @@
               Pedido {{data.item.code}}
             </template>
             <template slot="qtd" slot-scope="data">
-              <div class="seed_item" v-for="(seed_item, index) in data.item.seed_items" :ref="index" >
+              <div class="seed_item" v-for="(seed_item, index) in data.item.seed_items" :key="index" >
                 {{seed_item.qtd}} kg de {{seed_item.seed.name}}
               </div>
               <div class="seed_item" v-if="data.item.seed_items.length > 1" >
