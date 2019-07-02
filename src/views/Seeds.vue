@@ -56,6 +56,7 @@ export default {
 	},
 	methods: {
 		async list () {
+			this.error = null
 			this.seeds = await this.loadList('seeds')
 		},
 		remove (id) {

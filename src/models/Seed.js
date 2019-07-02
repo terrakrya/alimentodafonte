@@ -42,7 +42,50 @@ const SeedSchema = mongoose.Schema({
     ref: 'User'
   }
 }, {
-  timestamps: true
+  timestamps: true,
+  toJSON: { virtuals: true }
+});
+
+SeedSchema.virtual('potential_lists', {
+  ref: 'PotentialList',
+  localField: '_id',
+  foreignField: 'seed_items.seed'
+});
+
+SeedSchema.virtual('orders', {
+  ref: 'Order',
+  localField: '_id',
+  foreignField: 'seed_items.seed'
+});
+
+SeedSchema.virtual('collectors_requests', {
+  ref: 'CollectorsRequest',
+  localField: '_id',
+  foreignField: 'seed_items.seed'
+});
+
+SeedSchema.virtual('collectors_groups', {
+  ref: 'CollectorsGroup',
+  localField: '_id',
+  foreignField: 'seeds'
+});
+
+SeedSchema.virtual('collections', {
+  ref: 'Collection',
+  localField: '_id',
+  foreignField: 'seed'
+});
+
+SeedSchema.virtual('stock_ins', {
+  ref: 'StockIn',
+  localField: '_id',
+  foreignField: 'seed'
+});
+
+SeedSchema.virtual('stock_outs', {
+  ref: 'StockOut',
+  localField: '_id',
+  foreignField: 'seed'
 });
 
 mongoose.model('Seed', SeedSchema);

@@ -3,7 +3,6 @@ const mongoose = require('mongoose'),
   AddressSchema = require('./Address'),
   BankAccountSchema = require('./BankAccount');
 
-
 const CollectorsGroupSchema = mongoose.Schema({
   name: {
     type: String,
