@@ -1,36 +1,75 @@
 <template>
-	<div class="collectors-request-form">
-		<breadcrumb :links="[['Pedidos para coletores', '/pedidos-para-coletores']]" :active="isEditing() ? 'Pedido '+form.code : 'Cadastrar'" />
-		<div class="panel panel-headline data-list">
-			<div class="panel-body">
-				<form-headline name="pedido para coletores" />
-				<loading :loading="isLoading" />
-				<b-form @submit.prevent="save" v-if="!isLoading">
-					<div class="row">
-						<div class="col-sm-6">
-							<b-form-group label="Grupo de coletores" >
-								<form-entity-select type="collectors_groups" :form="form" field="collectors_group" />
-							</b-form-group>
-						</div>
-						<div class="col-sm-6">
-							<b-form-group label="Coletor" >
-								<form-entity-select type="collectors" :form="form" field="collector" />
-							</b-form-group>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-12">
-							<form-seeds-select :form="form" field="seed_items" :callback="seedsChanged" basecalc="compensation_collect" />
-							<div v-for="(seeds_error, index) in seeds_errors" :key="index" class="alert alert-danger">
-								{{seeds_error}}
-							</div>
-						</div>
-					</div>
-					<form-submit :errors="error" :sending="isSending" v-if="!seeds_errors.length && form.seed_items.length" />
-				</b-form>
-			</div>
-		</div>
-	</div>
+<div class="collectors-request-form">
+  <breadcrumb :links="[['Pedidos para coletores', '/pedidos-para-coletores']]" :active="isEditing() ? 'Pedido '+form.code : 'Cadastrar'" />
+  <div class="panel panel-headline data-list">
+    <div class="panel-body">
+      <form-headline name="pedido para coletores" />
+      <loading :loading="isLoading" />
+      <b-form @submit.prevent="save" v-if="!isLoading && potential_lists && potential_lists.length && collectors_requests && collectors_requests.length">
+        <div class="row">
+          <div class="col-sm-6">
+            <b-form-group label="Grupo de coletores">
+              <form-entity-select type="collectors_groups" :form="form" field="collectors_group" />
+            </b-form-group>
+          </div>
+          <div class="col-sm-6">
+            <b-form-group label="Coletor">
+              <form-entity-select type="collectors" :form="form" field="collector" />
+            </b-form-group>
+          </div>
+        </div>
+        <div class="row" v-if="potential_seeds && potential_seeds.length">
+          <div class="col-sm-12">
+            <table class="table b-table b-table-stacked-md">
+              <thead>
+                <tr>
+                  <th>Semente</th>
+                  <th>Potencial</th>
+                  <th>Já pedido</th>
+                  <th>Pedir</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(potential_seed, index) in potential_seeds" :key="index">
+                  <td>{{potential_seed.seed.name}}</td>
+                  <td>{{potential_seed.potential}} kg</td>
+                  <td>{{potential_seed.requested}} kg</td>
+                  <td v-if="potential_seed.max > 0">
+                    <b-form-input @input="setSeedItems" v-model="potential_seeds[index].qtd" step="1" class="weight" type="number" :max="potential_seed.qtd" :min="1" style="width: 100px; display: inline" /> kg
+                    <br>
+                    <small>máximo: {{potential_seed.max}} kg</small>
+                  </td>
+                  <td v-if="potential_seed.max <= 0">
+                    <small>Sem potencial</small>
+                  </td>
+                </tr>
+                <tr class="b-table-bottom-row" v-if="form.seed_items && form.seed_items.length">
+                  <td></td>
+                  <td>
+                    <strong>{{potential_seeds.map(i => Number(i.potential)).reduce((a, b) => a + b)}} kg</strong>
+                  </td>
+                  <td>
+                    <strong>{{potential_seeds.map(i => Number(i.requested)).reduce((a, b) => a + b)}} kg</strong>
+                  </td>
+                  <td>
+                    <strong>{{form.seed_items.map(i => Number(i.qtd)).reduce((a, b) => a + b)}} kg</strong>
+                  </td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+            <div v-for="(seeds_error, index) in seeds_errors" :key="index" class="alert alert-danger">
+              {{seeds_error}}
+            </div>
+          </div>
+        </div>
+        <form-submit :errors="error" :sending="isSending" v-if="!seeds_errors.length && form.seed_items.length" />
+      </b-form>
+    </div>
+  </div>
+  <pre>{{potential_seeds}}</pre>
+  <pre>{{form}}</pre>
+</div>
 </template>
 
 <script>
@@ -39,124 +78,178 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Loading from '@/components/Loading'
 import FormHeadline from '@/components/FormHeadline'
 import FormEntitySelect from '@/components/FormEntitySelect'
-import FormSeedsSelect from '@/components/FormSeedsSelect'
 import FormSubmit from '@/components/FormSubmit'
 
 export default {
-	name: 'CollectorsRequestForm',
-	data () {
-		return {
-			seeds_errors: [],
-			seeds_checklist: {},
-			seeds: [],
-			potential_lists: {},
-			form: {
-				code: null,
-				collectors_group: null,
-				collector: null,
-				seed_items: [],
-			}
-		}
-	},
-	async created () {
+  name: 'CollectorsRequestForm',
+  data() {
+    return {
+      seeds_errors: [],
+      seeds: [],
+      potential_lists: [],
+      collectors_requests: [],
+      potential_seeds: [],
+      form: {
+        code: null,
+        collectors_group: null,
+        collector: null,
+        seed_items: [],
+      }
+    }
+  },
+  async created() {
 
-		axios.get('potential_lists').then(response => {
-			this.potential_lists = response.data
-		}).catch(this.showError)
+    axios.get('potential_lists', {
+      params: {
+        populate: 'seed_items.seed'
+      }
+    }).then(response => {
+      this.potential_lists = response.data
+    }).catch(this.showError)
 
-		axios.get('seeds').then(response => {
-			this.seeds = response.data
-		}).catch(this.showError)
+    axios.get('collectors_requests').then(response => {
+      this.collectors_requests = response.data
+    }).catch(this.showError)
 
-		if (this.isEditing()) {
-			this.edit(this.$route.params.id)
-		}
-	},
-	methods: {
-		edit (id) {
-			this.isLoading = true
-			axios.get('collectors_requests/' + id).then(response => {
-				var data = response.data
-				this.apiDataToForm(this.form, data)
-				this.isLoading = false
-			}).catch(this.showError);
-		},
-		save () {
-			this.$validator.validate().then(isValid => {
-				if (isValid) {
-					this.isSending = true
-					this.error = false
-					axios({
-						method: (this.isEditing() ? 'PUT' : 'POST'),
-						url: 'collectors_requests' + (this.isEditing() ? '/' + this.$route.params.id : ''),
-						data: this.form
-					}).then(resp => {
-						var collectors_request = resp.data
-						if (collectors_request && collectors_request._id) {
-							this.$router.replace('/pedido-para-coletores/'+collectors_request._id)
-						}
-						this.isSending = false
-					}).catch(this.showError)
-				}
-			})
-		},
-		seedsChanged () {
-			this.validateQty()
-		},
-		validateQty () {
-			this.seeds_errors = []
-			if ((this.form.collectors_group || this.form.collector) && this.form.seed_items.length && this.potential_lists) {
+    axios.get('seeds').then(response => {
+      this.seeds = response.data
+    }).catch(this.showError)
 
-				this.seeds_checklist = {}
+    if (this.isEditing()) {
+      this.edit(this.$route.params.id)
+    }
+  },
+  methods: {
+    edit(id) {
+      this.isLoading = true
+      axios.get('collectors_requests/' + id).then(response => {
+        var data = response.data
+        this.apiDataToForm(this.form, data)
+        this.isLoading = false
+      }).catch(this.showError);
+    },
+    save() {
+      this.$validator.validate().then(isValid => {
+        if (isValid) {
+          this.isSending = true
+          this.error = false
+          axios({
+            method: (this.isEditing() ? 'PUT' : 'POST'),
+            url: 'collectors_requests' + (this.isEditing() ? '/' + this.$route.params.id : ''),
+            data: this.form
+          }).then(resp => {
+            var collectors_request = resp.data
+            if (collectors_request && collectors_request._id) {
+              this.$router.replace('/pedido-para-coletores/' + collectors_request._id)
+            }
+            this.isSending = false
+          }).catch(this.showError)
+        }
+      })
+    },
+    setSeedItems() {
+      this.seeds_errors = []
+      this.form.seed_items = []
+      this.potential_seeds.forEach(potential_seed => {
+        if (potential_seed.qtd && potential_seed.qtd > 0) {
+          if (potential_seed.qtd > potential_seed.max) {
+            this.seeds_errors.push('A quantidade solicitada (' + potential_seed.qtd + ' kg de ' + potential_seed.seed.name + ') é maior que o potencial de coleta (' + potential_seed.max + ' kg) desse coletor/grupo ')
+          } else {
+            this.form.seed_items.push({
+              seed: potential_seed.seed._id,
+              qtd: potential_seed.qtd,
+              compensation_collect: potential_seed.compensation_collect,
+              price: potential_seed.price,
+              wholesale_price: potential_seed.wholesale_price,
+            })
+          }
+        }
+      })
+    },
+    loadPotential() {
+      this.seeds_errors = []
+      var seed_items = {}
 
-				this.form.seed_items.forEach(item => {
-					this.seeds_checklist[item.seed] = Number(this.seeds_checklist[item.seed] || 0) + Number(item.qtd)
-				})
+      if ((this.form.collectors_group || this.form.collector)) {
 
-				Object.keys(this.seeds_checklist).map(seed_id => {
-					let pls = this.potential_lists.filter(pl => {
-						let collector = this.form.collector
-						let group = this.form.collectors_group
-						return ((
-								(collector && pl.collector && pl.collector == collector) ||
-								(group && pl.collectors_group && pl.collectors_group == group)
-							) && pl.seed_items && pl.seed_items.find(s => (s.seed == seed_id)))
-					})
+        let potential_lists_filtered = this.filterGroupCollector(this.potential_lists)
+        let collectors_request_filtered = this.filterGroupCollector(this.collectors_requests)
 
-					if (pls && pls.length) {
-						let seeds = pls.map(pl => pl.seed_items)
-						if (seeds && seeds.length) {
-							seeds = seeds.reduce((acc, val) => acc.concat(val), []).filter(s => (s.seed == seed_id))
-							var qtd = seeds.map((item) => Number(item.qtd)).reduce((a, b) => a + b)
-							if (Number(qtd) < this.seeds_checklist[seed_id]) {
-								this.seeds_errors.push('A quantidade solicitada ('+this.seeds_checklist[seed_id]+' kg de '+this.seeds.find(s => s._id == seed_id).name+') é maior que o potencial de coleta ('+ qtd + ' kg) desse coletor/grupo ')
-							}
-						}
-					} else {
-						this.seeds_errors.push('Não existe potencial de coleta de '+this.seeds.find(s => s._id == seed_id).name+' para este coletor/grupo')
-						return false
-					}
+        if (potential_lists_filtered && potential_lists_filtered.length) {
+          potential_lists_filtered.forEach(potential_list => {
+            potential_list.seed_items.forEach(seed_item => {
+              if (seed_items[seed_item.seed._id]) {
+                seed_items[seed_item.seed._id].potential += seed_item.qtd
+              } else {
+                seed_items[seed_item.seed._id] = {
+                  seed: seed_item.seed,
+                  potential: seed_item.qtd,
+                  compensation_collect: seed_item.compensation_collect,
+                  price: seed_item.price,
+                  wholesale_price: seed_item.wholesale_price,
+                  requested: 0,
+                  max: seed_item.qtd
+                }
 
-				})
-			}
-		}
-	},
-	watch: {
-		'form.collectors_group': function () {
-			this.validateQty()
-		},
-		'form.collector': function () {
-			this.validateQty()
-		}
-	},
-	components: {
-		Breadcrumb,
-		Loading,
-		FormHeadline,
-		FormEntitySelect,
-		FormSeedsSelect,
-		FormSubmit
-	}
+                if (this.form.seed_items && this.form.seed_items.length) {
+                  var item = this.form.seed_items.find(i => i.seed == seed_item.seed._id)
+                  if (item) {
+                    seed_items[seed_item.seed._id].qtd = item.qtd
+                  }
+                }
+              }
+            })
+          })
+
+          if (collectors_request_filtered) {
+            collectors_request_filtered.forEach(collectors_request => {
+              if (!this.$route.params.id || this.$route.params.id != collectors_request._id) {
+                collectors_request.seed_items.forEach(seed_item => {
+                  if (seed_items[seed_item.seed]) {
+                    seed_items[seed_item.seed].requested += seed_item.qtd
+                    seed_items[seed_item.seed].max = seed_items[seed_item.seed].potential - seed_items[seed_item.seed].requested
+                  }
+                })
+              }
+            })
+          }
+
+          this.potential_seeds = Object.values(seed_items)
+        } else {
+          this.seeds_errors.push('Não existe potencial de coleta para este coletor/grupo')
+          return false
+        }
+
+      }
+    },
+    filterGroupCollector(list) {
+      if (list) {
+        return list.filter(item => {
+          let collector = this.form.collector
+          let group = this.form.collectors_group
+          return (
+            (collector && item.collector && item.collector == collector) ||
+            (group && item.collectors_group && item.collectors_group == group)
+          )
+        })
+      }
+    }
+  },
+  watch: {
+    'form.collectors_group': function() {
+      this.loadPotential()
+    },
+    'form.collector': function() {
+      this.loadPotential()
+    }
+  },
+  components: {
+    Breadcrumb,
+    Loading,
+    FormHeadline,
+    FormEntitySelect,
+    FormSubmit
+  }
 
 };
 </script>
