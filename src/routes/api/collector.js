@@ -3,9 +3,7 @@ var express = require('express'),
   router = express.Router(),
   auth = require('../auth'),
   utils = require('../utils'),
-  Seed = mongoose.model('Seed'),
-  populate
-CollectorsRequest = mongoose.model('CollectorsRequest'),
+  CollectorsRequest = mongoose.model('CollectorsRequest'),
   StockIn = mongoose.model('StockIn');
 
 router.get('/requests', auth.collector, function(req, res) {
