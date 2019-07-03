@@ -10,26 +10,27 @@
         <no-item :list="collectors_requests" />
         <div v-if="collectors_requests && collectors_requests.length">
           <b-table stacked="md" :fields="table_fields" :items="collectors_requests" :sort-by="'created'" :sort-desc="true" :filter="filters.search">
-            <template slot="createdAt" slot-scope="data">
-              {{data.item.createdAt | moment("DD/MM/YYYY")}}
-              <br>
-              Pedido {{data.item.code}}
+            <template slot="seed" slot-scope="data">
+              {{data.value.name}}
             </template>
             <template slot="qtd" slot-scope="data">
-              <div class="seed_item" v-for="(seed_item, index) in data.item.seed_items" :key="index" >
-                {{seed_item.qtd}} kg de {{seed_item.seed.name}}
-              </div>
-              <div class="seed_item" v-if="data.item.seed_items.length > 1" >
-                <strong>{{data.item.seed_items.map(seed_item => seed_item.qtd).reduce((a,b) => a + b)}} kg total</strong>
-              </div>
+              {{data.value}} kg
+            </template>
+            <template slot="qtd_delivered" slot-scope="data">
+              {{data.value}} kg
+            </template>
+            <template slot="qtd_remaining" slot-scope="data">
+              {{data.value}} kg
             </template>
             <template slot="compensation_collect" slot-scope="data">
-							{{data.item.seed_items.map(seed_item => seed_item.compensation_collect * seed_item.qtd).reduce((a,b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+							{{data.item.compensation_collect * data.item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
             </template>
             <!-- eslint-disable-next-line -->
             <template slot="bottom-row" slot-scope="data">
               <td></td>
-              <td><strong>{{total_qtd}} Kg</strong></td>
+              <td><strong>{{total_qtd}} kg</strong></td>
+              <td><strong>{{total_qtd_delivered}} kg</strong></td>
+              <td><strong>{{total_qtd_remaining}} kg</strong></td>
               <td><strong>{{total_compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}</strong></td>
             </template>
           </b-table>
@@ -55,19 +56,30 @@ export default {
         search: null
       },
 			collectors_requests: null,
-      table_fields: [{
-          key: 'createdAt',
-          label: 'ID / Data',
+      table_fields: [
+        {
+          key: 'seed',
+          label: 'Semente',
           sortable: true
         },
         {
           key: 'qtd',
-          label: 'Quantidade',
+          label: 'Pedido',
+          sortable: true
+        },
+        {
+          key: 'qtd_delivered',
+          label: 'Entregue',
+          sortable: true
+        },
+        {
+          key: 'qtd_remaining',
+          label: 'Restante',
           sortable: true
         },
         {
           key: 'compensation_collect',
-          label: 'Remuneração total',
+          label: 'Remuneração total do pedido',
           sortable: true
         }
       ]
@@ -79,12 +91,22 @@ export default {
   computed: {
     total_qtd() {
       return this.collectors_requests.map(collectors_request => {
-        return collectors_request.seed_items.map(seed_item => seed_item.qtd).reduce((a,b) => a + b)
+        return collectors_request.qtd
+      }).reduce((a, b) => a + b)
+    },
+    total_qtd_delivered() {
+      return this.collectors_requests.map(collectors_request => {
+        return collectors_request.qtd_delivered
+      }).reduce((a, b) => a + b)
+    },
+    total_qtd_remaining() {
+      return this.collectors_requests.map(collectors_request => {
+        return collectors_request.qtd_remaining
       }).reduce((a, b) => a + b)
     },
     total_compensation_collect() {
       return this.collectors_requests.map(collectors_request => {
-        return collectors_request.seed_items.map(seed_item => seed_item.compensation_collect * seed_item.qtd).reduce((a,b) => a + b)
+        return collectors_request.compensation_collect * collectors_request.qtd
       }).reduce((a, b) => a + b)
     }
   },

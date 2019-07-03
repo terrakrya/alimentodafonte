@@ -25,9 +25,9 @@
                   <div class="weekly-summary text-center">
                     <router-link to="/pedidos-do-coletor">
                       <span class="info-label">Pedidos</span>
-                      <span class="number">{{ total_collectors_request | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+                      <span class="number">{{ total_collectors_request_qtd }} kg</span>
                       <br>
-                      <span>{{ total_collectors_request_qtd }} kg</span>
+                      <span>{{ total_collectors_request | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
                       <br>
                       <small>{{ total_collectors_request_species }} espécies</small>
                     </router-link>
@@ -37,9 +37,9 @@
                   <div class="weekly-summary text-center">
                     <router-link to="/entregas-do-coletor">
                       <span class="info-label">Entregas</span>
-                      <span class="number">{{ total_stock_in | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+                      <span class="number">{{ total_stock_in_qtd }} kg</span>
                       <br>
-                      <span>{{ total_stock_in_qtd }} kg</span>
+                      <span>{{ total_stock_in | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
                       <br>
                       <small>{{ total_stock_in_species }} espécies</small>
                     </router-link>
@@ -173,7 +173,7 @@ export default {
     total_collectors_request() {
       if (this.collectors_requests) {
         var values = this.collectors_requests.map(collectors_request => {
-          return collectors_request.seed_items.map(seed_item => seed_item.qtd * seed_item.price).reduce((a, b) => a + b)
+          return collectors_request.qtd * collectors_request.compensation_collect
         })
         return values && values.length ? values.reduce((a, b) => a + b) : 0
       }
@@ -182,7 +182,7 @@ export default {
     total_collectors_request_qtd() {
       if (this.collectors_requests) {
         var values = this.collectors_requests.map(collectors_request => {
-          return collectors_request.seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b)
+          return collectors_request.qtd
         })
         return values && values.length ? values.reduce((a, b) => a + b) : 0
       }
@@ -192,11 +192,9 @@ export default {
       if (this.collectors_requests) {
         var seeds = []
         this.collectors_requests.forEach(collectors_request => {
-          collectors_request.seed_items.forEach(seed_item => {
-            if (!seeds.includes(seed_item.seed)) {
-              seeds.push(seed_item.seed)
-            }
-          })
+          if (!seeds.includes(collectors_request.seed._id)) {
+            seeds.push(collectors_request.seed._id)
+          }
         })
         return seeds.length
       }

@@ -4,18 +4,47 @@ var express = require('express'),
   auth = require('../auth'),
   utils = require('../utils'),
   Seed = mongoose.model('Seed'),
-  CollectorsRequest = mongoose.model('CollectorsRequest'),
+  populate
+CollectorsRequest = mongoose.model('CollectorsRequest'),
   StockIn = mongoose.model('StockIn');
 
 router.get('/requests', auth.collector, function(req, res) {
+  var seed_items = {}
+
   CollectorsRequest.find({
     collector: req.payload.id
-  }, utils.select(req)).populate(utils.populate(req)).exec(function(err, collector_requests) {
-    if (err) {
-      res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
-    } else {
-      res.json(collector_requests);
-    }
+  }, 'seed_items').populate('seed_items.seed').exec(function(err, collectors_requests) {
+    StockIn.find({
+      collector: req.payload.id
+    }).exec(function(err, stock_ins) {
+      collectors_requests.forEach(collectors_request => {
+        collectors_request.seed_items.forEach(seed_item => {
+          let seed_id = seed_item.seed._id
+          if (seed_items[seed_id]) {
+            seed_items[seed_id].qtd += seed_item.qtd
+          } else {
+            seed_items[seed_id] = {
+              seed: seed_item.seed,
+              qtd: seed_item.qtd,
+              compensation_collect: seed_item.compensation_collect,
+              qtd_delivered: stock_ins.map(stock_in => {
+                if (stock_in.seed.toString() == seed_id.toString()) {
+                  return stock_in.qtd
+                } else {
+                  return 0
+                }
+              }).reduce((a, b) => a + b)
+            }
+          }
+          seed_items[seed_id].qtd_remaining = seed_items[seed_id].qtd - seed_items[seed_id].qtd_delivered
+        })
+      })
+      if (err) {
+        res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
+      } else {
+        res.json(Object.values(seed_items));
+      }
+    })
   });
 });
 
