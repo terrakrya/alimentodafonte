@@ -7,16 +7,7 @@
       <loading :loading="isLoading" />
       <b-form @submit.prevent="save" v-if="!isLoading && potential_lists && potential_lists.length && collectors_requests && collectors_requests.length">
         <div class="row">
-          <div class="col-sm-6">
-            <b-form-group label="Grupo de coletores">
-              <form-entity-select type="collectors_groups" :form="form" field="collectors_group" />
-            </b-form-group>
-          </div>
-          <div class="col-sm-6">
-            <b-form-group label="Coletor">
-              <form-entity-select type="collectors" :form="form" field="collector" />
-            </b-form-group>
-          </div>
+          <form-group-collector :form="form" />
         </div>
         <div class="row">
           <div class="col-sm-12">
@@ -75,7 +66,7 @@ import axios from 'axios'
 import Breadcrumb from '@/components/Breadcrumb'
 import Loading from '@/components/Loading'
 import FormHeadline from '@/components/FormHeadline'
-import FormEntitySelect from '@/components/FormEntitySelect'
+import FormGroupCollector from '@/components/FormGroupCollector'
 import FormSubmit from '@/components/FormSubmit'
 
 export default {
@@ -247,7 +238,7 @@ export default {
     Breadcrumb,
     Loading,
     FormHeadline,
-    FormEntitySelect,
+    FormGroupCollector,
     FormSubmit
   }
 

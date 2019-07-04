@@ -43,6 +43,7 @@
           <div class="col-sm-6">
             <b-form-group label="Coletores">
               <form-entities-select v-if="collectors && collectors.length" :items="collectors" type="collectors" :form="form" field="collectors" />
+              <no-item :list="collectors" />
             </b-form-group>
           </div>
         </div>
@@ -57,6 +58,7 @@
 import axios from 'axios'
 import Breadcrumb from '@/components/Breadcrumb'
 import Loading from '@/components/Loading'
+import NoItem from '@/components/NoItem'
 import FormHeadline from '@/components/FormHeadline'
 import FormEntitiesSelect from '@/components/FormEntitiesSelect'
 import FormAddress from '@/components/FormAddress'
@@ -152,6 +154,7 @@ export default {
   components: {
     Breadcrumb,
     Loading,
+    NoItem,
     FormHeadline,
     FormEntitiesSelect,
     FormAddress,
