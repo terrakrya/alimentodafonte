@@ -67,8 +67,6 @@
       </b-form>
     </div>
   </div>
-  <pre>{{potential_seeds}}</pre>
-  <pre>{{form}}</pre>
 </div>
 </template>
 
