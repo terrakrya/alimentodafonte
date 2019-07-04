@@ -42,18 +42,7 @@
             </b-form-group>
           </div>
         </div>
-        <div class="row">
-          <div class="col-sm-6">
-            <b-form-group label="Grupo de coletores">
-              <form-entity-select type="collectors_groups" :form="form" field="collectors_group" />
-            </b-form-group>
-          </div>
-          <div class="col-sm-6">
-            <b-form-group label="Coletor">
-              <form-entity-select type="collectors" :form="form" field="collector" />
-            </b-form-group>
-          </div>
-        </div>
+        <form-group-collector :form="form" />
         <form-submit :errors="error" :sending="isSending" />
       </b-form>
     </div>
@@ -66,7 +55,7 @@ import axios from 'axios'
 import Breadcrumb from '@/components/Breadcrumb'
 import Loading from '@/components/Loading'
 import FormHeadline from '@/components/FormHeadline'
-import FormEntitySelect from '@/components/FormEntitySelect'
+import FormGroupCollector from '@/components/FormGroupCollector'
 import FormAddress from '@/components/FormAddress'
 import FormSubmit from '@/components/FormSubmit'
 import FieldError from '@/components/FieldError'
@@ -136,7 +125,7 @@ export default {
     Breadcrumb,
     Loading,
     FormHeadline,
-    FormEntitySelect,
+    FormGroupCollector,
     FormAddress,
     FormSubmit,
     FieldError,

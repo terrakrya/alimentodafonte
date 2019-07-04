@@ -21,18 +21,7 @@
             </b-form-group>
           </div>
         </div>
-        <div class="row">
-          <div class="col-sm-6">
-            <b-form-group label="Coletor">
-              <form-entity-select type="collectors" :form="form" field="collector" />
-            </b-form-group>
-          </div>
-          <div class="col-sm-6">
-            <b-form-group label="Grupo de coletores">
-              <form-entity-select type="collectors_groups" :form="form" field="collectors_group" />
-            </b-form-group>
-          </div>
-        </div>
+        <form-group-collector :form="form" />
         <div class="row">
           <div class="col-sm-4">
             <b-form-group label="Quantidade (Kg) *">
@@ -73,6 +62,7 @@ import axios from 'axios'
 import Breadcrumb from '@/components/Breadcrumb'
 import Loading from '@/components/Loading'
 import FormEntitySelect from '@/components/FormEntitySelect'
+import FormGroupCollector from '@/components/FormGroupCollector'
 import FormSubmit from '@/components/FormSubmit'
 import FieldError from '@/components/FieldError'
 import utils from '@/views/utils'
@@ -250,6 +240,7 @@ export default {
     Breadcrumb,
     Loading,
     FormEntitySelect,
+    FormGroupCollector,
     FormSubmit,
     FieldError,
   }
