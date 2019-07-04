@@ -70,8 +70,8 @@ router.delete('/:id', auth.manager, function(req, res) {
         res.status(422).send('Não é possível excluír! Existem entradas no estoque cadastradas para este grupo');
       } else if (collectors_group.collectors_requests && collectors_group.collectors_requests.length) {
         res.status(422).send('Não é possível excluír! Existem pedidos para coletores cadastrados para este grupo: ('+collectors_group.collectors_requests.map(c => 'Pedido '+ c.code).join(', ') +')');
-      } else if (collectors_group.otential_lists && collectors_group.otential_lists.length) {
-        res.status(422).send('Não é possível excluír! Existem listas de potencial cadastradas para este grupo: ('+collectors_group.otential_lists.map(p => 'Lista '+ p.code).join(', ') +')');
+      } else if (collectors_group.potential_lists && collectors_group.potential_lists.length) {
+        res.status(422).send('Não é possível excluír! Existem listas de potencial cadastradas para este grupo: ('+collectors_group.potential_lists.map(p => 'Lista '+ p.code).join(', ') +')');
       } else if (collectors_group.seeds_matrixes && collectors_group.seeds_matrixes.length) {
         res.status(422).send('Não é possível excluír! Existem matrixes de semente relacionadas a este grupo');
       } else if (collectors_group.seeds_houses && collectors_group.seeds_houses.length) {
