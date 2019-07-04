@@ -4,7 +4,7 @@ var express = require('express'),
   auth = require('../auth'),
   populate = require('../utils').populate,
   CollectorsGroup = mongoose.model('CollectorsGroup');
-  
+
 router.get('/', auth.manager, function(req, res) {
   CollectorsGroup.find({}).exec(function(err, seeds) {
     if (err) {
@@ -55,15 +55,34 @@ router.put('/:id', auth.manager, function(req, res) {
 });
 
 router.delete('/:id', auth.manager, function(req, res) {
-  CollectorsGroup.findByIdAndRemove({
+
+  CollectorsGroup.findOne({
     _id: req.params.id
-  }, function(err, seed) {
+  }).populate('collections collection_areas collectors_requests potential_lists seeds_matrixes stock_ins seeds_houses').exec(function(err, collectors_group) {
     if (err) {
-      res.status(422).send('Ocorreu um erro ao excluír: ' + err.message);
+      res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
-      res.send(seed);
+      if (collectors_group.collections && collectors_group.collections.length) {
+        res.status(422).send('Não é possível excluír! Existem coletas cadastradas para este grupo');
+      } else if (collectors_group.collection_areas && collectors_group.collection_areas.length) {
+        res.status(422).send('Não é possível excluír! Existem áreas de coleta cadastradas para este grupo');
+      } else if (collectors_group.stock_ins && collectors_group.stock_ins.length) {
+        res.status(422).send('Não é possível excluír! Existem entradas no estoque cadastradas para este grupo');
+      } else if (collectors_group.collectors_requests && collectors_group.collectors_requests.length) {
+        res.status(422).send('Não é possível excluír! Existem pedidos para coletores cadastrados para este grupo: ('+collectors_group.collectors_requests.map(c => 'Pedido '+ c.code).join(', ') +')');
+      } else if (collectors_group.otential_lists && collectors_group.otential_lists.length) {
+        res.status(422).send('Não é possível excluír! Existem listas de potencial cadastradas para este grupo: ('+collectors_group.otential_lists.map(p => 'Lista '+ p.code).join(', ') +')');
+      } else if (collectors_group.seeds_matrixes && collectors_group.seeds_matrixes.length) {
+        res.status(422).send('Não é possível excluír! Existem matrixes de semente relacionadas a este grupo');
+      } else if (collectors_group.seeds_houses && collectors_group.seeds_houses.length) {
+        res.status(422).send('Não é possível excluír! Existem grupos de coletores relacionados a este grupo: ('+collectors_group.seeds_houses.map(p => p.name).join(', ') +')');
+      } else {
+        collectors_group.remove();
+        res.send(collectors_group);
+      }
     }
-  });
+  })
+
 });
 
 module.exports = router;
