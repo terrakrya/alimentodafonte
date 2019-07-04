@@ -15,7 +15,20 @@ const LotSchema = mongoose.Schema({
     ref: 'Seed'
   }
 }, {
-  timestamps: true
+  timestamps: true,
+  toJSON: { virtuals: true }
+});
+
+LotSchema.virtual('stock_ins', {
+  ref: 'StockIn',
+  localField: '_id',
+  foreignField: 'lot'
+});
+
+LotSchema.virtual('stock_outs', {
+  ref: 'StockOut',
+  localField: '_id',
+  foreignField: 'lot'
 });
 
 mongoose.model('Lot', LotSchema);
