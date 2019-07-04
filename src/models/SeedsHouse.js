@@ -23,7 +23,26 @@ const SeedsHouseSchema = mongoose.Schema({
     ref: 'CollectorsGroup'
   }],
 }, {
-  timestamps: true
+  timestamps: true,
+  toJSON: { virtuals: true }
+});
+
+SeedsHouseSchema.virtual('lots', {
+  ref: 'Lot',
+  localField: '_id',
+  foreignField: 'seeds_house'
+});
+
+SeedsHouseSchema.virtual('stock_ins', {
+  ref: 'StockIn',
+  localField: '_id',
+  foreignField: 'seeds_house'
+});
+
+SeedsHouseSchema.virtual('stock_outs', {
+  ref: 'StockOut',
+  localField: '_id',
+  foreignField: 'seeds_house'
 });
 
 mongoose.model('SeedsHouse', SeedsHouseSchema);
