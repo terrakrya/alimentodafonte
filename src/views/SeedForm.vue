@@ -159,7 +159,6 @@ export default {
 				if (isValid) {
 					this.isSending = true
 					this.error = false
-					this.form.user = this.currentUser._id
 					axios({
 						method: (this.isEditing() ? 'PUT' : 'POST'),
 						url: (this.isEditing() ? 'seeds/'+ this.$route.params.id : 'seeds'),

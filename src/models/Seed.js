@@ -36,11 +36,7 @@ const SeedSchema = mongoose.Schema({
   compensation_collect: Number,
   ecosystem: [String],
   fruiting_season: [String],
-  images: [Object],
-  user: {
-    type: ObjectId,
-    ref: 'User'
-  }
+  images: [Object]
 }, {
   timestamps: true,
   toJSON: { virtuals: true }

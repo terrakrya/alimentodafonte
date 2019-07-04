@@ -88,4 +88,64 @@ UserSchema.virtual('collectors_group', {
   justOne: true
 });
 
+UserSchema.virtual('collections', {
+  ref: 'Collection',
+  localField: '_id',
+  foreignField: 'collector'
+});
+
+UserSchema.virtual('collection_areas', {
+  ref: 'CollectionArea',
+  localField: '_id',
+  foreignField: 'collector'
+});
+
+UserSchema.virtual('collectors_requests', {
+  ref: 'CollectorsRequest',
+  localField: '_id',
+  foreignField: 'collector'
+});
+
+UserSchema.virtual('orders', {
+  ref: 'Order',
+  localField: '_id',
+  foreignField: 'client'
+});
+
+UserSchema.virtual('potential_lists', {
+  ref: 'PotentialList',
+  localField: '_id',
+  foreignField: 'collector'
+});
+
+UserSchema.virtual('seeds_matrixes', {
+  ref: 'SeedsMatrix',
+  localField: '_id',
+  foreignField: 'collector'
+});
+
+UserSchema.virtual('stock_ins', {
+  ref: 'StockIn',
+  localField: '_id',
+  foreignField: 'collector'
+});
+
+UserSchema.virtual('stock_outs', {
+  ref: 'StockOut',
+  localField: '_id',
+  foreignField: 'buyer'
+});
+
+UserSchema.virtual('seeds_houses', {
+  ref: 'SeedsHouse',
+  localField: '_id',
+  foreignField: 'owner'
+});
+
+UserSchema.virtual('seeds_houses_collector', {
+  ref: 'SeedsHouse',
+  localField: '_id',
+  foreignField: 'collectors'
+});
+
 mongoose.model('User', UserSchema);
