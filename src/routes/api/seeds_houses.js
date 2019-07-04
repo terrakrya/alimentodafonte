@@ -55,15 +55,24 @@ router.put('/:id', auth.manager, function(req, res) {
 });
 
 router.delete('/:id', auth.manager, function(req, res) {
-  SeedsHouse.findByIdAndRemove({
+  SeedsHouse.findOne({
     _id: req.params.id
-  }, function(err, seed) {
+  }).populate('lots stock_ins stock_outs').exec(function(err, seeds_house) {
     if (err) {
-      res.status(422).send('Ocorreu um erro ao excluír: ' + err.message);
+      res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
-      res.send(seed);
+      if (seeds_house.stock_ins && seeds_house.stock_ins.length) {
+        res.status(422).send('Não é possível excluír! Existem entradas no estoque cadastradas para esta casa de sementes');
+      } else if (seeds_house.stock_outs && seeds_house.stock_outs.length) {
+        res.status(422).send('Não é possível excluír! Existem saídas do estoque cadastradas para esta casa de sementes');
+      } else if (seeds_house.lots && seeds_house.lots.length) {
+        res.status(422).send('Não é possível excluír! Existem lotes relacionados a esta casa de sementes: (' + seeds_house.lots.map(p => p.code).join(', ') + ')');
+      } else {
+        seeds_house.remove();
+        res.send(seeds_house);
+      }
     }
-  });
+  })
 });
 
 module.exports = router;
