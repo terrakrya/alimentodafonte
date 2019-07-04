@@ -19,14 +19,14 @@ export default {
       return this.$store.state.currentUser
     },
     currentRole() {
-      if (this.isClient) {
-        return tipos_de_usuario.find(e => e.value == 'client')
-      } else if (this.isCollector) {
-        return tipos_de_usuario.find(e => e.value == 'collector')
+      if (this.isAdmin) {
+        return tipos_de_usuario.find(e => e.value == 'admin')
       } else if (this.isManager) {
         return tipos_de_usuario.find(e => e.value == 'manager')
-      } else if (this.isAdmin) {
-        return tipos_de_usuario.find(e => e.value == 'admin')
+      } else if (this.isCollector) {
+        return tipos_de_usuario.find(e => e.value == 'collector')
+      } else if (this.isClient) {
+        return tipos_de_usuario.find(e => e.value == 'client')
       }
       return { "text": "Usuário", "value": "user" }
     },
@@ -38,6 +38,9 @@ export default {
     },
     isCollector() {
       return this.isA('collector') || this.isA('manager') || this.isA('admin')
+    },
+    isClient() {
+      return this.isA('client') || this.isA('manager') || this.isA('admin')
     },
     baseUrl() {
       return axios.defaults.baseURL.replace('/api', '')

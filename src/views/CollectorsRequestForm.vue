@@ -18,9 +18,9 @@
             </b-form-group>
           </div>
         </div>
-        <div class="row" v-if="potential_seeds && potential_seeds.length">
+        <div class="row">
           <div class="col-sm-12">
-            <table class="table b-table b-table-stacked-md">
+            <table class="table b-table b-table-stacked-md" v-if="potential_seeds && potential_seeds.length">
               <thead>
                 <tr>
                   <th>Semente</th>
@@ -168,7 +168,9 @@ export default {
     },
     loadPotential() {
       this.seeds_errors = []
+      this.potential_seeds = []
       var seed_items = {}
+
 
       if ((this.form.collectors_group || this.form.collector)) {
 
