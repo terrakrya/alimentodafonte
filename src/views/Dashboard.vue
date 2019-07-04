@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import DashboardManager from './DashboardManager'
 import DashboardCollector from './DashboardCollector'
 
