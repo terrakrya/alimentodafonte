@@ -37,10 +37,23 @@ npm run lint
 ## Production
 
 ### Run the docker compose in the production server root app folder
+
 ```
 cd /home/xingu/rede-de-sementes/
 sudo git pull
-sudo docker-compose -f docker-compose-production.yml up -d --build
+make prod-run
+```
+
+### Stop the production containers
+
+```
+make prod-stop
+```
+
+### Clean the production containers
+
+```
+make clean
 ```
 
 ## Database initialization
