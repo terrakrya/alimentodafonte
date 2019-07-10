@@ -58,25 +58,4 @@ router.get('/stock_ins', auth.collector, function(req, res) {
   });
 });
 
-// TODO remove on next deploy
-router.get('/update_stock_ins_price', function(req, res) {
-  StockIn.find().populate('seed').exec(function(err, stock_ins) {
-    if (err) {
-      res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
-    } else {
-      stock_ins.forEach((stock_in, index) => {
-        if (stock_in.seed && !stock_in.compensation_collect) {
-          console.log('stock_in');
-          console.log(stock_in.seed);
-          stock_in.compensation_collect = stock_in.seed.compensation_collect
-          stock_in.wholesale_price = stock_in.seed.wholesale_price
-          console.log(stock_in);
-          stock_in.save();
-        }
-      })
-      res.json(stock_ins);
-    }
-  });
-});
-
 module.exports = router;
