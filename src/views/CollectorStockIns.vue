@@ -22,8 +22,8 @@
             <template slot="qtd" slot-scope="data">
               {{data.value}} kg
             </template>
-            <template slot="price" slot-scope="data">
-							{{data.value | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}
+            <template slot="compensation_collect" slot-scope="data">
+							{{data.value * data.item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}
             </template>
             <!-- eslint-disable-next-line -->
             <template slot="bottom-row" slot-scope="data">
@@ -31,7 +31,7 @@
               <td></td>
               <td></td>
               <td><strong>{{total_qtd}} Kg</strong></td>
-              <td><strong>{{total_price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}</strong></td>
+              <td><strong>{{total_compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}</strong></td>
             </template>
           </b-table>
         </div>
@@ -77,7 +77,7 @@ export default {
           sortable: true
         },
         {
-          key: 'price',
+          key: 'compensation_collect',
           label: 'Remuneração total',
           sortable: true
         }
@@ -93,9 +93,9 @@ export default {
         return stock_in.qtd
       }).reduce((a, b) => a + b)
     },
-    total_price() {
+    total_compensation_collect() {
       return this.stock_ins.map(stock_in => {
-        return stock_in.price * stock_in.qtd
+        return stock_in.compensation_collect * stock_in.qtd
       }).reduce((a, b) => a + b)
     }
   },

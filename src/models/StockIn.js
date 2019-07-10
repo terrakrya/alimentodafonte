@@ -3,8 +3,14 @@ const mongoose = require('mongoose'),
 
 const StockInSchema = mongoose.Schema({
   price: {
+    type: Number
+  },
+  compensation_collect: {
     type: Number,
     required: true
+  },
+  wholesale_price: {
+    type: Number
   },
   qtd: {
     type: Number,

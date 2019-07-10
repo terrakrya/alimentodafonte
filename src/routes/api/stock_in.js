@@ -24,6 +24,8 @@ router.post('/', auth.manager, function(req, res) {
       res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
     } else {
       newStockIn.price = seed.price
+      newStockIn.compensation_collect = seed.compensation_collect
+      newStockIn.wholesale_price = seed.wholesale_price
       newStockIn.save(function(err, stock_in) {
         if (err) {
           res.status(422).send('Ocorreu um erro ao salvar o item: ' + err.message);
