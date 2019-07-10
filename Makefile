@@ -29,5 +29,5 @@ stage-stop:
 prod-run:
 	sudo docker-compose -f docker-compose-production.yml up -d
 
-production-stop:
+prod-stop:
 	sudo docker-compose -f docker-compose-production.yml stop
