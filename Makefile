@@ -1,32 +1,33 @@
 -include env_make
 
-.PHONY: test
-
-drupal ?= 8
-php ?= 7.2
-
 default: run
 
 run:
-	docker-compose up -d
+	sudo docker-compose up -d
 
-in:
-	docker-compose exec nginx_front /bin/bash
+in-teste:
+	sudo docker exec -it sementes_teste /bin/bash
 
-in-with-root:
-	docker-compose exec --user root nginx_front /bin/bash
+in-teste-with-root:
+	sudo docker exec --user root -it sementes_cerrado /bin/bash
 
 stop:
-	docker-compose stop
+	sudo docker-compose stop
 
 clean:
-	docker-compose down
+	sudo docker-compose down --remove-orphans
 
 build:
-	docker-compose build
+	sudo docker-compose build
 
 stage-run:
-	docker-compose -f docker-compose-stage.yml up -d
+	sudo docker-compose -f docker-compose-stage.yml up -d
 
 stage-stop:
-	docker-compose -f docker-compose-stage.yml stop
+	sudo docker-compose -f docker-compose-stage.yml stop
+
+prod-run:
+	sudo docker-compose -f docker-compose-production.yml up -d
+
+production-stop:
+	sudo docker-compose -f docker-compose-production.yml stop
