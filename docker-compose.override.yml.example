@@ -25,6 +25,7 @@ services:
   mongo_xingu:
     container_name: mongo_xingu
     image: 'mongo:4'
+    restart: always
     volumes:
       - ./data/xingu:/data/db
     networks:
@@ -55,6 +56,7 @@ services:
   mongo_cerrado:
     container_name: mongo_cerrado
     image: 'mongo:4'
+    restart: always
     volumes:
       - ./data/cerrado:/data/db
     networks:
@@ -85,6 +87,7 @@ services:
   mongo_teste:
     container_name: mongo_teste
     image: 'mongo:4'
+    restart: always
     volumes:
       - ./data/teste:/data/db
     networks:
