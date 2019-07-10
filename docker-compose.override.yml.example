@@ -22,8 +22,9 @@ services:
       - 'traefik.port=80'
       - 'traefik.frontend.rule=Host:xingu.sementesdoxingu.org.br'
       - 'traefik.enable=true'
-    depends:
+    depends_on:
       - traefik
+      - mongo_xingu
   mongo_xingu:
     container_name: mongo_xingu
     image: 'mongo:4'
@@ -32,7 +33,7 @@ services:
       - ./data/xingu:/data/db
     networks:
       sementes:
-    depends:
+    depends_on:
       - traefik
 
   sementes_cerrado_app:
@@ -56,8 +57,9 @@ services:
       - 'traefik.port=80'
       - 'traefik.frontend.rule=Host:cerrado.sementesdoxingu.org.br'
       - 'traefik.enable=true'
-    depends:
+    depends_on:
       - traefik
+      - mongo_cerrado
   mongo_cerrado:
     container_name: mongo_cerrado
     image: 'mongo:4'
@@ -66,7 +68,7 @@ services:
       - ./data/cerrado:/data/db
     networks:
       sementes:
-    depends:
+    depends_on:
       - traefik
 
   sementes_teste_app:
@@ -90,8 +92,9 @@ services:
       - 'traefik.port=80'
       - 'traefik.frontend.rule=Host:teste.sementesdoxingu.org.br'
       - 'traefik.enable=true'
-    depends:
+    depends_on:
       - traefik
+      - mongo_teste
   mongo_teste:
     container_name: mongo_teste
     image: 'mongo:4'
@@ -100,7 +103,7 @@ services:
       - ./data/teste:/data/db
     networks:
       sementes:
-    depends:
+    depends_on:
       - traefik
 
   traefik:
