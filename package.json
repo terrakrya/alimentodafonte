@@ -7,7 +7,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "start": "nodemon ./server.js",
-    "api": "nodemon ./server.js",
+    "api": "nodemon ./server.js"
   },
   "dependencies": {
     "@fnando/cnpj": "^0.1.1",
