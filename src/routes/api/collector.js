@@ -21,17 +21,22 @@ router.get('/requests', auth.collector, function(req, res) {
           if (seed_items[seed_id]) {
             seed_items[seed_id].qtd += seed_item.qtd
           } else {
-            seed_items[seed_id] = {
-              seed: seed_item.seed,
-              qtd: seed_item.qtd,
-              compensation_collect: seed_item.compensation_collect,
-              qtd_delivered: stock_ins.map(stock_in => {
+            var qtd_delivered = 0
+            if (stock_ins && stock_ins.length) {
+              qtd_delivered = stock_ins.map(stock_in => {
                 if (stock_in.seed.toString() == seed_id.toString()) {
                   return stock_in.qtd
                 } else {
                   return 0
                 }
               }).reduce((a, b) => a + b)
+            }
+
+            seed_items[seed_id] = {
+              seed: seed_item.seed,
+              qtd: seed_item.qtd,
+              compensation_collect: seed_item.compensation_collect,
+              qtd_delivered: qtd_delivered
             }
           }
           seed_items[seed_id].qtd_remaining = seed_items[seed_id].qtd - seed_items[seed_id].qtd_delivered
