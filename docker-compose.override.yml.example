@@ -117,7 +117,7 @@ services:
     networks:
       sementes:
     labels:
-      - "traefik.docker.network=drupal"
+      - "traefik.docker.network=sementes"
 
 networks:
   sementes:
