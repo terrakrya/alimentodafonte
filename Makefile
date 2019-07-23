@@ -21,13 +21,16 @@ build:
 	sudo docker-compose build
 
 stage-run:
-	sudo docker-compose -f docker-compose-stage.yml up -d --build
+	sudo docker-compose -f docker-compose-stage.yml up -d
 
 stage-stop:
 	sudo docker-compose -f docker-compose-stage.yml stop
 
 prod-run:
-	sudo docker-compose -f docker-compose-production.yml up -d --build
+	sudo docker-compose -f docker-compose-production.yml up -d
+
+prod-build:
+	sudo docker-compose -f docker-compose-production.yml build
 
 prod-stop:
 	sudo docker-compose -f docker-compose-production.yml stop
