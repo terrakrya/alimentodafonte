@@ -6,9 +6,9 @@
     "frontend": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "start": "nodemon ./server.js",
-    "api": "pm2 start ./server.js",
-    "api-stop": "pm2 stop ./server.js"
+    "start": "pm2 start ./server.js",
+    "api": "nodemon ./server.js",
+    "stop": "pm2 stop ./server.js"
   },
   "dependencies": {
     "@fnando/cnpj": "^0.1.1",
