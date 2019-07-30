@@ -24,12 +24,12 @@
 					<div class="row gray">
 						<div class="col-sm-4">
 							<b-form-group label="Peso bruto (Kg)" >
-								<b-form-input v-model="form.weight_gross" type="number" />
+								<b-form-input v-model="form.weight_gross" type="number" step="0.01" lang="nb" />
 							</b-form-group>
 						</div>
 						<div class="col-sm-4">
 							<b-form-group label="Peso beneficiado (Kg)" >
-								<b-form-input v-model="form.weight_benef" type="number" />
+								<b-form-input v-model="form.weight_benef" type="number" step="0.01" lang="nb" />
 							</b-form-group>
 						</div>
 						<div class="col-sm-4">

@@ -29,7 +29,7 @@
           </div>
           <div class="col-sm-6">
             <b-form-group label="Quantidade (Kg) *">
-              <b-form-input v-model="form.qtd" type="number" v-validate="'required'" name="qtd" />
+              <b-form-input v-model="form.qtd" type="number" step="0.01" lang="nb" v-validate="'required'" name="qtd" />
               <field-error :msg="veeErrors" field="qtd" />
             </b-form-group>
           </div>
@@ -144,7 +144,7 @@ export default {
     },
     seedSelected(seed) {
       if (seed) {
-        this.price = Number(seed.compensation_collect)
+        this.price = parseFloat(seed.compensation_collect)
         this.filterOptions()
       }
     },

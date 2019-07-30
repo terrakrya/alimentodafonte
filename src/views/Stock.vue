@@ -252,10 +252,10 @@ export default {
 				this.total_price = 0
 				filteredItems.map(item => {
 					if (item.price) {
-						this.total_price += Number(item.price) * Number(item.qtd)
+						this.total_price += parseFloat(item.price) * parseFloat(item.qtd)
 					}
 					if (item.qtd) {
-						this.total_qtd += Number(item.qtd)
+						this.total_qtd += parseFloat(item.qtd)
 					}
 				})
 			}
@@ -265,7 +265,7 @@ export default {
 			this.total_seeds_qtd = 0
 			filteredItems.map(item => {
 				if (item.stock) {
-					this.total_seeds_qtd += Number(item.stock)
+					this.total_seeds_qtd += parseFloat(item.stock)
 				}
 			})
 		},

@@ -26,7 +26,7 @@
                   <td>{{potential_seed.potential}} kg</td>
                   <td>{{potential_seed.requested}} kg</td>
                   <td v-if="potential_seed.max > 0">
-                    <b-form-input @input="setSeedItems" v-model="potential_seeds[index].qtd" step="1" class="weight" type="number" :max="potential_seed.qtd" :min="1" style="width: 100px; display: inline" /> kg
+                    <b-form-input @input="setSeedItems" v-model="potential_seeds[index].qtd" class="weight" type="number" step="0.01" lang="nb" :max="potential_seed.qtd" :min="1" style="width: 100px; display: inline" /> kg
                     <br>
                     <small>máximo: {{potential_seed.max}} kg</small>
                   </td>
@@ -37,13 +37,13 @@
                 <tr class="b-table-bottom-row" v-if="form.seed_items && form.seed_items.length">
                   <td></td>
                   <td>
-                    <strong>{{potential_seeds.map(i => Number(i.potential)).reduce((a, b) => a + b)}} kg</strong>
+                    <strong>{{potential_seeds.map(i => parseFloat(i.potential)).reduce((a, b) => a + b)}} kg</strong>
                   </td>
                   <td>
-                    <strong>{{potential_seeds.map(i => Number(i.requested)).reduce((a, b) => a + b)}} kg</strong>
+                    <strong>{{potential_seeds.map(i => parseFloat(i.requested)).reduce((a, b) => a + b)}} kg</strong>
                   </td>
                   <td>
-                    <strong>{{form.seed_items.map(i => Number(i.qtd)).reduce((a, b) => a + b)}} kg</strong>
+                    <strong>{{form.seed_items.map(i => parseFloat(i.qtd)).reduce((a, b) => a + b)}} kg</strong>
                   </td>
                   <td></td>
                 </tr>
