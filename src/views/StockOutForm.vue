@@ -114,8 +114,8 @@ export default {
             return stock_ins_total.reduce((a, b) => a + b)
           }
         }
-        return 0
       }
+      return 0
     }
   },
   methods: {
