@@ -1,6 +1,6 @@
 <template>
 <div>
-  <cool-select :arrowsDisableInstantSelection="true" placeholder="Busque pelo nome clique para selecionar" v-model="entity" :items="list" item-text="title" @select="addItem(); callback(entity)">
+  <cool-select :arrowsDisableInstantSelection="true" placeholder="Busque pelo nome clique para selecionar" v-model="entity" v-validate="validate" :name="field" :items="list" item-text="title" @select="addItem(); callback(entity)">
     <template slot="item" slot-scope="{ item: option }">
       <div style="display: flex; align-items: center;">
         <img v-if="option.picture" :src="baseUrl + option.picture">
@@ -17,6 +17,9 @@
       <br>
     </template>
   </cool-select>
+  <span v-for="(err, index) in veeErrors" :key="index">
+    <span class="text-danger" v-if="err.field == field">{{ err.msg }}</span>
+  </span>
 </div>
 </template>
 
@@ -24,9 +27,11 @@
 import {
   CoolSelect
 } from 'vue-cool-select'
+import FieldError from '@/components/FieldError'
+
 export default {
   name: 'form-entity-select',
-  props: ['items', 'type', 'form', 'field', 'input'],
+  props: ['items', 'type', 'form', 'field', 'input', 'validate'],
   inject: ['$validator'],
   data() {
     return {
@@ -110,7 +115,8 @@ export default {
     }
   },
   components: {
-    CoolSelect
+    CoolSelect,
+    FieldError
   }
 };
 </script>

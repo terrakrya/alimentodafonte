@@ -15,7 +15,7 @@
           </div>
           <div class="col-sm-4">
             <b-form-group label="Área estimada" :description="'Área de ' + form.estimated_area + ' hectares'">
-              <b-form-input v-model="form.estimated_area" type="number" step="0.01" lang="nb" />
+              <b-form-input v-model="form.estimated_area" type="number" step="0.01" lang="nb" min="0" />
             </b-form-group>
           </div>
         </div>

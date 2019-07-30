@@ -19,7 +19,8 @@ const StockInSchema = mongoose.Schema({
   collection_date: Date,
   seeds_house: {
     type: ObjectId,
-    ref: 'SeedsHouse'
+    ref: 'SeedsHouse',
+    required: true
   },
   collectors_group: {
     type: ObjectId,
@@ -31,11 +32,13 @@ const StockInSchema = mongoose.Schema({
   },
   seed: {
     type: ObjectId,
-    ref: 'Seed'
+    ref: 'Seed',
+    required: true
   },
   lot: {
     type: ObjectId,
-    ref: 'Lot'
+    ref: 'Lot',
+    required: true
   }
 }, {
   timestamps: true

@@ -12,37 +12,33 @@
         <div class="row">
           <div class="col-sm-6">
             <b-form-group label="Casa de sementes *">
-              <form-entity-select :input="seedsHouseSelected" type="seeds_houses" :form="form" field="seeds_house" />
+              <form-entity-select :input="seedsHouseSelected" type="seeds_houses" :form="form" field="seeds_house" :validate="'required'" />
             </b-form-group>
           </div>
           <div class="col-sm-6">
             <b-form-group label="Semente *">
-              <form-entity-select :input="seedSelected" type="seeds" :form="form" field="seed" />
+              <form-entity-select :input="seedSelected" type="seeds" :form="form" field="seed" :validate="'required'" />
             </b-form-group>
           </div>
         </div>
-        <div class="row">
+        <div class="row" v-if="lot_filtered_options.length">
+          <div class="col-sm-6">
+            <b-form-group label="Lote *">
+              <form-entity-select :items="lot_filtered_options" :form="form" field="lot" :validate="'required'" />
+            </b-form-group>
+          </div>
+          <div class="col-sm-6">
+            <b-form-group label="Quantidade (Kg) *" >
+              <b-form-input v-model="form.qtd" type="number" step="0.01" lang="nb" min="0" :max="max_lot" v-validate="'required'" name="qtd" />
+              <field-error :msg="veeErrors" field="qtd" />
+              <small class="text-muted" v-show="max_lot">Máximo de {{max_lot}} kg para este lote</small>
+            </b-form-group>
+          </div>
+        </div>
+        <div class="row" v-if="lot_filtered_options.length">
           <div class="col-sm-6">
             <b-form-group label="Comprador">
               <form-entity-select type="clients" :form="form" field="buyer" />
-            </b-form-group>
-          </div>
-          <div class="col-sm-6">
-            <b-form-group label="Quantidade (Kg) *">
-              <b-form-input v-model="form.qtd" type="number" step="0.01" lang="nb" v-validate="'required'" name="qtd" />
-              <field-error :msg="veeErrors" field="qtd" />
-            </b-form-group>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-6">
-            <b-form-group label="Lote *" v-if="lot_filtered_options.length && !add_new_lot">
-              <form-entity-select :items="lot_filtered_options" :form="form" field="lot" />
-              <a @click="newLot" class="pull-right pointer">Adicionar novo lote</a>
-            </b-form-group>
-            <b-form-group label="Novo lote *" v-if="!lot_filtered_options.length || add_new_lot" description="Um novo lote será criado com esse código">
-              <b-form-input v-model="new_lot" v-validate="'required'" name="new_lot" />
-              <field-error :msg="veeErrors" field="new_lot" />
             </b-form-group>
           </div>
           <div class="col-sm-6">
@@ -50,6 +46,11 @@
               <b-form-radio-group v-model="form.out_mode" :options="modos_de_saida" stacked v-validate="'required'" name="out_mode" />
               <field-error :msg="veeErrors" field="out_mode" />
             </b-form-group>
+          </div>
+        </div>
+        <div class="row" v-if="form.seeds_house && form.seed">
+          <div class="col-sm-12">
+            <no-item :list="lot_filtered_options" msg="Nenhum lote encontrado para esta casa/semente" />
           </div>
         </div>
         <form-submit :errors="error" :sending="isSending" />
@@ -67,6 +68,7 @@ import FormEntitySelect from '@/components/FormEntitySelect'
 import FormSubmit from '@/components/FormSubmit'
 import FieldError from '@/components/FieldError'
 import modos_de_saida from '@/data/modos-de-saida.json'
+import NoItem from '@/components/NoItem'
 
 export default {
 
@@ -77,8 +79,6 @@ export default {
     return {
       lot_filtered_options: [],
       lot_options: [],
-      new_lot: null,
-      add_new_lot: false,
       price: null,
       modos_de_saida: modos_de_saida,
       form: {
@@ -93,9 +93,30 @@ export default {
     }
   },
   created() {
-    axios.get('lots').then(response => {
+    axios.get('lots', {
+      params: {
+        populate: 'stock_ins stock_outs'
+      }
+    }).then(response => {
       this.lots = response.data
     }).catch(this.showError)
+  },
+  computed: {
+    max_lot () {
+      if (this.lots && this.form.lot) {
+        var lot = this.lots.find(lot => { return lot._id == this.form.lot })
+        var stock_ins_total = lot.stock_ins.map(stock_in => stock_in.qtd)
+        var stock_outs_total = lot.stock_outs.map(stock_out => stock_out.qtd)
+        if (stock_ins_total.length > 0) {
+          if (stock_outs_total.length > 0) {
+            return stock_ins_total.reduce((a, b) => a + b) + stock_outs_total.reduce((a, b) => a + b)
+          } else {
+            return stock_ins_total.reduce((a, b) => a + b)
+          }
+        }
+        return 0
+      }
+    }
   },
   methods: {
     save() {
@@ -113,18 +134,7 @@ export default {
             }
           }
 
-          if (!this.form.lot && this.new_lot) {
-            axios.post('lots', {
-              code: this.new_lot,
-              seeds_house: this.form.seeds_house,
-              seed: this.form.seed,
-            }).then(resp => {
-              this.form.lot = resp.data._id
-              this.saveItem()
-            }).catch(this.showError);
-          } else {
-            this.saveItem()
-          }
+          this.saveItem()
         }
       })
     },
@@ -151,10 +161,6 @@ export default {
     seedsHouseSelected() {
       this.filterOptions()
     },
-    newLot() {
-      this.add_new_lot = true
-      this.form.lot = null
-    },
     filterOptions() {
       if (this.form.seed && this.form.seeds_house) {
         this.lot_filtered_options = this.lots.filter(lot => {
@@ -173,6 +179,7 @@ export default {
     FormEntitySelect,
     FormSubmit,
     FieldError,
+    NoItem
   }
 
 };

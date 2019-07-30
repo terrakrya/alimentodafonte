@@ -26,7 +26,7 @@
                   <td>{{potential_seed.potential}} kg</td>
                   <td>{{potential_seed.requested}} kg</td>
                   <td v-if="potential_seed.max > 0">
-                    <b-form-input @input="setSeedItems" v-model="potential_seeds[index].qtd" class="weight" type="number" step="0.01" lang="nb" :max="potential_seed.qtd" :min="1" style="width: 100px; display: inline" /> kg
+                    <b-form-input @input="setSeedItems" v-model="potential_seeds[index].qtd" class="weight" type="number" step="0.01" lang="nb" min="0" :max="potential_seed.qtd" :min="1" style="width: 100px; display: inline" /> kg
                     <br>
                     <small>máximo: {{potential_seed.max}} kg</small>
                   </td>

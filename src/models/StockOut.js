@@ -13,7 +13,8 @@ const StockOutSchema = mongoose.Schema({
   out_mode: String,
   seeds_house: {
     type: ObjectId,
-    ref: 'SeedsHouse'
+    ref: 'SeedsHouse',
+    required: true
   },
   buyer: {
     type: ObjectId,
@@ -21,11 +22,13 @@ const StockOutSchema = mongoose.Schema({
   },
   seed: {
     type: ObjectId,
-    ref: 'Seed'
+    ref: 'Seed',
+    required: true
   },
   lot: {
     type: ObjectId,
-    ref: 'Lot'
+    ref: 'Lot',
+    required: true
   }
 }, {
   timestamps: true
