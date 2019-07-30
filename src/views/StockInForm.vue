@@ -25,7 +25,7 @@
         <div class="row">
           <div class="col-sm-4">
             <b-form-group label="Quantidade (Kg) *">
-              <b-form-input v-model="form.qtd" type="number" v-validate="'required'" name="qtd" />
+              <b-form-input v-model="form.qtd" type="number" step="0.01" lang="nb" v-validate="'required'" name="qtd" />
               <field-error :msg="veeErrors" field="qtd" />
             </b-form-group>
           </div>
@@ -211,7 +211,7 @@ export default {
 
           let seed_items = collectors_requests.map(collectors_request => collectors_request.seed_items.find(seed_item => (seed_item.seed._id == this.form.seed)))
 
-          if (Number(seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b)) < Number(this.form.qtd)) {
+          if (parseFloat(seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b)) < parseFloat(this.form.qtd)) {
             this.qtd_error = 'Quantidade ' + this.form.qtd + ' kg maior que a solicitada '
             if (collectors_requests.length > 1) {
               this.qtd_error += 'nos pedidos: '

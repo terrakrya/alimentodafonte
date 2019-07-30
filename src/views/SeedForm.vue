@@ -52,14 +52,14 @@
 						</div>
 						<div class="col-md-3 col-sm-6">
 							<b-form-group label="Qtd. em estoque (Kg)">
-								<b-form-input v-model="form.stock" type="number" />
+								<b-form-input v-model="form.stock" type="number" step="0.01" lang="nb" />
 							</b-form-group>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-sm-4">
 							<b-form-group label="Qtd. de sementes / Kg *" :description="form.seeds_kg > 0 ? form.seeds_kg + ' sementes por quilo' : ''">
-								<b-form-input v-model="form.seeds_kg" type="number" v-validate="'required'" name="seeds_kg"  />
+								<b-form-input v-model="form.seeds_kg" type="number" step="0.01" lang="nb" v-validate="'required'" name="seeds_kg"  />
 								<field-error :msg="veeErrors" field="seeds_kg" />
 							</b-form-group>
 						</div>
@@ -71,7 +71,7 @@
 						</div>
 						<div class="col-sm-4">
 							<b-form-group label="Limite de peso por lote (Kg)" :description="form.lot_limit > 0 ? 'Limite de '+ form.lot_limit + ' quilos por lote' : ''">
-								<b-form-input type="number" v-model="form.lot_limit" />
+								<b-form-input type="number" step="0.01" lang="nb" v-model="form.lot_limit" />
 							</b-form-group>
 						</div>
 					</div>

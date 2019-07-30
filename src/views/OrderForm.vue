@@ -14,7 +14,7 @@
           </div>
           <div class="col-sm-6">
             <b-form-group label="Área total" description="Área total a ser restaurada em hectares">
-              <b-form-input v-model="form.restored_area" type="number" />
+              <b-form-input v-model="form.restored_area" type="number" step="0.01" lang="nb" />
             </b-form-group>
           </div>
         </div>

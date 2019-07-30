@@ -20,7 +20,7 @@
           </template>
         </cool-select>
         <div class="col-sm-6">
-          <input @keypress.13.prevent="addItem" v-model="item_form.qtd" class="weight" placeholder="Quantidade" type="number" /> Kg
+          <input @keypress.13.prevent="addItem" v-model="item_form.qtd" class="weight" placeholder="Quantidade" type="number" step="0.01" lang="nb" /> Kg
           <b-button class="btn btn-primary fa fa-plus pull-right" @click="addItem()">Adicionar</b-button>
         </div>
         <br>
@@ -107,14 +107,14 @@ export default {
     },
     totalQty () {
       if (this.preview) {
-        return this.preview.map((item) => Number(item.qtd)).reduce((a, b) => a + b)
+        return this.preview.map((item) => parseFloat(item.qtd)).reduce((a, b) => a + b)
       } else {
         return 0
       }
     },
     totalPrice () {
       if (this.preview) {
-        return this.preview.map((item) => Number(item.value) * Number(item.qtd)).reduce((a, b) => a + b)
+        return this.preview.map((item) => parseFloat(item.value) * parseFloat(item.qtd)).reduce((a, b) => a + b)
       } else {
         return 0
       }
@@ -160,7 +160,7 @@ export default {
         })
 
         if (currentItem) {
-          currentItem.qtd = Number(this.item_form.qtd) + Number(currentItem.qtd)
+          currentItem.qtd = parseFloat(this.item_form.qtd) + parseFloat(currentItem.qtd)
         } else {
           var seed = this.seeds.find(s => {
             return s._id == this.item_form.seed
