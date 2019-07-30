@@ -1,10 +1,12 @@
 const mongoose = require('mongoose'),
-  ObjectId = mongoose.Schema.Types.ObjectId;
+  uniqueValidator = require('mongoose-unique-validator'),
+ObjectId = mongoose.Schema.Types.ObjectId;
 
 const LotSchema = mongoose.Schema({
   code: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   seeds_house: {
     type: ObjectId,
@@ -17,6 +19,11 @@ const LotSchema = mongoose.Schema({
 }, {
   timestamps: true,
   toJSON: { virtuals: true }
+});
+
+
+LotSchema.plugin(uniqueValidator, {
+  message: 'Esse código do lote já está sendo usado'
 });
 
 LotSchema.virtual('stock_ins', {
