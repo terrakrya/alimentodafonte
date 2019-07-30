@@ -9,12 +9,12 @@
         <div class="row">
           <div class="col-sm-6">
             <b-form-group label="Cliente *">
-              <form-entity-select type="clients" :form="form" field="client" />
+              <form-entity-select type="clients" :form="form" field="client" :validate="'required'" />
             </b-form-group>
           </div>
           <div class="col-sm-6">
             <b-form-group label="Área total" description="Área total a ser restaurada em hectares">
-              <b-form-input v-model="form.restored_area" type="number" step="0.01" lang="nb" />
+              <b-form-input v-model="form.restored_area" type="number" step="0.01" lang="nb" min="0" />
             </b-form-group>
           </div>
         </div>

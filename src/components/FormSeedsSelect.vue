@@ -20,7 +20,7 @@
           </template>
         </cool-select>
         <div class="col-sm-6">
-          <input @keypress.13.prevent="addItem" v-model="item_form.qtd" class="weight" placeholder="Quantidade" type="number" step="0.01" lang="nb" /> Kg
+          <input @keypress.13.prevent="addItem" v-model="item_form.qtd" class="weight" placeholder="Quantidade" type="number" step="0.01" lang="nb" min="0" /> Kg
           <b-button class="btn btn-primary fa fa-plus pull-right" @click="addItem()">Adicionar</b-button>
         </div>
         <br>

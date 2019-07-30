@@ -10,11 +10,13 @@ const LotSchema = mongoose.Schema({
   },
   seeds_house: {
     type: ObjectId,
-    ref: 'SeedsHouse'
+    ref: 'SeedsHouse',
+    required: true
   },
   seed: {
     type: ObjectId,
-    ref: 'Seed'
+    ref: 'Seed',
+    required: true
   }
 }, {
   timestamps: true,

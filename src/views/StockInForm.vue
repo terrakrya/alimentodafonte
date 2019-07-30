@@ -12,12 +12,12 @@
         <div class="row">
           <div class="col-sm-6">
             <b-form-group label="Casa de sementes *">
-              <form-entity-select :input="seedsHouseSelected" type="seeds_houses" :form="form" field="seeds_house" />
+              <form-entity-select :input="seedsHouseSelected" type="seeds_houses" :form="form" field="seeds_house" :validate="'required'" />
             </b-form-group>
           </div>
           <div class="col-sm-6">
             <b-form-group label="Semente *">
-              <form-entity-select :input="seedSelected" type="seeds" :form="form" field="seed" />
+              <form-entity-select :input="seedSelected" type="seeds" :form="form" field="seed" :validate="'required'" />
             </b-form-group>
           </div>
         </div>
@@ -25,7 +25,7 @@
         <div class="row">
           <div class="col-sm-4">
             <b-form-group label="Quantidade (Kg) *">
-              <b-form-input v-model="form.qtd" type="number" step="0.01" lang="nb" v-validate="'required'" name="qtd" />
+              <b-form-input v-model="form.qtd" type="number" step="0.01" lang="nb" min="0" v-validate="'required'" name="qtd" />
               <field-error :msg="veeErrors" field="qtd" />
             </b-form-group>
           </div>
@@ -36,7 +36,7 @@
           </div>
           <div class="col-sm-4">
             <b-form-group label="Lote *" v-if="lot_filtered_options.length && !add_new_lot">
-              <form-entity-select :items="lot_filtered_options" :form="form" field="lot" />
+              <form-entity-select :items="lot_filtered_options" :form="form" field="lot" :validate="'required'" />
               <a @click="newLot" class="pull-right pointer">Adicionar novo lote</a>
             </b-form-group>
             <b-form-group label="Novo lote *" v-if="!lot_filtered_options.length || add_new_lot" description="Um novo lote será criado com esse código">
