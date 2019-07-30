@@ -27,7 +27,6 @@
 import {
   CoolSelect
 } from 'vue-cool-select'
-import FieldError from '@/components/FieldError'
 
 export default {
   name: 'form-entity-select',
@@ -115,8 +114,7 @@ export default {
     }
   },
   components: {
-    CoolSelect,
-    FieldError
+    CoolSelect
   }
 };
 </script>

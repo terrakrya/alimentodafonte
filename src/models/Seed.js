@@ -1,5 +1,4 @@
-const mongoose = require('mongoose'),
-  ObjectId = mongoose.Schema.Types.ObjectId;
+const mongoose = require('mongoose');
 
 const SeedSchema = mongoose.Schema({
   name: {
