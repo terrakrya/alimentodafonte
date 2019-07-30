@@ -3,13 +3,12 @@ export default {
     var initials = ''
     names.forEach(name => {
       var parts = name.split(' ')
-      var qtdChars = 4 - parts.length
-      if (qtdChars < 1) {
-        qtdChars = 1
-      }
       for (var i = 0; i < parts.length; i++) {
         if (parts[i].length > 0 && parts[i] !== '') {
-          initials += parts[i].substr(0,qtdChars)
+          if (i != 0) {
+            initials += '-'
+          }
+          initials += parts[i].substr(0,3)
         }
       }
       initials += '-'
@@ -17,7 +16,7 @@ export default {
     if (initials == '') {
       initials = 'COD-'+Date.now()
     } else {
-      initials += (new Date).getMilliseconds()
+      initials += (new Date).getFullYear()
     }
     return initials.toUpperCase()
   }

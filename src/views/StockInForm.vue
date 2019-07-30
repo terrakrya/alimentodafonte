@@ -179,6 +179,7 @@ export default {
       this.form.lot = null
     },
     filterOptions() {
+      this.add_new_lot = false
       if (this.form.seed && this.form.seeds_house) {
         this.lot_filtered_options = this.lots.filter(lot => {
           return lot.seed == this.form.seed && lot.seeds_house == this.form.seeds_house
