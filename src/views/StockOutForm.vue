@@ -32,6 +32,8 @@
               <b-form-input v-model="form.qtd" type="number" step="0.01" lang="nb" min="0" :max="max_lot" v-validate="'required'" name="qtd" />
               <field-error :msg="veeErrors" field="qtd" />
               <small class="text-muted" v-show="max_lot">Máximo de {{max_lot}} kg para este lote</small>
+              <span class="text-danger" v-if="max_lot == 0">Não existem pedidos pendentes para esta casa/semente</span>
+
             </b-form-group>
           </div>
         </div>
@@ -114,8 +116,9 @@ export default {
             return stock_ins_total.reduce((a, b) => a + b)
           }
         }
+        return 0
       }
-      return 0
+      return null
     }
   },
   methods: {
