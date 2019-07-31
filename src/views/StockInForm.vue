@@ -38,7 +38,7 @@
               <b-form-input v-model="form.qtd" type="number" step="0.01" lang="nb" min="0" :max="max_qtd" v-validate="'required'" name="qtd" />
               <field-error :msg="veeErrors" field="qtd" />
               <small class="text-muted" v-if="max_qtd > 0">Máximo {{max_qtd}} kg</small>
-              <span class="text-danger" v-if="max_qtd == 0">Já existem entradas para todos os pedidos desta casa/semente</span>
+              <span class="text-danger" v-if="max_qtd == 0">Não existem pedidos pendentes para esta casa/semente</span>
             </b-form-group>
           </div>
           <div class="col-sm-4">

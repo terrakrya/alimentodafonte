@@ -28,7 +28,7 @@ router.post('/', auth.manager, function(req, res) {
         if (err) {
           res.status(422).send('Ocorreu um erro ao salvar o item: ' + err.message);
         } else {
-          seed.stock -= stock_out.qtd
+          seed.stock += stock_out.qtd
           seed.save()
           res.json(stock_out);
         }
