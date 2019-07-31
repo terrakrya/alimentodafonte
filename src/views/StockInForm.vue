@@ -24,17 +24,6 @@
         <form-group-collector :form="form" />
         <div class="row">
           <div class="col-sm-4">
-            <b-form-group label="Quantidade (Kg) *">
-              <b-form-input v-model="form.qtd" type="number" step="0.01" lang="nb" min="0" v-validate="'required'" name="qtd" />
-              <field-error :msg="veeErrors" field="qtd" />
-            </b-form-group>
-          </div>
-          <div class="col-sm-4">
-            <b-form-group label="Data da coleta">
-              <b-form-input v-model="form.collection_date" type="date" />
-            </b-form-group>
-          </div>
-          <div class="col-sm-4">
             <b-form-group label="Lote *" v-if="lot_filtered_options.length && !add_new_lot">
               <form-entity-select :items="lot_filtered_options" :form="form" field="lot" :validate="'required'" />
               <a @click="newLot" class="pull-right pointer">Adicionar novo lote</a>
@@ -42,6 +31,19 @@
             <b-form-group label="Novo lote *" v-if="!lot_filtered_options.length || add_new_lot" description="Um novo lote será criado com esse código">
               <b-form-input v-model="new_lot" v-validate="'required'" name="new_lot" />
               <field-error :msg="veeErrors" field="new_lot" />
+            </b-form-group>
+          </div>
+          <div class="col-sm-4">
+            <b-form-group label="Quantidade (Kg) *">
+              <b-form-input v-model="form.qtd" type="number" step="0.01" lang="nb" min="0" :max="max_qtd" v-validate="'required'" name="qtd" />
+              <field-error :msg="veeErrors" field="qtd" />
+              <small class="text-muted" v-if="max_qtd > 0">Máximo {{max_qtd}} kg</small>
+              <span class="text-danger" v-if="max_qtd == 0">Já existem entradas para todos os pedidos desta casa/semente</span>
+            </b-form-group>
+          </div>
+          <div class="col-sm-4">
+            <b-form-group label="Data da coleta">
+              <b-form-input v-model="form.collection_date" type="date" />
             </b-form-group>
           </div>
         </div>
@@ -80,9 +82,11 @@ export default {
       add_new_lot: false,
       price: null,
       collectors_requests: [],
+      stock_ins: [],
       lots: [],
       seed_name: '',
       seeds_house_name: '',
+      max_qtd: null,
       form: {
         price: 0,
         qtd: 0,
@@ -102,6 +106,10 @@ export default {
       }
     }).then(response => {
       this.collectors_requests = response.data
+    }).catch(this.showError)
+
+    axios.get('stock_in').then(response => {
+      this.stock_ins = response.data
     }).catch(this.showError)
 
     axios.get('lots').then(response => {
@@ -179,6 +187,7 @@ export default {
       this.form.lot = null
     },
     filterOptions() {
+      this.validateQty()
       this.add_new_lot = false
       if (this.form.seed && this.form.seeds_house) {
         this.lot_filtered_options = this.lots.filter(lot => {
@@ -194,6 +203,7 @@ export default {
       }
     },
     validateQty() {
+      this.max_qtd = null
       this.qtd_error = ''
       if ((this.form.collectors_group || this.form.collector) && this.form.seed && this.collectors_requests) {
         let collectors_requests = this.collectors_requests.filter(cr => {
@@ -209,20 +219,30 @@ export default {
         })
         if (collectors_requests && collectors_requests.length) {
 
-          let seed_items = collectors_requests.map(collectors_request => collectors_request.seed_items.find(seed_item => (seed_item.seed._id == this.form.seed)))
+          let stock_ins = this.stock_ins.filter(stock_in => {
+            let collector = this.form.collector
+            let group = this.form.collectors_group
+            return (
+              (
+                (collector && stock_in.collector && stock_in.collector == collector) ||
+                (group && stock_in.collectors_group && stock_in.collectors_group == group)
+              ) &&
+              stock_in.seed == this.form.seed && stock_in.seeds_house == this.form.seeds_house
+            )
+          }).map(stock_in => stock_in.qtd)
 
-          if (parseFloat(seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b)) < parseFloat(this.form.qtd)) {
-            this.qtd_error = 'Quantidade ' + this.form.qtd + ' kg maior que a solicitada '
-            if (collectors_requests.length > 1) {
-              this.qtd_error += 'nos pedidos: '
-              this.qtd_error += collectors_requests.map(collectors_request => {
-                var seed_item = collectors_request.seed_items.find(s => (s.seed._id == this.form.seed))
-                return '<br>Pedido ' + collectors_request.code + ': ' + seed_item.qtd + ' kg de ' + seed_item.seed.name
-              }).join(', ')
-            } else {
-              var seed_item = collectors_requests[0].seed_items.find(s => (s.seed._id == this.form.seed))
-              this.qtd_error += 'no Pedido ' + collectors_requests[0].code + ': ' + seed_item.qtd + ' kg de ' + seed_item.seed.name
-            }
+          let stock_ins_total = 0
+          if (stock_ins.length) {
+            stock_ins_total = parseFloat(stock_ins.reduce((a, b) => a + b))
+          }
+
+          let seed_items = collectors_requests.map(collectors_request => collectors_request.seed_items.find(seed_item => (seed_item.seed._id == this.form.seed)))
+          let collectors_request_total = parseFloat(seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b))
+
+          this.max_qtd = collectors_request_total - stock_ins_total
+
+          if (this.max_qtd < parseFloat(this.form.qtd)) {
+            this.qtd_error = 'Quantidade ' + this.form.qtd + ' kg maior que a solicitada nos pedidos: ' + this.max_qtd + ' kg'
             return false
           } else {
             return true
@@ -232,9 +252,19 @@ export default {
           return false
         }
       } else {
-        this.qtd_error = 'Selecione um grupo ou coletor'
+        if (!this.form.collectors_group && !this.form.collector) {
+          this.qtd_error = 'Selecione um grupo ou coletor'
+        }
         return false
       }
+    }
+  },
+  watch: {
+    'form.collector': function(newVal) {
+      this.validateQty()
+    },
+    'form.collectors_group': function(newVal) {
+      this.validateQty()
     }
   },
   components: {
