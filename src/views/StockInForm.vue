@@ -28,7 +28,7 @@
               <form-entity-select :items="lot_filtered_options" :form="form" field="lot" :validate="'required'" />
               <a @click="newLot" class="pull-right pointer">Adicionar novo lote</a>
             </b-form-group>
-            <b-form-group label="Novo lote *" v-if="!lot_filtered_options.length || add_new_lot" description="Um novo lote será criado com esse código">
+            <b-form-group label="Novo lote *" v-if="!lot_filtered_options.length || add_new_lot" description="Deve conter as iniciais da casa, semente e ano. Exemplo: CAN-JAT-MAT-2019-Livre = Casa de Sementes de Canarana, Jatobá-da-mata, coletado em 2019, livre para qualquer comércio. ">
               <b-form-input v-model="new_lot" v-validate="'required'" name="new_lot" />
               <field-error :msg="veeErrors" field="new_lot" />
             </b-form-group>
@@ -185,6 +185,7 @@ export default {
     newLot() {
       this.add_new_lot = true
       this.form.lot = null
+      this.new_lot = utils.generateCode([this.seeds_house_name, this.seed_name])
     },
     filterOptions() {
       this.validateQty()
@@ -205,6 +206,7 @@ export default {
     validateQty() {
       this.max_qtd = null
       this.qtd_error = ''
+      this.error = null
       if ((this.form.collectors_group || this.form.collector) && this.form.seed && this.collectors_requests) {
         let collectors_requests = this.collectors_requests.filter(cr => {
           let collector = this.form.collector
@@ -253,17 +255,17 @@ export default {
         }
       } else {
         if (!this.form.collectors_group && !this.form.collector) {
-          this.qtd_error = 'Selecione um grupo ou coletor'
+          this.error = 'Selecione um grupo ou coletor'
         }
         return false
       }
     }
   },
   watch: {
-    'form.collector': function(newVal) {
+    'form.collector': function() {
       this.validateQty()
     },
-    'form.collectors_group': function(newVal) {
+    'form.collectors_group': function() {
       this.validateQty()
     }
   },

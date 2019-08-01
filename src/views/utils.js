@@ -2,6 +2,7 @@ export default {
   generateCode (names) {
     var initials = ''
     names.forEach(name => {
+      name = name.replace('-', ' ')
       var parts = name.split(' ')
       for (var i = 0; i < parts.length; i++) {
         if (parts[i].length > 0 && parts[i] !== '') {
