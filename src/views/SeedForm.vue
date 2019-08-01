@@ -52,7 +52,7 @@
 						</div>
 						<div class="col-md-3 col-sm-6">
 							<b-form-group label="Qtd. em estoque (Kg)">
-								<b-form-input v-model="form.stock" type="number" step="0.01" lang="nb" min="0" />
+								<b-form-input v-model="form.stock" type="number" step="0.01" lang="nb" min="0" disabled="disabled" />
 							</b-form-group>
 						</div>
 					</div>
