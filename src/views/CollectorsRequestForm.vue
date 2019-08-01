@@ -5,7 +5,7 @@
     <div class="panel-body">
       <form-headline name="pedido para coletores" />
       <loading :loading="isLoading" />
-      <b-form @submit.prevent="save" v-if="!isLoading && potential_lists && potential_lists.length && collectors_requests && collectors_requests.length">
+      <b-form @submit.prevent="save" v-if="!isLoading && potential_lists && potential_lists && collectors_requests && collectors_requests">
         <div class="row">
           <form-group-collector :form="form" />
         </div>
