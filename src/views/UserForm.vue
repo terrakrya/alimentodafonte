@@ -74,7 +74,7 @@
         <div class="row" v-if="isAdmin">
           <div class="col-sm-6">
             <b-form-group label="Perfis de usuário *">
-              <b-form-checkbox-group v-model="form.roles" :options="tipos_de_usuario" v-validate="'required'" name="roles" />
+              <b-form-radio-group v-model="form.roles[0]" :options="tipos_de_usuario" v-validate="'required'" name="roles" />
               <field-error :msg="veeErrors" field="roles" />
             </b-form-group>
           </div>
