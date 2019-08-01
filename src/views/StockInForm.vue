@@ -28,7 +28,7 @@
               <form-entity-select :items="lot_filtered_options" :form="form" field="lot" :validate="'required'" />
               <a @click="newLot" class="pull-right pointer">Adicionar novo lote</a>
             </b-form-group>
-            <b-form-group label="Novo lote *" v-if="!lot_filtered_options.length || add_new_lot" description="Deve conter as iniciais da casa, semente e ano. Exemplo: CAN-JAT-MAT-2019-Livre = Casa de Sementes de Canarana, Jatobá-da-mata, coletado em 2019, livre para qualquer comércio. ">
+            <b-form-group label="Novo lote *" v-if="!lot_filtered_options.length || add_new_lot" description="IMPORTANTE: o nome do lote deve conter, na seguinte ordem: sigla da Casa de Sementes (como CAN ou NX) em que está sendo dada a entrada; 3 a 24 letras do nome popular (como jat-mat OU mirindibinha-mat-do-valdo); Ano de coleta (2019); venda Livre (L) ou venda Restrita (R) à finalidade de restauração ecológica.">
               <b-form-input v-model="new_lot" v-validate="'required'" name="new_lot" />
               <field-error :msg="veeErrors" field="new_lot" />
             </b-form-group>
