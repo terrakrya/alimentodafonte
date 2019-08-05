@@ -105,7 +105,7 @@
 									<template slot="qtd" slot-scope="data">
 										{{data.value}} Kg
 									</template>
-									<template slot="price" slot-scope="data">
+									<template slot="compensation_collect" slot-scope="data">
 										{{data.value * data.item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
 									</template>
 									<!-- eslint-disable-next-line -->
@@ -116,7 +116,7 @@
 										<td/>
 										<td><strong> Total</strong></td>
 										<td><strong>{{total_qtd}} Kg</strong></td>
-										<td><strong>{{total_price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}</strong></td>
+										<td><strong>{{total_compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}</strong></td>
 									</template>
 								</b-table>
 							</div>
@@ -179,7 +179,7 @@ export default {
 				to: null
 			},
 			total_qtd: 0,
-			total_price: 0,
+			total_compensation_collect: 0,
 			total_seeds_qtd: 0,
 			modos_de_saida: modos_de_saida,
 			table_fields: [
@@ -189,7 +189,7 @@ export default {
 			{ key: 'seed', label: 'Semente', sortable: true },
 			{ key: 'lot', label: 'Lote', sortable: true },
 			{ key: 'qtd', label: 'Quantidade', sortable: true },
-			{ key: 'price', label: 'Preço', sortable: true },
+			{ key: 'compensation_collect', label: 'Remuneração', sortable: true },
 			],
 			seeds_table_fields: [
 			{ key: 'title', label: 'Semente', sortable: true },
@@ -249,10 +249,10 @@ export default {
 		onFiltered(filteredItems) {
 			if (filteredItems) {
 				this.total_qtd = 0
-				this.total_price = 0
+				this.total_compensation_collect = 0
 				filteredItems.map(item => {
-					if (item.price) {
-						this.total_price += parseFloat(item.price) * parseFloat(item.qtd)
+					if (item.compensation_collect) {
+						this.total_compensation_collect += parseFloat(item.compensation_collect) * parseFloat(item.qtd)
 					}
 					if (item.qtd) {
 						this.total_qtd += parseFloat(item.qtd)
