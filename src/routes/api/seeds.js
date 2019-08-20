@@ -15,6 +15,18 @@ router.get('/', auth.collector, function(req, res) {
   });
 });
 
+router.get('/search', auth.manager, function(req, res) {
+  Seed.findOne({
+    name: req.query.name
+  }).exec(function(err, seed) {
+    if (err) {
+      res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
+    } else {
+      res.json(seed);
+    }
+  });
+});
+
 router.get('/:id', auth.manager, function(req, res) {
   Seed.findOne({
     _id: req.params.id
@@ -26,6 +38,7 @@ router.get('/:id', auth.manager, function(req, res) {
     }
   });
 });
+
 
 router.post('/', auth.manager, function(req, res) {
   var newSeed = new Seed(req.body);

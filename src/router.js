@@ -11,6 +11,7 @@ import UserForm from '@/views/UserForm.vue'
 import User from '@/views/User.vue'
 import Seeds from '@/views/Seeds.vue'
 import SeedForm from '@/views/SeedForm.vue'
+import SeedImport from '@/views/SeedImport.vue'
 import Seed from '@/views/Seed.vue'
 import Collectors from '@/views/Collectors.vue'
 import CollectorForm from '@/views/CollectorForm.vue'
@@ -86,6 +87,7 @@ export default new Router({
     { path: '/cadastrar-semente', component: SeedForm, beforeEnter: requireAuth },
     { path: '/editar-semente/:id', component: SeedForm, beforeEnter: requireAuth },
     { path: '/semente/:id', component: Seed, beforeEnter: requireAuth },
+    { path: '/importar-sementes', component: SeedImport, beforeEnter: requireAuth },
 
     { path: '/coletores', component: Collectors, beforeEnter: requireAuth },
     { path: '/cadastrar-coletor', component: CollectorForm, beforeEnter: requireAuth },
