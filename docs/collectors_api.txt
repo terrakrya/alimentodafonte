@@ -1,0 +1,311 @@
+API que seria a proposta ideal:
+
+-------------------------------------------------------------------------------
+1) Login:
+Objetivo: Validar as credenciais do usuário, ou seja, autentica um usuário.
+Url: /api/users/login
+Method: POST
+
+1.1) REQUEST:
+Header:
+Content-Type: application/json; charset=utf-8
+Body:
+{
+  "email": "nome de usuário ou email do usuário",
+  "password": "senha do usuário"
+}
+
+1.2) RESPONSE:
+{
+  "_id": "id do usuário (hexadecimal)",
+  "token": "token-de-autenticação (JWT)",
+  "username": "nome de usuário",
+  "name": "Nome completo do usuário",
+  "email": "email do usuário",
+  "roles": "perfis do usuário ex: ['collector']",
+  "image": "Foto do usuário",
+}
+
+RESPONSE EXAMPLE:
+
+{
+  "_id":"5402a0891289d949d4f93077",
+  "username":"diego",
+  "email":"diego@gmail.com",
+  "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ4.eyJpZCI6IjVkMDJhMDg5MTI4OWQ5NDlkNGY5ZTA3NyIsInVzZXJuYW1lIjoiZGllZ29tcjg2Iiwicm9sZXMiOlsiYWRtaW4iLCJtYW5hZ2VyIiwiY2xpZW50Il0sImV4cCI6MTU2Njk5NTk1NSwiaWF0IjoxNTYxODExOTU1fQ.NUaaszWJcxRoKV4jk5QEnzpGnrpBKx97UErqm3Jwlyg",
+  "roles":["manager"],
+  "name":"Diego Maradona Rodrigues",
+  "image": {
+    "url":"uploads/images/image-1560457383934.gif",
+    "thumb":"uploads/thumbs/image-1560457383934.gif"
+  }
+}
+
+-------------------------------------------------------------------------------
+2) Foto do usuário:
+
+A foto do usuário já retorna no objeto usuário retornado após o login. Ver ítem anterior
+
+
+-------------------------------------------------------------------------------
+3) Lista de sementes:
+Objetivo: Faz o download de todas as sementes cadastradas no sistema.
+Url: /api/seeds
+Method: GET
+
+3.1) REQUEST:
+Header:
+Content-Type: application/json; charset=utf-8
+Authorization Token: token-de-autenticação
+
+3.2) RESPONSE:
+[
+  {
+    "_id": "id-da-semente",
+    "name": "nome-da-semente",
+    "price": "valor-pago-pela-semente (no formato '9.9')",
+    "seeds_kg": "quantidade-de-sementes-por-quilo (inteiro)",
+    "fruiting_season": "lista-de-meses de frutificação (números, a começar de 1, separados por vírgula)",
+    ...
+  }
+]
+
+RESPONSE EXAMPLE:
+
+[
+  {
+    "_id":"5d024222d7e0731beb66da6b",
+    "name":"Crotalária",
+    "price":120,
+    "seeds_kg":1200,
+    "fruiting_season":["12", "9", "10", "11"],
+    "description":"Crotalaria é um género botânico pertencente à família Fabaceae. Possui cerca de 300 espécies descritas, com a ressalva de que nem todas pertencem realmente ao gênero."
+    "stock":51,
+    "ecosystem":["swamp", "forest"],
+    "images":[
+      {
+        "url":"uploads/images/250px-Starr_090123-1215_Crotalaria_pumila-1561813480735.jpg",
+        "thumb":"uploads/thumbs/250px-Starr_090123-1215_Crotalaria_pumila-1561813480735.jpg"
+      },
+      {
+        "url":"uploads/images/CrotalariaDSC37302.jpg",
+        "thumb":"uploads/thumbs/CrotalariaDSC37302.jpg"
+      }
+    ],
+    "scientific_name":"Crotaláriuns clotais",
+    "local_name":"Crotalária, Mata aedes",
+    "body":"Crotalaria é um género botânico pertencente à família Fabaceae. Possui cerca de 300 espécies descritas, com a ressalva de que nem todas pertencem realmente ao gênero. ",
+    "seeds_kg":1200,
+    "viability_rate":92,
+    "lot_limit":10,
+    "compensation_collect":80.25,
+    "wholesale_price":110.5,
+    "user":"5d02a0891289d949d4f9e077",
+    "createdAt":"2019-06-13T12:31:30.982Z",
+    "updatedAt":"2019-06-29T13:05:51.127Z",
+    "__v":0,
+  }
+]
+
+OBS: Para trazer apenas os campos desejados passe o parametro select com os nomes dos campos que deseja trazer.
+Exemplo:
+
+/api/seeds?select=scientific_name+price+seeds_kg+fruiting_season
+
+
+-------------------------------------------------------------------------------
+4) Lista de pedidos:
+Objetivo: Faz o download dos pedidos do coletor.
+Url: /api/collector/requests
+Method: GET
+
+4.1) REQUEST:
+Header:
+Content-Type: application/json; charset=utf-8
+Authorization Token: token-de-autenticação
+Body:
+- nada -
+
+4.2) RESPONSE:
+[
+  {
+    "seed": { // semente
+      "_id": "5d1ce4074a7595249eeea3c1",
+      "name": "Crotalária",
+      ...
+    },
+    "qtd": 5, // quantidade pedida
+    "qtd_delivered": 4, // quantidade entregue
+    "qtd_remaining": 1, // restante
+    "compensation_collect": 80 // valor base da remuderação
+  },
+]
+
+-------------------------------------------------------------------------------
+5) Entregas:
+Objetivo: Faz o download das entregas do coletor.
+Url: /api/collector/stock_ins
+Method: GET
+
+5.1) REQUEST:
+Header:
+Content-Type: application/json; charset=utf-8
+Authorization Token: token-de-autenticação
+Body:
+- nada -
+
+5.2) RESPONSE:
+[
+  {
+    "_id": "5d1a62dfaf40f24375b63950", // id da entrada
+    "price": 200, // valor da remuneração
+    "qtd": 2, // quantidade entregue
+    "collection_date": "2019-07-02T00:00:00.000Z", // data da coleta
+    "seeds_house": "5d122036fa465823ae4a5921", // casa de sementes
+    "collectors_group": "5d122f6f466c1328417aca7f", // grupo de coletores
+    "collector": "5d19f357e445c31c8ef33be9", // coletor
+    "seed": "5d02765970d63f39dc9875cb", // semente
+    "lot": "5d1a62dfaf40f24375b6394f", // lote
+    "createdAt": "2019-07-01T19:45:35.141Z", // data da criação
+    "updatedAt": "2019-07-01T19:45:35.141Z", // última alteração
+  }
+]
+
+OBS:
+Para trazer apenas os campos desejados passe o parametro select com os nomes dos campos que deseja trazer.
+Exemplo:
+
+/api/collector/stock_ins?select=price+qtd+seed
+
+Para trazer os valores das relações preenchidos na request basta passar o parametro populate.
+Exemplo:
+
+/api/collector/stock_ins?populate=seeds_house+seed
+
+-------------------------------------------------------------------------------
+6) Enviar uma coleta:
+Objetivo: Faz o upload de uma coleta.
+Url: /api/collections
+Method: POST
+
+6.1) REQUEST:
+Header:
+Content-Type: application/json; charset=utf-8
+Authorization Token: token-de-autenticação
+Body:
+{
+  "audio" : "uploads/audios/teste de audio.mp3",
+  "commentary" : "Comentário sobre a coleta",
+  "date_time" : "2019-06-30T12:35:00",
+  "flowering" : "2019-06-10",
+  "geolocation" : {
+    "lat" : "-123123123",
+    "lng" : "-123132123"
+  },
+  "images" : [ // imagens da semente
+    {
+      "thumb" : "uploads/thumbs/CrotalariaDSC37302-1562024304948.jpg",
+      "url" : "uploads/images/CrotalariaDSC37302-1562024304948.jpg"
+    }
+  ],
+  "seed" : "5d024222d7e0731beb66da6b", // id da semente
+  "weight_benef" : "10", // peso beneficiado
+  "weight_gross" : "12", // beso bruto
+}
+
+6.2) RESPONSE:
+- objeto-da-coleta-gravada -
+
+
+-------------------------------------------------------------------------------
+7) Atualizar uma coleta:
+Objetivo: Faz o upload de uma coleta já gravada no server.
+Url: /api/collections/{id-da-coleta-gravada}
+Method: PUT
+
+7.1) REQUEST:
+Header:
+Content-Type: application/json; charset=utf-8
+Authorization Token: token-de-autenticação
+Body:
+{
+  "audio" : "uploads/audios/teste de audio.mp3",
+  "commentary" : "Comentário sobre a coleta",
+  "date_time" : "2019-06-30T12:35:00",
+  "flowering" : "2019-06-10",
+  "geolocation" : {
+    "lat" : "-123123123",
+    "lng" : "-123132123"
+  },
+  "images" : [ // imagens da semente
+    {
+      "thumb" : "uploads/thumbs/CrotalariaDSC37302-1562024304948.jpg",
+      "url" : "uploads/images/CrotalariaDSC37302-1562024304948.jpg"
+    }
+  ],
+  "seed" : "5d024222d7e0731beb66da6b", // id da semente
+  "weight_benef" : "10", // peso beneficiado
+  "weight_gross" : "12", // beso bruto
+}
+
+7.2) RESPONSE:
+- objeto-da-coleta-gravada -
+
+
+-------------------------------------------------------------------------------
+8) Enviar uma foto:
+Objetivo: Faz o upload de uma foto, referente à uma coleta.
+Url: /api/uploads/images
+Method: POST
+
+8.1) REQUEST:
+Header:
+Authorization Token: token-de-autenticação
+Content-Type: multipart/form-data
+
+Body:
+- binary data do arquivo campo image -
+Ex:
+var formData = new FormData();
+formData.append('image', file, file.name);
+http.post('/api/uploads/images', formData, {
+  headers: {
+    'Content-Type': 'multipart/form-data'
+  }
+})
+
+8.2) RESPONSE:
+- objeto com as urls da foto gravada -
+Ex:
+{
+  "url":"uploads/images/CrotalariaDSC37302-1562025878152.jpg",
+  "thumb":"uploads/thumbs/CrotalariaDSC37302-1562025878152.jpg"
+}
+
+
+-------------------------------------------------------------------------------
+9) Enviar um audio:
+Objetivo: Faz o upload de um audio, referente à coleta.
+Url: /api/uploads/audios
+Method: POST
+
+9.1) REQUEST:
+Header:
+Authorization Token: token-de-autenticação
+Content-Type: multipart/form-data
+
+Body:
+- binary data do arquivo campo audio -
+Ex:
+var formData = new FormData();
+formData.append('audio', file, file.name);
+http.post('/api/uploads/audios', formData, {
+  headers: {
+    'Content-Type': 'multipart/form-data'
+  }
+})
+
+8.2) RESPONSE:
+- url do áudio gravado -
+Ex:
+uploads/audios/coleta0001.mp3
