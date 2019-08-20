@@ -3,18 +3,21 @@ var express = require('express'),
   multer = require('multer'),
   fs = require('fs'),
   sharp = require('sharp'),
-  auth = require('../auth');
+  auth = require('../auth'),
+  XLSX = require('xlsx');
 
 const UPLOAD_PATH = 'uploads/';
 const IMAGES_PATH = UPLOAD_PATH + 'images/';
 const THUMBS_PATH = UPLOAD_PATH + 'thumbs/';
 const DOCUMENTS_PATH = UPLOAD_PATH + 'documents/';
 const AUDIOS_PATH = UPLOAD_PATH + 'audios/';
+const IMPORTS_PATH = UPLOAD_PATH + 'import/';
 !fs.existsSync(UPLOAD_PATH) && fs.mkdirSync(UPLOAD_PATH);
 !fs.existsSync(IMAGES_PATH) && fs.mkdirSync(IMAGES_PATH);
 !fs.existsSync(THUMBS_PATH) && fs.mkdirSync(THUMBS_PATH);
 !fs.existsSync(DOCUMENTS_PATH) && fs.mkdirSync(DOCUMENTS_PATH);
 !fs.existsSync(AUDIOS_PATH) && fs.mkdirSync(AUDIOS_PATH);
+!fs.existsSync(IMPORTS_PATH) && fs.mkdirSync(IMPORTS_PATH);
 
 var imageStorage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -102,6 +105,32 @@ var audioUploader = multer({
 router.post('/audios', [auth.authenticated, audioUploader.single('audio')], (req, res) => {
   var url = req.file.filename
   res.status(201).send(AUDIOS_PATH + url);
+});
+
+
+var importStorage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, IMPORTS_PATH)
+  },
+  filename: function(req, file, cb) {
+    var filename = file.originalname
+    if (fs.existsSync(IMPORTS_PATH+filename)){
+      var nameArr = filename.split('.')
+      nameArr[0] += '-' + Date.now()
+      filename = nameArr.join('.')
+    }
+    cb(null, filename)
+  }
+})
+var importUploader = multer({
+  storage: importStorage,
+  limits: {
+    fileSize: 32 * 1024 * 1024
+  }
+})
+router.post('/import', [auth.authenticated, importUploader.single('import')], (req, res) => {
+  var url = req.file.filename
+  res.status(201).send(XLSX.readFile(IMPORTS_PATH + url));
 });
 
 module.exports = router;

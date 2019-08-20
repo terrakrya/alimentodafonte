@@ -3,7 +3,7 @@
 		<breadcrumb active="Sementes" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
-				<list-headline name="Sementes" addUrl="/cadastrar-semente" :filters="filters"/>
+				<list-headline name="Sementes" addUrl="/cadastrar-semente" importUrl="/importar-sementes" :filters="filters"/>
 				<div class="info-content">
 					<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
 					<loading :loading="!seeds && !error" msg="Carregando lista de sementes" />
