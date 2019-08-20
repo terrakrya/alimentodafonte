@@ -188,4 +188,13 @@ router.get('/init', function(req, res) {
   });
 });
 
+router.get('/is_alive', function(req, res) {
+  User.count().exec(function(err, users) {
+    if (!err) {
+      res.send('yep')
+    }
+  });
+
+});
+
 module.exports = router;
