@@ -21,16 +21,19 @@ build:
 	sudo docker-compose build
 
 stage-run:
-	sudo docker-compose -f docker-compose-stage.yml up -d
+	sudo docker-compose -f docker-compose-stage.yml up -d --build
 
 stage-stop:
 	sudo docker-compose -f docker-compose-stage.yml stop
 
 prod-run:
-	sudo docker-compose -f docker-compose-production.yml up -d
+	sudo docker-compose -f docker-compose-production.yml up -d --build
 
 prod-build:
 	sudo docker-compose -f docker-compose-production.yml build
 
 prod-stop:
 	sudo docker-compose -f docker-compose-production.yml stop
+
+logs:
+	sudo docker logs sementes_teste -t
