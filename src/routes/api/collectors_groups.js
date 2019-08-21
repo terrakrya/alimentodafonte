@@ -15,6 +15,19 @@ router.get('/', auth.manager, function(req, res) {
   });
 });
 
+
+router.get('/search', auth.manager, function(req, res) {
+  CollectorsGroup.findOne({
+    name: req.query.name
+  }).exec(function(err, seed) {
+    if (err) {
+      res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
+    } else {
+      res.json(seed);
+    }
+  });
+});
+
 router.get('/:id', auth.manager, function(req, res) {
   CollectorsGroup.findOne({
     _id: req.params.id

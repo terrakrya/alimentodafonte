@@ -16,6 +16,7 @@
       </b-form>
     </div>
   </div>
+  <pre>{{form.seed_items}}</pre>
 </div>
 </template>
 
