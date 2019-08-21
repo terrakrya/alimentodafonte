@@ -45,6 +45,7 @@ import StockInForm from '@/views/StockInForm.vue'
 import StockOutForm from '@/views/StockOutForm.vue'
 import PotentialList from '@/views/PotentialList.vue'
 import PotentialListForm from '@/views/PotentialListForm.vue'
+import PotentialListImport from '@/views/PotentialListImport.vue'
 import PotentialLists from '@/views/PotentialLists.vue'
 import CollectorSeeds from '@/views/CollectorSeeds.vue'
 import CollectorRequests from '@/views/CollectorRequests.vue'
@@ -138,6 +139,7 @@ export default new Router({
     { path: '/cadastrar-lista-de-potencial', component: PotentialListForm, beforeEnter: requireAuth },
     { path: '/editar-lista-de-potencial/:id', component: PotentialListForm, beforeEnter: requireAuth },
     { path: '/lista-de-potencial/:id', component: PotentialList, beforeEnter: requireAuth },
+    { path: '/importar-lista-de-potencial', component: PotentialListImport, beforeEnter: requireAuth },
 
     { path: '/estoque', component: Stock, beforeEnter: requireAuth },
     { path: '/entrada-de-estoque', component: StockInForm, beforeEnter: requireAuth },
