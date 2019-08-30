@@ -1,6 +1,7 @@
 var express = require('express'),
   mongoose = require('mongoose'),
   router = express.Router(),
+  slugify = require('slugify')
   auth = require('../auth'),
   populate = require('../utils').populate,
   CollectorsGroup = mongoose.model('CollectorsGroup');
@@ -42,6 +43,7 @@ router.get('/:id', auth.manager, function(req, res) {
 
 router.post('/', auth.manager, function(req, res) {
   var newCollectorsGroup = new CollectorsGroup(req.body);
+  newCollectorsGroup.slug = slugify(newCollectorsGroup.name).toLowerCase()
   newCollectorsGroup.save(function(err, seed) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
@@ -52,10 +54,12 @@ router.post('/', auth.manager, function(req, res) {
 });
 
 router.put('/:id', auth.manager, function(req, res) {
+  params = req.body
+  params.slug = slugify(params.name).toLowerCase()
   CollectorsGroup.findOneAndUpdate({
     _id: req.params.id
   }, {
-    $set: req.body
+    $set: params
   }, {
     upsert: true
   }, function(err, newCollectorsGroup) {

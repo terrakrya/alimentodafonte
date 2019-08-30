@@ -5,6 +5,9 @@ const SeedSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  slug: {
+    type: String
+  },
   scientific_name: {
     type: String,
     required: true

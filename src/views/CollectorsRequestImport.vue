@@ -1,12 +1,12 @@
 <template>
-	<div class="potential-list-form">
-		<breadcrumb :links="[['Listas de potencial', '/listas-de-potencial']]" :active="isEditing() ? form.name : 'Importar'" />
-		<div class="panel panel-headline data-list">
+	<div class="collectors-request-form">
+		<breadcrumb :links="[['Pedidos para coletores', '/pedidos-para-coletores']]" :active="isEditing() ? form.name : 'Importar'" />
+		<div class="panel panel-headline data-request">
 			<div class="panel-body">
 				<div class="row">
 			    <div class="col-md-8">
 			      <h1>
-			        Importar listas de potencial
+			        Importar pedidos para coletores
 			      </h1>
 			      <br>
 			    </div>
@@ -114,12 +114,11 @@ export default {
 					while (i< 1000) {
 					  if (sheets['A'+i] && sheets['A'+i].v) {
 							try {
-								if (sheets['A'+i] && sheets['B'+i] && sheets['E'+i]) {
-
+								if (sheets['A'+i] && sheets['B'+i] && sheets['I'+i]) {
 									items.push({
 										seed: sheets['A'+i].v,
 										collectors_group: sheets['B'+i].v,
-						        qtd: sheets['E'+i].v
+						        qtd: sheets['I'+i].v
 									})
 								}
 
@@ -200,15 +199,15 @@ export default {
 				setTimeout(() => {
 					axios({
 						method: 'POST',
-						url: 'potential_lists',
+						url: 'collectors_requests',
 						data: item
 					}).then(resp => {
-						var potential_list = resp.data
-						if (potential_list && potential_list._id) {
-							this.import_log.push({status: 'success', message: (index + ' - Lista ' + potential_list.code + ': cadastrada com sucesso'), index: index})
+						var collectors_request = resp.data
+						if (collectors_request && collectors_request._id) {
+							this.import_log.push({status: 'success', message: (index + ' - Pedido ' + collectors_request.code + ': cadastrada com sucesso'), index: index})
 						} else {
-							this.import_log.push({status: 'success', message: (index + ' - Erro: '+potential_list), index: index})
-							this.error = potential_list
+							this.import_log.push({status: 'success', message: (index + ' - Erro: '+collectors_request), index: index})
+							this.error = collectors_request
 						}
 						this.isSending = false
 					}).catch(this.showError)

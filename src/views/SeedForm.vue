@@ -96,9 +96,6 @@
 				</b-form>
 			</div>
 		</div>
-		<pre>
-			{{form}}
-		</pre>
 	</div>
 </template>
 <script>
