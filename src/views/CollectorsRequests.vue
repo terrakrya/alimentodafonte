@@ -22,10 +22,10 @@
               <router-link v-if="data.item.collector" :to="'/coletor/'+ data.item.collector._id"> {{data.item.collector.name}} </router-link>
             </template>
             <template slot="qtd" slot-scope="data">
-              {{data.item.seed_items.map(seed_item => seed_item.qtd).reduce((a,b) => a + b)}} kg
+              {{data.item.seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b).toFixed(2)}} kg
             </template>
             <template slot="compensation_collect" slot-scope="data">
-							{{data.item.seed_items.map(seed_item => seed_item.compensation_collect * seed_item.qtd).reduce((a,b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+							{{data.item.seed_items.map(seed_item => seed_item.compensation_collect * seed_item.qtd).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
             </template>
 						<template slot="actions" slot-scope="data">
               <router-link :to="'/editar-pedido-para-coletores/'+ data.item._id" class="fa fa-edit btn btn-primary btn-xs "></router-link>
@@ -96,12 +96,12 @@ export default {
   computed: {
     total_qtd() {
       return this.collectors_requests.map(collectors_request => {
-        return collectors_request.seed_items.map(seed_item => seed_item.qtd).reduce((a,b) => a + b)
+        return collectors_request.seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b)
       }).reduce((a, b) => a + b)
     },
     total_compensation_collect() {
       return this.collectors_requests.map(collectors_request => {
-        return collectors_request.seed_items.map(seed_item => seed_item.compensation_collect * seed_item.qtd).reduce((a,b) => a + b)
+        return collectors_request.seed_items.map(seed_item => seed_item.compensation_collect * seed_item.qtd).reduce((a, b) => a + b)
       }).reduce((a, b) => a + b)
     }
   },

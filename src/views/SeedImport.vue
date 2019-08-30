@@ -193,10 +193,10 @@ export default {
 
 								if (sheets['C'+i] && sheets['D'+i] && sheets['N'+i] && sheets['P'+i] && sheets['I'+i] && sheets['K'+i] && sheets['J'+i] && sheets['C'+i]) {
 									this.import_preview.push({
-										name: sheets['C'+i] ? sheets['C'+i].v.split(',')[0] : '',
+										name: (sheets['C'+i] ? sheets['C'+i].v.split(',')[0] : '').replace(/-/g, " "),
 										scientific_name: sheets['D'+i].v,
 										local_name: sheets['C'+i].v,
-										seeds_kg: sheets['N'+i].v,
+										seeds_kg: parseFloat(sheets['N'+i].v).toFixed(2),
 										viability_rate: (parseFloat(sheets['P'+i].v) * 100).toFixed(2),
 										compensation_collect: parseFloat(sheets['I'+i].v).toFixed(2),
 										price: parseFloat(sheets['K'+i].v).toFixed(2),
@@ -231,7 +231,7 @@ export default {
 			this.import_preview.forEach((item, index) => {
 				this.isSending = true
 				this.error = false
-				axios.get('seeds/search', { params: { name: item.name } }).then(resp => {
+				axios.get('seeds/slug', { params: { name: item.name } }).then(resp => {
 					var seed = resp.data
 					var isEditing = false
 

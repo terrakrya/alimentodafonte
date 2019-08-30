@@ -39,13 +39,13 @@
 						<div class="col-sm-3" v-if="order.seed_items && order.seed_items.length">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Quantidade</span>
-								<span class="number">{{ order.seed_items.map(seed_item => seed_item.qtd).reduce((a,b) => a + b) }} Kg</span>
+								<span class="number">{{ order.seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b) }} Kg</span>
 							</div>
 						</div>
 						<div class="col-sm-3" v-if="order.seed_items && order.seed_items.length">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Total {{order.purchase_type.toLowerCase()}}</span>
-								<span class="number">{{ order.seed_items.map(seed_item => seed_item.qtd * (order.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price)).reduce((a,b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+								<span class="number">{{ order.seed_items.map(seed_item => seed_item.qtd * (order.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price)).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
 							</div>
 						</div>
 						<div class="col-sm-3" v-if="order.amount_paid >= 0">

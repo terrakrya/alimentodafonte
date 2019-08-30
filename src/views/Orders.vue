@@ -22,11 +22,11 @@
 								<small v-if="data.item.restored_area">{{data.item.restored_area}} hectares</small>
 							</template>
 							<template slot="total" slot-scope="data">
-								<span v-if="data.item.seed_items && data.item.seed_items.length">{{data.item.seed_items.map(seed_item => seed_item.qtd * (data.item.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price)).reduce((a,b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}</span>
+								<span v-if="data.item.seed_items && data.item.seed_items.length">{{data.item.seed_items.map(seed_item => seed_item.qtd * (data.item.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price)).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}</span>
 								<small v-if="data.item.purchase_type"><br/>({{data.item.purchase_type}})</small>
 							</template>
 							<template slot="qtd" slot-scope="data">
-								<span v-if="data.item.seed_items && data.item.seed_items.length">{{data.item.seed_items.map(seed_item => seed_item.qtd).reduce((a,b) => a + b)}} kg</span>
+								<span v-if="data.item.seed_items && data.item.seed_items.length">{{data.item.seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b)}} kg</span>
 							</template>
 							<template slot="actions" slot-scope="data">
 								<router-link :to="'/editar-encomenda/'+ data.item._id" class="fa fa-edit btn btn-primary btn-xs "></router-link>
@@ -78,7 +78,7 @@ export default {
 		total_weight () {
 			let values = this.orders.map(order => {
 				if (order.seed_items && order.seed_items.length) {
-					return order.seed_items.map(seed_item => seed_item.qtd).reduce((a,b) => a + b)
+					return order.seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b)
 				} else {
 					return 0
 				}
@@ -88,7 +88,7 @@ export default {
 		total_price () {
 			let values = this.orders.map(order => {
 				if (order.seed_items && order.seed_items.length) {
-					return order.seed_items.map(seed_item => seed_item.qtd * (order.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price)).reduce((a,b) => a + b)
+					return order.seed_items.map(seed_item => seed_item.qtd * (order.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price)).reduce((a, b) => a + b)
 				} else {
 					return 0
 				}

@@ -32,10 +32,12 @@ router.post('/', auth.manager, function(req, res) {
 
   CollectorsRequest.find().sort({ code: -1 }).limit(1).exec(function(err, latest) {
     if (!err) {
-      if (latest && latest.length) {
-        newCollectorsRequest.code = latest[0].code+1
-      } else {
-        newCollectorsRequest.code = 1
+      if (!newCollectorsRequest.code) {
+        if (latest && latest.length) {
+          newCollectorsRequest.code = latest[0].code+1
+        } else {
+          newCollectorsRequest.code = 1
+        }
       }
       newCollectorsRequest.save(function(err, collector_request) {
         if (err) {

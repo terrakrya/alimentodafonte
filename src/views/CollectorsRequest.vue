@@ -29,13 +29,13 @@
           <div class="col-sm-6 col-md-3">
             <div class="weekly-summary text-center">
               <span class="info-label">Quantidade</span>
-              <span class="number">{{ collectors_request.seed_items.map(seed_item => seed_item.qtd).reduce((a,b) => a + b) }} Kg</span>
+              <span class="number">{{ collectors_request.seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b).toFixed(2) }} Kg</span>
             </div>
           </div>
           <div class="col-sm-6 col-md-3">
             <div class="weekly-summary text-center">
               <span class="info-label">Remuneração total</span>
-              <span class="number">{{ collectors_request.seed_items.map(seed_item =>  seed_item.compensation_collect * seed_item.qtd).reduce((a,b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+              <span class="number">{{ collectors_request.seed_items.map(seed_item =>  seed_item.compensation_collect * seed_item.qtd).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
             </div>
           </div>
         </div>
@@ -61,7 +61,7 @@
                     {{seed_item.compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
                   </td>
                   <td>
-                    {{seed_item.qtd}} kg
+                    {{seed_item.qtd.toFixed(2)}} kg
                   </td>
                   <td>
                     {{seed_item.compensation_collect * seed_item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}

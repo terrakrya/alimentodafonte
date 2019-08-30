@@ -8,11 +8,13 @@ const CollectorsGroupSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  slug: {
+    type: String
+  },
   description: String,
   cnpj: String,
   contact: {
-    type: String,
-    required: true
+    type: String
   },
   address: AddressSchema,
   bank_account: BankAccountSchema,

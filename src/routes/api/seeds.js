@@ -1,6 +1,7 @@
 var express = require('express'),
   mongoose = require('mongoose'),
   router = express.Router(),
+  slugify = require('slugify')
   auth = require('../auth'),
   select = require('../utils').select,
   Seed = mongoose.model('Seed');
@@ -15,9 +16,9 @@ router.get('/', auth.collector, function(req, res) {
   });
 });
 
-router.get('/search', auth.manager, function(req, res) {
+router.get('/slug', auth.manager, function(req, res) {
   Seed.findOne({
-    name: req.query.name
+    slug: slugify(req.query.name).toLowerCase()
   }).exec(function(err, seed) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
@@ -42,6 +43,7 @@ router.get('/:id', auth.manager, function(req, res) {
 
 router.post('/', auth.manager, function(req, res) {
   var newSeed = new Seed(req.body);
+  newSeed.slug = slugify(newSeed.name).toLowerCase()
   newSeed.save(function(err, seed) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
@@ -52,10 +54,12 @@ router.post('/', auth.manager, function(req, res) {
 });
 
 router.put('/:id', auth.manager, function(req, res) {
+  params = req.body
+  params.slug = slugify(params.name).toLowerCase()
   Seed.findOneAndUpdate({
     _id: req.params.id
   }, {
-    $set: req.body
+    $set: params
   }, {
     upsert: true
   }, function(err, newSeed) {

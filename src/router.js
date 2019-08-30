@@ -21,6 +21,7 @@ import ClientForm from '@/views/ClientForm.vue'
 import Client from '@/views/Client.vue'
 import CollectorsGroups from '@/views/CollectorsGroups.vue'
 import CollectorsGroupForm from '@/views/CollectorsGroupForm.vue'
+import CollectorsGroupImport from '@/views/CollectorsGroupImport.vue'
 import CollectorsGroup from '@/views/CollectorsGroup.vue'
 import SeedsHouses from '@/views/SeedsHouses.vue'
 import SeedsHouseForm from '@/views/SeedsHouseForm.vue'
@@ -36,6 +37,7 @@ import CollectionForm from '@/views/CollectionForm.vue'
 import Collection from '@/views/Collection.vue'
 import CollectorsRequests from '@/views/CollectorsRequests.vue'
 import CollectorsRequestForm from '@/views/CollectorsRequestForm.vue'
+import CollectorsRequestImport from '@/views/CollectorsRequestImport.vue'
 import CollectorsRequest from '@/views/CollectorsRequest.vue'
 import Orders from '@/views/Orders.vue'
 import OrderForm from '@/views/OrderForm.vue'
@@ -104,6 +106,7 @@ export default new Router({
     { path: '/cadastrar-grupo-de-coletores', component: CollectorsGroupForm, beforeEnter: requireAuth },
     { path: '/editar-grupo-de-coletores/:id', component: CollectorsGroupForm, beforeEnter: requireAuth },
     { path: '/grupo-de-coletores/:id', component: CollectorsGroup, beforeEnter: requireAuth },
+    { path: '/importar-grupo-de-coletores', component: CollectorsGroupImport, beforeEnter: requireAuth },
 
     { path: '/casas-de-sementes', component: SeedsHouses, beforeEnter: requireAuth },
     { path: '/cadastrar-casa-de-sementes', component: SeedsHouseForm, beforeEnter: requireAuth },
@@ -129,6 +132,7 @@ export default new Router({
     { path: '/cadastrar-pedido-para-coletores', component: CollectorsRequestForm, beforeEnter: requireAuth },
     { path: '/editar-pedido-para-coletores/:id', component: CollectorsRequestForm, beforeEnter: requireAuth },
     { path: '/pedido-para-coletores/:id', component: CollectorsRequest, beforeEnter: requireAuth },
+    { path: '/importar-pedido-para-coletores', component: CollectorsRequestImport, beforeEnter: requireAuth },
 
     { path: '/encomendas', component: Orders, beforeEnter: requireAuth },
     { path: '/cadastrar-encomenda', component: OrderForm, beforeEnter: requireAuth },

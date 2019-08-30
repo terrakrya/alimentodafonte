@@ -32,10 +32,12 @@ router.post('/', auth.manager, function(req, res) {
 
   PotentialList.find().sort({ code: -1 }).limit(1).exec(function(err, latest) {
     if (!err) {
-      if (latest && latest.length) {
-        newPotentialList.code = latest[0].code+1
-      } else {
-        newPotentialList.code = 1
+      if (!newPotentialList.code) {
+        if (latest && latest.length) {
+          newPotentialList.code = latest[0].code+1
+        } else {
+          newPotentialList.code = 1
+        }
       }
       newPotentialList.save(function(err, seed) {
         if (err) {

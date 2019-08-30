@@ -26,25 +26,25 @@
 						<div class="col-sm-3">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Quantidade</span>
-								<span class="number">{{ potential_list.seed_items.map(item => item.qtd).reduce((a,b) => a + b) }} Kg</span>
+								<span class="number">{{ potential_list.seed_items.map(item => item.qtd).reduce((a, b) => a + b).toFixed(2) }} Kg</span>
 							</div>
 						</div>
 						<div class="col-sm-3">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Remuneração</span>
-								<span class="number">{{ potential_list.seed_items.map(item => item.compensation_collect * item.qtd).reduce((a,b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+								<span class="number">{{ potential_list.seed_items.map(item => item.compensation_collect * item.qtd).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
 							</div>
 						</div>
 						<div class="col-sm-3">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Potencial atacado</span>
-								<span class="number">{{ potential_list.seed_items.map(item => item.wholesale_price * item.qtd).reduce((a,b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+								<span class="number">{{ potential_list.seed_items.map(item => item.wholesale_price * item.qtd).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
 							</div>
 						</div>
 						<div class="col-sm-3">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Potencial varejo</span>
-								<span class="number">{{ potential_list.seed_items.map(item => item.price * item.qtd).reduce((a,b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+								<span class="number">{{ potential_list.seed_items.map(item => item.price * item.qtd).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
 							</div>
 						</div>
 					</div>
