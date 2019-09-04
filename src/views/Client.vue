@@ -40,7 +40,7 @@
               </div>
               <div class="list-group-item">
                 <dl v-if="user.cpf">
-                  <dt>CPF</dt>
+                  <dt>CPF/CNPJ</dt>
                   <dd>{{ user.cpf | cpf }}</dd>
                 </dl>
                 <dl v-if="user.email">
