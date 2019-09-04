@@ -74,6 +74,13 @@
         </div>
         <div class="row">
           <div class="col-sm-12">
+            <b-form-group label="Observações">
+              <b-form-textarea v-model="form.comments" />
+            </b-form-group>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
             <form-seeds-select :form="form" field="seed_items" :basecalc="form.purchase_type == 'Atacado' ? 'wholesale_price' : 'price'" />
           </div>
         </div>
@@ -113,6 +120,7 @@ export default {
         flood: false,
         amount_paid: '',
         amount_remain: '',
+        comments: ''
       }
     }
   },
