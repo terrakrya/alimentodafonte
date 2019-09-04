@@ -33,6 +33,7 @@ var UserSchema = new mongoose.Schema({
   nickname: String,
   cpf: String,
   contact: String,
+  comments: String,
   roles: [String],
   image: Object,
   address: AddressSchema,

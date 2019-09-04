@@ -25,6 +25,11 @@
                 {{user.address | address}}
               </span>
             </p>
+            <p v-if="user.comments">
+              <span>
+                {{user.comments}}
+              </span>
+            </p>
             <router-link :to="'/editar-coletor/'+user._id" class="btn btn-default btn-xs">
               <i class="fa fa-edit" aria-hidden="true"></i>
               Editar coletor
