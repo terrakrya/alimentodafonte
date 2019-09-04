@@ -25,6 +25,7 @@ const OrderSchema = mongoose.Schema({
   flood: Boolean,
   amount_paid: Number,
   amount_remain: Number,
+  comments: String,
   seed_items: [SeedItemSchema],
 }, {
   timestamps: true

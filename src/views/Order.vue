@@ -28,10 +28,14 @@
 								<span v-if="order.restored_area">{{order.restored_area}} hectares</span>
 								<span v-if="order.vegetation">{{order.vegetation}}</span>
 							</p>
+							<p>
+								<span v-if="order.comments">{{order.comments}}</span>
+							</p>
 							<div>
 								<b-badge v-if="order.flood" pill><i class="fa fa-check"></i> Alaga</b-badge>
 								<b-badge v-if="order.bog" pill><i class="fa fa-check"></i> Brejo</b-badge>
 							</div>
+
 						</div>
 					</div>
 					<hr class="clearfix">
