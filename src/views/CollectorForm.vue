@@ -67,6 +67,13 @@
 						</div>
 					</div>
 					<div class="row">
+						<div class="col-sm-12">
+							<b-form-group label="Observações">
+								<b-form-textarea v-model="form.comments" />
+							</b-form-group>
+						</div>
+					</div>
+					<div class="row">
 						<div class="col-md-12">
 							<pictures-upload :form="form" :preview="images_preview" :error="error" field="image" url="uploads/images" />
 						</div>
@@ -99,9 +106,6 @@ export default {
 	},
 	data () {
 		return {
-
-
-
 			images_preview: [],
 			log: false,
 			show_password: false,
@@ -115,6 +119,7 @@ export default {
 				name: '',
 				nickname: '',
 				contact: '',
+				comments: '',
 				image: {},
 				address: {
 					uf: "",
