@@ -28,8 +28,8 @@
 							</b-form-group>
 						</div>
 						<div class="col-sm-6">
-							<b-form-group label="CPF">
-								<the-mask  v-model="form.cpf" :mask="['###.###.###-##']" />
+							<b-form-group label="CPF/CNPJ">
+								<the-mask  v-model="form.cpf" masked="true" :mask="['###.###.###-##', '##.###.###/####-##']" />
 							</b-form-group>
 						</div>
 					</div>
