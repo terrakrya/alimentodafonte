@@ -25,7 +25,7 @@
               {{data.item.seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b).toFixed(2)}} kg
             </template>
             <template slot="compensation_collect" slot-scope="data">
-              {{data.item.seed_items.map(seed_item => seed_item.qtd * seed_item.compensation_collect).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}
+              {{data.item.seed_items.map(seed_item => seed_item.qtd * seed_item.compensation_collect).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}
             </template>
             <template slot="actions" slot-scope="data">
               <router-link :to="'/editar-lista-de-potencial/'+ data.item._id" class="fa fa-edit btn btn-primary btn-xs "></router-link>
@@ -37,7 +37,7 @@
               <td />
               <td><strong> Total</strong></td>
               <td><strong>{{total_qtd.toFixed(2)}} Kg</strong></td>
-              <td><strong>{{total_compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}</strong></td>
+              <td><strong>{{total_compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</strong></td>
               <td />
             </template>
           </b-table>
