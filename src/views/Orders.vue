@@ -22,7 +22,7 @@
 								<small v-if="data.item.restored_area">{{data.item.restored_area}} hectares</small>
 							</template>
 							<template slot="total" slot-scope="data">
-								<span v-if="data.item.seed_items && data.item.seed_items.length">{{data.item.seed_items.map(seed_item => seed_item.qtd * (data.item.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price)).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}</span>
+								<span v-if="data.item.seed_items && data.item.seed_items.length">{{data.item.seed_items.map(seed_item => seed_item.qtd * (data.item.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price)).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</span>
 								<small v-if="data.item.purchase_type"><br/>({{data.item.purchase_type}})</small>
 							</template>
 							<template slot="qtd" slot-scope="data">
@@ -37,7 +37,7 @@
 								<td/>
 								<td><strong> Total</strong></td>
 								<td><strong>{{total_weight}} Kg</strong></td>
-								<td><strong>{{total_price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}</strong></td>
+								<td><strong>{{total_price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</strong></td>
 								<td/>
 							</template>
 						</b-table>

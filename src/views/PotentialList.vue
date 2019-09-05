@@ -32,19 +32,19 @@
 						<div class="col-sm-3">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Remuneração</span>
-								<span class="number">{{ potential_list.seed_items.map(item => item.compensation_collect * item.qtd).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+								<span class="number">{{ potential_list.seed_items.map(item => item.compensation_collect * item.qtd).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
 							</div>
 						</div>
 						<div class="col-sm-3">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Potencial atacado</span>
-								<span class="number">{{ potential_list.seed_items.map(item => item.wholesale_price * item.qtd).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+								<span class="number">{{ potential_list.seed_items.map(item => item.wholesale_price * item.qtd).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
 							</div>
 						</div>
 						<div class="col-sm-3">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Potencial varejo</span>
-								<span class="number">{{ potential_list.seed_items.map(item => item.price * item.qtd).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+								<span class="number">{{ potential_list.seed_items.map(item => item.price * item.qtd).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
 							</div>
 						</div>
 					</div>
@@ -70,13 +70,13 @@
 											{{seed_item.qtd}} kg
 										</td>
 										<td>
-											{{seed_item.compensation_collect * seed_item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+											{{seed_item.compensation_collect * seed_item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
 										</td>
 										<td>
-											{{seed_item.wholesale_price * seed_item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+											{{seed_item.wholesale_price * seed_item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
 										</td>
 										<td>
-											{{seed_item.price * seed_item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+											{{seed_item.price * seed_item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
 										</td>
 									</tr>
 								</tbody>

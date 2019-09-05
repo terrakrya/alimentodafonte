@@ -13,7 +13,7 @@
                   <div class="weekly-summary text-center">
                     <router-link to="/listas-de-potencial">
                       <span class="info-label">Potencial de coleta</span>
-                      <span class="number">{{ total_potential | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+                      <span class="number">{{ total_potential | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
                       <br>
                       <span>{{ total_potential_qtd.toFixed(2) }} kg</span>
                       <br>
@@ -25,7 +25,7 @@
                   <div class="weekly-summary text-center">
                     <router-link to="/pedidos-para-coletores">
                       <span class="info-label">Pedidos</span>
-                      <span class="number">{{ total_collectors_request | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+                      <span class="number">{{ total_collectors_request | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
                       <br>
                       <span>{{ total_collectors_request_qtd.toFixed(2) }} kg</span>
                       <br>
@@ -37,7 +37,7 @@
                   <div class="weekly-summary text-center">
                     <router-link to="/encomendas">
                       <span class="info-label">Encomendas</span>
-                      <span class="number">{{ total_order | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+                      <span class="number">{{ total_order | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
                       <br>
                       <span>{{ total_order_qtd.toFixed(2) }} kg</span>
                       <br>

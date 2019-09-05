@@ -23,7 +23,7 @@
               {{data.value}} kg
             </template>
             <template slot="compensation_collect" slot-scope="data">
-							{{data.item.compensation_collect * data.item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+							{{data.item.compensation_collect * data.item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
             </template>
             <!-- eslint-disable-next-line -->
             <template slot="bottom-row" slot-scope="data">
@@ -31,7 +31,7 @@
               <td><strong>{{total_qtd}} kg</strong></td>
               <td><strong>{{total_qtd_delivered}} kg</strong></td>
               <td><strong>{{total_qtd_remaining}} kg</strong></td>
-              <td><strong>{{total_compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}</strong></td>
+              <td><strong>{{total_compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</strong></td>
             </template>
           </b-table>
         </div>

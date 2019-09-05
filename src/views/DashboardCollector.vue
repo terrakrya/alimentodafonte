@@ -26,7 +26,7 @@
                     <span class="info-label">Pedidos</span>
                     <span class="number">{{ total_collectors_request_qtd }} kg</span>
                     <br>
-                    <span>{{ total_collectors_request | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+                    <span>{{ total_collectors_request | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
                     <br>
                     <small>{{ total_collectors_request_species }} espécies</small>
                   </router-link>
@@ -38,7 +38,7 @@
                     <span class="info-label">Entregas</span>
                     <span class="number">{{ total_stock_in_qtd }} kg</span>
                     <br>
-                    <span>{{ total_stock_in | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' }) }}</span>
+                    <span>{{ total_stock_in | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
                     <br>
                     <small>{{ total_stock_in_species }} espécies</small>
                   </router-link>

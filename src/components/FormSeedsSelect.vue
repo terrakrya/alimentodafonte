@@ -48,13 +48,13 @@
               {{item_preview.seed.name}}
             </td>
             <td>
-              {{item_preview.value | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+              {{item_preview.value | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
             </td>
             <td>
               {{item_preview.qtd}} kg
             </td>
             <td>
-              {{item_preview.value * item_preview.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}
+              {{item_preview.value * item_preview.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
             </td>
             <td class="text-right">
               <b-button v-if="item_preview" class="btn btn-xs btn-danger fa fa-trash" @click="removeItem(index)"></b-button>
@@ -69,7 +69,7 @@
               <strong>{{totalQty}} kg</strong>
             </td>
             <td>
-              <strong>{{totalPrice | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '' })}}</strong>
+              <strong>{{totalPrice | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</strong>
             </td>
             <td></td>
           </tr>
