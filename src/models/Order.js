@@ -27,6 +27,10 @@ const OrderSchema = mongoose.Schema({
   amount_remain: Number,
   comments: String,
   seed_items: [SeedItemSchema],
+  createdBy: {
+    type: ObjectId,
+    ref: 'User'
+  }
 }, {
   timestamps: true
 });

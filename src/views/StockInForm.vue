@@ -95,7 +95,8 @@ export default {
         collectors_group: null,
         collector: null,
         seed: null,
-        lot: null
+        lot: null,
+        createdBy: this.$store.state.currentUser._id
       }
     }
   },

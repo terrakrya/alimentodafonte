@@ -83,6 +83,7 @@ export default {
         collectors_group: null,
         collector: null,
         seed_items: [],
+        createdBy: this.$store.state.currentUser._id
       }
     }
   },

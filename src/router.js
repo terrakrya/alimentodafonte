@@ -52,6 +52,7 @@ import PotentialLists from '@/views/PotentialLists.vue'
 import CollectorSeeds from '@/views/CollectorSeeds.vue'
 import CollectorRequests from '@/views/CollectorRequests.vue'
 import CollectorStockIns from '@/views/CollectorStockIns.vue'
+import StockInReceipt from '@/views/StockInReceipt.vue'
 
 Vue.use(Router)
 
@@ -148,6 +149,7 @@ export default new Router({
     { path: '/estoque', component: Stock, beforeEnter: requireAuth },
     { path: '/entrada-de-estoque', component: StockInForm, beforeEnter: requireAuth },
     { path: '/saida-de-estoque', component: StockOutForm, beforeEnter: requireAuth },
+    { path: '/recibo/:id', component: StockInReceipt, beforeEnter: requireAuth },
 
     { path: '/sementes-do-coletor', component: CollectorSeeds, beforeEnter: requireAuth },
     { path: '/pedidos-do-coletor', component: CollectorRequests, beforeEnter: requireAuth },

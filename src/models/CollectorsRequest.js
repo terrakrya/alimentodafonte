@@ -16,6 +16,10 @@ const CollectorsRequestSchema = mongoose.Schema({
     ref: 'User'
   },
   seed_items: [SeedItemSchema],
+  createdBy: {
+    type: ObjectId,
+    ref: 'User'
+  }
 }, {
   timestamps: true
 });

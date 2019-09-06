@@ -120,7 +120,8 @@ export default {
         flood: false,
         amount_paid: '',
         amount_remain: '',
-        comments: ''
+        comments: '',
+        createdBy: this.$store.state.currentUser._id
       }
     }
   },

@@ -2,6 +2,7 @@ var express = require('express'),
   mongoose = require('mongoose'),
   router = express.Router(),
   auth = require('../auth'),
+  populate = require('../utils').populate,
   Seed = mongoose.model('Seed'),
   StockIn = mongoose.model('StockIn');
 
@@ -35,6 +36,18 @@ router.post('/', auth.manager, function(req, res) {
           res.json(stock_in);
         }
       });
+    }
+  });
+});
+
+router.get('/:id', auth.manager, function(req, res) {
+  StockIn.findOne({
+    _id: req.params.id
+  }).populate(populate(req)).exec(function(err, stock_in) {
+    if (err) {
+      res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
+    } else {
+      res.json(stock_in);
     }
   });
 });
