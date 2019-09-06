@@ -29,6 +29,10 @@ const StockOutSchema = mongoose.Schema({
     type: ObjectId,
     ref: 'Lot',
     required: true
+  },
+  createdBy: {
+    type: ObjectId,
+    ref: 'User'
   }
 }, {
   timestamps: true

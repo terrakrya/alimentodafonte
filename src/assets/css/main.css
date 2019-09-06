@@ -1,6 +1,6 @@
-/*	
+/*
 *	############################################################################################
-*	
+*
 *	KLOROFIL - Free Bootstrap Dashboard Template
 *	---------------------------------------------------------------------
 *
@@ -9,7 +9,7 @@
 *	Website: 	https://www.themeineed.com/
 *	Copyright: 	Copyright 2016 The Develovers
 *	License: 	Creative Common Attribution 4.0 https://creativecommons.org/licenses/by/4.0/
-*	
+*
 *	############################################################################################
 */
 /********************
@@ -32,7 +32,7 @@ a {
     text-decoration: none; }
 
 th {
-  font-weight: 600; 
+  font-weight: 600;
 }
 
 .page-title {
@@ -966,7 +966,7 @@ ul.activity-list > li {
     *zoom: 1;
     *display: inline;
     width: 90%;
-    vertical-align: middle; 
+    vertical-align: middle;
     color: #fff;}
 
     .auth-box .content i {
@@ -994,7 +994,7 @@ ul.activity-list > li {
     position: relative;
     background-image: url("../../assets/img/login-bg.jpg");
     background-repeat: no-repeat;
-    background-size: cover; 
+    background-size: cover;
     display: none;}
     .auth-box .right:before {
       display: inline-block;
@@ -1743,4 +1743,3 @@ ul.activity-timeline > li {
     border: 1px solid #CCC; }
 
 /*# sourceMappingURL=main.css.map */
-

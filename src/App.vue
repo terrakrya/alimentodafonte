@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="this.$route.path.startsWith('/recibo/') ? 'clean' : ''">
     <div id="wrapper">
       <Navbar />
       <div v-if="currentUser" class="row-fluid">

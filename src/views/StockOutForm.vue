@@ -90,7 +90,8 @@ export default {
         seeds_house: null,
         seed: null,
         buyer: null,
-        lot: null
+        lot: null,
+        createdBy: this.$store.state.currentUser._id
       }
     }
   },

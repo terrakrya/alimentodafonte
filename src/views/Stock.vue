@@ -105,6 +105,11 @@
 									<template slot="qtd" slot-scope="data">
 										{{data.value}} Kg
 									</template>
+									<template slot="_id" slot-scope="data">
+										<router-link :to="'/recibo/'+ data.value" target="_blank">
+											<i class="fa fa-print"></i>
+										</router-link>
+									</template>
 									<template slot="compensation_collect" slot-scope="data">
 										{{data.value * data.item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
 									</template>
@@ -117,6 +122,7 @@
 										<td><strong> Total</strong></td>
 										<td><strong>{{total_qtd}} Kg</strong></td>
 										<td><strong>{{total_compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</strong></td>
+										<td/>
 									</template>
 								</b-table>
 							</div>
@@ -190,6 +196,7 @@ export default {
 			{ key: 'lot', label: 'Lote', sortable: true },
 			{ key: 'qtd', label: 'Quantidade', sortable: true },
 			{ key: 'compensation_collect', label: 'Remuneração', sortable: true },
+			{ key: '_id', label: '' },
 			],
 			seeds_table_fields: [
 			{ key: 'title', label: 'Semente', sortable: true },

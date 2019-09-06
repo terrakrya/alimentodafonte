@@ -37,7 +37,8 @@ export default {
         code: null,
         collectors_group: null,
         collector: null,
-        seed_items: []
+        seed_items: [],
+        createdBy: this.$store.state.currentUser._id
       },
     }
   },
