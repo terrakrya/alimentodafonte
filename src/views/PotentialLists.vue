@@ -5,21 +5,53 @@
     <div class="panel-body">
       <list-headline name="Listas de potencial" addUrl="/cadastrar-lista-de-potencial" :filters="filters" />
       <div class="info-content">
+        <div class="filters gray" v-if="filtered_potential_lists">
+          <b-form-group label="Filtrar por:" >
+            <div class="row">
+              <div class="col-sm-4">
+                <filter-entity-select type="seeds" :form="filters" field="seed" :input="applyFilters" placeholder="Semente" item-text="title" item-value="id" />
+              </div>
+              <div class="col-sm-4">
+                <filter-entity-select type="collectors_groups" :form="filters" field="collectors_group" :input="applyFilters" placeholder="Grupo de coletores" item-text="title" item-value="id" />
+              </div>
+              <div class="col-sm-4">
+                <filter-entity-select type="collectors" :form="filters" field="collector" :input="applyFilters" placeholder="Coletor" item-text="title" item-value="id" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 from_to">
+                De <b-form-input v-model="filters.from" type="date" @input="applyFilters" />
+                Até <b-form-input v-model="filters.to" type="date" @input="applyFilters" />
+              </div>
+              <div class="col-sm-6">
+                <a @click="clearFilters" class="btn btn-default" v-if="showClearButton">
+                  Limpar filtros
+                </a>
+              </div>
+            </div>
+          </b-form-group>
+        </div>
         <b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-        <loading :loading="!potential_lists && !error" msg="Carregando lista de potencial" />
-        <no-item :list="potential_lists" />
-        <div v-if="potential_lists && potential_lists.length">
-          <b-table stacked="md" :fields="table_fields" :items="potential_lists" :sort-by="'name'" :filter="filters.search">
+        <loading :loading="!filtered_potential_lists && !error" msg="Carregando lista de potencial" />
+        <no-item :list="filtered_potential_lists" />
+        <div v-if="filtered_potential_lists && filtered_potential_lists.length">
+          <b-table stacked="md" :fields="table_fields" :items="filtered_potential_lists" :sort-by="'name'" :filter="filters.search">
             <template slot="code" slot-scope="data">
               <router-link v-if="data.item.code" :to="'/lista-de-potencial/'+ data.item._id">
                 Lista {{data.item.code}}
+                <br>
+                {{data.item.createdAt | moment("DD/MM/YYYY")}}
               </router-link>
             </template>
             <template slot="collector" slot-scope="data">
-              <router-link v-if="data.item.collector" :to="'/coletor/'+ data.item.collector._id">{{data.item.collector.name}}</router-link>
+              <a @click="setFilter(data.field.key, data.item.collector._id)" v-if="data.item.collector">
+                {{data.item.collector.name}}
+              </a>
             </template>
             <template slot="collectors_group" slot-scope="data">
-              <router-link v-if="data.item.collectors_group" :to="'/grupo-de-coletores/'+ data.item.collectors_group._id">{{data.item.collectors_group.name}}</router-link>
+              <a @click="setFilter(data.field.key, data.item.collectors_group._id)" v-if="data.item.collectors_group">
+                {{data.item.collectors_group.name}}
+              </a>
             </template>
             <template slot="qtd" slot-scope="data">
               {{data.item.seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b).toFixed(2)}} kg
@@ -53,6 +85,7 @@ import Loading from '@/components/Loading'
 import NoItem from '@/components/NoItem'
 import ListHeadline from '@/components/ListHeadline'
 import Breadcrumb from '@/components/Breadcrumb'
+import FilterEntitySelect from '@/components/FilterEntitySelect'
 
 export default {
 
@@ -61,9 +94,17 @@ export default {
   data() {
     return {
       filters: {
-        search: null
+        search: null,
+        seed: null,
+        collector: null,
+        collectors_group: null,
+        from: null,
+        to: null
       },
       potential_lists: null,
+      filtered_potential_lists: null,
+      total_qtd: 0,
+			total_compensation_collect: 0,
       table_fields: [{
           key: 'code',
           label: 'Lista',
@@ -102,16 +143,9 @@ export default {
     this.list()
   },
   computed: {
-    total_qtd() {
-      return this.potential_lists.map(potential_list => {
-        return potential_list.seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b)
-      }).reduce((a, b) => a + b)
-    },
-    total_compensation_collect() {
-      return this.potential_lists.map(potential_list => {
-        return potential_list.seed_items.map(seed_item => seed_item.qtd * seed_item.compensation_collect).reduce((a, b) => a + b)
-      }).reduce((a, b) => a + b)
-    }
+    showClearButton () {
+			return Object.keys(this.filters).find(k => (this.filters[k]))
+		}
   },
   methods: {
     list() {
@@ -129,13 +163,87 @@ export default {
           this.list()
         }).catch(this.showError)
       }
-    }
+    },
+		applyFilters() {
+			this.filtered_potential_lists = this.potential_lists
+			Object.keys(this.filters).map((filter) => {
+				if (filter && this.filters[filter] && filter != 'search') {
+					this.filtered_potential_lists = this.filtered_potential_lists.filter(item => {
+
+						if (filter == 'from') {
+							return new Date(item.createdAt) >= new Date(this.filters[filter])
+						}
+						if (filter == 'to') {
+							let date = new Date(this.filters[filter]+'T23:59:59+00:00')
+							return new Date(item.createdAt) <= date
+						}
+            if (filter == 'seed') {
+              console.log(this.filters[filter]);
+              console.log(item.seed_items.find(seed_item => {
+                console.log(seed_item.seed == this.filters[filter]);
+                return seed_item.seed == this.filters[filter]
+              }));
+							return item.seed_items.find(seed_item => {
+                return seed_item.seed == this.filters[filter]
+              })
+						}
+						return item[filter] && (item[filter]._id == this.filters[filter] || item[filter] == this.filters[filter])
+					})
+				}
+			})
+			this.onFiltered(this.filtered_potential_lists)
+		},
+    onFiltered(filteredItems) {
+			if (filteredItems) {
+				this.total_qtd = 0
+				this.total_compensation_collect = 0
+				filteredItems.map(item => {
+          item.seed_items.map(seed_item => {
+            if (seed_item.compensation_collect) {
+  						this.total_compensation_collect += parseFloat(seed_item.compensation_collect) * parseFloat(seed_item.qtd)
+  					}
+  					if (seed_item.qtd) {
+  						this.total_qtd += parseFloat(seed_item.qtd)
+  					}
+          })
+				})
+			}
+		},
+    listFromData(type) {
+			if (this.potential_lists) {
+				let items = this.potential_lists.map(item => {
+					if (item[type]) {
+						return {
+							id: item[type]._id,
+							title: item[type].name
+						}
+					}
+				})
+				return this.getUnique(items)
+			}
+		},
+    setFilter(field, value) {
+      this.filters[field] = value
+      this.applyFilters()
+    },
+		clearFilters() {
+			Object.keys(this.filters).map((filter) => {
+				this.filters[filter] = null
+			})
+			this.filtered_potential_lists = this.potential_lists
+		}
   },
+	watch: {
+		potential_lists () {
+			this.applyFilters()
+		}
+	},
   components: {
     Loading,
     NoItem,
     ListHeadline,
-    Breadcrumb
+    Breadcrumb,
+    FilterEntitySelect
   }
 
 };

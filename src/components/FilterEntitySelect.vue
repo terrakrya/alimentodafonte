@@ -25,7 +25,7 @@
 import { CoolSelect } from 'vue-cool-select'
 export default {
   name: 'filter-entities-select',
-  props: ['items', 'form', 'field', 'input', 'placeholder', 'itemValue'],
+  props: ['items', 'form', 'field', 'input', 'placeholder', 'itemValue', 'type'],
   data() {
     return {
       list: []
