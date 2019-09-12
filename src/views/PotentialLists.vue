@@ -6,7 +6,7 @@
       <list-headline name="Listas de potencial" addUrl="/cadastrar-lista-de-potencial" :filters="filters" />
       <div class="info-content">
         <div class="filters gray" v-if="filtered_potential_lists">
-          <b-form-group label="Filtrar por:" >
+          <b-form-group label="Filtrar por:">
             <div class="row">
               <div class="col-sm-4">
                 <filter-entity-select type="seeds" :form="filters" field="seed" :input="applyFilters" placeholder="Semente" item-text="title" item-value="id" />
@@ -20,8 +20,10 @@
             </div>
             <div class="row">
               <div class="col-sm-6 from_to">
-                De <b-form-input v-model="filters.from" type="date" @input="applyFilters" />
-                Até <b-form-input v-model="filters.to" type="date" @input="applyFilters" />
+                De
+                <b-form-input v-model="filters.from" type="date" @input="applyFilters" />
+                Até
+                <b-form-input v-model="filters.to" type="date" @input="applyFilters" />
               </div>
               <div class="col-sm-6">
                 <a @click="clearFilters" class="btn btn-default" v-if="showClearButton">
@@ -104,7 +106,7 @@ export default {
       potential_lists: null,
       filtered_potential_lists: null,
       total_qtd: 0,
-			total_compensation_collect: 0,
+      total_compensation_collect: 0,
       table_fields: [{
           key: 'code',
           label: 'Lista',
@@ -143,9 +145,9 @@ export default {
     this.list()
   },
   computed: {
-    showClearButton () {
-			return Object.keys(this.filters).find(k => (this.filters[k]))
-		}
+    showClearButton() {
+      return Object.keys(this.filters).find(k => (this.filters[k]))
+    }
   },
   methods: {
     list() {
@@ -164,80 +166,75 @@ export default {
         }).catch(this.showError)
       }
     },
-		applyFilters() {
-			this.filtered_potential_lists = this.potential_lists
-			Object.keys(this.filters).map((filter) => {
-				if (filter && this.filters[filter] && filter != 'search') {
-					this.filtered_potential_lists = this.filtered_potential_lists.filter(item => {
+    applyFilters() {
+      this.filtered_potential_lists = this.potential_lists
+      Object.keys(this.filters).map((filter) => {
+        if (filter && this.filters[filter] && filter != 'search') {
+          this.filtered_potential_lists = this.filtered_potential_lists.filter(item => {
 
-						if (filter == 'from') {
-							return new Date(item.createdAt) >= new Date(this.filters[filter])
-						}
-						if (filter == 'to') {
-							let date = new Date(this.filters[filter]+'T23:59:59+00:00')
-							return new Date(item.createdAt) <= date
-						}
+            if (filter == 'from') {
+              return new Date(item.createdAt) >= new Date(this.filters[filter])
+            }
+            if (filter == 'to') {
+              let date = new Date(this.filters[filter] + 'T23:59:59+00:00')
+              return new Date(item.createdAt) <= date
+            }
             if (filter == 'seed') {
-              console.log(this.filters[filter]);
-              console.log(item.seed_items.find(seed_item => {
-                console.log(seed_item.seed == this.filters[filter]);
-                return seed_item.seed == this.filters[filter]
-              }));
-							return item.seed_items.find(seed_item => {
+              return item.seed_items.find(seed_item => {
                 return seed_item.seed == this.filters[filter]
               })
-						}
-						return item[filter] && (item[filter]._id == this.filters[filter] || item[filter] == this.filters[filter])
-					})
-				}
-			})
-			this.onFiltered(this.filtered_potential_lists)
-		},
+            }
+            return item[filter] && (item[filter]._id == this.filters[filter] || item[filter] == this.filters[filter])
+          })
+        }
+      })
+      this.onFiltered(this.filtered_potential_lists)
+    },
     onFiltered(filteredItems) {
-			if (filteredItems) {
-				this.total_qtd = 0
-				this.total_compensation_collect = 0
-				filteredItems.map(item => {
+      if (filteredItems) {
+        this.total_qtd = 0
+        this.total_compensation_collect = 0
+        filteredItems.map(item => {
           item.seed_items.map(seed_item => {
             if (seed_item.compensation_collect) {
-  						this.total_compensation_collect += parseFloat(seed_item.compensation_collect) * parseFloat(seed_item.qtd)
-  					}
-  					if (seed_item.qtd) {
-  						this.total_qtd += parseFloat(seed_item.qtd)
-  					}
+              this.total_compensation_collect += parseFloat(seed_item.compensation_collect) * parseFloat(seed_item.qtd)
+            }
+            if (seed_item.qtd) {
+              this.total_qtd += parseFloat(seed_item.qtd)
+            }
           })
-				})
-			}
-		},
+        })
+      }
+    },
     listFromData(type) {
-			if (this.potential_lists) {
-				let items = this.potential_lists.map(item => {
-					if (item[type]) {
-						return {
-							id: item[type]._id,
-							title: item[type].name
-						}
-					}
-				})
-				return this.getUnique(items)
-			}
-		},
+      if (this.potential_lists) {
+        let items = this.potential_lists.map(item => {
+          if (item[type]) {
+            return {
+              id: item[type]._id,
+              title: item[type].name
+            }
+          }
+        })
+        return this.getUnique(items)
+      }
+    },
     setFilter(field, value) {
       this.filters[field] = value
       this.applyFilters()
     },
-		clearFilters() {
-			Object.keys(this.filters).map((filter) => {
-				this.filters[filter] = null
-			})
-			this.filtered_potential_lists = this.potential_lists
-		}
+    clearFilters() {
+      Object.keys(this.filters).map((filter) => {
+        this.filters[filter] = null
+      })
+      this.applyFilters()
+    }
   },
-	watch: {
-		potential_lists () {
-			this.applyFilters()
-		}
-	},
+  watch: {
+    potential_lists() {
+      this.applyFilters()
+    }
+  },
   components: {
     Loading,
     NoItem,
