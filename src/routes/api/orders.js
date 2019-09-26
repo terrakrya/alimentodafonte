@@ -3,6 +3,7 @@ var express = require('express'),
   router = express.Router(),
   auth = require('../auth'),
   populate = require('../utils').populate,
+  fixQtdToNumber = require('../utils').fixQtdToNumber,
   Order = mongoose.model('Order');
 
 router.get('/', auth.manager, function(req, res) {
@@ -37,6 +38,9 @@ router.post('/', auth.manager, function(req, res) {
       } else {
         newOrder.code = 1
       }
+
+      fixQtdToNumber(newOrder)
+
       newOrder.save(function(err, order) {
         if (err) {
           res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
@@ -49,10 +53,14 @@ router.post('/', auth.manager, function(req, res) {
 });
 
 router.put('/:id', auth.manager, function(req, res) {
+  var order = req.body
+
+  fixQtdToNumber(order)
+
   Order.findOneAndUpdate({
     _id: req.params.id
   }, {
-    $set: req.body
+    $set: order
   }, {
     upsert: true
   }, function(err, newOrder) {

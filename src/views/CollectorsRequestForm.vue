@@ -26,9 +26,26 @@
                   <td>{{potential_seed.potential}} kg</td>
                   <td>{{potential_seed.requested}} kg</td>
                   <td v-if="potential_seed.max > 0">
-                    <b-form-input @input="setSeedItems" v-model="potential_seeds[index].qtd" class="weight" type="number" step="0.01" lang="nb" min="0" :max="potential_seed.qtd" style="width: 100px; display: inline" /> kg
-                    <br>
-                    <small>máximo: {{potential_seed.max}} kg</small>
+                    <div v-if="typeof potential_seeds[index].qtd == 'object'">
+                      <div v-for="(qtd, i) in potential_seeds[index].qtd" :key="i">
+                        <form-entity-select v-if="collectors && collectors.length" :items="collectors" :form="potential_seeds[index].qtd[i]" field="collector" placeholder="Coletor" />
+                        <b-form-input @input="setSeedItems" v-model="potential_seeds[index].qtd[i].qtd" class="weight" type="number" step="0.01" lang="nb" min="0" :max="potential_seed.qtd - sumQtd(potential_seeds[index].qtd)"
+                          style="width: 100px; display: inline" />
+                        <span> kg.</span> <small :class="sumQtd(potential_seeds[index].qtd) > potential_seed.max ? 'text-danger': 'text-gray'"> Máximo: {{potential_seed.max}} kg</small>
+                        <br>
+                      </div>
+                      <small v-if="typeof potential_seeds[index].qtd == 'object' && potential_seeds[index].qtd.length > 1" :class="sumQtd(potential_seeds[index].qtd) > potential_seed.max ? 'text-danger': 'text-success'">Total: {{sumQtd(potential_seeds[index].qtd)}} kg</small>
+                      <br>
+                      <a @click="addQtd(index)" v-if="!form.collector" class="btn btn-xs">Adicionar</a>
+                      <br>
+                    </div>
+                    <div v-if="typeof potential_seeds[index].qtd != 'object'">
+                      <b-form-input @input="setSeedItems" v-model="potential_seeds[index].qtd" class="weight" type="number" step="0.01" lang="nb" min="0" :max="potential_seed.qtd" style="width: 100px; display: inline" />
+                      <span> kg.</span> <small :class="sumQtd(potential_seeds[index].qtd) > potential_seed.max ? 'text-danger': 'text-gray'"> Máximo: {{potential_seed.max}} kg</small>
+                      <small v-if="typeof potential_seeds[index].qtd == 'object' && potential_seeds[index].qtd.length > 1" :class="sumQtd(potential_seeds[index].qtd) > potential_seed.max ? 'text-danger': 'text-success'">Total: {{sumQtd(potential_seeds[index].qtd)}} kg</small>
+                      <br>
+                      <a @click="splitQtd(index)" v-if="!form.collector && collectors && collectors.length" class="btn btn-xs">Dividir pedido</a>
+                    </div>
                   </td>
                   <td v-if="potential_seed.max <= 0">
                     <small>Sem potencial</small>
@@ -37,13 +54,13 @@
                 <tr class="b-table-bottom-row" v-if="form.seed_items && form.seed_items.length">
                   <td></td>
                   <td>
-                    <strong>{{potential_seeds.map(i => parseFloat(i.potential)).reduce((a, b) => a + b)}} kg</strong>
+                    <strong>{{potential_seeds.map(i => parseFloat(i.potential)).reduce((a, b) => a + b).toFixed(2)}} kg</strong>
                   </td>
                   <td>
-                    <strong>{{potential_seeds.map(i => parseFloat(i.requested)).reduce((a, b) => a + b)}} kg</strong>
+                    <strong>{{potential_seeds.map(i => parseFloat(i.requested)).reduce((a, b) => a + b).toFixed(2)}} kg</strong>
                   </td>
                   <td>
-                    <strong>{{form.seed_items.map(i => parseFloat(i.qtd)).reduce((a, b) => a + b)}} kg</strong>
+                    <strong>{{form.seed_items.map(i => parseFloat(sumQtd(i.qtd))).reduce((a, b) => a + b).toFixed(2)}} kg</strong>
                   </td>
                   <td></td>
                 </tr>
@@ -67,6 +84,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Loading from '@/components/Loading'
 import FormHeadline from '@/components/FormHeadline'
 import FormGroupCollector from '@/components/FormGroupCollector'
+import FormEntitySelect from '@/components/FormEntitySelect'
 import FormSubmit from '@/components/FormSubmit'
 
 export default {
@@ -78,6 +96,7 @@ export default {
       potential_lists: [],
       collectors_requests: [],
       potential_seeds: [],
+      collectors: [],
       form: {
         code: null,
         collectors_group: null,
@@ -95,19 +114,21 @@ export default {
       }
     }).then(response => {
       this.potential_lists = response.data
-    }).catch(this.showError)
 
-    axios.get('collectors_requests').then(response => {
-      this.collectors_requests = response.data
+      axios.get('collectors_requests').then(resp => {
+        this.collectors_requests = resp.data
+        if (this.isEditing()) {
+          this.edit(this.$route.params.id)
+        }
+
+      }).catch(this.showError)
+
     }).catch(this.showError)
 
     axios.get('seeds').then(response => {
       this.seeds = response.data
     }).catch(this.showError)
 
-    if (this.isEditing()) {
-      this.edit(this.$route.params.id)
-    }
   },
   methods: {
     edit(id) {
@@ -141,7 +162,7 @@ export default {
       this.seeds_errors = []
       this.form.seed_items = []
       this.potential_seeds.forEach(potential_seed => {
-        if (potential_seed.qtd && potential_seed.qtd > 0) {
+        if (potential_seed.qtd && (potential_seed.qtd > 0 || typeof potential_seed.qtd == 'object')) {
           if (potential_seed.qtd > potential_seed.max) {
             this.seeds_errors.push('A quantidade solicitada (' + potential_seed.qtd + ' kg de ' + potential_seed.seed.name + ') é maior que o potencial de coleta (' + potential_seed.max + ' kg) desse coletor/grupo ')
           } else {
@@ -166,7 +187,6 @@ export default {
 
         let potential_lists_filtered = this.filterGroupCollector(this.potential_lists)
         let collectors_request_filtered = this.filterGroupCollector(this.collectors_requests)
-
         if (potential_lists_filtered && potential_lists_filtered.length) {
           potential_lists_filtered.forEach(potential_list => {
             potential_list.seed_items.forEach(seed_item => {
@@ -198,7 +218,7 @@ export default {
               if (!this.$route.params.id || this.$route.params.id != collectors_request._id) {
                 collectors_request.seed_items.forEach(seed_item => {
                   if (seed_items[seed_item.seed]) {
-                    seed_items[seed_item.seed].requested += seed_item.qtd
+                    seed_items[seed_item.seed].requested += this.sumQtd(seed_item.qtd)
                     seed_items[seed_item.seed].max = seed_items[seed_item.seed].potential - seed_items[seed_item.seed].requested
                   }
                 })
@@ -206,12 +226,30 @@ export default {
             })
           }
 
-          this.potential_seeds = Object.values(seed_items)
+          this.potential_seeds = Object.values(seed_items).map(seed_item => {
+            if (!seed_item.qtd) {
+              seed_item.qtd = 0
+            }
+            return seed_item
+          })
         } else {
           this.seeds_errors.push('Não existe potencial de coleta para este coletor/grupo')
           return false
         }
 
+        axios.get('collectors_groups/' + this.form.collectors_group, {
+          params: {
+            populate: 'collectors'
+          }
+        }).then(response => {
+          this.collectors = response.data.collectors.map(collector => {
+            return {
+              id: collector._id,
+              title: collector.name,
+              description: collector.nickname,
+            }
+          })
+        }).catch(this.showError)
       }
     },
     filterGroupCollector(list) {
@@ -225,6 +263,18 @@ export default {
           )
         })
       }
+    },
+    splitQtd(index) {
+      this.potential_seeds[index].qtd = [{
+        collector: null,
+        qtd: 0
+      }]
+    },
+    addQtd(index) {
+      this.potential_seeds[index].qtd.push({
+        collector: null,
+        qtd: 0
+      })
     }
   },
   watch: {
@@ -240,7 +290,8 @@ export default {
     Loading,
     FormHeadline,
     FormGroupCollector,
-    FormSubmit
+    FormSubmit,
+    FormEntitySelect
   }
 
 };

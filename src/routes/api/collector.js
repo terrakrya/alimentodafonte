@@ -10,36 +10,44 @@ router.get('/requests', auth.collector, function(req, res) {
   var seed_items = {}
 
   CollectorsRequest.find({
-    collector: req.payload.id
-  }, 'seed_items').populate('seed_items.seed').exec(function(err, collectors_requests) {
+    $or: [{
+      collector: req.payload.id
+    }, {
+      'seed_items.qtd.collector': req.payload.id
+    }]
+  } , 'seed_items collector').populate('seed_items.seed').exec(function(err, collectors_requests) {
     StockIn.find({
       collector: req.payload.id
     }).exec(function(err, stock_ins) {
       collectors_requests.forEach(collectors_request => {
         collectors_request.seed_items.forEach(seed_item => {
-          let seed_id = seed_item.seed._id
-          if (seed_items[seed_id]) {
-            seed_items[seed_id].qtd += seed_item.qtd
-          } else {
-            var qtd_delivered = 0
-            if (stock_ins && stock_ins.length) {
-              qtd_delivered = stock_ins.map(stock_in => {
-                if (stock_in.seed.toString() == seed_id.toString()) {
-                  return stock_in.qtd
-                } else {
-                  return 0
-                }
-              }).reduce((a, b) => a + b)
-            }
+          var total_qtd = utils.sumQtd(seed_item, collectors_request.collector, req.payload.id)
+          if (total_qtd) {
 
-            seed_items[seed_id] = {
-              seed: seed_item.seed,
-              qtd: seed_item.qtd,
-              compensation_collect: seed_item.compensation_collect,
-              qtd_delivered: qtd_delivered
+            let seed_id = seed_item.seed._id
+            if (seed_items[seed_id]) {
+              seed_items[seed_id].qtd += utils.sumQtd(seed_item, collectors_request.collector, req.payload.id)
+            } else {
+              var qtd_delivered = 0
+              if (stock_ins && stock_ins.length) {
+                qtd_delivered = stock_ins.map(stock_in => {
+                  if (stock_in.seed.toString() == seed_id.toString()) {
+                    return stock_in.qtd
+                  } else {
+                    return 0
+                  }
+                }).reduce((a, b) => a + b)
+              }
+
+              seed_items[seed_id] = {
+                seed: seed_item.seed,
+                qtd: total_qtd,
+                compensation_collect: seed_item.compensation_collect,
+                qtd_delivered: qtd_delivered
+              }
             }
+            seed_items[seed_id].qtd_remaining = seed_items[seed_id].qtd - seed_items[seed_id].qtd_delivered
           }
-          seed_items[seed_id].qtd_remaining = seed_items[seed_id].qtd - seed_items[seed_id].qtd_delivered
         })
       })
       if (err) {

@@ -3,7 +3,7 @@ var mongoose = require('mongoose'),
 
 var SeedItemSchema = new mongoose.Schema({
   qtd: {
-    type: Number,
+    type: mongoose.Mixed,
     required: true
   },
   compensation_collect: {

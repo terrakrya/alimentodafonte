@@ -97,6 +97,12 @@ export default {
           address.uf,
         ].filter(Boolean).join(' - ') :
         '';
+    },
+    sumQtd(qtd) {
+      if (typeof qtd == 'object') {
+        return qtd.map(q => parseFloat(q.qtd || 0)).reduce((a, b) => a + b)
+      }
+      return qtd || 0
     }
   },
   filters: {

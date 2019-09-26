@@ -46,19 +46,19 @@
               </router-link>
             </template>
             <template slot="collector" slot-scope="data">
-              <a @click="setFilter(data.field.key, data.item.collector._id)" v-if="data.item.collector">
-                {{data.item.collector.name}}
-              </a>
               <a @click="setFilter('collectors_group', data.item.collectors_group._id)" v-if="data.item.collectors_group">
                 {{data.item.collectors_group.name}}
               </a>
-
+              <a @click="setFilter(data.field.key, data.item.collector._id)" v-if="data.item.collector">
+                {{data.item.collector.name}}
+              </a>
             </template>
             <template slot="qtd" slot-scope="data">
-              {{data.item.seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b).toFixed(2)}} kg
+              <p v-for=""></p>
+              {{data.item.seed_items.map(seed_item => sumQtd(seed_item.qtd)).reduce((a, b) => a + b).toFixed(2)}} kg
             </template>
             <template slot="compensation_collect" slot-scope="data">
-              {{data.item.seed_items.map(seed_item => seed_item.compensation_collect * seed_item.qtd).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
+              {{data.item.seed_items.map(seed_item => seed_item.compensation_collect * sumQtd(seed_item.qtd)).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
             </template>
             <template slot="actions" slot-scope="data">
               <router-link :to="'/editar-pedido-para-coletores/'+ data.item._id" class="fa fa-edit btn btn-primary btn-xs "></router-link>
@@ -170,6 +170,20 @@ export default {
                 return seed_item.seed == this.filters[filter]
               })
             }
+            if (filter == 'collector') {
+              if (item.collector) {
+                return item.collector._id == this.filters[filter]
+              } else {
+                return item.seed_items.find(seed_item => {
+                  if (typeof seed_item.qtd == 'object') {
+                    return seed_item.qtd.find(qtd => {
+                      return qtd.collector == this.filters[filter]
+                    })
+                  }
+                })
+              }
+
+            }
             return item[filter] && (item[filter]._id == this.filters[filter] || item[filter] == this.filters[filter])
           })
         }
@@ -183,10 +197,10 @@ export default {
         filteredItems.map(item => {
           item.seed_items.map(seed_item => {
             if (seed_item.compensation_collect) {
-              this.total_compensation_collect += parseFloat(seed_item.compensation_collect) * parseFloat(seed_item.qtd)
+              this.total_compensation_collect += parseFloat(seed_item.compensation_collect) * parseFloat(this.sumQtd(seed_item.qtd))
             }
             if (seed_item.qtd) {
-              this.total_qtd += parseFloat(seed_item.qtd)
+              this.total_qtd += parseFloat(this.sumQtd(seed_item.qtd))
             }
           })
         })
@@ -210,6 +224,12 @@ export default {
       this.applyFilters()
     },
     clearFilters() {
+      Object.keys(this.filters).map((filter) => {
+        this.filters[filter] = null
+      })
+      this.applyFilters()
+    },
+    qtdByCollector() {
       Object.keys(this.filters).map((filter) => {
         this.filters[filter] = null
       })

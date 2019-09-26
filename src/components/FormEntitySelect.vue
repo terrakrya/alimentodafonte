@@ -1,6 +1,6 @@
 <template>
 <div>
-  <cool-select :arrowsDisableInstantSelection="true" placeholder="Busque pelo nome clique para selecionar" v-model="entity" v-validate="validate" :name="field" :items="list" item-text="title" @select="addItem(); callback(entity)">
+  <cool-select :arrowsDisableInstantSelection="true" :placeholder="placeholder || 'Busque pelo nome clique para selecionar'" v-model="entity" v-validate="validate" :name="field" :items="list" item-text="title" @select="addItem(); callback(entity)">
     <template slot="item" slot-scope="{ item: option }">
       <div style="display: flex; align-items: center;">
         <img v-if="option.picture" :src="baseUrl + option.picture">
@@ -30,7 +30,7 @@ import {
 
 export default {
   name: 'form-entity-select',
-  props: ['items', 'type', 'form', 'field', 'input', 'validate'],
+  props: ['items', 'type', 'form', 'field', 'input', 'validate', 'placeholder'],
   inject: ['$validator'],
   data() {
     return {

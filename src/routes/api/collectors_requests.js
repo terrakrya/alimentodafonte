@@ -3,6 +3,7 @@ var express = require('express'),
   router = express.Router(),
   auth = require('../auth'),
   populate = require('../utils').populate,
+  fixQtdToNumber = require('../utils').fixQtdToNumber,
   CollectorsRequest = mongoose.model('CollectorsRequest');
 
 router.get('/', auth.manager, function(req, res) {
@@ -39,6 +40,9 @@ router.post('/', auth.manager, function(req, res) {
           newCollectorsRequest.code = 1
         }
       }
+
+      fixQtdToNumber(newCollectorsRequest)
+
       newCollectorsRequest.save(function(err, collector_request) {
         if (err) {
           res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
@@ -51,10 +55,14 @@ router.post('/', auth.manager, function(req, res) {
 });
 
 router.put('/:id', auth.manager, function(req, res) {
+  var collectors_request = req.body
+
+  fixQtdToNumber(collectors_request)
+
   CollectorsRequest.findOneAndUpdate({
     _id: req.params.id
   }, {
-    $set: req.body
+    $set: collectors_request
   }, {
     upsert: true
   }, function(err, newCollectorsRequest) {
