@@ -125,7 +125,7 @@ export default {
     total_collectors_request() {
       if (this.collectors_requests) {
         var values = this.collectors_requests.map(collectors_request => {
-          return collectors_request.seed_items.map(seed_item => seed_item.qtd * seed_item.compensation_collect).reduce((a, b) => a + b)
+          return collectors_request.seed_items.map(seed_item => this.sumQtd(seed_item.qtd) * seed_item.compensation_collect).reduce((a, b) => a + b)
         })
         return values && values.length ? values.reduce((a, b) => a + b) : 0
       }
@@ -134,7 +134,7 @@ export default {
     total_collectors_request_qtd() {
       if (this.collectors_requests) {
         var values = this.collectors_requests.map(collectors_request => {
-          return collectors_request.seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b)
+          return collectors_request.seed_items.map(seed_item => this.sumQtd(seed_item.qtd)).reduce((a, b) => a + b)
         })
         return values && values.length ? values.reduce((a, b) => a + b) : 0
       }

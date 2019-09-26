@@ -29,13 +29,13 @@
           <div class="col-sm-6 col-md-3">
             <div class="weekly-summary text-center">
               <span class="info-label">Quantidade</span>
-              <span class="number">{{ collectors_request.seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b).toFixed(2) }} Kg</span>
+              <span class="number">{{ collectors_request.seed_items.map(seed_item => sumQtd(seed_item.qtd)).reduce((a, b) => a + b).toFixed(2) }} Kg</span>
             </div>
           </div>
           <div class="col-sm-6 col-md-3">
             <div class="weekly-summary text-center">
               <span class="info-label">Remuneração total</span>
-              <span class="number">{{ collectors_request.seed_items.map(seed_item =>  seed_item.compensation_collect * seed_item.qtd).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
+              <span class="number">{{ collectors_request.seed_items.map(seed_item =>  seed_item.compensation_collect * sumQtd(seed_item.qtd)).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
             </div>
           </div>
         </div>
@@ -46,8 +46,8 @@
               <thead>
                 <tr>
                   <th>Espécie</th>
-                  <th>Remuneração / Kg</th>
                   <th>Quantidade</th>
+                  <th>Remuneração / Kg</th>
                   <th>Total</th>
                   <th></th>
                 </tr>
@@ -58,13 +58,21 @@
                     <router-link :to="'/semente/'+seed_item.seed._id">{{seed_item.seed.name}}</router-link>
                   </td>
                   <td>
-                    {{seed_item.compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
+                    <span v-if="typeof seed_item.qtd == 'object'">
+                      <p v-for="(qtd, i) in seed_item.qtd" :key="i"><span v-if="qtd.collector">{{collectors.find(collector => collector._id == qtd.collector).name}}:</span> {{parseFloat(qtd.qtd).toFixed(2)}} kg</p>
+                      <p><strong>Total: {{sumQtd(seed_item.qtd).toFixed(2)}} kg</strong></p>
+                    </span>
+                    <span v-else>{{sumQtd(seed_item.qtd).toFixed(2)}} kg</span>
+
                   </td>
                   <td>
-                    {{seed_item.qtd.toFixed(2)}} kg
+                    <span v-if="typeof seed_item.qtd == 'object'">
+                      <p v-for="(qtd, i) in seed_item.qtd" :key="i"><span v-if="qtd.collector">{{collectors.find(collector => collector._id == qtd.collector).name}}:</span> {{(seed_item.compensation_collect * parseFloat(qtd.qtd)) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</p>
+                    </span>
+                    <span v-else>{{(seed_item.compensation_collect * sumQtd(seed_item.qtd)) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</span>
                   </td>
                   <td>
-                    {{seed_item.compensation_collect * seed_item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
+                    {{seed_item.compensation_collect * sumQtd(seed_item.qtd) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
                   </td>
                 </tr>
               </tbody>
@@ -87,19 +95,28 @@ export default {
 
   data() {
     return {
-      collectors_request: null
+      collectors_request: null,
+      collectors: null
     }
   },
   created() {
     this.isLoading = true
-    axios.get('collectors_requests/' + this.$route.params.id, {
+    axios.get('users', {
       params: {
-        populate: 'collectors_group collector seed_items.seed'
+        role: 'collector'
       }
     }).then(response => {
-      this.collectors_request = response.data
-      this.isLoading = false
-    }).catch(this.showError);
+      this.collectors = response.data
+      axios.get('collectors_requests/' + this.$route.params.id, {
+        params: {
+          populate: 'collectors_group collectors_group.collectors collector seed_items.seed seed_items.qtd.collector'
+        }
+      }).then(response => {
+        this.collectors_request = response.data
+        this.isLoading = false
+      }).catch(this.showError);
+    }).catch(this.showError)
+
   },
   components: {
     'loading': Loading,
