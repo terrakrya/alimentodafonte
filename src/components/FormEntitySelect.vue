@@ -1,6 +1,7 @@
 <template>
 <div>
-  <cool-select :arrowsDisableInstantSelection="true" :placeholder="placeholder || 'Busque pelo nome clique para selecionar'" v-model="entity" v-validate="validate" :name="field" :items="list" item-text="title" @select="addItem(); callback(entity)">
+  <cool-select :scrollItemsLimit="10000" :scrollItemsLimitAddAfterScroll="10000" :arrowsDisableInstantSelection="true" :placeholder="placeholder || 'Busque pelo nome clique para selecionar'" v-model="entity" v-validate="validate" :name="field"
+    :items="list" item-text="title" @select="addItem(); callback(entity)">
     <template slot="item" slot-scope="{ item: option }">
       <div style="display: flex; align-items: center;">
         <img v-if="option.picture" :src="baseUrl + option.picture">
@@ -27,7 +28,6 @@
 import {
   CoolSelect
 } from 'vue-cool-select'
-
 export default {
   name: 'form-entity-select',
   props: ['items', 'type', 'form', 'field', 'input', 'validate', 'placeholder'],
@@ -40,7 +40,9 @@ export default {
   },
   async created() {
     if (this.items) {
-      this.list = this.items
+      this.list = this.items.sort(function(a, b) {
+        return a.title.localeCompare(b.title);
+      })
     } else {
       switch (this.type) {
         case 'seeds':
@@ -49,7 +51,9 @@ export default {
             title: seed.name,
             description: seed.scientific_name,
             picture: seed.images && seed.images.length ? seed.images[0].thumb : '',
-          }))
+          })).sort(function(a, b) {
+            return a.title.localeCompare(b.title);
+          })
           break;
         case 'users':
           this.list = (await this.loadList('users')).map(user => ({
@@ -58,14 +62,18 @@ export default {
             email: user.email,
             description: user.nickname,
             picture: user.image ? user.image.thumb : '',
-          }))
+          })).sort(function(a, b) {
+            return a.title.localeCompare(b.title);
+          })
           break;
         case 'collectors_groups':
           this.list = (await this.loadList('collectors_groups')).map(collectors_group => ({
             id: collectors_group._id,
             title: collectors_group.name,
             description: this.formatCity(collectors_group.address)
-          }))
+          })).sort(function(a, b) {
+            return a.title.localeCompare(b.title);
+          })
           break;
         case 'collectors':
           this.list = (await this.loadList('collectors')).map(collector => ({
@@ -73,7 +81,9 @@ export default {
             title: collector.name,
             description: collector.nickname,
             picture: collector.image ? collector.image.thumb : '',
-          }))
+          })).sort(function(a, b) {
+            return a.title.localeCompare(b.title);
+          })
           break;
         case 'clients':
           this.list = (await this.loadList('clients')).map(client => ({
@@ -81,14 +91,18 @@ export default {
             title: client.name,
             description: client.nickname,
             picture: client.image ? client.image.thumb : '',
-          }))
+          })).sort(function(a, b) {
+            return a.title.localeCompare(b.title);
+          })
           break;
         case 'seeds_houses':
           this.list = (await this.loadList('seeds_houses')).map(seeds_house => ({
             id: seeds_house._id,
             title: seeds_house.name,
             description: this.formatCity(seeds_house.address)
-          }))
+          })).sort(function(a, b) {
+            return a.title.localeCompare(b.title);
+          })
           break;
       }
     }

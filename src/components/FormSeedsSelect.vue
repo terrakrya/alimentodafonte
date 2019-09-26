@@ -2,7 +2,7 @@
   <div>
     <div class="seeds-select">
       <b-form-group label="Adicionar semente">
-        <cool-select v-if="seeds" v-model="item_form.seed" :arrowsDisableInstantSelection="true" placeholder="Selecione a semente" :items="seeds" item-text="name" item-value="_id" class="col-sm-6" @keypress.13.prevent="addItem">
+        <cool-select :scrollItemsLimit="10000" :scrollItemsLimitAddAfterScroll="10000" v-if="seeds" v-model="item_form.seed" :arrowsDisableInstantSelection="true" placeholder="Selecione a semente" :items="seeds" item-text="name" item-value="_id" class="col-sm-6" @keypress.13.prevent="addItem">
           <template slot="item" slot-scope="{ item: option }">
             <div style="display: flex; align-items: center;">
               <img v-if="option.images && option.images.length" :src="baseUrl + option.images[0].thumb">
@@ -135,7 +135,9 @@ export default {
       }
     },
     async list () {
-      this.seeds = (await this.loadList('seeds'))
+      this.seeds = (await this.loadList('seeds')).sort(function(a, b) {
+        return a.name.localeCompare(b.name);
+      })
     },
     removeItem (index) {
       this.form[this.field] = this.form[this.field].filter((item, i) => i != index)
