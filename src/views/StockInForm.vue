@@ -240,7 +240,7 @@ export default {
           }
 
           let seed_items = collectors_requests.map(collectors_request => collectors_request.seed_items.find(seed_item => (seed_item.seed._id == this.form.seed)))
-          let collectors_request_total = parseFloat(seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b))
+          let collectors_request_total = parseFloat(seed_items.map(seed_item => this.sumQtd(seed_item.qtd)).reduce((a, b) => a + b))
 
           this.max_qtd = collectors_request_total - stock_ins_total
 
