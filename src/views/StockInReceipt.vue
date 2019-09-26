@@ -63,6 +63,11 @@
       </tr>
 
     </table>
+		<div class="signature">
+			<p v-if="stock_in.collector">{{stock_in.collector.name}}<br></p>
+			<p v-if="stock_in.collectors_group">{{stock_in.collectors_group.name}}<br></p>
+		</div>
+
   </div>
 </div>
 </template>
