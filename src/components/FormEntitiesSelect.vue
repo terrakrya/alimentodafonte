@@ -1,6 +1,6 @@
 <template>
 <div>
-  <cool-select :arrowsDisableInstantSelection="true" placeholder="Busque pelo nome clique para adicionar à lista" v-model="entity" :items="list" item-text="title" @select="addItem()">
+  <cool-select :scrollItemsLimit="10000" :scrollItemsLimitAddAfterScroll="10000" :arrowsDisableInstantSelection="true" placeholder="Busque pelo nome clique para adicionar à lista" v-model="entity" :items="list" item-text="title" @select="addItem()">
     <template slot="item" slot-scope="{ item: option }">
       <div style="display: flex; align-items: center;">
         <img v-if="option.picture" :src="baseUrl + option.picture">
@@ -48,7 +48,9 @@ export default {
   },
   async created() {
     if (this.items) {
-      this.list = this.items
+      this.list = this.items.sort(function(a, b) {
+        return a.title.localeCompare(b.title);
+      })
     } else {
       switch (this.type) {
         case 'seeds':
@@ -57,7 +59,9 @@ export default {
             title: seed.name,
             description: seed.scientific_name,
             picture: seed.images && seed.images.length ? seed.images[0].thumb : '',
-          }))
+          })).sort(function(a, b) {
+            return a.title.localeCompare(b.title);
+          })
           break;
         case 'collectors':
           this.list = (await this.loadList('collectors')).map(collector => ({
@@ -65,14 +69,18 @@ export default {
             title: collector.name,
             description: collector.nickname,
             picture: collector.image ? collector.image.thumb : '',
-          }))
+          })).sort(function(a, b) {
+            return a.title.localeCompare(b.title);
+          })
           break;
         case 'collectors_groups':
           this.list = (await this.loadList('collectors_groups')).map(collectors_group => ({
             id: collectors_group._id,
             title: collectors_group.name,
             description: this.formatCity(collectors_group.address)
-          }))
+          })).sort(function(a, b) {
+            return a.title.localeCompare(b.title);
+          })
           break;
       }
     }
