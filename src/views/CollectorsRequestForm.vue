@@ -237,19 +237,21 @@ export default {
           return false
         }
 
-        axios.get('collectors_groups/' + this.form.collectors_group, {
-          params: {
-            populate: 'collectors'
-          }
-        }).then(response => {
-          this.collectors = response.data.collectors.map(collector => {
-            return {
-              id: collector._id,
-              title: collector.name,
-              description: collector.nickname,
+        if (this.form.collectors_group) {
+          axios.get('collectors_groups/' + this.form.collectors_group, {
+            params: {
+              populate: 'collectors'
             }
-          })
-        }).catch(this.showError)
+          }).then(response => {
+            this.collectors = response.data.collectors.map(collector => {
+              return {
+                id: collector._id,
+                title: collector.name,
+                description: collector.nickname,
+              }
+            })
+          }).catch(this.showError)
+        }
       }
     },
     filterGroupCollector(list) {

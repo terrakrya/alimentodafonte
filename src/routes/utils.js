@@ -40,7 +40,7 @@ module.exports = {
     }
   },
   fixQtdToNumber(obj) {
-    obj.seed_items = collectors_request.seed_items.map(seed_item => {
+    obj.seed_items = obj.seed_items.map(seed_item => {
       if (typeof seed_item.qtd == 'string') {
         seed_item.qtd = parseFloat(seed_item.qtd)
       }
