@@ -56,11 +56,12 @@
               </a>
             </template>
             <template slot="qtd" slot-scope="data">
-              {{data.item.seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b).toFixed(2)}} kg
+              {{calcQtd(data.item.seed_items)}} kg
             </template>
             <template slot="compensation_collect" slot-scope="data">
-              {{data.item.seed_items.map(seed_item => seed_item.qtd * seed_item.compensation_collect).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}
+              {{calcCompensationCollect(data.item.seed_items) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
             </template>
+
             <template slot="actions" slot-scope="data">
               <router-link :to="'/editar-lista-de-potencial/'+ data.item._id" class="fa fa-edit btn btn-primary btn-xs "></router-link>
               <a @click="remove(data.item._id)" class="fa fa-trash btn btn-danger btn-xs"></a>
@@ -195,14 +196,8 @@ export default {
         this.total_qtd = 0
         this.total_compensation_collect = 0
         filteredItems.map(item => {
-          item.seed_items.map(seed_item => {
-            if (seed_item.compensation_collect) {
-              this.total_compensation_collect += parseFloat(seed_item.compensation_collect) * parseFloat(seed_item.qtd)
-            }
-            if (seed_item.qtd) {
-              this.total_qtd += parseFloat(seed_item.qtd)
-            }
-          })
+          this.total_qtd += this.calcQtd(item.seed_items)
+          this.total_compensation_collect += this.calcCompensationCollect(item.seed_items)
         })
       }
     },
@@ -228,6 +223,26 @@ export default {
         this.filters[filter] = null
       })
       this.applyFilters()
+    },
+    calcQtd(seed_items) {
+      seed_items = this.seedItemsBySeed(seed_items)
+      if (seed_items && seed_items.length) {
+        return seed_items.map(seed_item => this.sumQtd(seed_item.qtd)).reduce((a, b) => a + b)
+      }
+      return 0
+    },
+    calcCompensationCollect(seed_items) {
+      seed_items = this.seedItemsBySeed(seed_items)
+      if (seed_items && seed_items.length) {
+        return seed_items.map(seed_item => seed_item.compensation_collect * this.sumQtd(seed_item.qtd)).reduce((a, b) => a + b)
+      }
+      return 0
+    },
+    seedItemsBySeed(seed_items) {
+      if (this.filters['seed']) {
+        return seed_items.filter(seed_item => (seed_item.seed == this.filters['seed']))
+      }
+      return seed_items
     }
   },
   watch: {
