@@ -12,9 +12,9 @@
                 <div class="weekly-summary text-center">
                   <router-link to="/coletas">
                     <span class="info-label">Coletas</span>
-                    <span class="number">{{ total_collection_weight_gross.toFixed(2) }} kg</span>
+                    <span class="number">{{ total_collection_weight_gross | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }} kg</span>
                     <br>
-                    <span>{{ total_collection_weight_benef.toFixed(2) }} kg beneficiado</span>
+                    <span>{{ total_collection_weight_benef | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }} kg beneficiado</span>
                     <br>
                     <small>{{ total_collection_species }} espécies</small>
                   </router-link>
@@ -24,7 +24,7 @@
                 <div class="weekly-summary text-center">
                   <router-link to="/pedidos-do-coletor">
                     <span class="info-label">Pedidos</span>
-                    <span class="number">{{ total_collectors_request_qtd.toFixed(2) }} kg</span>
+                    <span class="number">{{ total_collectors_request_qtd | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }} kg</span>
                     <br>
                     <span>{{ total_collectors_request | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
                     <br>
@@ -36,7 +36,7 @@
                 <div class="weekly-summary text-center">
                   <router-link to="/entregas-do-coletor">
                     <span class="info-label">Entregas</span>
-                    <span class="number">{{ total_stock_in_qtd.toFixed(2) }} kg</span>
+                    <span class="number">{{ total_stock_in_qtd | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }} kg</span>
                     <br>
                     <span>{{ total_stock_in | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
                     <br>

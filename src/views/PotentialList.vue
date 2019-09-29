@@ -26,7 +26,7 @@
 						<div class="col-sm-3">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Quantidade</span>
-								<span class="number">{{ potential_list.seed_items.map(item => item.qtd).reduce((a, b) => a + b).toFixed(2) }} Kg</span>
+								<span class="number">{{ potential_list.seed_items.map(item => item.qtd).reduce((a, b) => a + b) | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }} Kg</span>
 							</div>
 						</div>
 						<div class="col-sm-3">

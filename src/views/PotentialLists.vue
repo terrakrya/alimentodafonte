@@ -71,7 +71,7 @@
               <td />
               <td />
               <td><strong> Total</strong></td>
-              <td><strong>{{total_qtd.toFixed(2)}} Kg</strong></td>
+              <td><strong>{{total_qtd | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}} Kg</strong></td>
               <td><strong>{{total_compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</strong></td>
               <td />
             </template>
