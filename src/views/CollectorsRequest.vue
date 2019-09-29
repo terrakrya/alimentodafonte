@@ -46,8 +46,8 @@
               <thead>
                 <tr>
                   <th>Espécie</th>
-                  <th>Quantidade</th>
                   <th>Remuneração / Kg</th>
+                  <th>Quantidade</th>
                   <th>Total</th>
                   <th></th>
                 </tr>
@@ -58,21 +58,21 @@
                     <router-link :to="'/semente/'+seed_item.seed._id">{{seed_item.seed.name}}</router-link>
                   </td>
                   <td>
+                    <span>{{(seed_item.compensation_collect) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</span>
+                  </td>
+                  <td>
                     <span v-if="typeof seed_item.qtd == 'object'">
-                      <p v-for="(qtd, i) in seed_item.qtd" :key="i"><span v-if="qtd.collector">{{collectors.find(collector => collector._id == qtd.collector).name}}:</span> {{parseFloat(qtd.qtd).toFixed(2)}} kg</p>
-                      <p><strong>Total: {{sumQtd(seed_item.qtd).toFixed(2)}} kg</strong></p>
+                      <p v-for="(qtd, i) in seed_item.qtd" :key="i"><small v-if="qtd.collector">{{collectors.find(collector => collector._id == qtd.collector).name}}:</small> {{parseFloat(qtd.qtd).toFixed(2)}} kg</p>
+                      <p><span>Total: {{sumQtd(seed_item.qtd).toFixed(2)}} kg</span></p>
                     </span>
                     <span v-else>{{sumQtd(seed_item.qtd).toFixed(2)}} kg</span>
-
                   </td>
                   <td>
                     <span v-if="typeof seed_item.qtd == 'object'">
-                      <p v-for="(qtd, i) in seed_item.qtd" :key="i"><span v-if="qtd.collector">{{collectors.find(collector => collector._id == qtd.collector).name}}:</span> {{(seed_item.compensation_collect * parseFloat(qtd.qtd)) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</p>
+                      <p v-for="(qtd, i) in seed_item.qtd" :key="i"><small v-if="qtd.collector">{{collectors.find(collector => collector._id == qtd.collector).name}}:</small> {{(seed_item.compensation_collect * parseFloat(qtd.qtd)) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</p>
+                      <p><span>Total: {{(sumQtd(seed_item.qtd) * seed_item.compensation_collect) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</span></p>
                     </span>
                     <span v-else>{{(seed_item.compensation_collect * sumQtd(seed_item.qtd)) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</span>
-                  </td>
-                  <td>
-                    {{seed_item.compensation_collect * sumQtd(seed_item.qtd) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
                   </td>
                 </tr>
               </tbody>
