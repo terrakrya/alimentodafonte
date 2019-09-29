@@ -54,13 +54,13 @@
                 <tr class="b-table-bottom-row" v-if="form.seed_items && form.seed_items.length">
                   <td></td>
                   <td>
-                    <strong>{{potential_seeds.map(i => parseFloat(i.potential)).reduce((a, b) => a + b).toFixed(2)}} kg</strong>
+                    <strong>{{potential_seeds.map(i => parseFloat(i.potential)).reduce((a, b) => a + b) | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}} kg</strong>
                   </td>
                   <td>
-                    <strong>{{potential_seeds.map(i => parseFloat(i.requested)).reduce((a, b) => a + b).toFixed(2)}} kg</strong>
+                    <strong>{{potential_seeds.map(i => parseFloat(i.requested)).reduce((a, b) => a + b) | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}} kg</strong>
                   </td>
                   <td>
-                    <strong>{{form.seed_items.map(i => parseFloat(sumQtd(i.qtd))).reduce((a, b) => a + b).toFixed(2)}} kg</strong>
+                    <strong>{{form.seed_items.map(i => parseFloat(sumQtd(i.qtd))).reduce((a, b) => a + b) | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}} kg</strong>
                   </td>
                   <td></td>
                 </tr>

@@ -54,7 +54,7 @@
               </a>
             </template>
             <template slot="qtd" slot-scope="data">
-              {{calcQtd(data.item.seed_items).toFixed(2)}} kg
+              {{calcQtd(data.item.seed_items) | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}} kg
             </template>
             <template slot="compensation_collect" slot-scope="data">
               {{calcCompensationCollect(data.item.seed_items) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
@@ -67,7 +67,7 @@
             <template slot="bottom-row" slot-scope="data">
               <td />
               <td><strong> Total</strong></td>
-              <td><strong>{{total_qtd.toFixed(2)}} Kg</strong></td>
+              <td><strong>{{total_qtd | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}} Kg</strong></td>
               <td><strong>{{total_compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</strong></td>
               <td />
             </template>
