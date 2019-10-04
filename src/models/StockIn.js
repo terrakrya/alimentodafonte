@@ -1,22 +1,8 @@
 const mongoose = require('mongoose'),
-  ObjectId = mongoose.Schema.Types.ObjectId;
+  ObjectId = mongoose.Schema.Types.ObjectId,
+  StockItemSchema = require('./StockItem');
 
 const StockInSchema = mongoose.Schema({
-  price: {
-    type: Number
-  },
-  compensation_collect: {
-    type: Number,
-    required: true
-  },
-  wholesale_price: {
-    type: Number
-  },
-  qtd: {
-    type: Number,
-    required: true
-  },
-  collection_date: Date,
   seeds_house: {
     type: ObjectId,
     ref: 'SeedsHouse',
@@ -30,16 +16,7 @@ const StockInSchema = mongoose.Schema({
     type: ObjectId,
     ref: 'User'
   },
-  seed: {
-    type: ObjectId,
-    ref: 'Seed',
-    required: true
-  },
-  lot: {
-    type: ObjectId,
-    ref: 'Lot',
-    required: true
-  },
+  stock_items: [StockItemSchema],
   createdBy: {
     type: ObjectId,
     ref: 'User'
