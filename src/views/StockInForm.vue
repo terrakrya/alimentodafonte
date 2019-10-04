@@ -10,52 +10,30 @@
       <loading :loading="isLoading" />
       <b-form @submit.prevent="save" v-if="!isLoading">
         <div class="row">
-          <div class="col-sm-6">
+          <div class="col-sm-12">
             <b-form-group label="Casa de sementes *">
               <form-entity-select :input="seedsHouseSelected" type="seeds_houses" :form="form" field="seeds_house" :validate="'required'" />
             </b-form-group>
           </div>
-          <div class="col-sm-6">
+          <!-- <div class="col-sm-6">
             <b-form-group label="Semente *">
               <form-entity-select :input="seedSelected" type="seeds" :form="form" field="seed" :validate="'required'" />
             </b-form-group>
-          </div>
+          </div> -->
+
         </div>
-        <form-group-collector :form="form" />
+        <form-group-collector :form="form" v-if="this.form.seeds_house" />
         <div class="row">
-          <div class="col-sm-4">
-            <b-form-group label="Lote *" v-if="lot_filtered_options.length && !add_new_lot">
-              <form-entity-select :items="lot_filtered_options" :form="form" field="lot" :validate="'required'" />
-              <a @click="newLot" class="pull-right pointer">Adicionar novo lote</a>
-            </b-form-group>
-            <b-form-group label="Novo lote *" v-if="!lot_filtered_options.length || add_new_lot" description="IMPORTANTE: o nome do lote deve conter, na seguinte ordem: sigla da Casa de Sementes (como CAN ou NX) em que está sendo dada a entrada; 3 a 24 letras do nome popular (como jat-mat OU mirindibinha-mat-do-valdo); Ano de coleta (2019); venda Livre (L) ou venda Restrita (R) à finalidade de restauração ecológica.">
-              <b-form-input v-model="new_lot" v-validate="'required'" name="new_lot" />
-              <field-error :msg="veeErrors" field="new_lot" />
-            </b-form-group>
-          </div>
-          <div class="col-sm-4">
-            <b-form-group label="Quantidade (Kg) *">
-              <b-form-input v-model="form.qtd" type="number" step="0.01" lang="nb" min="0" :max="max_qtd" v-validate="'required'" name="qtd" />
-              <field-error :msg="veeErrors" field="qtd" />
-              <small class="text-muted" v-if="max_qtd > 0">Máximo {{max_qtd}} kg</small>
-              <span class="text-danger" v-if="max_qtd == 0">Não existem pedidos pendentes para esta casa/semente</span>
-            </b-form-group>
-          </div>
-          <div class="col-sm-4">
-            <b-form-group label="Data da coleta">
-              <b-form-input v-model="form.collection_date" type="date" />
-            </b-form-group>
+          <div class="col-sm-12">
+            <form-stock-item :form="form" field="stock_items" />
           </div>
         </div>
-        <div class="row" v-if="qtd_error">
-          <div class="col-sm-12 text-center">
-            <b-alert variant="danger" show v-html="qtd_error"></b-alert>
-          </div>
-        </div>
-        <form-submit :errors="error" :sending="isSending" />
+        <form-submit :errors="error" :sending="isSending" v-if="this.form.seeds_house && this.form.stock_items && this.form.stock_items.length" />
       </b-form>
     </div>
   </div>
+  <pre>{{seeds_house_name}}</pre>
+  <pre>{{form}}</pre>
 </div>
 </template>
 
@@ -65,6 +43,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Loading from '@/components/Loading'
 import FormEntitySelect from '@/components/FormEntitySelect'
 import FormGroupCollector from '@/components/FormGroupCollector'
+import FormStockItem from '@/components/FormStockItem'
 import FormSubmit from '@/components/FormSubmit'
 import FieldError from '@/components/FieldError'
 import utils from '@/views/utils'
@@ -76,14 +55,11 @@ export default {
   data() {
 
     return {
-      qtd_error: null,
+
       lot_filtered_options: [],
       new_lot: null,
       add_new_lot: false,
       price: null,
-      collectors_requests: [],
-      stock_ins: [],
-      lots: [],
       seed_name: '',
       seeds_house_name: '',
       max_qtd: null,
@@ -92,30 +68,16 @@ export default {
         qtd: 0,
         collection_date: "",
         seeds_house: null,
-        collectors_group: null,
+        collectors_group: '5d6927111ba0621391fcb086',
         collector: null,
         seed: null,
-        lot: null,
+        stock_items: [],
         createdBy: this.$store.state.currentUser._id
       }
     }
   },
   created() {
-    axios.get('collectors_requests', {
-      params: {
-        populate: 'seed_items.seed'
-      }
-    }).then(response => {
-      this.collectors_requests = response.data
-    }).catch(this.showError)
 
-    axios.get('stock_in').then(response => {
-      this.stock_ins = response.data
-    }).catch(this.showError)
-
-    axios.get('lots').then(response => {
-      this.lots = response.data
-    }).catch(this.showError)
 
   },
   methods: {
@@ -170,96 +132,13 @@ export default {
         this.isSending = false
       }).catch(this.showError)
     },
-    seedSelected(seed) {
-      if (seed) {
-        this.price = seed.compensation_collect
-        this.seed_name = seed.title
-      }
-      this.filterOptions()
-    },
     seedsHouseSelected(seeds_house) {
+      console.log('seedsHouseSelected');
       if (seeds_house) {
         this.seeds_house_name = seeds_house.title
       }
-      this.filterOptions()
-    },
-    newLot() {
-      this.add_new_lot = true
-      this.form.lot = null
-      this.new_lot = utils.generateCode([this.seeds_house_name, this.seed_name])
-    },
-    filterOptions() {
-      this.validateQty()
-      this.add_new_lot = false
-      if (this.form.seed && this.form.seeds_house) {
-        this.lot_filtered_options = this.lots.filter(lot => {
-          return lot.seed == this.form.seed && lot.seeds_house == this.form.seeds_house
-        }).map(lot => ({
-          id: lot._id,
-          title: lot.code
-        }))
-        if (!this.lot_filtered_options.length) {
-          this.new_lot = utils.generateCode([this.seeds_house_name, this.seed_name])
-        }
-        this.form.lot = null
-      }
-    },
-    validateQty() {
-      this.max_qtd = null
-      this.qtd_error = ''
-      this.error = null
-      if ((this.form.collectors_group || this.form.collector) && this.form.seed && this.collectors_requests) {
-        let collectors_requests = this.collectors_requests.filter(cr => {
-          let collector = this.form.collector
-          let group = this.form.collectors_group
-          return (
-            (
-              (collector && cr.collector && cr.collector == collector) ||
-              (group && cr.collectors_group && cr.collectors_group == group)
-            ) &&
-            cr.seed_items && cr.seed_items.find(s => (s.seed._id == this.form.seed))
-          )
-        })
-        if (collectors_requests && collectors_requests.length) {
-
-          let stock_ins = this.stock_ins.filter(stock_in => {
-            let collector = this.form.collector
-            let group = this.form.collectors_group
-            return (
-              (
-                (collector && stock_in.collector && stock_in.collector == collector) ||
-                (group && stock_in.collectors_group && stock_in.collectors_group == group)
-              ) &&
-              stock_in.seed == this.form.seed && stock_in.seeds_house == this.form.seeds_house
-            )
-          }).map(stock_in => stock_in.qtd)
-
-          let stock_ins_total = 0
-          if (stock_ins.length) {
-            stock_ins_total = parseFloat(stock_ins.reduce((a, b) => a + b))
-          }
-
-          let seed_items = collectors_requests.map(collectors_request => collectors_request.seed_items.find(seed_item => (seed_item.seed._id == this.form.seed)))
-          let collectors_request_total = parseFloat(seed_items.map(seed_item => this.sumQtd(seed_item.qtd)).reduce((a, b) => a + b))
-
-          this.max_qtd = collectors_request_total - stock_ins_total
-
-          if (this.max_qtd < parseFloat(this.form.qtd)) {
-            this.qtd_error = 'Quantidade ' + this.form.qtd + ' kg maior que a solicitada nos pedidos: ' + this.max_qtd + ' kg'
-            return false
-          } else {
-            return true
-          }
-        } else {
-          this.qtd_error = 'Não existe registro de pedido dessa semente para este coletor/grupo'
-          return false
-        }
-      } else {
-        if (!this.form.collectors_group && !this.form.collector) {
-          this.error = 'Selecione um grupo ou coletor'
-        }
-        return false
-      }
+      // TODO limpar tudo quando mudar a casa de sementes
+      // this.filterOptions()
     }
   },
   watch: {
@@ -275,6 +154,7 @@ export default {
     Loading,
     FormEntitySelect,
     FormGroupCollector,
+    FormStockItem,
     FormSubmit,
     FieldError,
   }
