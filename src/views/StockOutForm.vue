@@ -108,7 +108,7 @@ export default {
     max_lot () {
       if (this.lots && this.form.lot) {
         var lot = this.lots.find(lot => { return lot._id == this.form.lot })
-        var stock_ins_total = lot.stock_ins.map(stock_in => stock_in.qtd)
+        var stock_ins_total = lot.stock_ins.map(stock_in => this.sumArray(stock_in.stock_items, 'qtd'))
         var stock_outs_total = lot.stock_outs.map(stock_out => stock_out.qtd)
         if (stock_ins_total.length > 0) {
           if (stock_outs_total.length > 0) {

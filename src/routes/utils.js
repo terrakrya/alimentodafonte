@@ -46,5 +46,18 @@ module.exports = {
       }
       return seed_item
     })
+  },
+  sumArray(arr, prop, prop_to_multiply) {
+    var values = []
+    if (prop_to_multiply != null) {
+      values = arr.map(item => parseFloat(item[prop] * item[prop_to_multiply] || 0))
+    } else {
+      values = arr.map(item => parseFloat(item[prop] || 0))
+    }
+    if (values && values.length) {
+      return values.reduce((a, b) => a + b)
+    } else {
+      return 0
+    }
   }
 }

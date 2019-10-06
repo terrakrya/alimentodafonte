@@ -16,14 +16,17 @@
             <template slot="seeds_house.name" slot-scope="data">
               {{data.value}}
             </template>
-            <template slot="seed.name" slot-scope="data">
-              {{data.value}}
+            <template slot="seed" slot-scope="data">
+              <p v-for="(stock_item, index) in data.item.stock_items" :key="index">
+                {{stock_item.seed.name}} <br> <small v-if="data.item.stock_items.length > 1">{{stock_item.qtd | kg}} / {{(stock_item.qtd * stock_item.compensation_collect) | moeda}}</small> 
+              </p>
+
             </template>
             <template slot="qtd" slot-scope="data">
-              {{data.value| kg}}
+              {{sumArray(data.item.stock_items, 'qtd') | kg}}
             </template>
             <template slot="compensation_collect" slot-scope="data">
-							{{data.value * data.item.qtd | moeda }}
+							{{sumArray(data.item.stock_items, 'qtd', 'compensation_collect') | moeda }}
             </template>
             <!-- eslint-disable-next-line -->
             <template slot="bottom-row" slot-scope="data">
@@ -67,7 +70,7 @@ export default {
           sortable: true
         },
         {
-          key: 'seed.name',
+          key: 'seed',
           label: 'Semente',
           sortable: true
         },
@@ -78,7 +81,7 @@ export default {
         },
         {
           key: 'compensation_collect',
-          label: 'Remuneração total',
+          label: 'Remuneração',
           sortable: true
         }
       ]
@@ -90,12 +93,12 @@ export default {
   computed: {
     total_qtd() {
       return this.stock_ins.map(stock_in => {
-        return stock_in.qtd
+        return this.sumArray(stock_in.stock_items, 'qtd')
       }).reduce((a, b) => a + b)
     },
     total_compensation_collect() {
       return this.stock_ins.map(stock_in => {
-        return stock_in.compensation_collect * stock_in.qtd
+        return this.sumArray(stock_in.stock_items, 'qtd', 'compensation_collect')
       }).reduce((a, b) => a + b)
     }
   },
@@ -103,7 +106,7 @@ export default {
 		list() {
       axios.get('collector/stock_ins', {
         params: {
-          populate: 'seeds_house seed'
+          populate: 'seeds_house stock_items.seed'
         }
       }).then(response => {
         this.stock_ins = response.data

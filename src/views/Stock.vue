@@ -98,13 +98,15 @@
 										</a>
 									</template>
 									<template slot="qtd" slot-scope="data">
-										{{sumArray(data.item.stock_items, 'qtd') | kg}}
+										<span v-if="data.item.type == 'stock_in'">{{sumArray(data.item.stock_items, 'qtd') | kg}}</span>
+										<span v-else>{{data.item.qtd | kg}}</span>
 									</template>
 									<template slot="compensation_collect" slot-scope="data">
-										{{sumArray(data.item.stock_items, 'qtd', 'compensation_collect') | moeda}}
+										<span v-if="data.item.type == 'stock_in'">{{sumArray(data.item.stock_items, 'qtd', 'compensation_collect') | moeda}}</span>
+										<span v-else>{{(data.item.qtd * data.item.price) | kg}}</span>
 									</template>
 									<template slot="_id" slot-scope="data">
-										<router-link :to="'/recibo/'+ data.value" target="_blank">
+										<router-link  v-if="data.item.type == 'stock_in'" :to="'/recibo/'+ data.value" target="_blank">
 											<i class="fa fa-print"></i>
 										</router-link>
 									</template>
@@ -138,7 +140,7 @@
 										{{data.value}}
 									</template>
 									<template slot="stock" slot-scope="data">
-										<span v-if="data.item.stock" :class="{'text-danger': data.item.stock < 1}">{{data.item.stock | kg}}</span>
+										<span v-if="data.item.stock" :class="{'text-danger': data.item.stock <= 0}">{{data.item.stock | kg}}</span>
 									</template>
 									<!-- eslint-disable-next-line -->
 									<template slot="bottom-row" slot-scope="data">
@@ -327,8 +329,6 @@ export default {
 			Object.keys(this.filters).map((filter) => {
 				this.filters[filter] = null
 			})
-			console.log('this.stock');
-			console.log(this.stock);
 			this.filtered_stock = JSON.parse(JSON.stringify(this.stock))
 		},
 		getUnique(arr){

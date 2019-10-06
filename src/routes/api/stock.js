@@ -2,6 +2,7 @@ var express = require('express'),
   mongoose = require('mongoose'),
   router = express.Router(),
   auth = require('../auth'),
+  utils = require('../utils'),
   Seed = mongoose.model('Seed'),
   StockIn = mongoose.model('StockIn'),
   StockOut = mongoose.model('StockOut');
@@ -29,8 +30,6 @@ router.get('/fix_stock_items', auth.manager, function(req, res) {
     } else {
       stock_ins.forEach(stock_in => {
         if (!stock_in.stock_items.length && stock_in.seed) {
-          console.log('aaaaaa');
-          console.log(stock_in);
           stock_in.stock_items.push({
             seed: stock_in.seed,
             lot: stock_in.lot,
@@ -54,17 +53,20 @@ router.post('/', auth.manager, function(req, res) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
     } else {
-      Seed.findOne({
-        _id: stock_in.seed
-      }).exec(function(err, seed) {
-        if (err) {
-          res.status(422).send('Ocorreu um erro ao salvar o item: ' + err.message);
-        } else {
-          seed.stock += stock_in.qtd
-          seed.save()
-          res.json(stock_in);
-        }
-      });
+      stock_in.stock_items.forEach(stock_item => {
+        Seed.findOne({
+          _id: stock_item.seed
+        }).exec(function(err, seed) {
+          if (err) {
+            res.status(422).send('Ocorreu um erro ao salvar o item: ' + err.message);
+          } else {
+            seed.stock += stock_item.qtd
+            seed.save()
+            res.json(stock_in);
+          }
+        });
+
+      })
     }
   });
 });

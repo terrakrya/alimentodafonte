@@ -108,7 +108,6 @@ export default {
       }).catch(this.showError)
     },
     seedsHouseSelected(seeds_house) {
-      console.log('seedsHouseSelected');
       if (seeds_house) {
         this.seeds_house_name = seeds_house.title
       }
