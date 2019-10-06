@@ -260,7 +260,6 @@ export default {
       }
     },
     seedSelected() {
-      console.log(this.item_form.seed);
       if (this.item_form.seed) {
         this.seed = this.seeds.find(seed => {
           return seed._id == this.item_form.seed
@@ -326,11 +325,7 @@ export default {
           let collectors_request_total = parseFloat(seed_items.map(seed_item => this.sumQtd(seed_item.qtd)).reduce((a, b) => a + b))
 
           this.max_qtd = collectors_request_total - stock_ins_total
-
-          console.log(collectors_request_total);
-          console.log(stock_ins_total);
-          console.log(this.max_qtd);
-
+          
           if (this.max_qtd < parseFloat(this.item_form.qtd)) {
             this.qtd_error = 'Quantidade ' + this.$options.filters.kg(this.item_form.qtd) + ' maior que a solicitada nos pedidos: ' + this.$options.filters.kg(this.max_qtd)
             return false

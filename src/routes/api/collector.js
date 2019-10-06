@@ -31,8 +31,8 @@ router.get('/requests', auth.collector, function(req, res) {
               var qtd_delivered = 0
               if (stock_ins && stock_ins.length) {
                 qtd_delivered = stock_ins.map(stock_in => {
-                  if (stock_in.seed.toString() == seed_id.toString()) {
-                    return stock_in.qtd
+                  if (stock_in.stock_items.find(stock_item => (stock_item.seed.toString() == seed_id.toString()))) {
+                    return utils.sumArray(stock_in.stock_items, 'qtd')
                   } else {
                     return 0
                   }

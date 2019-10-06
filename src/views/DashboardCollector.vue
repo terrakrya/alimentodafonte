@@ -106,7 +106,7 @@ export default {
     total_stock_in() {
       if (this.stock_ins) {
         var values = this.stock_ins.map(stock_in => {
-          return stock_in.qtd * stock_in.price
+          return this.sumArray(stock_in.stock_items, 'qtd', 'compensation_collect')
         })
         return values && values.length ? values.reduce((a, b) => a + b) : 0
       }
@@ -115,7 +115,7 @@ export default {
     total_stock_in_qtd() {
       if (this.stock_ins) {
         var values = this.stock_ins.map(stock_in => {
-          return stock_in.qtd
+          return this.sumArray(stock_in.stock_items, 'qtd')
         })
         return values && values.length ? values.reduce((a, b) => a + b) : 0
       }
@@ -125,9 +125,11 @@ export default {
       if (this.stock_ins) {
         var seeds = []
         this.stock_ins.forEach(stock_in => {
-          if (!seeds.includes(stock_in.seed)) {
-            seeds.push(stock_in.seed)
-          }
+          stock_in.stock_items.forEach(stock_item => {
+            if (!seeds.includes(stock_item.seed)) {
+              seeds.push(stock_item.seed)
+            }
+          })
         })
         return seeds.length
       }
