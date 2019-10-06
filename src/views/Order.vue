@@ -43,25 +43,25 @@
 						<div class="col-sm-3" v-if="order.seed_items && order.seed_items.length">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Quantidade</span>
-								<span class="number">{{ order.seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b) }} Kg</span>
+								<span class="number">{{ order.seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b) | kg}}</span>
 							</div>
 						</div>
 						<div class="col-sm-3" v-if="order.seed_items && order.seed_items.length">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Total {{order.purchase_type.toLowerCase()}}</span>
-								<span class="number">{{ order.seed_items.map(seed_item => seed_item.qtd * (order.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price)).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
+								<span class="number">{{ order.seed_items.map(seed_item => seed_item.qtd * (order.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price)).reduce((a, b) => a + b) | moeda }}</span>
 							</div>
 						</div>
 						<div class="col-sm-3" v-if="order.amount_paid >= 0">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Pago</span>
-								<span class="number">{{ order.amount_paid | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
+								<span class="number">{{ order.amount_paid | moeda }}</span>
 							</div>
 						</div>
 						<div class="col-sm-3" v-if="order.amount_remain >= 0">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Restante</span>
-								<span class="number">{{ order.amount_remain | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
+								<span class="number">{{ order.amount_remain | moeda }}</span>
 							</div>
 						</div>
 					</div>
@@ -83,13 +83,13 @@
 											<router-link :to="'/semente/'+seed_item.seed._id">{{seed_item.seed.name}}</router-link>
 										</td>
 										<td>
-											{{(order.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
+											{{(order.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price) | moeda}}
 										</td>
 										<td>
-											{{seed_item.qtd}} kg
+											{{seed_item.qtd| kg}}
 										</td>
 										<td>
-											{{(order.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price) * seed_item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
+											{{(order.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price) * seed_item.qtd | moeda}}
 										</td>
 									</tr>
 								</tbody>

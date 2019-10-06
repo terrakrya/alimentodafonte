@@ -20,7 +20,29 @@ const StockInSchema = mongoose.Schema({
   createdBy: {
     type: ObjectId,
     ref: 'User'
+  },
+  qtd: {
+    type: Number,
+  },
+  collection_date: Date,
+  price: {
+    type: Number
+  },
+  compensation_collect: {
+    type: Number,
+  },
+  wholesale_price: {
+    type: Number
+  },
+  seed: {
+    type: ObjectId,
+    ref: 'Seed',
+  },
+  lot: {
+    type: ObjectId,
+    ref: 'Lot',
   }
+
 }, {
   timestamps: true
 });

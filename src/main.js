@@ -34,6 +34,15 @@ Vue.use(moment);
 
 Validator.localize('pt_BR', ptBR)
 
+Vue.filter("moeda", value => {
+    return Vue.options.filters.currency(value, 'R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })
+});
+
+Vue.filter("kg", value => {
+    var kg = Vue.options.filters.currency(value, '', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) + ' Kg'
+    return kg.replace(',00', '')
+});
+
 Vue.mixin(mixin)
 
 new Vue({

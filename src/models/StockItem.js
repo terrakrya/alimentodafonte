@@ -7,6 +7,7 @@ var SeedItemSchema = new mongoose.Schema({
     required: true
   },
   collection_date: Date,
+  number_of_matrixes: Number,
   price: {
     type: Number
   },

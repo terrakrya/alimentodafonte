@@ -14,7 +14,7 @@
 								<router-link :to="'/semente/'+ data.item._id">{{data.item.name}}</router-link>
 							</template>
 							<template slot="compensation_collect" slot-scope="data">
-								{{data.item.compensation_collect | currency('R$ ', 2, { decimalSeparator: ',' })}}
+								{{data.item.compensation_collect | moeda}}
 							</template>
 							<template slot="actions" slot-scope="data">
 								<router-link :to="'/editar-semente/'+ data.item._id" class="fa fa-edit btn btn-primary btn-xs "></router-link>

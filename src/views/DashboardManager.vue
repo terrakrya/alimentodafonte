@@ -13,9 +13,9 @@
                   <div class="weekly-summary text-center">
                     <router-link to="/listas-de-potencial">
                       <span class="info-label">Potencial de coleta</span>
-                      <span class="number">{{ total_potential | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
+                      <span class="number">{{ total_potential | moeda }}</span>
                       <br>
-                      <span>{{ total_potential_qtd | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }} kg</span>
+                      <span>{{ total_potential_qtd | kg}}</span>
                       <br>
                       <small>{{ total_potential_species }} espécies</small>
                     </router-link>
@@ -25,9 +25,9 @@
                   <div class="weekly-summary text-center">
                     <router-link to="/pedidos-para-coletores">
                       <span class="info-label">Pedidos</span>
-                      <span class="number">{{ total_collectors_request | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
+                      <span class="number">{{ total_collectors_request | moeda }}</span>
                       <br>
-                      <span>{{ total_collectors_request_qtd | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }} kg</span>
+                      <span>{{ total_collectors_request_qtd | kg}}</span>
                       <br>
                       <small>{{ total_collectors_request_species }} espécies</small>
                     </router-link>
@@ -37,9 +37,9 @@
                   <div class="weekly-summary text-center">
                     <router-link to="/encomendas">
                       <span class="info-label">Encomendas</span>
-                      <span class="number">{{ total_order | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
+                      <span class="number">{{ total_order | moeda }}</span>
                       <br>
-                      <span>{{ total_order_qtd | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }} kg</span>
+                      <span>{{ total_order_qtd | kg}}</span>
                       <br>
                       <small>{{ total_order_species }} espécies</small>
                     </router-link>

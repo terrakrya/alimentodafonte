@@ -103,7 +103,21 @@ export default {
         return qtd.map(q => parseFloat(q.qtd || 0)).reduce((a, b) => a + b)
       }
       return qtd || 0
-    }
+    },
+    sumArray(arr, prop, prop_to_multiply) {
+      var values = []
+      if (prop_to_multiply != null) {
+        values = arr.map(item => parseFloat(item[prop] * item[prop_to_multiply] || 0))
+      } else {
+        values = arr.map(item => parseFloat(item[prop] || 0))
+      }
+      if (values && values.length) {
+        return values.reduce((a, b) => a + b)
+      } else {
+        return 0
+      }
+
+    },
   },
   filters: {
     cpf: function(value) {

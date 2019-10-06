@@ -26,25 +26,25 @@
 						<div class="col-sm-3">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Quantidade</span>
-								<span class="number">{{ potential_list.seed_items.map(item => item.qtd).reduce((a, b) => a + b) | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }} Kg</span>
+								<span class="number">{{ potential_list.seed_items.map(item => item.qtd).reduce((a, b) => a + b) | kg}}</span>
 							</div>
 						</div>
 						<div class="col-sm-3">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Remuneração</span>
-								<span class="number">{{ potential_list.seed_items.map(item => item.compensation_collect * item.qtd).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
+								<span class="number">{{ potential_list.seed_items.map(item => item.compensation_collect * item.qtd).reduce((a, b) => a + b) | moeda }}</span>
 							</div>
 						</div>
 						<div class="col-sm-3">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Potencial atacado</span>
-								<span class="number">{{ potential_list.seed_items.map(item => item.wholesale_price * item.qtd).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
+								<span class="number">{{ potential_list.seed_items.map(item => item.wholesale_price * item.qtd).reduce((a, b) => a + b) | moeda }}</span>
 							</div>
 						</div>
 						<div class="col-sm-3">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Potencial varejo</span>
-								<span class="number">{{ potential_list.seed_items.map(item => item.price * item.qtd).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
+								<span class="number">{{ potential_list.seed_items.map(item => item.price * item.qtd).reduce((a, b) => a + b) | moeda }}</span>
 							</div>
 						</div>
 					</div>
@@ -67,16 +67,16 @@
 											<router-link :to="'/semente/'+seed_item._id">{{seed_item.seed.name}}</router-link>
 										</td>
 										<td>
-											{{seed_item.qtd}} kg
+											{{seed_item.qtd| kg}}
 										</td>
 										<td>
-											{{seed_item.compensation_collect * seed_item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
+											{{seed_item.compensation_collect * seed_item.qtd | moeda}}
 										</td>
 										<td>
-											{{seed_item.wholesale_price * seed_item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
+											{{seed_item.wholesale_price * seed_item.qtd | moeda}}
 										</td>
 										<td>
-											{{seed_item.price * seed_item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
+											{{seed_item.price * seed_item.qtd | moeda}}
 										</td>
 									</tr>
 								</tbody>

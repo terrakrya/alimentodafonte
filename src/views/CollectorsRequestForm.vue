@@ -23,26 +23,26 @@
               <tbody>
                 <tr v-for="(potential_seed, index) in potential_seeds" :key="index">
                   <td>{{potential_seed.seed.name}}</td>
-                  <td>{{potential_seed.potential}} kg</td>
-                  <td>{{potential_seed.requested}} kg</td>
+                  <td>{{potential_seed.potential | kg}}</td>
+                  <td>{{potential_seed.requested | kg}}</td>
                   <td v-if="potential_seed.max > 0">
                     <div v-if="typeof potential_seeds[index].qtd == 'object'">
                       <div v-for="(qtd, i) in potential_seeds[index].qtd" :key="i">
                         <form-entity-select v-if="collectors && collectors.length" :items="collectors" :form="potential_seeds[index].qtd[i]" field="collector" placeholder="Coletor" />
                         <b-form-input @input="setSeedItems" v-model="potential_seeds[index].qtd[i].qtd" class="weight" type="number" step="0.01" lang="nb" min="0" :max="potential_seed.qtd - sumQtd(potential_seeds[index].qtd)"
                           style="width: 100px; display: inline" />
-                        <span> kg.</span> <small :class="sumQtd(potential_seeds[index].qtd) > potential_seed.max ? 'text-danger': 'text-gray'"> Máximo: {{potential_seed.max}} kg</small>
+                        <span> kg.</span> <small :class="sumQtd(potential_seeds[index].qtd) > potential_seed.max ? 'text-danger': 'text-gray'"> Máximo: {{potential_seed.max | kg}}</small>
                         <br>
                       </div>
-                      <small v-if="typeof potential_seeds[index].qtd == 'object' && potential_seeds[index].qtd.length > 1" :class="sumQtd(potential_seeds[index].qtd) > potential_seed.max ? 'text-danger': 'text-success'">Total: {{sumQtd(potential_seeds[index].qtd)}} kg</small>
+                      <small v-if="typeof potential_seeds[index].qtd == 'object' && potential_seeds[index].qtd.length > 1" :class="sumQtd(potential_seeds[index].qtd) > potential_seed.max ? 'text-danger': 'text-success'">Total: {{sumQtd(potential_seeds[index].qtd)| kg}}</small>
                       <br>
                       <a @click="addQtd(index)" v-if="!form.collector" class="btn btn-xs">Adicionar</a>
                       <br>
                     </div>
                     <div v-if="typeof potential_seeds[index].qtd != 'object'">
                       <b-form-input @input="setSeedItems" v-model="potential_seeds[index].qtd" class="weight" type="number" step="0.01" lang="nb" min="0" :max="potential_seed.qtd" style="width: 100px; display: inline" />
-                      <span> kg.</span> <small :class="sumQtd(potential_seeds[index].qtd) > potential_seed.max ? 'text-danger': 'text-gray'"> Máximo: {{potential_seed.max}} kg</small>
-                      <small v-if="typeof potential_seeds[index].qtd == 'object' && potential_seeds[index].qtd.length > 1" :class="sumQtd(potential_seeds[index].qtd) > potential_seed.max ? 'text-danger': 'text-success'">Total: {{sumQtd(potential_seeds[index].qtd)}} kg</small>
+                      <span> kg.</span> <small :class="sumQtd(potential_seeds[index].qtd) > potential_seed.max ? 'text-danger': 'text-gray'"> Máximo: {{potential_seed.max | kg}}</small>
+                      <small v-if="typeof potential_seeds[index].qtd == 'object' && potential_seeds[index].qtd.length > 1" :class="sumQtd(potential_seeds[index].qtd) > potential_seed.max ? 'text-danger': 'text-success'">Total: {{sumQtd(potential_seeds[index].qtd)| kg}}</small>
                       <br>
                       <a @click="splitQtd(index)" v-if="!form.collector && collectors && collectors.length" class="btn btn-xs">Dividir pedido</a>
                     </div>
@@ -54,13 +54,13 @@
                 <tr class="b-table-bottom-row" v-if="form.seed_items && form.seed_items.length">
                   <td></td>
                   <td>
-                    <strong>{{potential_seeds.map(i => parseFloat(i.potential)).reduce((a, b) => a + b) | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}} kg</strong>
+                    <strong>{{potential_seeds.map(i => parseFloat(i.potential)).reduce((a, b) => a + b) | kg}}</strong>
                   </td>
                   <td>
-                    <strong>{{potential_seeds.map(i => parseFloat(i.requested)).reduce((a, b) => a + b) | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}} kg</strong>
+                    <strong>{{potential_seeds.map(i => parseFloat(i.requested)).reduce((a, b) => a + b) | kg}}</strong>
                   </td>
                   <td>
-                    <strong>{{form.seed_items.map(i => parseFloat(sumQtd(i.qtd))).reduce((a, b) => a + b) | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}} kg</strong>
+                    <strong>{{form.seed_items.map(i => parseFloat(sumQtd(i.qtd))).reduce((a, b) => a + b) | kg}}</strong>
                   </td>
                   <td></td>
                 </tr>

@@ -29,13 +29,13 @@
           <div class="col-sm-6 col-md-3">
             <div class="weekly-summary text-center">
               <span class="info-label">Quantidade</span>
-              <span class="number">{{ collectors_request.seed_items.map(seed_item => sumQtd(seed_item.qtd)).reduce((a, b) => a + b) | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }} Kg</span>
+              <span class="number">{{ collectors_request.seed_items.map(seed_item => sumQtd(seed_item.qtd)).reduce((a, b) => a + b) | kg}}</span>
             </div>
           </div>
           <div class="col-sm-6 col-md-3">
             <div class="weekly-summary text-center">
               <span class="info-label">Remuneração total</span>
-              <span class="number">{{ collectors_request.seed_items.map(seed_item =>  seed_item.compensation_collect * sumQtd(seed_item.qtd)).reduce((a, b) => a + b) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
+              <span class="number">{{ collectors_request.seed_items.map(seed_item =>  seed_item.compensation_collect * sumQtd(seed_item.qtd)).reduce((a, b) => a + b) | moeda }}</span>
             </div>
           </div>
         </div>
@@ -58,21 +58,21 @@
                     <router-link :to="'/semente/'+seed_item.seed._id">{{seed_item.seed.name}}</router-link>
                   </td>
                   <td>
-                    <span>{{(seed_item.compensation_collect) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</span>
+                    <span>{{(seed_item.compensation_collect) | moeda}}</span>
                   </td>
                   <td>
                     <span v-if="typeof seed_item.qtd == 'object'">
-                      <p v-for="(qtd, i) in seed_item.qtd" :key="i"><small v-if="qtd.collector">{{collectors.find(collector => collector._id == qtd.collector).name}}:</small> {{parseFloat(qtd.qtd) | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}} kg</p>
-                      <p><span>Total: {{sumQtd(seed_item.qtd) | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}} kg</span></p>
+                      <p v-for="(qtd, i) in seed_item.qtd" :key="i"><small v-if="qtd.collector">{{collectors.find(collector => collector._id == qtd.collector).name}}:</small> {{parseFloat(qtd.qtd) | kg}}</p>
+                      <p><span>Total: {{sumQtd(seed_item.qtd) | kg}}</span></p>
                     </span>
-                    <span v-else>{{sumQtd(seed_item.qtd) | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}} kg</span>
+                    <span v-else>{{sumQtd(seed_item.qtd) | kg}}</span>
                   </td>
                   <td>
                     <span v-if="typeof seed_item.qtd == 'object'">
-                      <p v-for="(qtd, i) in seed_item.qtd" :key="i"><small v-if="qtd.collector">{{collectors.find(collector => collector._id == qtd.collector).name}}:</small> {{(seed_item.compensation_collect * parseFloat(qtd.qtd)) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</p>
-                      <p><span>Total: {{(sumQtd(seed_item.qtd) * seed_item.compensation_collect) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</span></p>
+                      <p v-for="(qtd, i) in seed_item.qtd" :key="i"><small v-if="qtd.collector">{{collectors.find(collector => collector._id == qtd.collector).name}}:</small> {{(seed_item.compensation_collect * parseFloat(qtd.qtd)) | moeda}}</p>
+                      <p><span>Total: {{(sumQtd(seed_item.qtd) * seed_item.compensation_collect) | moeda}}</span></p>
                     </span>
-                    <span v-else>{{(seed_item.compensation_collect * sumQtd(seed_item.qtd)) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</span>
+                    <span v-else>{{(seed_item.compensation_collect * sumQtd(seed_item.qtd)) | moeda}}</span>
                   </td>
                 </tr>
               </tbody>

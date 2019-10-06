@@ -30,7 +30,7 @@
             </template>
             <template slot="weight_gross" slot-scope="data">
               <span v-if="data.item.weight_gross">
-                {{data.item.weight_gross}} kg
+                {{data.item.weight_gross| kg}}
               </span>
             </template>
             <template slot="actions" slot-scope="data">
