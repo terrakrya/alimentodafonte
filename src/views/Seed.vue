@@ -26,19 +26,19 @@
           <div class="col-sm-6 col-md-3" v-if="seed.price">
             <div class="weekly-summary text-center">
               <span class="info-label">Preço</span>
-              <span class="number">{{ seed.price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
+              <span class="number">{{ seed.price | moeda }}</span>
             </div>
           </div>
           <div class="col-sm-6 col-md-3" v-if="seed.wholesale_price">
             <div class="weekly-summary text-center">
               <span class="info-label">Preço no atacado</span>
-              <span class="number">{{ seed.wholesale_price | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
+              <span class="number">{{ seed.wholesale_price | moeda }}</span>
             </div>
           </div>
           <div class="col-sm-6 col-md-3" v-if="seed.compensation_collect">
             <div class="weekly-summary text-center">
               <span class="info-label">Remuneração do coletor</span>
-              <span class="number">{{ seed.compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }) }}</span>
+              <span class="number">{{ seed.compensation_collect | moeda }}</span>
             </div>
           </div>
           <div class="col-sm-6 col-md-3" v-if="seed.stock">
@@ -72,7 +72,7 @@
                     </dl>
                     <dl>
                       <dt>Limite de peso por lote</dt>
-                      <dd>{{ seed.lot_limit }} kg por lote</dd>
+                      <dd>{{ seed.lot_limit | kg}} por lote</dd>
                     </dl>
                   </div>
                   <div class="col-sm-6">

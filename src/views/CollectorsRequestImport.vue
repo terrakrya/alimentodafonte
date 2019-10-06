@@ -39,7 +39,7 @@
                 <td>{{item.code}}</td>
                 <td>{{item.collectors_group}}</td>
                 <td>
-                  <p v-for="(seed_item, vindex) in item.seed_items" :key="vindex">{{seed_item.qtd}} kg - {{seed_item.seed.split(', ')[0]}}</p>
+                  <p v-for="(seed_item, vindex) in item.seed_items" :key="vindex">{{seed_item.qtd| kg}} - {{seed_item.seed.split(', ')[0]}}</p>
                 </td>
               </tr>
             </tbody>

@@ -14,24 +14,24 @@
               {{data.value.name}}
             </template>
             <template slot="qtd" slot-scope="data">
-              {{data.value | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}} kg
+              {{data.value | kg}}
             </template>
             <template slot="qtd_delivered" slot-scope="data">
-              {{data.value | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}} kg
+              {{data.value | kg}}
             </template>
             <template slot="qtd_remaining" slot-scope="data">
-              {{data.value | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}} kg
+              {{data.value | kg}}
             </template>
             <template slot="compensation_collect" slot-scope="data">
-							{{data.item.compensation_collect * data.item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
+							{{data.item.compensation_collect * data.item.qtd | moeda}}
             </template>
             <!-- eslint-disable-next-line -->
             <template slot="bottom-row" slot-scope="data">
               <td></td>
-              <td><strong>{{total_qtd | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}} kg</strong></td>
-              <td><strong>{{total_qtd_delivered | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}} kg</strong></td>
-              <td><strong>{{total_qtd_remaining | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}} kg</strong></td>
-              <td><strong>{{total_compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</strong></td>
+              <td><strong>{{total_qtd | kg}}</strong></td>
+              <td><strong>{{total_qtd_delivered | kg}}</strong></td>
+              <td><strong>{{total_qtd_remaining | kg}}</strong></td>
+              <td><strong>{{total_compensation_collect | moeda}}</strong></td>
             </template>
           </b-table>
         </div>

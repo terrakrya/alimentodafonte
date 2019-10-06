@@ -635,6 +635,7 @@ a, a:hover, a:focus
     padding: 0
   .details
     font-style: italic
+    font-size: 12px
   .noborder
     border: none
     td
@@ -1061,7 +1062,8 @@ form
 .stock-items
   button
     margin-top: 40px
-
+.inline
+  display: inline !important
 .stock, .collectors-requests
   table
     font-size: 14px
@@ -1162,6 +1164,12 @@ form
 .table > thead > tr > th
   border-bottom: 1px
 .receipt
+  .heading, .details
+    td
+      font-size: 13px
+      line-height: 16px
+  .total
+    font-weight: bold
   .signature
     border-top: 1px solid #000
     max-width: 300px

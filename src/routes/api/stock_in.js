@@ -18,26 +18,26 @@ router.get('/', auth.manager, function(req, res) {
 
 router.post('/', auth.manager, function(req, res) {
   var newStockIn = new StockIn(req.body);
-  Seed.findOne({
-    _id: newStockIn.seed
-  }).exec(function(err, seed) {
+  newStockIn.save(function(err, stock_in) {
     if (err) {
-      res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
+      res.status(422).send('Ocorreu um erro ao salvar o item: ' + err.message);
     } else {
-      newStockIn.price = seed.price
-      newStockIn.compensation_collect = seed.compensation_collect
-      newStockIn.wholesale_price = seed.wholesale_price
-      newStockIn.save(function(err, stock_in) {
-        if (err) {
-          res.status(422).send('Ocorreu um erro ao salvar o item: ' + err.message);
-        } else {
-          seed.stock += stock_in.qtd
-          seed.save()
-          res.json(stock_in);
-        }
-      });
+      stock_in.stock_items.forEach(stock_item => {
+        Seed.findOne({
+          _id: stock_item.seed
+        }).exec(function(err, seed) {
+          if (err) {
+            res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
+          } else {
+            seed.stock += stock_item.qtd
+            seed.save()
+          }
+        });
+      })
+      res.json(stock_in);
     }
   });
+
 });
 
 router.get('/:id', auth.manager, function(req, res) {

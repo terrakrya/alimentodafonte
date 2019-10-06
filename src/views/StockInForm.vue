@@ -15,12 +15,6 @@
               <form-entity-select :input="seedsHouseSelected" type="seeds_houses" :form="form" field="seeds_house" :validate="'required'" />
             </b-form-group>
           </div>
-          <!-- <div class="col-sm-6">
-            <b-form-group label="Semente *">
-              <form-entity-select :input="seedSelected" type="seeds" :form="form" field="seed" :validate="'required'" />
-            </b-form-group>
-          </div> -->
-
         </div>
         <form-group-collector :form="form" v-if="this.form.seeds_house" />
         <div class="row">
@@ -32,8 +26,6 @@
       </b-form>
     </div>
   </div>
-  <pre>{{seeds_house_name}}</pre>
-  <pre>{{form}}</pre>
 </div>
 </template>
 
@@ -55,28 +47,20 @@ export default {
   data() {
 
     return {
-
-      lot_filtered_options: [],
-      new_lot: null,
-      add_new_lot: false,
-      price: null,
-      seed_name: '',
       seeds_house_name: '',
-      max_qtd: null,
       form: {
-        price: 0,
-        qtd: 0,
-        collection_date: "",
         seeds_house: null,
         collectors_group: '5d6927111ba0621391fcb086',
         collector: null,
-        seed: null,
         stock_items: [],
         createdBy: this.$store.state.currentUser._id
       }
     }
   },
   created() {
+    axios.get('stock/fix_stock_items').then(response => {
+      console.log(response);
+    }).catch(this.showError);
 
 
   },
@@ -90,31 +74,22 @@ export default {
       }).catch(this.showError);
     },
     save() {
-      this.$validator.validate().then(isValid => {
-        if (isValid && this.validateQty()) {
+
+      this.$validator.validate().then(async isValid => {
+
+        if (isValid) {
           this.isSending = true
-          this.error = false
-
-          if (this.form.qtd) {
-            this.form.qtd = this.form.qtd
-
-            if (this.price) {
-              this.form.price = this.price * this.form.qtd
+          await Promise.all(this.form.stock_items.map (async (stock_item, i) => {
+            if (!stock_item.lot && stock_item.new_lot) {
+              var lot = await axios.post('lots', {
+                code: stock_item.new_lot,
+                seeds_house: this.form.seeds_house,
+                seed: stock_item.seed,
+              })
+              this.form.stock_items[i].lot = lot.data._id
             }
-          }
-
-          if (!this.form.lot && this.new_lot) {
-            axios.post('lots', {
-              code: this.new_lot,
-              seeds_house: this.form.seeds_house,
-              seed: this.form.seed,
-            }).then(resp => {
-              this.form.lot = resp.data._id
-              this.saveItem()
-            }).catch(this.showError);
-          } else {
-            this.saveItem()
-          }
+          })).catch(this.showError)
+          this.saveItem()
         }
       })
     },
@@ -143,10 +118,10 @@ export default {
   },
   watch: {
     'form.collector': function() {
-      this.validateQty()
+      this.stock_items = []
     },
     'form.collectors_group': function() {
-      this.validateQty()
+      this.stock_items = []
     }
   },
   components: {

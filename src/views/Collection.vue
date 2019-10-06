@@ -34,13 +34,13 @@
 						<div class="col-sm-6" v-if="collection.weight_gross">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Peso bruto</span>
-								<span class="number">{{ collection.weight_gross }} Kg</span>
+								<span class="number">{{ collection.weight_gross | kg}}</span>
 							</div>
 						</div>
 						<div class="col-sm-6" v-if="collection.weight_benef">
 							<div class="weekly-summary text-center">
 								<span class="info-label">Peso beneficiado</span>
-								<span class="number">{{ collection.weight_benef }} Kg</span>
+								<span class="number">{{ collection.weight_benef | kg}}</span>
 							</div>
 						</div>
 					</div>

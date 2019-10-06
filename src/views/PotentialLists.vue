@@ -56,10 +56,10 @@
               </a>
             </template>
             <template slot="qtd" slot-scope="data">
-              {{calcQtd(data.item.seed_items)}} kg
+              {{calcQtd(data.item.seed_items)| kg}}
             </template>
             <template slot="compensation_collect" slot-scope="data">
-              {{calcCompensationCollect(data.item.seed_items) | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
+              {{calcCompensationCollect(data.item.seed_items) | moeda}}
             </template>
 
             <template slot="actions" slot-scope="data">
@@ -71,8 +71,8 @@
               <td />
               <td />
               <td><strong> Total</strong></td>
-              <td><strong>{{total_qtd | currency('', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}} Kg</strong></td>
-              <td><strong>{{total_compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</strong></td>
+              <td><strong>{{total_qtd | kg}}</strong></td>
+              <td><strong>{{total_compensation_collect | moeda}}</strong></td>
               <td />
             </template>
           </b-table>

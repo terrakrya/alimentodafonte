@@ -93,35 +93,30 @@
 										</div>
 									</template>
 									<template slot="seed" slot-scope="data">
-										<a @click="setFilter(data.field.key, data.value._id)" v-if="data.value">
-											{{data.value.name}}
-										</a>
-									</template>
-									<template slot="lot" slot-scope="data">
-										<a @click="setFilter(data.field.key, data.value._id)" v-if="data.value">
-											<small>{{data.value.code}}</small>
+										<a class="inline" v-for="(stock_item, index) in data.item.stock_items" :key="index" @click="setFilter(data.field.key, stock_item.seed._id)">
+											{{stock_item.seed.name}}<span v-if="index < data.item.stock_items.length - 1">,</span>
 										</a>
 									</template>
 									<template slot="qtd" slot-scope="data">
-										{{data.value}} Kg
+										{{sumArray(data.item.stock_items, 'qtd') | kg}}
+									</template>
+									<template slot="compensation_collect" slot-scope="data">
+										{{sumArray(data.item.stock_items, 'qtd', 'compensation_collect') | moeda}}
 									</template>
 									<template slot="_id" slot-scope="data">
 										<router-link :to="'/recibo/'+ data.value" target="_blank">
 											<i class="fa fa-print"></i>
 										</router-link>
 									</template>
-									<template slot="compensation_collect" slot-scope="data">
-										{{data.value * data.item.qtd | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}
-									</template>
 									<!-- eslint-disable-next-line -->
 									<template slot="bottom-row" slot-scope="data">
 										<td/>
 										<td/>
 										<td/>
-										<td/>
 										<td><strong> Total</strong></td>
-										<td><strong>{{total_qtd}} Kg</strong></td>
-										<td><strong>{{total_compensation_collect | currency('R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' })}}</strong></td>
+										<td><strong>{{total_qtd| kg}}</strong></td>
+										<td><strong>{{total_compensation_collect | moeda}}</strong></td>
+										<td/>
 										<td/>
 									</template>
 								</b-table>
@@ -143,13 +138,13 @@
 										{{data.value}}
 									</template>
 									<template slot="stock" slot-scope="data">
-										<span v-if="data.item.stock" :class="{'text-danger': data.item.stock < 1}">{{data.item.stock }} Kg</span>
+										<span v-if="data.item.stock" :class="{'text-danger': data.item.stock < 1}">{{data.item.stock | kg}}</span>
 									</template>
 									<!-- eslint-disable-next-line -->
 									<template slot="bottom-row" slot-scope="data">
 										<td/>
 										<td><strong> Total</strong></td>
-										<td><strong>{{total_seeds_qtd}} Kg</strong></td>
+										<td><strong>{{total_seeds_qtd| kg}}</strong></td>
 									</template>
 								</b-table>
 							</div>
@@ -192,8 +187,7 @@ export default {
 			{ key: 'createdAt', label: 'Data', sortable: true },
 			{ key: 'seeds_house', label: 'Casa de sementes', sortable: true },
 			{ key: 'group_collector_buyer', label: 'Grupo / Coletor / Comprador', sortable: true },
-			{ key: 'seed', label: 'Semente', sortable: true },
-			{ key: 'lot', label: 'Lote', sortable: true },
+			{ key: 'seed', label: 'Sementes', sortable: true },
 			{ key: 'qtd', label: 'Quantidade', sortable: true },
 			{ key: 'compensation_collect', label: 'Remuneração', sortable: true },
 			{ key: '_id', label: '' },
@@ -240,13 +234,27 @@ export default {
 		},
 		listFromStock(type) {
 			if (this.stock) {
-				let items = this.stock.map(movement => {
-					if (movement[type]) {
-						return {
-							id: movement[type]._id,
-							title: (type == 'lot' ? movement[type].code : movement[type].name),
-							description: (type == 'seed' ? movement[type].scientific_name : ''),
-							stock: (type == 'seed' ? movement[type].stock : '')
+				let items = []
+				this.stock.forEach(movement => {
+					if ((type == 'seed' || type == 'lot')) {
+						if (movement.stock_items) {
+							movement.stock_items.forEach(stock_item => {
+								items.push({
+									id: stock_item[type]._id,
+									title: (type == 'lot' ? stock_item[type].code : stock_item[type].name),
+									description: (type == 'seed' ? stock_item[type].scientific_name : ''),
+									stock: (type == 'seed' ? stock_item[type].stock : '')
+								})
+							})
+						}
+					} else {
+						if (movement[type]) {
+							items.push({
+								id: movement[type]._id,
+								title: movement[type].name,
+								description: '',
+								stock: ''
+							})
 						}
 					}
 				})
@@ -258,11 +266,9 @@ export default {
 				this.total_qtd = 0
 				this.total_compensation_collect = 0
 				filteredItems.map(item => {
-					if (item.compensation_collect) {
-						this.total_compensation_collect += parseFloat(item.compensation_collect) * parseFloat(item.qtd)
-					}
-					if (item.qtd) {
-						this.total_qtd += parseFloat(item.qtd)
+					if (item.stock_items) {
+						this.total_compensation_collect += this.sumArray(item.stock_items, 'compensation_collect')
+						this.total_qtd += this.sumArray(item.stock_items, 'qtd')
 					}
 				})
 			}
@@ -281,10 +287,10 @@ export default {
 			this.applyFilters()
 		},
 		applyFilters() {
-			this.filtered_stock = this.stock
+			this.filtered_stock = JSON.parse(JSON.stringify(this.stock))
 			Object.keys(this.filters).map((filter) => {
 				if (filter && this.filters[filter] && filter != 'search') {
-					this.filtered_stock = this.filtered_stock.filter(item => {
+					this.filtered_stock = [...this.filtered_stock.filter(item => {
 						if (filter == 'from') {
 							return new Date(item.createdAt) >= new Date(this.filters[filter])
 						}
@@ -292,9 +298,24 @@ export default {
 							let date = new Date(this.filters[filter]+'T23:59:59+00:00')
 							return new Date(item.createdAt) <= date
 						}
+						if (filter == 'seed') {
+							return item.stock_items.find(stock_item => (stock_item.seed._id == this.filters.seed))
+						}
+						if (filter == 'lot') {
+							return item.stock_items.find(stock_item => (stock_item.lot._id == this.filters.lot))
+						}
 						return item[filter] && (item[filter]._id == this.filters[filter] || item[filter] == this.filters[filter])
-					})
+					})]
 				}
+			})
+			this.filtered_stock = this.filtered_stock.map(item => {
+				if (this.filters.seed) {
+					item.stock_items = item.stock_items.filter(stock_item => (stock_item.seed._id == this.filters.seed))
+				}
+				if (this.filters.lot) {
+					item.stock_items = item.stock_items.filter(stock_item => (stock_item.lot._id == this.filters.lot))
+				}
+				return item
 			})
 			this.onFiltered(this.filtered_stock)
 		},
@@ -306,7 +327,9 @@ export default {
 			Object.keys(this.filters).map((filter) => {
 				this.filters[filter] = null
 			})
-			this.filtered_stock = this.stock
+			console.log('this.stock');
+			console.log(this.stock);
+			this.filtered_stock = JSON.parse(JSON.stringify(this.stock))
 		},
 		getUnique(arr){
 			if (arr) {
