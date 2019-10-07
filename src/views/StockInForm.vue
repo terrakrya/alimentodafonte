@@ -37,8 +37,6 @@ import FormEntitySelect from '@/components/FormEntitySelect'
 import FormGroupCollector from '@/components/FormGroupCollector'
 import FormStockItem from '@/components/FormStockItem'
 import FormSubmit from '@/components/FormSubmit'
-import FieldError from '@/components/FieldError'
-import utils from '@/views/utils'
 
 export default {
 
@@ -59,6 +57,7 @@ export default {
   },
   created() {
     axios.get('stock/fix_stock_items').then(response => {
+      // eslint-disable-next-line
       console.log(response);
     }).catch(this.showError);
 
@@ -130,7 +129,6 @@ export default {
     FormGroupCollector,
     FormStockItem,
     FormSubmit,
-    FieldError,
   }
 
 };
