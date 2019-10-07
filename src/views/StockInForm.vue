@@ -56,11 +56,6 @@ export default {
     }
   },
   created() {
-    axios.get('stock/fix_stock_items').then(response => {
-      // eslint-disable-next-line
-      console.log(response);
-    }).catch(this.showError);
-
 
   },
   methods: {

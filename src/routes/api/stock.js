@@ -23,30 +23,6 @@ router.get('/', auth.manager, function(req, res) {
   });
 });
 
-router.get('/fix_stock_items', auth.manager, function(req, res) {
-  StockIn.find({}).exec(function(err, stock_ins) {
-    if (err) {
-      res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
-    } else {
-      stock_ins.forEach(stock_in => {
-        if (!stock_in.stock_items.length && stock_in.seed) {
-          stock_in.stock_items.push({
-            seed: stock_in.seed,
-            lot: stock_in.lot,
-            qtd: stock_in.qtd,
-            collection_date: stock_in.collection_date,
-            number_of_matrixes: stock_in.number_of_matrixes,
-            compensation_collect: stock_in.compensation_collect,
-            price: stock_in.price,
-            wholesale_price: stock_in.wholesale_price,
-          })
-          stock_in.save()
-        }
-      })
-    }
-  });
-});
-
 router.post('/', auth.manager, function(req, res) {
   var newStockIn = new StockIn(req.body);
   newStockIn.save(function(err, stock_in) {
