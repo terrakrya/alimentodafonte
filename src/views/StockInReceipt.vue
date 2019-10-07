@@ -50,7 +50,7 @@
         <td>Quantidade</td>
         <td>Total</td>
       </tr>
-      <tr class="details" v-for="(stock_item, index) in stock_in.stock_items">
+      <tr class="details" v-for="(stock_item, index) in stock_in.stock_items" :key="index">
         <td>
 					{{stock_item.seed.name}}
 					<small v-if="stock_item.number_of_matrixes"><br>{{stock_item.number_of_matrixes}} matrizes</small>
@@ -64,7 +64,7 @@
       <tr class="total">
         <td></td>
         <td></td>
-        <td>Total:</small></td>
+        <td>Total:</td>
         <td>{{sumArray(stock_in.stock_items, 'qtd') | kg }}</td>
         <td>{{sumArray(stock_in.stock_items, 'compensation_collect', 'qtd') | moeda }}</td>
       </tr>
