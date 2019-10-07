@@ -93,9 +93,16 @@
 										</div>
 									</template>
 									<template slot="seed" slot-scope="data">
-										<a class="inline" v-for="(stock_item, index) in data.item.stock_items" :key="index" @click="setFilter(data.field.key, stock_item.seed._id)">
-											{{stock_item.seed.name}}<span v-if="index < data.item.stock_items.length - 1">,</span>
-										</a>
+										<span v-if="data.item.type == 'stock_in'">
+											<a class="inline" v-for="(stock_item, index) in data.item.stock_items" :key="index" @click="setFilter(data.field.key, stock_item.seed._id)">
+												{{stock_item.seed.name}}<span v-if="index < data.item.stock_items.length - 1">,</span>
+											</a>
+										</span>
+										<span v-else>
+											<a class="inline" @click="setFilter(data.field.key, data.item.seed._id)">
+												{{data.item.seed.name}}
+											</a>
+										</span>
 									</template>
 									<template slot="qtd" slot-scope="data">
 										<span v-if="data.item.type == 'stock_in'">{{sumArray(data.item.stock_items, 'qtd') | kg}}</span>
@@ -106,9 +113,10 @@
 										<span v-else>{{(data.item.qtd * data.item.price) | kg}}</span>
 									</template>
 									<template slot="_id" slot-scope="data">
-										<router-link  v-if="data.item.type == 'stock_in'" :to="'/recibo/'+ data.value" target="_blank">
+										<router-link v-if="data.item.type == 'stock_in'" :to="'/recibo/'+ data.value" target="_blank">
 											<i class="fa fa-print"></i>
 										</router-link>
+										<span v-else> </span>
 									</template>
 									<!-- eslint-disable-next-line -->
 									<template slot="bottom-row" slot-scope="data">
@@ -268,7 +276,7 @@ export default {
 				this.total_qtd = 0
 				this.total_compensation_collect = 0
 				filteredItems.map(item => {
-					if (item.stock_items) {
+					if (item.stock_items && item.stock_items.length) {
 						this.total_compensation_collect += this.sumArray(item.stock_items, 'compensation_collect')
 						this.total_qtd += this.sumArray(item.stock_items, 'qtd')
 					}
