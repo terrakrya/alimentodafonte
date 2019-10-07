@@ -110,7 +110,7 @@
 									</template>
 									<template slot="compensation_collect" slot-scope="data">
 										<span v-if="data.item.type == 'stock_in'">{{sumArray(data.item.stock_items, 'qtd', 'compensation_collect') | moeda}}</span>
-										<span v-else>{{(data.item.qtd * data.item.price) | kg}}</span>
+										<span v-else>{{(data.item.qtd * data.item.price) | moeda}}</span>
 									</template>
 									<template slot="_id" slot-scope="data">
 										<router-link v-if="data.item.type == 'stock_in'" :to="'/recibo/'+ data.value" target="_blank">
