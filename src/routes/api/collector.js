@@ -23,7 +23,8 @@ router.get('/requests', auth.collector, function(req, res) {
         collectors_request.seed_items.forEach(seed_item => {
           var total_qtd = utils.sumQtd(seed_item, collectors_request.collector, req.payload.id)
           if (total_qtd) {
-
+            console.log('total_qtd');
+            console.log(total_qtd);
             let seed_id = seed_item.seed._id
             if (seed_items[seed_id]) {
               seed_items[seed_id].qtd += utils.sumQtd(seed_item, collectors_request.collector, req.payload.id)
