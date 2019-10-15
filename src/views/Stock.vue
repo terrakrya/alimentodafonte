@@ -235,7 +235,6 @@ export default {
 	},
 	created () {
 		this.list()
-		console.log('created');
 	},
 	methods: {
 		async list () {
