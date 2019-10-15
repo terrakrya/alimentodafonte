@@ -23,7 +23,13 @@ router.post('/', auth.manager, function(req, res) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
     } else {
-      newStockOut.price = seed.price
+      if (newStockOut.out_mode == 'Venda Varejo') {
+        newStockOut.price = seed.price
+      } else if (newStockOut.out_mode == 'Venda Atacado') {
+        newStockOut.price = seed.wholesale_price
+      } else {
+        newStockOut.price = 0
+      }
       newStockOut.save(function(err, stock_out) {
         if (err) {
           res.status(422).send('Ocorreu um erro ao salvar o item: ' + err.message);

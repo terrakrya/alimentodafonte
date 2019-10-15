@@ -75,9 +75,6 @@
 												{{data.item.type == 'stock_in' ? 'Entrada' : 'Saída'}}
 											</a>
 											{{data.value | moment("DD/MM/YYYY")}}
-											<a @click="setFilter('out_mode', data.item.out_mode)" v-if="data.item.out_mode">
-												<small>({{data.item.out_mode}})</small>
-											</a>
 										</div>
 									</template>
 									<template slot="seeds_house" slot-scope="data">
@@ -110,7 +107,13 @@
 									</template>
 									<template slot="compensation_collect" slot-scope="data">
 										<span v-if="data.item.type == 'stock_in'">{{sumArray(data.item.stock_items, 'qtd', 'compensation_collect') | moeda}}</span>
-										<span v-else>{{(data.item.qtd * data.item.price) | moeda}}</span>
+									</template>
+									<template slot="price" slot-scope="data">
+										<span v-if="data.item.type == 'stock_out'">{{(data.item.qtd * data.item.price
+											) * -1 | moeda}}</span>
+										<a @click="setFilter('out_mode', data.item.out_mode)" v-if="data.item.out_mode">
+											<small>({{data.item.out_mode.replace('Venda ', '')}})</small>
+										</a>
 									</template>
 									<template slot="_id" slot-scope="data">
 										<router-link v-if="data.item.type == 'stock_in'" :to="'/recibo/'+ data.value" target="_blank">
@@ -126,6 +129,7 @@
 										<td><strong> Total</strong></td>
 										<td><strong>{{total_qtd| kg}}</strong></td>
 										<td><strong>{{total_compensation_collect | moeda}}</strong></td>
+										<td><strong>{{total_price * -1 | moeda}}</strong></td>
 										<td/>
 										<td/>
 									</template>
@@ -191,6 +195,7 @@ export default {
 			},
 			total_qtd: 0,
 			total_compensation_collect: 0,
+			total_price: 0,
 			total_seeds_qtd: 0,
 			modos_de_saida: modos_de_saida,
 			table_fields: [
@@ -200,6 +205,7 @@ export default {
 			{ key: 'seed', label: 'Sementes', sortable: true },
 			{ key: 'qtd', label: 'Quantidade', sortable: true },
 			{ key: 'compensation_collect', label: 'Remuneração', sortable: true },
+			{ key: 'price', label: 'Preço', sortable: true },
 			{ key: '_id', label: '' },
 			],
 			seeds_table_fields: [
@@ -275,10 +281,16 @@ export default {
 			if (filteredItems) {
 				this.total_qtd = 0
 				this.total_compensation_collect = 0
+				this.total_price = 0
 				filteredItems.map(item => {
-					if (item.stock_items && item.stock_items.length) {
-						this.total_compensation_collect += this.sumArray(item.stock_items, 'compensation_collect')
-						this.total_qtd += this.sumArray(item.stock_items, 'qtd')
+					if (item.type == 'stock_in') {
+						if (item.stock_items && item.stock_items.length) {
+							this.total_compensation_collect += this.sumArray(item.stock_items, 'qtd', 'compensation_collect')
+							this.total_qtd += this.sumArray(item.stock_items, 'qtd')
+						}
+					} else {
+						this.total_qtd += item.qtd
+						this.total_price += item.qtd * item.price
 					}
 				})
 			}
@@ -309,20 +321,28 @@ export default {
 							return new Date(item.createdAt) <= date
 						}
 						if (filter == 'seed') {
-							return item.stock_items.find(stock_item => (stock_item.seed._id == this.filters.seed))
+							if (item.out_mode) {
+								return item.seed._id == this.filters.seed
+							} else {
+								return item.stock_items.find(stock_item => (stock_item.seed._id == this.filters.seed))
+							}
 						}
 						if (filter == 'lot') {
-							return item.stock_items.find(stock_item => (stock_item.lot._id == this.filters.lot))
+							if (item.out_mode) {
+								return item.lot._id == this.filters.lot
+							} else {
+								return item.stock_items.find(stock_item => (stock_item.lot._id == this.filters.lot))
+							}
 						}
 						return item[filter] && (item[filter]._id == this.filters[filter] || item[filter] == this.filters[filter])
 					})]
 				}
 			})
 			this.filtered_stock = this.filtered_stock.map(item => {
-				if (this.filters.seed) {
+				if (this.filters.seed && item.stock_items) {
 					item.stock_items = item.stock_items.filter(stock_item => (stock_item.seed._id == this.filters.seed))
 				}
-				if (this.filters.lot) {
+				if (this.filters.lot && item.stock_items) {
 					item.stock_items = item.stock_items.filter(stock_item => (stock_item.lot._id == this.filters.lot))
 				}
 				return item
