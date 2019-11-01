@@ -44,7 +44,9 @@ import OrderForm from '@/views/OrderForm.vue'
 import Order from '@/views/Order.vue'
 import Stock from '@/views/Stock.vue'
 import StockInForm from '@/views/StockInForm.vue'
+import StockInImport from '@/views/StockInImport.vue'
 import StockOutForm from '@/views/StockOutForm.vue'
+import StockOutImport from '@/views/StockOutImport.vue'
 import PotentialList from '@/views/PotentialList.vue'
 import PotentialListForm from '@/views/PotentialListForm.vue'
 import PotentialListImport from '@/views/PotentialListImport.vue'
@@ -150,6 +152,8 @@ export default new Router({
     { path: '/entrada-de-estoque', component: StockInForm, beforeEnter: requireAuth },
     { path: '/saida-de-estoque', component: StockOutForm, beforeEnter: requireAuth },
     { path: '/recibo/:id', component: StockInReceipt, beforeEnter: requireAuth },
+    { path: '/importar-entradas', component: StockInImport, beforeEnter: requireAuth },
+    { path: '/importar-saidas', component: StockOutImport, beforeEnter: requireAuth },
 
     { path: '/sementes-do-coletor', component: CollectorSeeds, beforeEnter: requireAuth },
     { path: '/pedidos-do-coletor', component: CollectorRequests, beforeEnter: requireAuth },

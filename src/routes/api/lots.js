@@ -15,6 +15,18 @@ router.get('/', auth.manager, function(req, res) {
   });
 });
 
+router.get('/:code', auth.manager, function(req, res) {
+  Lot.findOne({
+    code: req.params.code
+  }).populate(populate(req)).exec(function(err, lot) {
+    if (err) {
+      res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
+    } else {
+      res.json(lot);
+    }
+  });
+});
+
 router.post('/', auth.manager, function(req, res) {
   var newLot = new Lot(req.body);
   newLot.save(function(err, seed) {
