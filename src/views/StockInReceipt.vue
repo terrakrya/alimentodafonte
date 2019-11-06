@@ -9,7 +9,7 @@
             <tr>
               <td class="title">
 								<div class="brand">
-									<h1 class="logo"><a><span>REDE</span> de <strong>sementes</strong></a></h1>
+									<h1 class="logo"><a><span>Plataforma </span><strong>SocioBio</strong></a></h1>
 								</div>
 
               </td>

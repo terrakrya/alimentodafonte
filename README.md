@@ -1,4 +1,4 @@
-# Rede de sementes
+# Plataforma SocioBio
 
 ## Development
 
