@@ -153,6 +153,9 @@ export default {
     },
     roles: function(roles) {
       return roles.map(r => tipos_de_usuario.find(e => e.value == r)).filter(n => n).map(v => v.text).join(', ')
+    },
+    firstname: function(fullName) {
+      return fullName ? fullName.split(' ')[0] : ''
     }
   }
 

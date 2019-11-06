@@ -1,33 +1,26 @@
 <template>
-  <div id="app" :class="this.$route.path.startsWith('/recibo/') ? 'clean' : ''">
-    <div id="wrapper">
+<div class="wrapper" :class="this.$route.path.startsWith('/recibo/') ? 'clean' : ''">
+  <div v-if="currentUser">
+    <Sidebar />
+    <div class="main-panel">
       <Navbar />
-      <div v-if="currentUser" class="row-fluid">
-        <Sidebar />
-        <div class="main">
-          <div class="main-content">
-            <div class="container-fluid">
-              <template v-if="$route.matched.length">
-                <router-view></router-view>
-              </template>
-              <template v-else>
-                <p>You are logged {{ currentUser ? 'in' : 'out' }}</p>
-              </template>
-            </div>
-          </div>
-        </div>
-
+      <div class="container-fluid">
+        <template v-if="$route.matched.length">
+          <router-view></router-view>
+        </template>
+        <template v-else>
+          <p>You are logged {{ currentUser ? 'in' : 'out' }}</p>
+        </template>
       </div>
-      <div v-if="!currentUser" class="vertical-align-wrap">
-        <div class="vertical-align-middle">
-          <div class="auth-box">
-            <router-view></router-view>
-          </div>
-        </div>
-      </div>
-      <div class="clearfix"></div>
     </div>
   </div>
+  <div v-if="!currentUser">
+    <div class="off-canvas-sidebar">
+      <router-view></router-view>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+</div>
 </template>
 
 <script>
@@ -40,7 +33,6 @@ export default {
     Sidebar
   }
 };
-
 </script>
 
 <style lang='sass'>

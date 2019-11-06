@@ -1,12 +1,11 @@
 import Vue from 'vue'
 import axios from 'axios'
-import BootstrapVue from 'bootstrap-vue'
 import money from 'v-money'
 import Vue2Filters from 'vue2-filters'
 import VeeValidate, { Validator } from 'vee-validate'
 import VueTheMask from 'vue-the-mask'
 import moment from 'vue-moment'
-
+import BootstrapVue from 'bootstrap-vue'
 
 import ptBR from './locale/pt_BR'
 import router from './router'
@@ -24,13 +23,13 @@ axios.defaults.baseURL = (process.env.NODE_ENV == 'development')
   ? "http://localhost:3000/api/"
   : "/api/"
 
-Vue.use(BootstrapVue)
 
 Vue.use(money, { prefix: 'R$ ', decimal: ',', thousands: '', masked: false })
 Vue.use(Vue2Filters)
 Vue.use(VeeValidate, { locale: 'pt_BR', fieldsBagName: 'veeFields',  errorBagName: 'veeErrors' })
 Vue.use(VueTheMask)
 Vue.use(moment);
+Vue.use(BootstrapVue)
 
 Validator.localize('pt_BR', ptBR)
 
