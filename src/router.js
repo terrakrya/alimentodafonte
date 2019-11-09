@@ -56,6 +56,10 @@ import CollectorRequests from '@/views/CollectorRequests.vue'
 import CollectorStockIns from '@/views/CollectorStockIns.vue'
 import StockInReceipt from '@/views/StockInReceipt.vue'
 
+import Organizations from '@/views/Organizations.vue'
+import Organization from '@/views/Organization.vue'
+import OrganizationForm from '@/views/OrganizationForm.vue'
+
 Vue.use(Router)
 
 function requireAuth (to, from, next) {
@@ -158,6 +162,12 @@ export default new Router({
     { path: '/sementes-do-coletor', component: CollectorSeeds, beforeEnter: requireAuth },
     { path: '/pedidos-do-coletor', component: CollectorRequests, beforeEnter: requireAuth },
     { path: '/entregas-do-coletor', component: CollectorStockIns, beforeEnter: requireAuth },
+
+
+    { path: '/organizacoes', component: Organizations, beforeEnter: requireAuth },
+    { path: '/cadastrar-organizacao', component: OrganizationForm, beforeEnter: requireAuth },
+    { path: '/editar-organizacao/:id', component: OrganizationForm, beforeEnter: requireAuth },
+    { path: '/organizacao/:id', component: Organization, beforeEnter: requireAuth },
 
   ]
 })
