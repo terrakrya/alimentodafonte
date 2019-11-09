@@ -9,16 +9,16 @@ var mongoose = require('mongoose'),
 mongoose.set('useCreateIndex', true)
 
 var UserSchema = new mongoose.Schema({
-  username: {
+  cnpj: {
     type: String,
     lowercase: true,
-    unique: true,
     required: [true, "é obrigatório"],
     match: [/^[a-zA-Z0-9]+$/, 'inválido'],
     index: true
   },
   email: {
     type: String,
+    unique: true,
     lowercase: true,
     match: [/\S+@\S+\.\S+/, 'inválido'],
     index: {
@@ -64,7 +64,7 @@ UserSchema.methods.generateJWT = function() {
 
   return jwt.sign({
     id: this._id,
-    username: this.username,
+    cnpj: this.cnpj,
     roles: this.roles,
     exp: parseInt(exp.getTime() / 1000),
   }, secret);
@@ -73,7 +73,7 @@ UserSchema.methods.generateJWT = function() {
 UserSchema.methods.toAuthJSON = function() {
   return {
     _id: this._id,
-    username: this.username,
+    cnpj: this.cnpj,
     email: this.email,
     token: this.generateJWT(),
     roles: this.roles,

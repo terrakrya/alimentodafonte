@@ -11,10 +11,10 @@
     <div class="card-body">
       <div class="table-responsive">
         <b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-        <loading :loading="!collectors_groups && !error" msg="Carregando lista de grupos" />
-        <no-item :list="collectors_groups" />
-        <div v-if="collectors_groups && collectors_groups.length">
-          <b-table stacked="md" :fields="table_fields" :items="collectors_groups" :sort-by="'name'" :filter="filters.search">
+        <loading :loading="!organizations && !error" msg="Carregando lista de organizações" />
+        <no-item :list="organizations" />
+        <div v-if="organizations && organizations.length">
+          <b-table stacked="md" :fields="table_fields" :items="organizations" :sort-by="'name'" :filter="filters.search">
             <template slot="name" slot-scope="data">
               <router-link :to="'/organizacao/'+ data.item._id">
                 <strong>{{data.item.name}}</strong>
@@ -28,8 +28,12 @@
               <span>{{data.value | city}}</span>
             </template>
             <template slot="actions" slot-scope="data">
-              <router-link :to="'/editar-organizacao/'+ data.item._id" class="fa fa-edit btn btn-primary btn-xs "></router-link>
-              <a @click="remove(data.item._id)" class="fa fa-trash btn btn-danger btn-xs"></a>
+              <router-link :to="'/editar-organizacao/'+ data.item._id" class="btn btn-link btn-success">
+                <i class="material-icons">edit</i>
+              </router-link>
+              <a @click="remove(data.item._id)" class="btn btn-link btn-danger">
+                <i class="material-icons">close</i>
+              </a>
             </template>
           </b-table>
         </div>
@@ -68,10 +72,10 @@ export default {
         {
           key: 'actions',
           label: 'Ações',
-          'class': 'actions'
+          'class': 'td-actions text-right'
         },
       ],
-      collectors_groups: null
+      organizations: null
     }
   },
 
@@ -81,11 +85,14 @@ export default {
 
   methods: {
     async list() {
-      this.collectors_groups = await this.loadList('collectors_groups')
+      axios.get('organizations').then(response => {
+        this.organizations = response.data
+      }).catch(this.showError)
+
     },
     remove(id) {
       if (confirm("Tem certeza que deseja excluír?")) {
-        axios.delete('collectors_groups/' + id).then(() => {
+        axios.delete('organizations/' + id).then(() => {
           this.list()
         }).catch(this.showError)
       }

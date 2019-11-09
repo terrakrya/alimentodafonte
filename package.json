@@ -15,7 +15,7 @@
     "@sindresorhus/slugify": "^0.8.0",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.3.1",
-    "bootstrap-vue": "^2.0.4",
+    "bootstrap-vue": "2.0.0-rc.22",
     "cors": "^2.8.5",
     "ejs": "^2.6.1",
     "errorhandler": "^1.5.1",
