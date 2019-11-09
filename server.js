@@ -36,6 +36,7 @@ if(isProduction){
 }
 
 require('./src/models/User');
+require('./src/models/Organization');
 require('./src/models/Seed');
 require('./src/models/CollectorsGroup');
 require('./src/models/SeedsHouse');
