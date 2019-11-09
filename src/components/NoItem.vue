@@ -1,5 +1,9 @@
 <template>
-  <h5 v-if="list && list.length == 0" class="no-item text-center">{{msg ? msg : 'Nenhum ítem encontrado'}}</h5>
+  <div class="row-fluid">
+    <br>
+    <br>
+    <div v-if="list && list.length == 0" class="col-md-3 ml-auto mr-auto text-center alert alert-info"><strong>{{msg ? msg : 'Nenhum item encontrado'}}</strong></div>
+  </div>
 </template>
 
 <script>

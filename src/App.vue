@@ -4,13 +4,15 @@
     <Sidebar />
     <div class="main-panel">
       <Navbar />
-      <div class="container-fluid">
-        <template v-if="$route.matched.length">
-          <router-view></router-view>
-        </template>
-        <template v-else>
-          <p>You are logged {{ currentUser ? 'in' : 'out' }}</p>
-        </template>
+      <div class="content">
+        <div class="container-fluid">
+          <template v-if="$route.matched.length">
+            <router-view></router-view>
+          </template>
+          <template v-else>
+            <p>Página não encontrada.</p>
+          </template>
+        </div>
       </div>
     </div>
   </div>
