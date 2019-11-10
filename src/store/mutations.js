@@ -15,6 +15,11 @@ export const mutations = {
 
   toggleMenu (state) {
     state.showMenu = !state.showMenu
+    if (state.showMenu) {
+      document.documentElement.className = 'nav-open';
+    } else {
+      document.documentElement.className = '';
+    }
   },
 
 }

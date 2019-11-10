@@ -74,6 +74,12 @@
           <p>Armazens</p>
         </router-link>
       </li>
+      <li class="nav-item" @click="toggleMenu" v-if="isAdmin">
+        <router-link class="nav-link" to="/usuarios">
+          <i class="material-icons">person</i>
+          <p>Usuários</p>
+        </router-link>
+      </li>
     </ul>
   </div>
   <div class="sidebar-background">

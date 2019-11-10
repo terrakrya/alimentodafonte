@@ -1,10 +1,9 @@
 <template>
   <div class="form-address">
-    <div class="row" :class="{gray: gray}">
+    <div class="row">
       <div class="col-sm-6">
         <b-form-group label="Estado *">
-          <b-form-select class="form-control" @input="loadCities" v-model="form.address.uf" :options="estados" v-validate="'required'" name="uf" />
-          <field-error :msg="veeErrors" field="uf" />
+          <b-form-select class="form-control" @input="loadCities" v-model="form.address.uf" :options="estados" name="uf" />
         </b-form-group>
       </div>
       <div class="col-sm-6">
@@ -13,14 +12,14 @@
         </b-form-group>
       </div>
     </div>
-    <div class="row" :class="{gray: gray}">
-      <div class="col-sm-8">
+    <div class="row">
+      <div class="col-sm-9">
         <b-form-group label="Endereço *">
-          <b-form-input v-model="form.address.address" v-validate="'required'" name="address" />
+          <b-form-input v-model="form.address.address" name="address" />
           <field-error :msg="veeErrors" field="address" />
         </b-form-group>
       </div>
-      <div class="col-sm-4">
+      <div class="col-sm-3">
         <b-form-group label="CEP">
           <b-form-input v-model="form.address.postal_code" v-mask="['#####-###']" />
         </b-form-group>
@@ -39,10 +38,6 @@ export default {
   name: 'form-address',
   props: {
     form: Object,
-    gray: {
-      type: Boolean,
-      default: false
-    },
   },
   inject: ['$validator'],
   data () {

@@ -14,6 +14,7 @@
           </template>
         </div>
       </div>
+      <div class="close-layer visible" v-if="showMenu" @click="toggleMenu"></div>
     </div>
   </div>
   <div v-if="!currentUser">
@@ -22,6 +23,7 @@
     </div>
   </div>
   <div class="clearfix"></div>
+  <notifications group="a" />
 </div>
 </template>
 
@@ -30,6 +32,16 @@ import Navbar from '@/components/Navbar'
 import Sidebar from '@/components/Sidebar'
 
 export default {
+  computed: {
+    showMenu() {
+      return this.$store.state.showMenu
+    }
+  },
+  methods: {
+    toggleMenu: function() {
+      this.$store.dispatch('toggleMenu')
+    }
+  },
   components: {
     Navbar,
     Sidebar

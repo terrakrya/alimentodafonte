@@ -1,16 +1,20 @@
 <template>
-<div class="pictures-upload">
+<div class="pictures-upload fileinput">
   <b-form-group :label="'Foto' + (multiple ? 's' : '')" :description="'Selecione um '+ (multiple ? 'ou mais arquivos' : 'arquivo') +' no formato PNG, GIF, JPG ou JPEG, com no máximo 32 MB.'" v-show="!isLoading">
-    <b-form-file ref="files" id="files" :multiple="multiple" accept="image/*" v-on:change="uploadImages"></b-form-file>
+    <span class="btn btn-rose btn-round btn-file" @click="selectFile()">
+      <span class="fileinput-new"><i class="material-icons">add_a_photo</i> Selecionar fotos</span>
+      <b-form-file class="hidden" ref="files" id="files" :multiple="multiple" accept="image/*" v-on:change="uploadImages"></b-form-file>
+    </span>
     <span class="text-danger" v-show="error">{{ error }}</span>
   </b-form-group>
-  <div class="row images_preview" v-if="!isLoading">
-    <div v-if="Array.isArray(form[field]) && form[field].length > 0">
-      <div class="col-xs-2" v-for="(image, index) in form[field]" :key="index">
-        <b-img :src="baseUrl + image.thumb" fluid thumbnail />
+  <div v-if="!isLoading">
+    <div v-if="Array.isArray(form[field]) && form[field].length > 0" class="row images_preview">
+      <div class="col-md-4" v-for="(image, index) in form[field]" :key="index">
+        <div class="fileinput-new thumbnail">
+          <b-img :src="baseUrl + image.thumb" />
+        </div>
         <br>
-        <br>
-        <p class="text-center"><a class="btn btn-default btn-small" @click="deleteImage(index)"><i class="fa fa-trash"></i></a></p>
+        <p class="text-center"><a class="btn btn-danger btn-sm btn-round fileinput-exists" @click="deleteImage(index)"><i class="fa fa-trash"></i> Remover</a></p>
       </div>
     </div>
     <div v-if="!Array.isArray(form[field]) && form[field] && form[field].thumb">
@@ -68,6 +72,10 @@ export default {
       } else {
         this.form[this.field] = null
       }
+    },
+    selectFile() {
+      console.log(this.$refs.files.$el);
+      document.getElementById('files').click()
     }
   },
   components: {

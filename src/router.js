@@ -59,6 +59,7 @@ import StockInReceipt from '@/views/StockInReceipt.vue'
 import Organizations from '@/views/Organizations.vue'
 import Organization from '@/views/Organization.vue'
 import OrganizationForm from '@/views/OrganizationForm.vue'
+import OrganizationRegisterForm from '@/views/OrganizationRegisterForm.vue'
 
 Vue.use(Router)
 
@@ -165,7 +166,7 @@ export default new Router({
 
 
     { path: '/organizacoes', component: Organizations, beforeEnter: requireAuth },
-    { path: '/cadastrar-organizacao', component: OrganizationForm, beforeEnter: requireAuth },
+    { path: '/cadastrar-organizacao', component: OrganizationRegisterForm, beforeEnter: requireAuth },
     { path: '/editar-organizacao/:id', component: OrganizationForm, beforeEnter: requireAuth },
     { path: '/organizacao/:id', component: Organization, beforeEnter: requireAuth },
 

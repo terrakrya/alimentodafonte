@@ -6,6 +6,7 @@ import VeeValidate, { Validator } from 'vee-validate'
 import VueTheMask from 'vue-the-mask'
 import moment from 'vue-moment'
 import BootstrapVue from 'bootstrap-vue'
+import Notifications from 'vue-notification'
 
 import ptBR from './locale/pt_BR'
 import router from './router'
@@ -24,6 +25,7 @@ axios.defaults.baseURL = (process.env.NODE_ENV == 'development')
   : "/api/"
 
 Vue.use(BootstrapVue)
+Vue.use(Notifications)
 
 Vue.use(money, { prefix: 'R$ ', decimal: ',', thousands: '', masked: false })
 Vue.use(Vue2Filters)

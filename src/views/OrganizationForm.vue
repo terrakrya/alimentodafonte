@@ -1,76 +1,79 @@
 <template>
 <div class="collectors-group-form">
-  <div class="col-md-8 col-12 mr-auto ml-auto" v-if="!isEditing()">
+  <div class="col-md-12 mr-auto ml-auto">
     <div class="wizard-container">
       <div class="card card-wizard active" data-color="rose" id="wizardProfile">
         <b-form @submit.prevent="save" v-if="!isLoading">
           <div class="card-header text-center">
             <h3 class="card-title">
-              Cadastrar organização
+              {{organization.name}}
             </h3>
-            <h5 class="card-description">Preencha os dados abaixo para continuar</h5>
+            <h5 class="card-description">Preencha os dados da organização para continuar</h5>
           </div>
           <div class="wizard-navigation">
             <ul class="nav nav-pills organization-form">
-              <li class="nav-item active">
-                <span class="nav-link active">
-                  Acesso
-                </span>
-              </li>
               <li class="nav-item">
-                <span class="nav-link">
+                <a class="nav-link" :class="tab == 0 ? 'active' : ''" @click="setTab(0)">
                   Apresentação
-                </span>
+                </a>
               </li>
               <li class="nav-item">
-                <span class="nav-link">
+                <a class="nav-link" :class="tab == 1 ? 'active' : ''" @click="setTab(1)">
                   Contato
-                </span>
+                </a>
               </li>
               <li class="nav-item">
-                <span class="nav-link">
+                <a class="nav-link" :class="tab == 2 ? 'active' : ''" @click="setTab(2)">
                   Financeiro
-                </span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" :class="tab == 3 ? 'active' : ''" @click="setTab(3)">
+                  Usuários
+                </a>
               </li>
             </ul>
-            <!-- <div class="moving-tab" style="width: 219.778px; transform: translate3d(-8px, 0px, 0px); transition: transform 0s ease 0s;">
-              About
-            </div> -->
           </div>
           <div class="card-body">
             <div class="tab-content">
-              <div class="tab-pane active">
-
-                <h5 class="info-text">Insira os dados do responsável e o CNPJ da organização</h5>
+              <div class="tab-pane" :class="tab == 0 ? 'active' : ''">
                 <div class="row justify-content-center">
-                  <div class="col-lg-10">
-                    <b-form-group label="CNPJ *" class="bmd-form-group">
-                      <b-form-input v-model="form.cnpj" v-validate="'required'" name="cnpj" v-mask="['##.###.###/####-##']" />
-                      <field-error :msg="veeErrors" field="cnpj" />
+                  <div class="col-lg-12">
+                    <b-form-group label="Histórico da organização" description="Escreva um breve resumo da história da organização" class="bmd-form-group">
+                      <b-form-textarea v-model="form.history" name="history" />
                     </b-form-group>
                   </div>
-                  <div class="col-lg-10">
-                    <b-form-group label="Email">
-                      <b-form-input v-model="form.email" v-validate="'email'" name="email" />
-                      <field-error :msg="veeErrors" field="email" />
-                      <div class="text-right" v-if="isEditing()">
-                        <a class="pointer" @click="changePassword">Alterar senha</a>
-                      </div>
-                    </b-form-group>
+                  <div class="col-lg-12">
+                    <form-links :form="form" field="links" />
                   </div>
-                  <div class="col-lg-5">
-                    <b-form-group label="Senha *">
-                      <b-form-input v-model="form.password" type="password" v-validate="'required'" name="password" ref="password" placeholder="Senha"/>
-                      <field-error :msg="veeErrors" field="password" />
-                    </b-form-group>
-                  </div>
-                  <div class="col-lg-5">
-                    <b-form-group label="Confirmar senha *">
-                      <b-form-input v-model="form.password_confirmation" type="password" v-validate="'required|confirmed:password'" data-vv-as="password" name="password_confirmation" />
-                      <field-error :msg="veeErrors" field="password_confirmation" />
-                    </b-form-group>
+                  <div class="col-lg-12">
+                    <pictures-upload :form="form" :preview="this.images_preview" :error="error" field="images" url="uploads/images" :multiple="true"  />
                   </div>
                 </div>
+              </div>
+              <div class="tab-pane" :class="tab == 1 ? 'active' : ''">
+                <b-form-group label="Email" class="bmd-form-group">
+                  <b-form-input v-model="form.email" name="email" />
+                </b-form-group>
+                <form-address :form="form" />
+                <form-geolocation :form="form" />
+                <form-phones :form="form" field="phones" />
+                <form-contact-persons :form="form" field="contact_persons" />
+              </div>
+              <div class="tab-pane" :class="tab == 2 ? 'active' : ''">
+                <b-form-group label="Formato jurídico" class="bmd-form-group">
+                  <b-form-input v-model="form.legal_format" name="legal_format" />
+                </b-form-group>
+                <b-form-group label="Regime tributário" class="bmd-form-group">
+                  <b-form-input v-model="form.tax_regime" name="tax_regime" />
+                </b-form-group>
+                <b-form-group label="Inscrição" class="bmd-form-group">
+                  <b-form-input v-model="form.subscription" name="subscription" />
+                </b-form-group>
+                <form-bank-account :form="form" />
+              </div>
+              <div class="tab-pane" :class="tab == 3 ? 'active' : ''">
+                <form-users :organization="organization" />
               </div>
             </div>
           </div>
@@ -80,60 +83,9 @@
         </b-form>
       </div>
     </div>
-    <!-- wizard container -->
-  </div>
-  <!-- <breadcrumb :links="[['Grupos de coletores', '/grupos-de-coletores']]" :active="isEditing() ? form.name : 'Cadastrar'" /> -->
-  <div class="panel panel-headline data-list" v-else>
-    <div class="panel-body">
-      <form-headline name="grupo de coletores" />
-      <loading :loading="isLoading" />
-      <b-form @submit.prevent="save" v-if="!isLoading">
-        <div class="row">
-          <div class="col-sm-6">
-            <b-form-group label="Nome do grupo *">
-              <b-form-input v-model="form.name" v-validate="'required'" name="name" />
-              <field-error :msg="veeErrors" field="name" />
-            </b-form-group>
-          </div>
-          <div class="col-sm-6">
-            <b-form-group label="CNPJ">
-              <the-mask v-model="form.cnpj" :mask="['##.###.###/####-##']"  />
-            </b-form-group>
-          </div>
-        </div>
-        <div class="row gray">
-          <div class="col-sm-6">
-            <b-form-group label="Contatos *" description="Liste todas as formas de contato com o grupo">
-              <b-form-textarea v-model="form.contact" v-validate="'required'" name="contact" :rows="3" />
-              <field-error :msg="veeErrors" field="contact" />
-            </b-form-group>
-          </div>
-          <div class="col-sm-6">
-            <b-form-group label="Descrição do grupo" description="Descreva aqui um pouco do trabalho do grupo de coletores">
-              <b-form-textarea v-model="form.description" :rows="3" name="body" />
-            </b-form-group>
-          </div>
-        </div>
-        <form-address :form="form" />
-        <form-bank-account :form="form" />
-        <div class="row">
-          <div class="col-sm-6">
-            <b-form-group label="Sementes">
-              <form-entities-select type="seeds" :form="form" field="seeds" />
-            </b-form-group>
-          </div>
-          <div class="col-sm-6">
-            <b-form-group label="Coletores">
-              <form-entities-select v-if="collectors && collectors.length" :items="collectors" type="collectors" :form="form" field="collectors" />
-              <no-item :list="collectors" />
-            </b-form-group>
-          </div>
-        </div>
-        <form-submit :errors="error" :sending="isSending" />
-      </b-form>
-    </div>
   </div>
   <pre>{{form}}</pre>
+  <pre>{{images_preview}}</pre>
 </div>
 </template>
 
@@ -148,6 +100,12 @@ import FormAddress from '@/components/FormAddress'
 import FormBankAccount from '@/components/FormBankAccount'
 import FormSubmit from '@/components/FormSubmit'
 import FieldError from '@/components/FieldError'
+import PicturesUpload from '@/components/PicturesUpload'
+import FormLinks from '@/components/FormLinks'
+import FormPhones from '@/components/FormPhones'
+import FormGeolocation from '@/components/FormGeolocation'
+import FormContactPersons from '@/components/FormContactPersons'
+import FormUsers from '@/components/FormUsers'
 import bancos from '@/data/bancos.json';
 import tipos_de_conta from '@/data/tipos-de-conta2.json';
 
@@ -156,29 +114,53 @@ export default {
   name: 'OrganizationForm',
   data() {
     return {
+      tab: 3,
       form: {
         cnpj: '07332061000103',
         email: 'admin@admin.com',
         password: 'asdf',
+        history: "",
         address: {
           uf: "",
           city: "",
           postal_code: "",
           address: ""
+        },
+        geolocation: {
+          lat: "",
+          lng: ""
+        },
+        images: [],
+        links: [],
+        phones: [],
+        contact_persons: [],
+        legal_format: "",
+        tax_regime: "",
+        subscription: "",
+        bank_account: {
+          bank_number: '',
+          agency: '',
+          account: '',
+          type: 'corrente',
         }
-      }
+      },
+      organization: null,
+      images_preview: [],
     }
   },
   created() {
-    if (this.isEditing()) {
-      this.edit(this.$route.params.id)
-    }
+    this.edit(this.$route.params.id)
   },
   methods: {
     edit(id) {
       this.isLoading = true
-      axios.get('organizations/' + id).then(response => {
+      axios.get('organizations/' + id, {
+        params: {
+          populate: 'users'
+        }
+      }).then(response => {
         this.apiDataToForm(this.form, response.data)
+        this.organization = response.data
         this.isLoading = false
       }).catch(this.showError);
     },
@@ -188,19 +170,28 @@ export default {
           this.isSending = true
           this.error = false
           axios({
-            method: (this.isEditing() ? 'PUT' : 'POST'),
-            url: 'organizations' + (this.isEditing() ? '/' + this.$route.params.id : ''),
+            method: 'PUT',
+            url: 'organizations/' + this.$route.params.id,
             data: this.form
           }).then(resp => {
             var organization = resp.data
             if (organization && organization._id) {
-              this.$router.replace('/organizacoes/' + organization._id)
+              this.notify("Os dados foram salvos!")
+              if (this.tab == 3) {
+                this.$router.replace('/organizacoes/' + organization._id)
+              } else {
+                window.scrollTo(0,0);
+                this.tab += 1
+              }
             }
             this.isSending = false
           }).catch(this.showError)
         }
       })
-    }
+    },
+    setTab(tab) {
+      this.tab = tab
+    },
   },
   components: {
     Breadcrumb,
@@ -211,7 +202,13 @@ export default {
     FormAddress,
     FormBankAccount,
     FormSubmit,
-    FieldError
+    FormLinks,
+    FormPhones,
+    FormGeolocation,
+    FormContactPersons,
+    FormUsers,
+    FieldError,
+    PicturesUpload
   }
 };
 </script>
