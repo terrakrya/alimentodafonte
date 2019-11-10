@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import axios from 'axios'
 import queries from '@/store/queries'
 import tipos_de_usuario from '@/data/tipos-de-usuario.json'
@@ -90,6 +91,14 @@ export default {
       }
       this.isLoading = false
       this.isSending = false
+    },
+    notify(msg, type = "success") {
+      console.log(msg);
+      Vue.notify({
+        group: 'a',
+        text: msg,
+        type: type
+      });
     },
     formatCity(address) {
       return address ? [

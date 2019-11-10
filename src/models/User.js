@@ -3,6 +3,7 @@ var mongoose = require('mongoose'),
   crypto = require('crypto'),
   jwt = require('jsonwebtoken'),
   secret = require('../config').secret,
+  ObjectId = mongoose.Schema.Types.ObjectId,
   AddressSchema = require('./Address'),
   BankAccountSchema = require('./BankAccount');
 
@@ -12,7 +13,6 @@ var UserSchema = new mongoose.Schema({
   cnpj: {
     type: String,
     lowercase: true,
-    required: [true, "é obrigatório"],
     match: [/^[a-zA-Z0-9]+$/, 'inválido'],
     index: true
   },
@@ -30,14 +30,12 @@ var UserSchema = new mongoose.Schema({
   hash: String,
   salt: String,
   name: String,
-  nickname: String,
-  cpf: String,
-  contact: String,
-  comments: String,
   roles: [String],
   image: Object,
-  address: AddressSchema,
-  bank_account: BankAccountSchema,
+  organization: {
+    type: ObjectId,
+    ref: 'Organization'
+  }
 }, {
   timestamps: true,
   toJSON: { virtuals: true }
@@ -78,7 +76,6 @@ UserSchema.methods.toAuthJSON = function() {
     token: this.generateJWT(),
     roles: this.roles,
     name: this.name,
-    image: this.image
   };
 };
 

@@ -35,15 +35,10 @@ router.get('/users/:id', auth.manager, function(req, res, next) {
 router.post('/users', auth.manager, function(req, res, next) {
   var user = new User();
 
-  user.username = req.body.username
+  user.cnpj = req.body.cnpj
   user.email = req.body.email
   user.name = req.body.name
-  user.nickname = req.body.nickname
-  user.cpf = req.body.cpf
-  user.contact = req.body.contact
-  user.image = req.body.image
-  user.address = req.body.address
-  user.bank_account = req.body.bank_account
+  user.organization = req.body.organization
 
   if (req.payload.roles.includes('admin')) {
     user.roles = req.body.roles
@@ -63,15 +58,9 @@ router.post('/users', auth.manager, function(req, res, next) {
 router.put('/users/:id', auth.manager, function(req, res, next) {
   User.findById(req.params.id).then(function(user) {
 
-    user.username = req.body.username
+    user.cnpj = req.body.cnpj
     user.email = req.body.email
     user.name = req.body.name
-    user.nickname = req.body.nickname
-    user.cpf = req.body.cpf
-    user.contact = req.body.contact
-    user.image = req.body.image
-    user.address = req.body.address
-    user.bank_account = req.body.bank_account
 
     if (req.payload.roles.includes('admin')) {
       user.roles = req.body.roles
@@ -150,6 +139,7 @@ router.post('/users/login', function(req, res, next) {
       return next(err);
     }
 
+    console.log(user);
     if (user) {
       user.token = user.generateJWT();
       return res.json(user.toAuthJSON());
@@ -170,8 +160,8 @@ router.get('/init', function(req, res) {
         var user = new User();
 
         user.name = 'Administrador do sistema'
-        user.nickname = 'Admin'
-        user.username = 'admin'
+        user.email = 'admin@sociobio.com'
+        user.cnpj = 'admin'
         user.roles = ['admin']
 
         user.setPassword('zyY5TeRl8k');

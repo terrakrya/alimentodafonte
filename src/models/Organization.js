@@ -33,9 +33,16 @@ const OrganizationSchema = mongoose.Schema({
   bank_account: BankAccountSchema,
   legal_format: String,
   tax_regime: String,
+  subscription: String,
 }, {
   timestamps: true,
   toJSON: { virtuals: true }
+});
+
+OrganizationSchema.virtual('users', {
+  ref: 'User',
+  localField: '_id',
+  foreignField: 'organization'
 });
 
 mongoose.model('Organization', OrganizationSchema);

@@ -1,78 +1,10 @@
 <template>
   <div class="dashboard">
-    <ol class="breadcrumb">
-      <li class="active">Painel do gestor</li>
-    </ol>
-    <div class="panel panel-headline data-list">
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="info-content">
-              <div class="row">
-                <div class="col-sm-4" v-if="potential_lists">
-                  <div class="weekly-summary text-center">
-                    <router-link to="/listas-de-potencial">
-                      <span class="info-label">Potencial de coleta</span>
-                      <span class="number">{{ total_potential | moeda }}</span>
-                      <br>
-                      <span>{{ total_potential_qtd | kg}}</span>
-                      <br>
-                      <small>{{ total_potential_species }} espécies</small>
-                    </router-link>
-                  </div>
-                </div>
-                <div class="col-sm-4" v-if="collectors_requests">
-                  <div class="weekly-summary text-center">
-                    <router-link to="/pedidos-para-coletores">
-                      <span class="info-label">Pedidos</span>
-                      <span class="number">{{ total_collectors_request | moeda }}</span>
-                      <br>
-                      <span>{{ total_collectors_request_qtd | kg}}</span>
-                      <br>
-                      <small>{{ total_collectors_request_species }} espécies</small>
-                    </router-link>
-                  </div>
-                </div>
-                <div class="col-sm-4" v-if="orders">
-                  <div class="weekly-summary text-center">
-                    <router-link to="/encomendas">
-                      <span class="info-label">Encomendas</span>
-                      <span class="number">{{ total_order | moeda }}</span>
-                      <br>
-                      <span>{{ total_order_qtd | kg}}</span>
-                      <br>
-                      <small>{{ total_order_species }} espécies</small>
-                    </router-link>
-                  </div>
-                </div>
-              </div>
-              <hr>
-              <br>
-              <div class="text-center">
-                <h4><i class="fa fa-cogs"></i>&nbsp;&nbsp;<span>Operacional</span></h4>
-                <div class="nav-buttons">
-                  <router-link class="btn btn-default" to="/estoque"><span>Estoque</span></router-link>
-                  <router-link class="btn btn-default" to="/listas-de-potencial"><span>Potencial de coleta</span></router-link>
-                  <router-link class="btn btn-default" to="/pedidos-para-coletores"><span>Pedidos para coletores</span></router-link>
-                  <router-link class="btn btn-default" to="/encomendas"><span>Encomendas</span></router-link>
-                  <router-link class="btn btn-default" to="/coletas"><span>Coleta de sementes</span></router-link>
-                </div>
-                <h4><i class="fa fa-list-alt"></i>&nbsp;&nbsp;<span>Cadastros</span></h4>
-                <div class="nav-buttons">
-                  <router-link class="btn btn-default" to="/usuarios" v-if="isAdmin"><span>Usuários</span></router-link>
-                  <router-link class="btn btn-default" to="/clientes"><span>Clientes</span></router-link>
-                  <router-link class="btn btn-default" to="/sementes"><span>Sementes</span></router-link>
-                  <router-link class="btn btn-default" to="/coletores"><span>Coletores</span></router-link>
-                  <router-link class="btn btn-default" to="/grupos-de-coletores"><span>Grupos de coletores</span></router-link>
-                  <router-link class="btn btn-default" to="/casas-de-sementes"><span>Casas de sementes</span></router-link>
-                  <router-link class="btn btn-default" to="/areas-de-coleta"><span>Áreas de coleta</span></router-link>
-                  <router-link class="btn btn-default" to="/matrizes-de-sementes"><span>Matrizes</span></router-link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="nav-buttons">
+      <router-link class="btn btn-default" to="/organizacoes"><span>Organizações</span></router-link>
+    </div>
+    <div class="nav-buttons">
+      <router-link class="btn btn-default" to="/usuarios" v-if="isAdmin"><span>Usuários</span></router-link>
     </div>
   </div>
 </template>

@@ -9,14 +9,14 @@
       <h4 class="card-title ">Organizações</h4>
     </div>
     <div class="card-body">
+      <b-alert variant="danger" show v-if="error">{{error}}</b-alert>
+      <loading :loading="!organizations && !error" msg="Carregando lista de organizações" />
+      <no-item :list="organizations" />
       <div class="table-responsive">
-        <b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-        <loading :loading="!organizations && !error" msg="Carregando lista de organizações" />
-        <no-item :list="organizations" />
         <div v-if="organizations && organizations.length">
           <b-table stacked="md" :fields="table_fields" :items="organizations" :sort-by="'name'" :filter="filters.search">
             <template slot="name" slot-scope="data">
-              <router-link :to="'/organizacao/'+ data.item._id">
+              <router-link :to="'/editar-organizacao/'+ data.item._id">
                 <strong>{{data.item.name}}</strong>
                 <small v-if="data.item.collectors">
                   <br>

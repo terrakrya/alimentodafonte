@@ -2,7 +2,7 @@
   <div class="row-fluid">
     <br>
     <br>
-    <div v-if="list && list.length == 0" class="col-md-3 ml-auto mr-auto text-center alert alert-info"><strong>{{msg ? msg : 'Nenhum item encontrado'}}</strong></div>
+    <div v-if="list && list.length == 0" class="col-md-3 ml-auto mr-auto text-center alert alert-default"><strong>{{msg ? msg : 'Nenhum item encontrado'}}</strong></div>
   </div>
 </template>
 
