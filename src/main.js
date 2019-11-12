@@ -21,7 +21,7 @@ if (store.state && store.state.currentUser) {
 }
 axios.defaults.headers.common['Content-Type'] = 'application/json'
 axios.defaults.baseURL = (process.env.NODE_ENV == 'development')
-  ? "http://localhost:3000/api/"
+  ? "http://sociobio.terrakrya.tk:3000/api/"
   : "/api/"
 
 Vue.use(BootstrapVue)
