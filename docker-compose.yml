@@ -1,23 +1,23 @@
 version: '3'
 services:
-  sementes:
-    container_name: sementes
+  sociobio:
+    container_name: sociobio
     restart: always
     build: .
     links:
       - mongo
     environment:
       - NODE_ENV=production
-      - MONGODB_URI=mongodb://mongo:27017/sementes
+      - MONGODB_URI=mongodb://mongo:27017/sociobio
       - SECRET=LBHbQJpuZT
     volumes:
       - ./uploads:/app/uploads
     labels:
-      - "traefik.backend=sementes"
-      - "traefik.frontend.rule=Host:sementes.diegomr86.ga"
+      - "traefik.backend=sociobio"
+      - "traefik.frontend.rule=Host:sociobio.terrakrya.tk"
 
   mongo:
-    container_name: sementes-mongo
+    container_name: sociobio-mongo
     image: 'mongo:4'
     volumes:
       - ./data:/data/db
