@@ -21,7 +21,6 @@ services:
       - 'traefik.frontend.rule=Host:sociobio.terrakrya.tk'
       - 'traefik.enable=true'
     depends_on:
-      - traefik
       - mongo_sociobio
   mongo_sociobio:
     container_name: mongo_sociobio
@@ -29,5 +28,3 @@ services:
     restart: always
     volumes:
       - ./data/sociobio:/data/db
-    depends_on:
-      - traefik
