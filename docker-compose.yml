@@ -15,13 +15,11 @@ services:
     labels:
       - "traefik.backend=sociobio"
       - "traefik.frontend.rule=Host:sociobio.terrakrya.tk"
-
   mongo:
     container_name: sociobio-mongo
     image: 'mongo:4'
     volumes:
       - ./data:/data/db
-
   traefik:
     image: traefik
     command: --web --docker --docker.domain=docker.localhost --logLevel=DEBUG
