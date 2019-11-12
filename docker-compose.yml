@@ -48,11 +48,3 @@ services:
       sociobio:
     labels:
       - "traefik.docker.network=sociobio"
-
-networks:
-  sociobio:
-    driver: bridge
-    ipam:
-      config:
-        -
-          subnet: 172.55.0.0/16
