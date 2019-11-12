@@ -102,9 +102,9 @@ export default {
   data() {
     return {
       form: {
-        cnpj: '07332061000103',
-        email: 'admin@admin.com',
-        password: 'asdf',
+        cnpj: '',
+        email: '',
+        password: '',
       }
     }
   },
