@@ -84,8 +84,6 @@
       </div>
     </div>
   </div>
-  <pre>{{form}}</pre>
-  <pre>{{images_preview}}</pre>
 </div>
 </template>
 
