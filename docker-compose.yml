@@ -1,31 +1,58 @@
-version: '3'
+version: "3"
+
 services:
-  sociobio:
+  sociobio_app:
     container_name: sociobio
     restart: always
     build: .
     links:
-      - mongo
+      - mongo_sociobio
     environment:
       - NODE_ENV=production
-      - MONGODB_URI=mongodb://mongo:27017/sociobio
+      - MONGODB_URI=mongodb://mongo_sociobio:27017/sociobio
       - SECRET=LBHbQJpuZT
+      - PORT=80
     volumes:
-      - ./uploads:/app/uploads
+      - ./uploads/sociobio:/app/uploads
+    networks:
+      sociobio:
     labels:
-      - "traefik.backend=sociobio"
-      - "traefik.frontend.rule=Host:sociobio.terrakrya.tk"
-  mongo:
-    container_name: sociobio-mongo
+      - 'traefik.docker.network=sociobio'
+      - 'traefik.backend=sociobio'
+      - 'traefik.port=80'
+      - 'traefik.frontend.rule=Host:sociobio.terrakrya.tk'
+      - 'traefik.enable=true'
+    depends_on:
+      - traefik
+      - mongo_sociobio
+  mongo_sociobio:
+    container_name: mongo_sociobio
     image: 'mongo:4'
+    restart: always
     volumes:
-      - ./data:/data/db
+      - ./data/sociobio:/data/db
+    networks:
+      sociobio:
+    depends_on:
+      - traefik
+
   traefik:
     image: traefik
-    command: --web --docker --docker.domain=docker.localhost --logLevel=DEBUG
+    restart: always
+    command: -c /dev/null --web --docker --logLevel=INFO
     ports:
-      - "80:80"
-      - "8080:8080"
+      - '80:80'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /dev/null:/traefik.toml
+    networks:
+      sociobio:
+    labels:
+      - "traefik.docker.network=sociobio"
+
+networks:
+  sociobio:
+    driver: bridge
+    ipam:
+      config:
+        -
+          subnet: 172.55.0.0/16
