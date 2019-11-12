@@ -14,8 +14,6 @@ services:
       - PORT=80
     volumes:
       - ./uploads/sociobio:/app/uploads
-    networks:
-      sociobio:
     labels:
       - 'traefik.docker.network=sociobio'
       - 'traefik.backend=sociobio'
@@ -31,8 +29,6 @@ services:
     restart: always
     volumes:
       - ./data/sociobio:/data/db
-    networks:
-      sociobio:
     depends_on:
       - traefik
 
@@ -44,7 +40,5 @@ services:
       - '80:80'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      sociobio:
     labels:
       - "traefik.docker.network=sociobio"
