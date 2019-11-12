@@ -114,11 +114,11 @@ export default {
   name: 'OrganizationForm',
   data() {
     return {
-      tab: 3,
+      tab: 0,
       form: {
-        cnpj: '07332061000103',
-        email: 'admin@admin.com',
-        password: 'asdf',
+        cnpj: '',
+        email: '',
+        password: '',
         history: "",
         address: {
           uf: "",
@@ -178,7 +178,7 @@ export default {
             if (organization && organization._id) {
               this.notify("Os dados foram salvos!")
               if (this.tab == 3) {
-                this.$router.replace('/organizacoes/' + organization._id)
+                this.$router.replace('/organizacoes')
               } else {
                 window.scrollTo(0,0);
                 this.tab += 1
