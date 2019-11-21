@@ -6,30 +6,30 @@
         <b-form @submit.prevent="save" v-if="!isLoading">
           <div class="card-header text-center">
             <h3 class="card-title">
-              {{organization.name}}
+              {{supplier.name}}
             </h3>
-            <h5 class="card-description">{{organization.description}}</h5>
+            <h5 class="card-description">{{supplier.description}}</h5>
           </div>
           <div class="wizard-navigation">
-            <ul class="nav nav-pills organization-form">
+            <ul class="nav nav-pills supplier-form">
               <li class="nav-item">
                 <a class="nav-link" :class="tab == 0 ? 'active' : ''" @click="setTab(0)">
-                  Apresentação
+                  Registro
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" :class="tab == 1 ? 'active' : ''" @click="setTab(1)">
-                  Contato
+                  Apresentação
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" :class="tab == 2 ? 'active' : ''" @click="setTab(2)">
-                  Financeiro
+                  Contato
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" :class="tab == 3 ? 'active' : ''" @click="setTab(3)">
-                  Usuários
+                  Financeiro
                 </a>
               </li>
             </ul>
@@ -37,9 +37,20 @@
           <div class="card-body">
             <div class="tab-content">
               <div class="tab-pane" :class="tab == 0 ? 'active' : ''">
+                <b-form-group label="CNPJ" class="bmd-form-group">
+                  {{form.cnpj | cnpj}}
+                </b-form-group>
+                <b-form-group label="Nome da organização" class="bmd-form-group">
+                  <b-form-input v-model="form.name" name="name" />
+                </b-form-group>
+                <b-form-group label="Atividade principal" class="bmd-form-group">
+                  <b-form-input v-model="form.description" name="description" />
+                </b-form-group>
+              </div>
+              <div class="tab-pane" :class="tab == 1 ? 'active' : ''">
                 <div class="row justify-content-center">
                   <div class="col-lg-12">
-                    <b-form-group label="Histórico da organização" description="Escreva um breve resumo da história da organização" class="bmd-form-group">
+                    <b-form-group label="Histórico do fornecedor" description="Escreva um breve resumo da história do fornecedor" class="bmd-form-group">
                       <b-form-textarea v-model="form.history" name="history" />
                     </b-form-group>
                   </div>
@@ -51,16 +62,16 @@
                   </div>
                 </div>
               </div>
-              <div class="tab-pane" :class="tab == 1 ? 'active' : ''">
-                <b-form-group label="Email" class="bmd-form-group">
-                  <b-form-input v-model="form.email" name="email" />
-                </b-form-group>
+              <div class="tab-pane" :class="tab == 2 ? 'active' : ''">
                 <form-address :form="form" />
                 <form-geolocation :form="form" />
                 <form-phones :form="form" field="phones" />
+                <b-form-group label="Email" class="bmd-form-group">
+                  <b-form-input v-model="form.email" name="email" />
+                </b-form-group>
                 <form-contact-persons :form="form" field="contact_persons" />
               </div>
-              <div class="tab-pane" :class="tab == 2 ? 'active' : ''">
+              <div class="tab-pane" :class="tab == 3 ? 'active' : ''">
                 <b-form-group label="Formato jurídico" class="bmd-form-group">
                   <b-form-input v-model="form.legal_format" name="legal_format" />
                 </b-form-group>
@@ -72,8 +83,8 @@
                 </b-form-group>
                 <form-bank-account :form="form" />
               </div>
-              <div class="tab-pane" :class="tab == 3 ? 'active' : ''">
-                <form-users :organization="organization" />
+              <div class="tab-pane" :class="tab == 4 ? 'active' : ''">
+                <form-users :supplier="supplier" />
               </div>
             </div>
           </div>
@@ -109,13 +120,15 @@ import tipos_de_conta from '@/data/tipos-de-conta2.json';
 
 export default {
 
-  name: 'OrganizationForm',
+  name: 'SupplierForm',
   data() {
     return {
       tab: 0,
       form: {
         cnpj: '',
         email: '',
+        name: '',
+        description: '',
         password: '',
         history: "",
         address: {
@@ -142,7 +155,7 @@ export default {
           type: 'corrente',
         }
       },
-      organization: null,
+      supplier: null,
       images_preview: [],
     }
   },
@@ -152,13 +165,13 @@ export default {
   methods: {
     edit(id) {
       this.isLoading = true
-      axios.get('organizations/' + id, {
+      axios.get('suppliers/' + id, {
         params: {
           populate: 'users'
         }
       }).then(response => {
         this.apiDataToForm(this.form, response.data)
-        this.organization = response.data
+        this.supplier = response.data
         this.isLoading = false
       }).catch(this.showError);
     },
@@ -169,14 +182,14 @@ export default {
           this.error = false
           axios({
             method: 'PUT',
-            url: 'organizations/' + this.$route.params.id,
+            url: 'suppliers/' + this.$route.params.id,
             data: this.form
           }).then(resp => {
-            var organization = resp.data
-            if (organization && organization._id) {
+            var supplier = resp.data
+            if (supplier && supplier._id) {
               this.notify("Os dados foram salvos!")
               if (this.tab == 3) {
-                this.$router.replace('/organizacoes')
+                this.$router.replace('/fornecedores')
               } else {
                 window.scrollTo(0,0);
                 this.tab += 1

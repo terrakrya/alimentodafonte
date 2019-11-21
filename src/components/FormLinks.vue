@@ -2,7 +2,7 @@
 <div class="form-links">
   <div class="row" v-for="(link, index) in form[field]">
     <div class="col-md-3">
-      <b-form-group v-if="links.find(l => (l.label == link.label))">
+      <b-form-group v-if="fixed_links.find(l => (l.label == link.label))">
         {{link.label}}:
       </b-form-group>
       <b-form-group v-else>
@@ -29,7 +29,8 @@ export default {
   props: ['form', 'field'],
   data() {
     return {
-      links: [{
+      links: [],
+      fixed_links: [{
           label: "Site",
           value: "",
         },
@@ -49,6 +50,7 @@ export default {
     }
   },
   created() {
+    this.links = this.fixed_links
     if (!this.form[this.field] || !this.form[this.field].length) {
       this.form[this.field] = this.links
 

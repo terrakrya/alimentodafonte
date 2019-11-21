@@ -53,6 +53,8 @@ router.post('/', auth.manager, function(req, res) {
   }, (err, resp, body) => {
     if (err) {
       res.status(422).send('Ocorreu um erro ao cadastrar: ' + err.message);
+    } else if (body.status == 'ERROR') {
+      res.status(422).send(body.message);
     } else {
       newOrganization.name = body.fantasia
       if (!newOrganization.name) {
@@ -91,7 +93,11 @@ router.post('/', auth.manager, function(req, res) {
       newOrganization.subscription = body.abertura
       newOrganization.save(function(err, organization) {
         if (err) {
-          res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
+          if (err.message.includes('duplicate')) {
+            res.status(422).send('Esta organização já está cadastrada');
+          } else {
+            res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
+          }
         } else {
           var newUser = new User({
             cnpj: organization.cnpj,
@@ -103,6 +109,7 @@ router.post('/', auth.manager, function(req, res) {
           });
           newUser.save(function(err, user) {
             if (err) {
+              organization.remove()
               res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
             } else {
               res.send(organization);

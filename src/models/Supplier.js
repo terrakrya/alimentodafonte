@@ -5,7 +5,11 @@ const mongoose = require('mongoose'),
   ContactPersonSchema = require('./ContactPerson'),
   BankAccountSchema = require('./BankAccount');
 
-const OrganizationSchema = mongoose.Schema({
+const SupplierSchema = mongoose.Schema({
+  organizations: [{
+    type: ObjectId,
+    ref: 'Organization'
+  }],
   slug: {
     type: String
   },
@@ -40,10 +44,10 @@ const OrganizationSchema = mongoose.Schema({
   toJSON: { virtuals: true }
 });
 
-OrganizationSchema.virtual('users', {
+SupplierSchema.virtual('users', {
   ref: 'User',
   localField: '_id',
   foreignField: 'organization'
 });
 
-mongoose.model('Organization', OrganizationSchema);
+mongoose.model('Supplier', SupplierSchema);
