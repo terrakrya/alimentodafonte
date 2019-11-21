@@ -1,20 +1,20 @@
 <template>
-<div class="organization-form">
+<div class="supplier-form">
   <div class="col-md-8 col-12 mr-auto ml-auto">
     <div class="wizard-container">
       <div class="card card-wizard active" data-color="rose" id="wizardProfile">
         <b-form @submit.prevent="save" v-if="!isLoading">
           <div class="card-header text-center">
             <h3 class="card-title">
-              Cadastrar organização
+              Cadastrar fornecedor
             </h3>
             <h5 class="card-description">Preencha os dados abaixo para continuar</h5>
           </div>
           <div class="wizard-navigation">
-            <ul class="nav nav-pills organization-form">
+            <ul class="nav nav-pills supplier-form">
               <li class="nav-item active">
                 <span class="nav-link active">
-                  Acesso
+                  Registro
                 </span>
               </li>
               <li class="nav-item">
@@ -37,30 +37,18 @@
           <div class="card-body">
             <div class="tab-content">
               <div class="tab-pane active">
-                <h5 class="info-text">Insira os dados do responsável e o CNPJ da organização</h5>
+                <h5 class="info-text">Insira os dados da organização fornecedora</h5>
                 <div class="row justify-content-center">
                   <div class="col-lg-10">
-                    <b-form-group label="CNPJ *" class="bmd-form-group">
+                    <b-form-group label="CNPJ da organização *" class="bmd-form-group">
                       <b-form-input v-model="form.cnpj" v-validate="'required'" name="cnpj" v-mask="['##.###.###/####-##']" />
                       <field-error :msg="veeErrors" field="cnpj" />
                     </b-form-group>
                   </div>
                   <div class="col-lg-10">
-                    <b-form-group label="Email">
-                      <b-form-input v-model="form.email" v-validate="'email'" name="email" />
-                      <field-error :msg="veeErrors" field="email" />
-                    </b-form-group>
-                  </div>
-                  <div class="col-lg-5">
-                    <b-form-group label="Senha *">
-                      <b-form-input v-model="form.password" type="password" v-validate="'required'" name="password" ref="password" placeholder="Senha" />
-                      <field-error :msg="veeErrors" field="password" />
-                    </b-form-group>
-                  </div>
-                  <div class="col-lg-5">
-                    <b-form-group label="Confirmar senha *">
-                      <b-form-input v-model="form.password_confirmation" type="password" v-validate="'required|confirmed:password'" data-vv-as="password" name="password_confirmation" />
-                      <field-error :msg="veeErrors" field="password_confirmation" />
+                    <b-form-group label="Redes que englobam esta organização *" class="bmd-form-group">
+                      <form-entities-select type="organizations" :form="form" field="organizations" />
+                      <field-error :msg="veeErrors" field="organizations" />
                     </b-form-group>
                   </div>
                 </div>
@@ -74,6 +62,7 @@
       </div>
     </div>
   </div>
+
 </div>
 </template>
 
@@ -98,10 +87,11 @@ import tipos_de_conta from '@/data/tipos-de-conta2.json';
 
 export default {
 
-  name: 'OrganizationRegisterForm',
+  name: 'SupplierRegisterForm',
   data() {
     return {
       form: {
+        organizations: [],
         cnpj: '',
         email: '',
         password: '',
@@ -116,13 +106,13 @@ export default {
           this.error = false
           axios({
             method: 'POST',
-            url: 'organizations',
+            url: 'suppliers',
             data: this.form
           }).then(resp => {
-            var organization = resp.data
-            if (organization && organization._id) {
+            var supplier = resp.data
+            if (supplier && supplier._id) {
               this.notify("Cadastro realizado com sucesso!")
-              this.$router.replace('/editar-organizacao/' + organization._id)
+              this.$router.replace('/editar-fornecedor/' + supplier._id)
             }
             this.isSending = false
           }).catch(this.showError)

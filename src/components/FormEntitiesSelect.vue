@@ -1,6 +1,7 @@
 <template>
 <div>
-  <cool-select :scrollItemsLimit="10000" :scrollItemsLimitAddAfterScroll="10000" :arrowsDisableInstantSelection="true" placeholder="Busque pelo nome clique para adicionar à lista" v-model="entity" :items="list" item-text="title" @select="addItem()">
+  <cool-select :scrollItemsLimit="10000" :scrollItemsLimitAddAfterScroll="10000" :arrowsDisableInstantSelection="true" placeholder="Busque pelo nome clique para adicionar à lista" v-model="entity" :items="list" item-text="title" @select="addItem()"
+    inputForTextClass="form-control">
     <template slot="item" slot-scope="{ item: option }">
       <div style="display: flex; align-items: center;">
         <img v-if="option.picture" :src="baseUrl + option.picture">
@@ -18,15 +19,22 @@
     </template>
   </cool-select>
   <div class="entity-select-preview" v-if="preview && preview.length > 0">
+    <br>
     <h5> Selecionados: </h5>
     <div class="list-group">
-      <div class="list-group-item" v-for="(item_preview, index) in preview" :key="index">
-        <div>
-          <img v-if="item_preview && item_preview.picture" :src="baseUrl + item_preview.picture" />
-          <span v-if="item_preview">{{item_preview.title}}</span>
-          <b-button v-if="item_preview" class="btn btn-xs btn-danger fa fa-trash pull-right" @click="removeItem(item_preview.id)"></b-button>
-        </div>
-      </div>
+      <table class="table table-hover">
+        <tbody>
+          <tr v-for="(item_preview, index) in preview" :key="index">
+            <td><img class="table-image" v-if="item_preview && item_preview.picture" :src="baseUrl + item_preview.picture" /></td>
+            <td><span v-if="item_preview">{{item_preview.title}}</span></td>
+            <td>
+              <a v-if="item_preview" @click="removeItem(item_preview.id)" class="btn btn-link btn-danger pull-right">
+                <i class="material-icons">close</i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
@@ -53,6 +61,16 @@ export default {
       })
     } else {
       switch (this.type) {
+        case 'organizations':
+          this.list = (await this.loadList('organizations')).map(organization => ({
+            id: organization._id,
+            title: organization.name,
+            description: organization.description,
+            picture: organization.images && organization.images.length ? organization.images[0].thumb : '',
+          })).sort(function(a, b) {
+            return a.title.localeCompare(b.title);
+          })
+          break;
         case 'seeds':
           this.list = (await this.loadList('seeds')).map(seed => ({
             id: seed._id,

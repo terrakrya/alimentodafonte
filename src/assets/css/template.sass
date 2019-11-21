@@ -17,10 +17,14 @@ a
       &.active
         background-color: $pink-500 !important
         color: $white !important
-.organization-form
+.organization-form, .supplier-form
   li
     width: 25%
     overflow: hidden
+.supplier-form
+  .card-wizard
+    .tab-content
+      min-height: auto
 .card
   .card-body
     .col-form-label
@@ -47,3 +51,34 @@ form
   .form-group
     select.form-control
       position: inherit
+
+.IZ-select__item
+  padding: 10px
+  border-bottom: 1px solid $gray-color
+  cursor: pointer
+  img
+    max-width: 50px
+    margin-right: 10px
+    border: 1px solid $gray-color
+  &:hover
+    background-color: $pink
+    color: $white
+  &:first-child
+    border-bottom: 0
+
+.IZ-select__menu
+  max-height: 268px
+  overflow-y: scroll
+  border: 1px solid $gray-color
+  position: absolute
+  background-color: $white
+  z-index: 100
+  left: auto !important
+.IZ-select__input
+    width: 100%
+
+.IZ-select__menu-items
+  > div:last-child, > div:first-child
+    display: none
+.table-image
+  max-width: 50px

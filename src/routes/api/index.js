@@ -2,6 +2,7 @@ var router = require('express').Router();
 
 router.use('/', require('./users'));
 router.use('/organizations', require('./organizations'));
+router.use('/suppliers', require('./suppliers'));
 router.use('/seeds', require('./seeds'));
 router.use('/collectors_groups', require('./collectors_groups'));
 router.use('/seeds_houses', require('./seeds_houses'));

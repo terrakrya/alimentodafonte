@@ -61,6 +61,10 @@ import Organization from '@/views/Organization.vue'
 import OrganizationForm from '@/views/OrganizationForm.vue'
 import OrganizationRegisterForm from '@/views/OrganizationRegisterForm.vue'
 
+import Suppliers from '@/views/Suppliers.vue'
+import SupplierForm from '@/views/SupplierForm.vue'
+import SupplierRegisterForm from '@/views/SupplierRegisterForm.vue'
+
 Vue.use(Router)
 
 function requireAuth (to, from, next) {
@@ -169,6 +173,11 @@ export default new Router({
     { path: '/cadastrar-organizacao', component: OrganizationRegisterForm, beforeEnter: requireAuth },
     { path: '/editar-organizacao/:id', component: OrganizationForm, beforeEnter: requireAuth },
     { path: '/organizacao/:id', component: Organization, beforeEnter: requireAuth },
+
+    { path: '/fornecedores', component: Suppliers, beforeEnter: requireAuth },
+    { path: '/cadastrar-fornecedor', component: SupplierRegisterForm, beforeEnter: requireAuth },
+    { path: '/editar-fornecedor/:id', component: SupplierForm, beforeEnter: requireAuth },
+    // { path: '/fornecedor/:id', component: Supplier, beforeEnter: requireAuth },
 
   ]
 })
