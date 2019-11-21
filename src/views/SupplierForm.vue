@@ -46,6 +46,10 @@
                 <b-form-group label="Atividade principal" class="bmd-form-group">
                   <b-form-input v-model="form.description" name="description" />
                 </b-form-group>
+                <b-form-group label="Redes que englobam esta organização *" class="bmd-form-group">
+                  <form-entities-select type="organizations" :form="form" field="organizations" />
+                  <field-error :msg="veeErrors" field="organizations" />
+                </b-form-group>
               </div>
               <div class="tab-pane" :class="tab == 1 ? 'active' : ''">
                 <div class="row justify-content-center">
@@ -100,31 +104,24 @@
 
 <script>
 import axios from 'axios'
-import Breadcrumb from '@/components/Breadcrumb'
-import Loading from '@/components/Loading'
-import NoItem from '@/components/NoItem'
-import FormHeadline from '@/components/FormHeadline'
-import FormEntitiesSelect from '@/components/FormEntitiesSelect'
 import FormAddress from '@/components/FormAddress'
 import FormBankAccount from '@/components/FormBankAccount'
 import FormSubmit from '@/components/FormSubmit'
-import FieldError from '@/components/FieldError'
-import PicturesUpload from '@/components/PicturesUpload'
 import FormLinks from '@/components/FormLinks'
 import FormPhones from '@/components/FormPhones'
 import FormGeolocation from '@/components/FormGeolocation'
 import FormContactPersons from '@/components/FormContactPersons'
 import FormUsers from '@/components/FormUsers'
-import bancos from '@/data/bancos.json';
-import tipos_de_conta from '@/data/tipos-de-conta2.json';
+import FormEntitiesSelect from '@/components/FormEntitiesSelect'
 
 export default {
 
   name: 'SupplierForm',
   data() {
     return {
-      tab: 0,
+      tab: 1,
       form: {
+        organizations: [],
         cnpj: '',
         email: '',
         name: '',
@@ -205,11 +202,6 @@ export default {
     },
   },
   components: {
-    Breadcrumb,
-    Loading,
-    NoItem,
-    FormHeadline,
-    FormEntitiesSelect,
     FormAddress,
     FormBankAccount,
     FormSubmit,
@@ -218,8 +210,7 @@ export default {
     FormGeolocation,
     FormContactPersons,
     FormUsers,
-    FieldError,
-    PicturesUpload
+    FormEntitiesSelect
   }
 };
 </script>

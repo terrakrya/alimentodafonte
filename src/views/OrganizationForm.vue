@@ -89,23 +89,15 @@
 
 <script>
 import axios from 'axios'
-import Breadcrumb from '@/components/Breadcrumb'
-import Loading from '@/components/Loading'
-import NoItem from '@/components/NoItem'
-import FormHeadline from '@/components/FormHeadline'
-import FormEntitiesSelect from '@/components/FormEntitiesSelect'
 import FormAddress from '@/components/FormAddress'
 import FormBankAccount from '@/components/FormBankAccount'
 import FormSubmit from '@/components/FormSubmit'
-import FieldError from '@/components/FieldError'
 import PicturesUpload from '@/components/PicturesUpload'
 import FormLinks from '@/components/FormLinks'
 import FormPhones from '@/components/FormPhones'
 import FormGeolocation from '@/components/FormGeolocation'
 import FormContactPersons from '@/components/FormContactPersons'
 import FormUsers from '@/components/FormUsers'
-import bancos from '@/data/bancos.json';
-import tipos_de_conta from '@/data/tipos-de-conta2.json';
 
 export default {
 
@@ -192,11 +184,6 @@ export default {
     },
   },
   components: {
-    Breadcrumb,
-    Loading,
-    NoItem,
-    FormHeadline,
-    FormEntitiesSelect,
     FormAddress,
     FormBankAccount,
     FormSubmit,
@@ -205,7 +192,6 @@ export default {
     FormGeolocation,
     FormContactPersons,
     FormUsers,
-    FieldError,
     PicturesUpload
   }
 };
