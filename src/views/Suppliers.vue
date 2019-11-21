@@ -46,8 +46,6 @@
 import axios from 'axios'
 import Loading from '@/components/Loading'
 import NoItem from '@/components/NoItem'
-import ListHeadline from '@/components/ListHeadline'
-import Breadcrumb from '@/components/Breadcrumb'
 
 export default {
 
@@ -101,9 +99,7 @@ export default {
 
   components: {
     Loading,
-    NoItem,
-    ListHeadline,
-    Breadcrumb
+    NoItem
   }
 
 };

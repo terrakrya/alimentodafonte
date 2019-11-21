@@ -1,6 +1,6 @@
 <template>
 <div class="form-links">
-  <div class="row" v-for="(link, index) in form[field]">
+  <div class="row" v-for="(link, index) in form[field]" :key="index">
     <div class="col-md-3">
       <b-form-group v-if="fixed_links.find(l => (l.label == link.label))">
         {{link.label}}:
@@ -20,8 +20,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-import Loading from './Loading'
 
 export default {
 
@@ -55,7 +53,6 @@ export default {
       this.form[this.field] = this.links
 
     }
-    console.log(this.form[this.field]);
   },
   methods: {
     addLink() {
@@ -64,21 +61,6 @@ export default {
         value: ""
       })
     }
-  },
-  components: {
-    Loading
   }
 };
 </script>
-
-<style lang="sass">
-.brand h1
-  margin-top: 10px
-  font-size: 31px
-  a
-  color: #fff
-  span
-  font-weight: 300
-  strong
-  font-weight: 900
-  </style>
