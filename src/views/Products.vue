@@ -1,22 +1,22 @@
 <template>
 <div>
-  <router-link class="btn btn-success btn-round btn-add" to="/cadastrar-fornecedor"><i class="material-icons">add</i>Cadastrar</router-link>
+  <router-link class="btn btn-success btn-round btn-add" to="/cadastrar-produto"><i class="material-icons">add</i>Cadastrar</router-link>
   <div class="card">
     <div class="card-header card-header-icon card-header-rose">
       <div class="card-icon">
-        <i class="material-icons">people</i>
+        <i class="material-icons">shopping_cart</i>
       </div>
-      <h4 class="card-title ">Fornecedores</h4>
+      <h4 class="card-title ">Produtos</h4>
     </div>
     <div class="card-body">
       <b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-      <loading :loading="!suppliers && !error" msg="Carregando lista de fornecedores" />
-      <no-item :list="suppliers" />
+      <loading :loading="!products && !error" msg="Carregando lista de produtos" />
+      <no-item :list="products" />
       <div class="table-responsive">
-        <div v-if="suppliers && suppliers.length">
-          <b-table stacked="md" :fields="table_fields" :items="suppliers" :sort-by="'name'" :filter="filters.search">
+        <div v-if="products && products.length">
+          <b-table stacked="md" :fields="table_fields" :items="products" :sort-by="'name'" :filter="filters.search">
             <template slot="name" slot-scope="data">
-              <router-link :to="'/editar-fornecedor/'+ data.item._id">
+              <router-link :to="'/editar-produto/'+ data.item._id">
                 <strong>{{data.item.name}}</strong>
                 <small v-if="data.item.collectors">
                   <br>
@@ -28,7 +28,7 @@
               <span>{{data.value | city}}</span>
             </template>
             <template slot="actions" slot-scope="data">
-              <router-link :to="'/editar-fornecedor/'+ data.item._id" class="btn btn-link btn-success">
+              <router-link :to="'/editar-produto/'+ data.item._id" class="btn btn-link btn-success">
                 <i class="material-icons">edit</i>
               </router-link>
               <a @click="remove(data.item._id)" class="btn btn-link btn-danger">
@@ -49,7 +49,7 @@ import NoItem from '@/components/NoItem'
 
 export default {
 
-  name: 'Suppliers',
+  name: 'Products',
 
   data() {
     return {
@@ -73,7 +73,7 @@ export default {
           'class': 'td-actions text-right'
         },
       ],
-      suppliers: null
+      products: null
     }
   },
 
@@ -83,14 +83,14 @@ export default {
 
   methods: {
     async list() {
-      axios.get('suppliers').then(response => {
-        this.suppliers = response.data
+      axios.get('products').then(response => {
+        this.products = response.data
       }).catch(this.showError)
 
     },
     remove(id) {
       if (confirm("Tem certeza que deseja excluír?")) {
-        axios.delete('suppliers/' + id).then(() => {
+        axios.delete('products/' + id).then(() => {
           this.list()
         }).catch(this.showError)
       }

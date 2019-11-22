@@ -6,6 +6,12 @@ var getOrganizations = async function() {
   })
 }
 
+var getSuppliers = async function() {
+  return await axios.get('suppliers').then(async response => {
+    return response.data
+  })
+}
+
 var getSeeds = async function() {
   return await axios.get('seeds').then(async response => {
     return response.data
@@ -67,6 +73,8 @@ var getStock = async function() {
 var loadList = async function(type) {
   if (type == 'organizations') {
     return await getOrganizations()
+  } else if (type == 'suppliers') {
+    return await getSuppliers()
   } else if (type == 'collectors') {
     return await getCollectors()
   } else if (type == 'collectors_groups') {

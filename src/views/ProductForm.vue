@@ -1,35 +1,46 @@
 <template>
-<div class="supplier-form">
+<div class="product-form">
   <div class="col-md-12 mr-auto ml-auto">
     <div class="wizard-container">
       <div class="card card-wizard active" data-color="rose" id="wizardProfile">
         <b-form @submit.prevent="save" v-if="!isLoading">
-          <div class="card-header text-center">
+          <div class="card-header text-center" v-if="product">
             <h3 class="card-title">
-              {{supplier.name}}
+              {{product.name}}
             </h3>
-            <h5 class="card-description">{{supplier.description}}</h5>
+            <h5 class="card-description">{{product.description}}</h5>
+          </div>
+          <div class="card-header text-center" v-else>
+            <h3 class="card-title">
+              Cadastro de produtos
+            </h3>
+            <h5 class="card-description">Preencha os dados abaixo para continuar</h5>
           </div>
           <div class="wizard-navigation">
-            <ul class="nav nav-pills supplier-form">
+            <ul class="nav nav-pills product-form">
               <li class="nav-item">
                 <a class="nav-link" :class="tab == 0 ? 'active' : ''" @click="setTab(0)">
-                  Registro
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" :class="tab == 1 ? 'active' : ''" @click="setTab(1)">
                   Apresentação
                 </a>
               </li>
               <li class="nav-item">
+                <a class="nav-link" :class="tab == 1 ? 'active' : ''" @click="setTab(1)">
+                  Características
+                </a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link" :class="tab == 2 ? 'active' : ''" @click="setTab(2)">
-                  Contato
+                  Valores
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" :class="tab == 3 ? 'active' : ''" @click="setTab(3)">
-                  Financeiro
+                  Ficha técnica
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" :class="tab == 4 ? 'active' : ''" @click="setTab(3)">
+                  Estocagem e Frete
                 </a>
               </li>
             </ul>
@@ -37,19 +48,44 @@
           <div class="card-body">
             <div class="tab-content">
               <div class="tab-pane" :class="tab == 0 ? 'active' : ''">
-                <b-form-group label="CNPJ" class="bmd-form-group">
-                  {{form.cnpj | cnpj}}
+                <h5 class="info-text"> Em qual fase este produto está? </h5>
+                <div class="row justify-content-center">
+                  <div class="col-md-10">
+                    <div class="row">
+                      <div v-for="(category, index) in categorias_de_produtos" class="col-sm-4">
+                        <label class="choice" :class="{ active: form.category == category.value }">
+                          <input type="radio" v-model="form.category" :value="category.value">
+                          <div class="icon">
+                            <i :class="category.icon"></i>
+                          </div>
+                          <h6>{{category.text}}</h6>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <br>
+                <br>
+                <b-form-group label="Fornecedor *" class="bmd-form-group">
+                  <form-entity-select type="suppliers" :form="form" field="supplier" :validate="'required'"  />
                 </b-form-group>
-                <b-form-group label="Nome da organização" class="bmd-form-group">
-                  <b-form-input v-model="form.name" name="name" />
+                <b-form-group label="Nome do produto *" class="bmd-form-group">
+                  <b-form-input v-model="form.name" v-validate="'required'" name="name" />
+  								<field-error :msg="veeErrors" field="name" />
                 </b-form-group>
-                <b-form-group label="Atividade principal" class="bmd-form-group">
-                  <b-form-input v-model="form.description" name="description" />
+                <b-form-group label="Descrição *" description="Texto que irá aparecer na apresentação do produto" class="bmd-form-group">
+                  <b-form-textarea v-model="form.description" v-validate="'required'" name="description" />
+  								<field-error :msg="veeErrors" field="description" />
                 </b-form-group>
-                <b-form-group label="Redes que englobam esta organização *" class="bmd-form-group">
-                  <form-entities-select type="organizations" :form="form" field="organizations" />
-                  <field-error :msg="veeErrors" field="organizations" />
+                <b-form-group label="História do produto" description="Descreva o histórico deste produto que aparecerá na apresentação" class="bmd-form-group">
+                  <form-editor :form="form" field="history" />
                 </b-form-group>
+                <b-form-group label="Certificações" class="bmd-form-group">
+                  <form-tags :form="form" field="certifications" :tags="certifications" />
+                </b-form-group>
+                <b-form-group label="Período de oferta" class="bmd-form-group">
+  								<form-months :form="form" field="seasonality" />
+  							</b-form-group>
               </div>
               <div class="tab-pane" :class="tab == 1 ? 'active' : ''">
                 <div class="row justify-content-center">
@@ -62,7 +98,7 @@
                     <form-links :form="form" field="links" />
                   </div>
                   <div class="col-lg-12">
-                    <pictures-upload :form="form" :preview="this.images_preview" :error="error" field="images" url="uploads/images" :multiple="true"  />
+                    <pictures-upload :form="form" :preview="this.images_preview" :error="error" field="images" url="uploads/images" :multiple="true" />
                   </div>
                 </div>
               </div>
@@ -87,12 +123,15 @@
                 </b-form-group>
                 <form-bank-account :form="form" />
               </div>
+              <div class="tab-pane" :class="tab == 4 ? 'active' : ''">
+              </div>
             </div>
           </div>
           <div class="card-footer justify-content-center">
             <form-submit :errors="error" :sending="isSending" label="Continuar" icon="arrow_forward" />
           </div>
         </b-form>
+        <pre>{{form}}</pre>
       </div>
     </div>
   </div>
@@ -109,22 +148,33 @@ import FormPhones from '@/components/FormPhones'
 import FormGeolocation from '@/components/FormGeolocation'
 import FormContactPersons from '@/components/FormContactPersons'
 import FormUsers from '@/components/FormUsers'
-import FormEntitiesSelect from '@/components/FormEntitiesSelect'
+import FormEntitySelect from '@/components/FormEntitySelect'
+import FieldError from '@/components/FieldError'
+import PicturesUpload from '@/components/PicturesUpload'
+import FormEditor from '@/components/FormEditor';
+import FormTags from '@/components/FormTags';
+import FormMonths from '@/components/FormMonths';
+import categorias_de_produtos from '@/data/categorias-de-produtos.json'
+
 
 export default {
 
-  name: 'SupplierForm',
+  name: 'ProductForm',
   data() {
     return {
-      tab: 1,
+      categorias_de_produtos: categorias_de_produtos,
+      tab: 0,
       form: {
-        organizations: [],
+        supplier: null,
+        category: '',
         cnpj: '',
         email: '',
         name: '',
         description: '',
         password: '',
-        history: "",
+        history: '',
+        certifications: [],
+        seasonality: [],
         address: {
           uf: "",
           city: "",
@@ -149,23 +199,38 @@ export default {
           type: 'corrente',
         }
       },
-      supplier: null,
+      product: null,
       images_preview: [],
+      certifications: []
     }
   },
   created() {
-    this.edit(this.$route.params.id)
+    if (this.isEditing()) {
+      this.edit(this.$route.params.id)
+    }
+    axios.get('products', {
+      params: {
+        select: 'certifications'
+      }
+    }).then(response => {
+      response.data.forEach(product => {
+        product.certifications.forEach(certification => {
+          this.certifications.push(certification)
+        })
+      });
+      this.certifications = this.certifications.filter((v,i,a)=>a.findIndex(t=>(t.text === v.text))===i)
+    }).catch(this.showError);
   },
   methods: {
     edit(id) {
       this.isLoading = true
-      axios.get('suppliers/' + id, {
+      axios.get('products/' + id, {
         params: {
           populate: 'users'
         }
       }).then(response => {
         this.apiDataToForm(this.form, response.data)
-        this.supplier = response.data
+        this.product = response.data
         this.isLoading = false
       }).catch(this.showError);
     },
@@ -175,17 +240,18 @@ export default {
           this.isSending = true
           this.error = false
           axios({
-            method: 'PUT',
-            url: 'suppliers/' + this.$route.params.id,
+            method: (this.isEditing() ? 'PUT' : 'POST'),
+            url: (this.isEditing() ? 'products/' + this.$route.params.id : 'products'),
             data: this.form
           }).then(resp => {
-            var supplier = resp.data
-            if (supplier && supplier._id) {
+            var product = resp.data
+            if (product && product._id) {
               this.notify("Os dados foram salvos!")
               if (this.tab == 3) {
-                this.$router.replace('/fornecedores')
+                this.$router.replace('/produtos')
               } else {
-                window.scrollTo(0,0);
+                this.$router.replace('/editar-produto/'+product._id)
+                window.scrollTo(0, 0);
                 this.tab += 1
               }
             }
@@ -207,7 +273,12 @@ export default {
     FormGeolocation,
     FormContactPersons,
     FormUsers,
-    FormEntitiesSelect
+    FormEntitySelect,
+    FieldError,
+    PicturesUpload,
+    FormEditor,
+    FormTags,
+    FormMonths
   }
 };
 </script>
