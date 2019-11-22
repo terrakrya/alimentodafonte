@@ -86,21 +86,25 @@
                 <b-form-group label="Período de oferta" class="bmd-form-group">
   								<form-months :form="form" field="seasonality" />
   							</b-form-group>
+                <pictures-upload :form="form" :preview="this.images_preview" :error="error" field="images" url="uploads/images" :multiple="true" />
               </div>
               <div class="tab-pane" :class="tab == 1 ? 'active' : ''">
                 <div class="row justify-content-center">
-                  <div class="col-lg-12">
-                    <b-form-group label="Histórico do fornecedor" description="Escreva um breve resumo da história do fornecedor" class="bmd-form-group">
-                      <b-form-textarea v-model="form.history" name="history" />
+                  <div class="col-md-6">
+                    <b-form-group label="Data de fabricação" class="bmd-form-group">
+                      <b-form-input v-model="form.manufacturing_date" name="manufacturing_date" />
                     </b-form-group>
                   </div>
-                  <div class="col-lg-12">
-                    <form-links :form="form" field="links" />
-                  </div>
-                  <div class="col-lg-12">
-                    <pictures-upload :form="form" :preview="this.images_preview" :error="error" field="images" url="uploads/images" :multiple="true" />
+                  <div class="col-md-6">
+                    <b-form-group label="Tempo de duração" class="bmd-form-group">
+                      <form-value-with-unit :form="form" field="duration" />
+                    </b-form-group>
                   </div>
                 </div>
+                <b-form-group label="Atributos" class="bmd-form-group">
+                  <form-tags :form="form" field="tags" :tags="tags" />
+                </b-form-group>
+
               </div>
               <div class="tab-pane" :class="tab == 2 ? 'active' : ''">
                 <form-address :form="form" />
@@ -154,6 +158,7 @@ import PicturesUpload from '@/components/PicturesUpload'
 import FormEditor from '@/components/FormEditor';
 import FormTags from '@/components/FormTags';
 import FormMonths from '@/components/FormMonths';
+import FormValueWithUnit from '@/components/FormValueWithUnit';
 import categorias_de_produtos from '@/data/categorias-de-produtos.json'
 
 
@@ -163,7 +168,7 @@ export default {
   data() {
     return {
       categorias_de_produtos: categorias_de_produtos,
-      tab: 0,
+      tab: 1,
       form: {
         supplier: null,
         category: '',
@@ -175,6 +180,12 @@ export default {
         history: '',
         certifications: [],
         seasonality: [],
+        manufacturing_date: '',
+        duration: {
+          value: '',
+          unit: 'Meses',
+        },
+        tags: [],
         address: {
           uf: "",
           city: "",
@@ -201,6 +212,11 @@ export default {
       },
       product: null,
       images_preview: [],
+      tags: [
+        { text: 'Sem glúten' },
+        { text: 'Sem lactose' },
+        { text: 'Vegano' },
+      ],
       certifications: []
     }
   },
@@ -210,15 +226,19 @@ export default {
     }
     axios.get('products', {
       params: {
-        select: 'certifications'
+        select: 'certifications tags'
       }
     }).then(response => {
       response.data.forEach(product => {
         product.certifications.forEach(certification => {
           this.certifications.push(certification)
         })
+        product.tags.forEach(tag => {
+          this.tags.push(tag)
+        })
       });
       this.certifications = this.certifications.filter((v,i,a)=>a.findIndex(t=>(t.text === v.text))===i)
+      this.tags = this.tags.filter((v,i,a)=>a.findIndex(t=>(t.text === v.text))===i)
     }).catch(this.showError);
   },
   methods: {
@@ -278,7 +298,8 @@ export default {
     PicturesUpload,
     FormEditor,
     FormTags,
-    FormMonths
+    FormMonths,
+    FormValueWithUnit
   }
 };
 </script>
