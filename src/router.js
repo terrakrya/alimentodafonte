@@ -65,6 +65,9 @@ import Suppliers from '@/views/Suppliers.vue'
 import SupplierForm from '@/views/SupplierForm.vue'
 import SupplierRegisterForm from '@/views/SupplierRegisterForm.vue'
 
+import Products from '@/views/Products.vue'
+import ProductForm from '@/views/ProductForm.vue'
+
 Vue.use(Router)
 
 function requireAuth (to, from, next) {
@@ -177,7 +180,10 @@ export default new Router({
     { path: '/fornecedores', component: Suppliers, beforeEnter: requireAuth },
     { path: '/cadastrar-fornecedor', component: SupplierRegisterForm, beforeEnter: requireAuth },
     { path: '/editar-fornecedor/:id', component: SupplierForm, beforeEnter: requireAuth },
-    // { path: '/fornecedor/:id', component: Supplier, beforeEnter: requireAuth },
+
+    { path: '/produtos', component: Products, beforeEnter: requireAuth },
+    { path: '/cadastrar-produto', component: ProductForm, beforeEnter: requireAuth },
+    { path: '/editar-produto/:id', component: ProductForm, beforeEnter: requireAuth },
 
   ]
 })

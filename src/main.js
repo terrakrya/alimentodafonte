@@ -7,6 +7,7 @@ import VueTheMask from 'vue-the-mask'
 import moment from 'vue-moment'
 import BootstrapVue from 'bootstrap-vue'
 import Notifications from 'vue-notification'
+import CKEditor from '@ckeditor/ckeditor5-vue';
 
 import ptBR from './locale/pt_BR'
 import router from './router'
@@ -32,6 +33,7 @@ Vue.use(Vue2Filters)
 Vue.use(VeeValidate, { locale: 'pt_BR', fieldsBagName: 'veeFields',  errorBagName: 'veeErrors' })
 Vue.use(VueTheMask)
 Vue.use(moment);
+Vue.use(CKEditor);
 
 Validator.localize('pt_BR', ptBR)
 

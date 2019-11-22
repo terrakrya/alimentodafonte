@@ -1,7 +1,7 @@
 <template>
 <div>
   <cool-select :scrollItemsLimit="10000" :scrollItemsLimitAddAfterScroll="10000" :arrowsDisableInstantSelection="true" :placeholder="placeholder || 'Busque pelo nome clique para selecionar'" v-model="entity" v-validate="validate" :name="field"
-    :items="list" item-text="title" @select="addItem(); callback(entity)">
+    :items="list" item-text="title" @select="addItem(); callback(entity)" inputForTextClass="form-control">
     <template slot="item" slot-scope="{ item: option }">
       <div style="display: flex; align-items: center;">
         <img v-if="option.picture" :src="baseUrl + option.picture">
@@ -45,6 +45,16 @@ export default {
       })
     } else {
       switch (this.type) {
+        case 'suppliers':
+          this.list = (await this.loadList('suppliers')).map(supplier => ({
+            id: supplier._id,
+            title: supplier.name,
+            description: supplier.description,
+            picture: supplier.images && supplier.images.length ? supplier.images[0].thumb : '',
+          })).sort(function(a, b) {
+            return a.title.localeCompare(b.title);
+          })
+          break;
         case 'seeds':
           this.list = (await this.loadList('seeds')).map(seed => ({
             id: seed._id,

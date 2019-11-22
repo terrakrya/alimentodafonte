@@ -1,0 +1,20 @@
+[
+  {
+    "value": "raw_product",
+    "text": "Matéria prima",
+    "description": "Produtos que podem ser comercializados como insumos, mas não tem marca própria",
+    "icon": "fa fa-leaf"
+  },
+  {
+    "value": "potential_product",
+    "text": "Produto em potencial",
+    "description": "Matérias primas e/ou produtos que tem potencial de mercado, mas precisam de apoio para acessar algum tipo de mercado.",
+    "icon": "fa fa-recycle"
+  },
+  {
+    "value": "branded_product",
+    "text": "Produto com marca",
+    "description": "Produtos que contemplam todas as exigências legais, tem marca própria e estão prontos para serem comercializados",
+    "icon": "fa fa-registered"
+  }
+]

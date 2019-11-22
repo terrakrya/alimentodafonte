@@ -4,6 +4,12 @@
       <router-link class="btn btn-default" to="/organizacoes"><span>Organizações</span></router-link>
     </div>
     <div class="nav-buttons">
+      <router-link class="btn btn-default" to="/fornecedores"><span>Fornecedores</span></router-link>
+    </div>
+    <div class="nav-buttons">
+      <router-link class="btn btn-default" to="/produtos"><span>Produtos</span></router-link>
+    </div>
+    <div class="nav-buttons">
       <router-link class="btn btn-default" to="/usuarios" v-if="isAdmin"><span>Usuários</span></router-link>
     </div>
   </div>
