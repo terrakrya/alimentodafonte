@@ -24,8 +24,7 @@ const ProductSchema = mongoose.Schema({
 
   manufacturing_date: Date,
   duration: Object,
-
-  tags: [String],
+  tags: [Object],
 
   producer_price: Number,
   minimum_quantity_for_shipping: Number,
