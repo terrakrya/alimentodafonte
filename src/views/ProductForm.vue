@@ -28,7 +28,7 @@
                   Características
                 </a>
               </li>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a class="nav-link" :class="tab == 2 ? 'active' : ''" @click="setTab(2)">
                   Valores
                 </a>
@@ -42,7 +42,7 @@
                 <a class="nav-link" :class="tab == 4 ? 'active' : ''" @click="setTab(3)">
                   Estocagem e Frete
                 </a>
-              </li>
+              </li> -->
             </ul>
           </div>
           <div class="card-body">
@@ -92,7 +92,7 @@
                 <div class="row justify-content-center">
                   <div class="col-md-6">
                     <b-form-group label="Data de fabricação" class="bmd-form-group">
-                      <b-form-input v-model="form.manufacturing_date" name="manufacturing_date" />
+                      <b-form-input v-model="form.manufacturing_date" name="manufacturing_date" type="date" />
                     </b-form-group>
                   </div>
                   <div class="col-md-6">
@@ -106,7 +106,7 @@
                 </b-form-group>
 
               </div>
-              <div class="tab-pane" :class="tab == 2 ? 'active' : ''">
+              <!-- <div class="tab-pane" :class="tab == 2 ? 'active' : ''">
                 <form-address :form="form" />
                 <form-geolocation :form="form" />
                 <form-phones :form="form" field="phones" />
@@ -128,14 +128,13 @@
                 <form-bank-account :form="form" />
               </div>
               <div class="tab-pane" :class="tab == 4 ? 'active' : ''">
-              </div>
+              </div> -->
             </div>
           </div>
           <div class="card-footer justify-content-center">
             <form-submit :errors="error" :sending="isSending" label="Continuar" icon="arrow_forward" />
           </div>
         </b-form>
-        <pre>{{form}}</pre>
       </div>
     </div>
   </div>
@@ -168,7 +167,7 @@ export default {
   data() {
     return {
       categorias_de_produtos: categorias_de_produtos,
-      tab: 1,
+      tab: 0,
       form: {
         supplier: null,
         category: '',
@@ -267,7 +266,7 @@ export default {
             var product = resp.data
             if (product && product._id) {
               this.notify("Os dados foram salvos!")
-              if (this.tab == 3) {
+              if (this.tab == 1) {
                 this.$router.replace('/produtos')
               } else {
                 this.$router.replace('/editar-produto/'+product._id)
