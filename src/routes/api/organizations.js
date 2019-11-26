@@ -102,11 +102,11 @@ router.post('/', auth.manager, function(req, res) {
           var newUser = new User({
             cnpj: organization.cnpj,
             email: params.email,
-            password: params.password,
             name: organization.name,
             roles: ['manager'],
             organization: organization._id,
           });
+          newUser.setPassword(params.password);
           newUser.save(function(err, user) {
             if (err) {
               organization.remove()
