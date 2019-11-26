@@ -68,11 +68,41 @@
       </div>
     </div>
   </div>
+  <h3>Últimos produtos cadastrados</h3>
+  <br>
+  <div class="row">
+    <div class="col-md-3" v-for="(product, index) in products">
+      <div class="card card-product">
+        <div class="card-header card-header-image" data-header-animation="true">
+          <router-link :to="'/editar-produto/'+product._id">
+            <product-image :product="product" />
+          </router-link>
+        </div>
+        <div class="card-body">
+          <div class="card-actions text-center">
+            <router-link :to="'/editar-produto/'+product._id" type="router-link" class="btn btn-success btn-link" rel="tooltip" data-placement="bottom" title="Editar">
+              <i class="material-icons">edit</i>
+            </router-link>
+          </div>
+          <h4 class="card-title">
+            <router-link :to="'/editar-produto/'+product._id">
+              {{product.name}}
+            </router-link>
+          </h4>
+          <div class="card-description">
+            {{product.description}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 </template>
 
 <script>
 import axios from 'axios'
+import ProductImage from '@/components/ProductImage';
+
 export default {
   name: 'DashboardManager',
 
@@ -90,12 +120,19 @@ export default {
     axios.get('suppliers').then(response => {
       this.suppliers = response.data
     }).catch(this.showError)
-    axios.get('products').then(response => {
+    axios.get('products', {
+      params: {
+        populate: 'product_variations'
+      }
+    }).then(response => {
       this.products = response.data
     }).catch(this.showError)
     axios.get('users').then(response => {
       this.users = response.data
     }).catch(this.showError)
+  },
+  components: {
+    ProductImage
   }
 }
 </script>
