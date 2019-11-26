@@ -3,58 +3,43 @@
   <div class="col-md-12 mr-auto ml-auto">
     <div class="wizard-container">
       <div class="card card-wizard active" data-color="rose" id="wizardProfile">
-        <b-form @submit.prevent="save" v-if="!isLoading">
-          <div class="card-header text-center" v-if="product">
-            <h3 class="card-title">
-              {{product.name}}
-            </h3>
-            <h5 class="card-description">{{product.description}}</h5>
-          </div>
-          <div class="card-header text-center" v-else>
-            <h3 class="card-title">
-              Cadastro de produtos
-            </h3>
-            <h5 class="card-description">Preencha os dados abaixo para continuar</h5>
-          </div>
-          <div class="wizard-navigation">
-            <ul class="nav nav-pills product-form">
-              <li class="nav-item">
-                <a class="nav-link" :class="tab == 0 ? 'active' : ''" @click="setTab(0)">
-                  Apresentação
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" :class="tab == 1 ? 'active' : ''" @click="setTab(1)">
-                  Características
-                </a>
-              </li>
-              <!-- <li class="nav-item">
-                <a class="nav-link" :class="tab == 2 ? 'active' : ''" @click="setTab(2)">
-                  Valores
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" :class="tab == 3 ? 'active' : ''" @click="setTab(3)">
-                  Ficha técnica
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" :class="tab == 4 ? 'active' : ''" @click="setTab(3)">
-                  Estocagem e Frete
-                </a>
-              </li> -->
-            </ul>
-          </div>
-          <div class="card-body">
-            <div class="tab-content">
-              <div class="tab-pane" :class="tab == 0 ? 'active' : ''">
+        <div class="card-header text-center" v-if="product">
+          <h3 class="card-title">
+            {{product.name}}
+          </h3>
+          <h5 class="card-description">{{product.description}}</h5>
+        </div>
+        <div class="card-header text-center" v-else>
+          <h3 class="card-title">
+            Cadastro de produtos
+          </h3>
+          <h5 class="card-description">Preencha os dados abaixo para continuar</h5>
+        </div>
+        <div class="wizard-navigation">
+          <ul class="nav nav-pills product-form">
+            <li class="nav-item">
+              <a class="nav-link" :class="tab == 0 ? 'active' : ''" @click="setTab(0)">
+                Apresentação
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" :class="tab == 1 ? 'active' : ''" @click="setTab(1)">
+                Variações do produto
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="card-body">
+          <div class="tab-content">
+            <div class="tab-pane" :class="tab == 0 ? 'active' : ''">
+              <b-form @submit.prevent="save" v-if="!isLoading">
                 <h5 class="info-text"> Em qual fase este produto está? </h5>
                 <div class="row justify-content-center">
                   <div class="col-md-10">
                     <div class="row">
                       <div v-for="(category, index) in categorias_de_produtos" class="col-sm-4">
                         <label class="choice" :class="{ active: form.category == category.value }">
-                          <input type="radio" v-model="form.category" :value="category.value">
+                          <input type="radio" v-model="form.category" :value="category.value" v-validate="'required'" name="category">
                           <div class="icon">
                             <i :class="category.icon"></i>
                           </div>
@@ -63,19 +48,20 @@
                       </div>
                     </div>
                   </div>
+                  <field-error :msg="veeErrors" field="category" />
                 </div>
                 <br>
                 <br>
                 <b-form-group label="Fornecedor *" class="bmd-form-group">
-                  <form-entity-select type="suppliers" :form="form" field="supplier" :validate="'required'"  />
+                  <form-entity-select type="suppliers" :form="form" field="supplier" :validate="'required'" />
                 </b-form-group>
                 <b-form-group label="Nome do produto *" class="bmd-form-group">
-                  <b-form-input v-model="form.name" v-validate="'required'" name="name" />
-  								<field-error :msg="veeErrors" field="name" />
+                  <b-form-input v-model="form.name" v-validate="'required'" name="name" description="Yuka" />
+                  <field-error :msg="veeErrors" field="name" />
                 </b-form-group>
-                <b-form-group label="Descrição *" description="Texto que irá aparecer na apresentação do produto" class="bmd-form-group">
+                <b-form-group label="Descrição *" description="Texto que irá aparecer na apresentação do produto." class="bmd-form-group">
                   <b-form-textarea v-model="form.description" v-validate="'required'" name="description" />
-  								<field-error :msg="veeErrors" field="description" />
+                  <field-error :msg="veeErrors" field="description" />
                 </b-form-group>
                 <b-form-group label="História do produto" description="Descreva o histórico deste produto que aparecerá na apresentação" class="bmd-form-group">
                   <form-editor :form="form" field="history" />
@@ -84,60 +70,23 @@
                   <form-tags :form="form" field="certifications" :tags="certifications" />
                 </b-form-group>
                 <b-form-group label="Período de oferta" class="bmd-form-group">
-  								<form-months :form="form" field="seasonality" />
-  							</b-form-group>
+                  <form-months :form="form" field="seasonality" />
+                </b-form-group>
                 <pictures-upload :form="form" :preview="this.images_preview" :error="error" field="images" url="uploads/images" :multiple="true" />
-              </div>
-              <div class="tab-pane" :class="tab == 1 ? 'active' : ''">
-                <div class="row justify-content-center">
-                  <div class="col-md-6">
-                    <b-form-group label="Data de fabricação" class="bmd-form-group">
-                      <b-form-input v-model="form.manufacturing_date" name="manufacturing_date" type="date" />
-                    </b-form-group>
-                  </div>
-                  <div class="col-md-6">
-                    <b-form-group label="Tempo de duração" class="bmd-form-group">
-                      <form-value-with-unit :form="form" field="duration" />
-                    </b-form-group>
-                  </div>
-                </div>
-                <b-form-group label="Atributos" class="bmd-form-group">
-                  <form-tags :form="form" field="tags" :tags="tags" />
-                </b-form-group>
-
-              </div>
-              <!-- <div class="tab-pane" :class="tab == 2 ? 'active' : ''">
-                <form-address :form="form" />
-                <form-geolocation :form="form" />
-                <form-phones :form="form" field="phones" />
-                <b-form-group label="Email" class="bmd-form-group">
-                  <b-form-input v-model="form.email" name="email" />
-                </b-form-group>
-                <form-contact-persons :form="form" field="contact_persons" />
-              </div>
-              <div class="tab-pane" :class="tab == 3 ? 'active' : ''">
-                <b-form-group label="Formato jurídico" class="bmd-form-group">
-                  <b-form-input v-model="form.legal_format" name="legal_format" />
-                </b-form-group>
-                <b-form-group label="Regime tributário" class="bmd-form-group">
-                  <b-form-input v-model="form.tax_regime" name="tax_regime" />
-                </b-form-group>
-                <b-form-group label="Inscrição" class="bmd-form-group">
-                  <b-form-input v-model="form.subscription" name="subscription" />
-                </b-form-group>
-                <form-bank-account :form="form" />
-              </div>
-              <div class="tab-pane" :class="tab == 4 ? 'active' : ''">
-              </div> -->
+              </b-form>
+            </div>
+            <div class="tab-pane" :class="tab == 1 ? 'active' : ''" v-if="product">
+              <product-variations :product="product" />
             </div>
           </div>
-          <div class="card-footer justify-content-center">
-            <form-submit :errors="error" :sending="isSending" label="Continuar" icon="arrow_forward" />
-          </div>
-        </b-form>
+        </div>
+        <div class="card-footer justify-content-center" v-if="tab == 0">
+          <form-submit :errors="error" :sending="isSending" label="Continuar" icon="arrow_forward" />
+        </div>
       </div>
     </div>
   </div>
+  <pre>{{form}}</pre>
 </div>
 </template>
 
@@ -158,6 +107,7 @@ import FormEditor from '@/components/FormEditor';
 import FormTags from '@/components/FormTags';
 import FormMonths from '@/components/FormMonths';
 import FormValueWithUnit from '@/components/FormValueWithUnit';
+import ProductVariations from '@/components/ProductVariations';
 import categorias_de_produtos from '@/data/categorias-de-produtos.json'
 
 
@@ -167,56 +117,20 @@ export default {
   data() {
     return {
       categorias_de_produtos: categorias_de_produtos,
-      tab: 0,
+      tab: 1,
       form: {
         supplier: null,
         category: '',
-        cnpj: '',
-        email: '',
         name: '',
+        images: [],
         description: '',
-        password: '',
         history: '',
         certifications: [],
         seasonality: [],
-        manufacturing_date: '',
-        duration: {
-          value: '',
-          unit: 'Meses',
-        },
-        tags: [],
-        address: {
-          uf: "",
-          city: "",
-          postal_code: "",
-          address: ""
-        },
-        geolocation: {
-          lat: "",
-          lng: ""
-        },
-        images: [],
-        links: [],
-        phones: [],
-        contact_persons: [],
-        legal_format: "",
-        tax_regime: "",
-        subscription: "",
-        bank_account: {
-          bank_number: '',
-          agency: '',
-          account: '',
-          type: 'corrente',
-        }
       },
       product: null,
       images_preview: [],
-      tags: [
-        { text: 'Sem glúten' },
-        { text: 'Sem lactose' },
-        { text: 'Vegano' },
-      ],
-      certifications: []
+      certifications: [],
     }
   },
   created() {
@@ -232,12 +146,8 @@ export default {
         product.certifications.forEach(certification => {
           this.certifications.push(certification)
         })
-        product.tags.forEach(tag => {
-          this.tags.push(tag)
-        })
       });
-      this.certifications = this.certifications.filter((v,i,a)=>a.findIndex(t=>(t.text === v.text))===i)
-      this.tags = this.tags.filter((v,i,a)=>a.findIndex(t=>(t.text === v.text))===i)
+      this.certifications = this.certifications.filter((v, i, a) => a.findIndex(t => (t.text === v.text)) === i)
     }).catch(this.showError);
   },
   methods: {
@@ -245,7 +155,7 @@ export default {
       this.isLoading = true
       axios.get('products/' + id, {
         params: {
-          populate: 'users'
+          populate: 'users product_variations'
         }
       }).then(response => {
         this.apiDataToForm(this.form, response.data)
@@ -269,7 +179,8 @@ export default {
               if (this.tab == 1) {
                 this.$router.replace('/produtos')
               } else {
-                this.$router.replace('/editar-produto/'+product._id)
+                this.$router.replace('/editar-produto/' + product._id)
+                this.edit(product._id)
                 window.scrollTo(0, 0);
                 this.tab += 1
               }
@@ -280,7 +191,12 @@ export default {
       })
     },
     setTab(tab) {
-      this.tab = tab
+      if (this.isEditing()) {
+        this.tab = tab
+      }
+    },
+    isEditingProductVariation() {
+      this.product_variation && this.product_variation._id
     },
   },
   components: {
@@ -298,7 +214,8 @@ export default {
     FormEditor,
     FormTags,
     FormMonths,
-    FormValueWithUnit
+    FormValueWithUnit,
+    ProductVariations
   }
 };
 </script>

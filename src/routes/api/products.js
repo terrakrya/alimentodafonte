@@ -7,7 +7,7 @@ var express = require('express'),
   Product = mongoose.model('Product');
 
 router.get('/', auth.collector, function(req, res) {
-  Product.find({}, select(req)).exec(function(err, products) {
+  Product.find({}, select(req)).populate(populate(req)).exec(function(err, products) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
     } else {
@@ -31,7 +31,7 @@ router.get('/slug', auth.manager, function(req, res) {
 router.get('/:id', auth.manager, function(req, res) {
   Product.findOne({
     _id: req.params.id
-  }).exec(function(err, product) {
+  }).populate(populate(req)).exec(function(err, product) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {

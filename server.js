@@ -39,6 +39,7 @@ require('./src/models/User');
 require('./src/models/Organization');
 require('./src/models/Supplier');
 require('./src/models/Product');
+require('./src/models/ProductVariation');
 
 require('./src/models/Seed');
 require('./src/models/CollectorsGroup');

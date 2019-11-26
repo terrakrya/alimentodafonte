@@ -22,21 +22,15 @@ const ProductSchema = mongoose.Schema({
   certifications: [Object],
   seasonality: [String],
 
-  manufacturing_date: Date,
-  duration: Object,
-  tags: [Object],
-
-  producer_price: Number,
-  minimum_quantity_for_shipping: Number,
-  taxes: Number,
-  final_price: Number,
-
-  ncm: String,
-  gross_weight: Number,
-  net_weight: Number,
-  bar_code: String,
 }, {
   timestamps: true,
+  toJSON: { virtuals: true }
+});
+
+ProductSchema.virtual('product_variations', {
+  ref: 'ProductVariation',
+  localField: '_id',
+  foreignField: 'product'
 });
 
 mongoose.model('Product', ProductSchema);
