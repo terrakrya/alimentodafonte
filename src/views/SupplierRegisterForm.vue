@@ -45,7 +45,7 @@
                       <field-error :msg="veeErrors" field="cnpj" />
                     </b-form-group>
                   </div>
-                  <div class="col-lg-10">
+                  <div class="col-lg-10" v-if="isAdmin">
                     <b-form-group label="Redes que englobam esta organização *" class="bmd-form-group">
                       <form-entities-select type="organizations" :form="form" field="organizations" />
                       <field-error :msg="veeErrors" field="organizations" />

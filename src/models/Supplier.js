@@ -50,4 +50,10 @@ SupplierSchema.virtual('users', {
   foreignField: 'organization'
 });
 
+SupplierSchema.virtual('products', {
+  ref: 'Product',
+  localField: '_id',
+  foreignField: 'supplier'
+});
+
 mongoose.model('Supplier', SupplierSchema);

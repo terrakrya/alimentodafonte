@@ -37,6 +37,8 @@ const ProductVariationSchema = mongoose.Schema({
   box_gross_weight:Object,
   box_max_stack: Number,
 
+  published: Boolean,
+
 }, {
   timestamps: true,
 });

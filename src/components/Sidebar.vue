@@ -45,7 +45,7 @@
         </router-link>
       </li>
       <li class="nav-item" @click="toggleMenu">
-        <router-link class="nav-link" to="/organizacoes">
+        <router-link class="nav-link" to="/organizacoes" v-if="isAdmin">
           <i class="material-icons">device_hub</i>
           <p>Organizações</p>
         </router-link>

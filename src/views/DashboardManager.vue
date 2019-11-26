@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard">
     <div class="nav-buttons">
-      <router-link class="btn btn-default" to="/organizacoes"><span>Organizações</span></router-link>
+      <router-link class="btn btn-default" to="/organizacoes" v-if="isAdmin"><span>Organizações</span></router-link>
     </div>
     <div class="nav-buttons">
       <router-link class="btn btn-default" to="/fornecedores"><span>Fornecedores</span></router-link>

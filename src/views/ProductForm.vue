@@ -73,6 +73,9 @@
                   <form-months :form="form" field="seasonality" />
                 </b-form-group>
                 <pictures-upload :form="form" :preview="this.images_preview" :error="error" field="images" url="uploads/images" :multiple="true" />
+                <div class="card-footer justify-content-center" v-if="tab == 0">
+                  <form-submit :errors="error" :sending="isSending" label="Continuar" icon="arrow_forward" />
+                </div>
               </b-form>
             </div>
             <div class="tab-pane" :class="tab == 1 ? 'active' : ''" v-if="product">
@@ -80,13 +83,9 @@
             </div>
           </div>
         </div>
-        <div class="card-footer justify-content-center" v-if="tab == 0">
-          <form-submit :errors="error" :sending="isSending" label="Continuar" icon="arrow_forward" />
-        </div>
       </div>
     </div>
   </div>
-  <pre>{{form}}</pre>
 </div>
 </template>
 
@@ -117,7 +116,7 @@ export default {
   data() {
     return {
       categorias_de_produtos: categorias_de_produtos,
-      tab: 1,
+      tab: 0,
       form: {
         supplier: null,
         category: '',

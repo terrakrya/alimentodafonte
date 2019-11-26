@@ -83,7 +83,11 @@ export default {
 
   methods: {
     async list() {
-      axios.get('products').then(response => {
+      axios.get('products', {
+        params: {
+          populate: 'supplier'
+        }
+      }).then(response => {
         this.products = response.data
       }).catch(this.showError)
 
