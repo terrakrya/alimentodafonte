@@ -4,7 +4,12 @@
     <div class="wizard-container">
       <div class="card card-wizard active" data-color="rose" id="wizardProfile">
         <b-form @submit.prevent="save" v-if="!isLoading">
-          <div class="card-header text-center">
+          <div class="card-header card-header-icon card-header-rose text-center">
+            <div class="card-icon">
+              <router-link to="/fornecedores">
+                <i class="material-icons">people</i></a>
+              </router-link>
+            </div>
             <h3 class="card-title">
               Cadastrar fornecedor
             </h3>

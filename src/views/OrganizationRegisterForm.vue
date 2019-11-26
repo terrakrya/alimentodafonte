@@ -3,13 +3,18 @@
   <div class="col-md-8 col-12 mr-auto ml-auto">
     <div class="wizard-container">
       <div class="card card-wizard active" data-color="rose" id="wizardProfile">
-        <b-form @submit.prevent="save" v-if="!isLoading">
-          <div class="card-header text-center">
-            <h3 class="card-title">
-              Cadastrar organização
-            </h3>
-            <h5 class="card-description">Preencha os dados abaixo para continuar</h5>
+        <div class="card-header card-header-icon card-header-rose text-center">
+          <div class="card-icon">
+            <router-link to="/organizacoes">
+              <i class="material-icons">device_hub</i></a>
+            </router-link>
           </div>
+          <h3 class="card-title">
+            Cadastrar organização
+          </h3>
+          <h5 class="card-description">Preencha os dados abaixo para continuar</h5>
+        </div>
+        <b-form @submit.prevent="save" v-if="!isLoading">
           <div class="wizard-navigation">
             <ul class="nav nav-pills organization-form">
               <li class="nav-item active">
