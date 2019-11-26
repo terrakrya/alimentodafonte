@@ -46,7 +46,7 @@
                 <b-form-group label="Atividade principal" class="bmd-form-group">
                   <b-form-input v-model="form.description" name="description" />
                 </b-form-group>
-                <b-form-group label="Redes que englobam esta organização *" class="bmd-form-group">
+                <b-form-group label="Redes que englobam esta organização *" class="bmd-form-group" v-if="isAdmin">
                   <form-entities-select type="organizations" :form="form" field="organizations" />
                   <field-error :msg="veeErrors" field="organizations" />
                 </b-form-group>

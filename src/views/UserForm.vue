@@ -14,35 +14,6 @@
             </b-form-group>
           </div>
           <div class="col-sm-6">
-            <b-form-group label="Apelido *">
-              <b-form-input v-model="form.nickname" v-validate="'required'" name="nickname" />
-              <field-error :msg="veeErrors" field="nickname" />
-            </b-form-group>
-          </div>
-        </div>
-        <div class="row gray">
-          <div class="col-sm-6">
-            <b-form-group label="Telefone *">
-              <b-form-input v-model="form.contact" v-validate="'required'" name="contact" v-mask="['(##) ####-####', '(##) #####-####']" />
-              <field-error :msg="veeErrors" field="contact" />
-            </b-form-group>
-          </div>
-          <div class="col-sm-6">
-            <b-form-group label="CPF">
-              <the-mask v-model="form.cpf" :mask="['###.###.###-##']" />
-            </b-form-group>
-          </div>
-        </div>
-        <form-address :form="form" />
-        <form-bank-account :form="form" :gray="true" />
-        <div class="row">
-          <div class="col-sm-6">
-            <b-form-group label="Nome de usuário *" description="Nome que será usado para acessar o sistema">
-              <b-form-input v-model="form.username" v-validate="'required'" name="username" />
-              <field-error :msg="veeErrors" field="username" />
-            </b-form-group>
-          </div>
-          <div class="col-sm-6">
             <b-form-group label="Email">
               <b-form-input v-model="form.email" v-validate="'email'" name="email" />
               <field-error :msg="veeErrors" field="email" />
@@ -111,27 +82,11 @@ export default {
       show_password: false,
       tipos_de_usuario: tipos_de_usuario,
       form: {
-        username: '',
         email: null,
         password: '',
         password_confirmation: '',
-        cpf: '',
         name: '',
-        nickname: '',
-        contact: '',
         image: {},
-        address: {
-          uf: "",
-          city: "",
-          postal_code: "",
-          address: ""
-        },
-        bank_account: {
-          bank_number: '',
-          agency: '',
-          account: '',
-          type: 'corrente',
-        },
         roles: [],
       },
     }

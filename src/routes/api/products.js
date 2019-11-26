@@ -11,6 +11,17 @@ router.get('/', auth.collector, function(req, res) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
     } else {
+      if (req.payload.roles.includes('manager')) {
+        products = products.filter(product =>{
+          console.log('product.supplier');
+          console.log(product.supplier);
+          if (product.supplier) {
+            return product.supplier.organizations.includes(req.payload.organization)
+          }
+          return false
+        })
+      }
+
       res.json(products);
     }
   });

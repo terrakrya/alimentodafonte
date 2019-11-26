@@ -9,7 +9,13 @@ var express = require('express'),
   User = mongoose.model('User');
 
 router.get('/', auth.manager, function(req, res) {
-  Supplier.find({}).exec(function(err, seeds) {
+
+  var query = {}
+  if (req.payload.roles.includes('manager')) {
+    query.organizations = req.payload.organization
+  }
+
+  Supplier.find(query).exec(function(err, seeds) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
     } else {
@@ -20,9 +26,15 @@ router.get('/', auth.manager, function(req, res) {
 
 
 router.get('/search', auth.manager, function(req, res) {
-  Supplier.findOne({
+  var query = {
     name: req.query.name
-  }).exec(function(err, seed) {
+  }
+
+  if (req.payload.roles.includes('manager')) {
+    query.organizations = req.payload.organization
+  }
+
+  Supplier.findOne(query).exec(function(err, seed) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
@@ -45,6 +57,10 @@ router.get('/:id', auth.manager, function(req, res) {
 
 router.post('/', auth.manager, function(req, res) {
   var params = req.body
+  if (req.payload.roles.includes('manager')) {
+    params.organizations = [req.payload.organization]
+  }
+
   var newSupplier = new Supplier(params);
   newSupplier.cnpj = newSupplier.cnpj.replace(/\D/g, '')
 

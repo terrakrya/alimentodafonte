@@ -13,11 +13,8 @@
                 <tr>
                   <th class="text-center"></th>
                   <th>Variação</th>
-                  <th class="th-description">Color</th>
-                  <th class="th-description">Size</th>
-                  <th class="text-right">Price</th>
-                  <th class="text-right">Qty</th>
-                  <th class="text-right">Amount</th>
+                  <th class="text-right">Preço</th>
+                  <th class="text-right">Publicado</th>
                   <th></th>
                 </tr>
               </thead>
@@ -31,29 +28,16 @@
                     <br />
                     <small>{{product_variation.description}}</small>
                   </td>
-                  <td>
-                    Red
-                  </td>
-                  <td>
-                    M
+                  <td :class="{'text-success': product_variation.published, 'text-danger': !product_variation.published }">
+                    {{product_variation.published ? 'Sim' : 'Não'}}
                   </td>
                   <td class="td-number text-right">
-                    {{product_variation.final_price}}
+                    {{product_variation.final_price | moeda}}
                   </td>
                   <td class="td-number">
-                    1
                     <div class="btn-group btn-group-sm">
-                      <button class="btn btn-round btn-info"> <i class="material-icons">remove</i> </button>
-                      <button class="btn btn-round btn-info"> <i class="material-icons">add</i> </button>
+                      <button class="btn btn-danger"> <i class="material-icons">close</i> </button>
                     </div>
-                  </td>
-                  <td class="td-number">
-                    <small>&euro;</small>549
-                  </td>
-                  <td class="td-actions">
-                    <button type="button" rel="tooltip" data-placement="left" title="Remove item" class="btn btn-link">
-                      <i class="material-icons">close</i>
-                    </button>
                   </td>
                 </tr>
               </tbody>
@@ -105,7 +89,7 @@
             </div>
             <div class="col-md-4">
               <b-form-group label="Preço final" class="bmd-form-group">
-                <h4>{{form.final_price | currency}}</h4>
+                <h4>{{form.final_price | moeda}}</h4>
               </b-form-group>
             </div>
           </div>
@@ -165,10 +149,13 @@
             </div>
             <div class="col-md-6">
               <b-form-group label="Empilhamento máximo" class="bmd-form-group">
-                <form-value-with-unit :form="form" field="box_max_stack" type="weight" />
+                <b-form-input v-model="form.box_max_stack" type="number" />
               </b-form-group>
             </div>
           </div>
+          <b-form-group label="Disponível para venda?" class="bmd-form-group" description="Se esta opção estiver marcada esta variação de produto aparecerá na lista de produtos à venda.">
+            <b-form-checkbox v-model="form.published" />
+          </b-form-group>
           <div class="card-footer justify-content-center">
             <form-submit :errors="error" :sending="isSending" />
           </div>
@@ -176,8 +163,6 @@
       </div>
     </div>
   </b-form>
-  <pre>{{isEditing()}}</pre>
-  <pre>{{form}}</pre>
 </div>
 </template>
 
@@ -257,6 +242,7 @@ export default {
           unit: 'Kg',
         },
         box_max_stack: '',
+        published: false
       },
       product_variation: null,
       images_preview: [],
@@ -274,7 +260,7 @@ export default {
     }
   },
   created() {
-    Object.assign(this.empty_form, this.form)
+    // Object.assign(this.empty_form, this.form)
     axios.get('product_variations', {
       params: {
         select: 'tags'
@@ -289,6 +275,16 @@ export default {
     }).catch(this.showError);
   },
   methods: {
+    list () {
+      console.log(list);
+      axios.get('products/' + id, {
+        params: {
+          populate: 'users product_variations'
+        }
+      }).then(response => {
+        this.product = response.data
+      }).catch(this.showError);
+    },
     edit(id) {
       this.isLoading = true
       axios.get('product_variations/' + id).then(response => {
@@ -313,18 +309,6 @@ export default {
             if (product_variation && product_variation._id) {
               this.notify("Os dados foram salvos!")
               window.scrollTo(0, 0);
-              if (this.isEditing()) {
-                this.product.product_variations.forEach((pv, index) => {
-                  if (pv._id == product_variation._id) {
-                    console.log('index');
-                    console.log(index);
-                    console.log(this.product.product_variations[index]);
-                    this.product.product_variations[index] = product_variation
-                  }
-                })
-              } else {
-                this.product.product_variations.push(product_variation)
-              }
               this.hideForm()
             }
             this.isSending = false
@@ -340,6 +324,7 @@ export default {
     hideForm() {
       this.showForm = false
       this.product_variation = null
+      this.list()
     },
     calcFinalPrice() {
       this.form.final_price = this.form.producer_price + this.form.taxes
