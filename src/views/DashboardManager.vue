@@ -71,7 +71,7 @@
   <h3>Últimos produtos cadastrados</h3>
   <br>
   <div class="row">
-    <div class="col-md-3" v-for="(product, index) in products">
+    <div class="col-md-4" v-for="(product, index) in products">
       <div class="card card-product">
         <div class="card-header card-header-image" data-header-animation="true">
           <router-link :to="'/editar-produto/'+product._id">
@@ -108,9 +108,9 @@ export default {
 
   data() {
     return {
-      organizations: null,
-      suppliers: null,
-      products: null
+      organizations: [],
+      suppliers: [],
+      products: []
     }
   },
   created() {
@@ -126,9 +126,6 @@ export default {
       }
     }).then(response => {
       this.products = response.data
-    }).catch(this.showError)
-    axios.get('users').then(response => {
-      this.users = response.data
     }).catch(this.showError)
   },
   components: {
