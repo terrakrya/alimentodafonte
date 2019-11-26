@@ -7,7 +7,7 @@
           <div class="card-header card-header-icon card-header-rose text-center">
             <div class="card-icon">
               <router-link to="/fornecedores">
-                <i class="material-icons">people</i></a>
+                <i class="material-icons">people</i>
               </router-link>
             </div>
             <h3 class="card-title">

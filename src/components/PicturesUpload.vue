@@ -74,7 +74,6 @@ export default {
       }
     },
     selectFile() {
-      console.log(this.$refs.files.$el);
       document.getElementById('files').click()
     }
   },

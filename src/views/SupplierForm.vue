@@ -7,7 +7,7 @@
           <div class="card-header card-header-icon card-header-rose text-center">
             <div class="card-icon">
               <router-link to="/fornecedores">
-                <i class="material-icons">people</i></a>
+                <i class="material-icons">people</i>
               </router-link>
             </div>
             <h3 class="card-title">
@@ -113,7 +113,6 @@ import FormLinks from '@/components/FormLinks'
 import FormPhones from '@/components/FormPhones'
 import FormGeolocation from '@/components/FormGeolocation'
 import FormContactPersons from '@/components/FormContactPersons'
-import FormUsers from '@/components/FormUsers'
 import FormEntitiesSelect from '@/components/FormEntitiesSelect'
 
 export default {
@@ -211,7 +210,6 @@ export default {
     FormPhones,
     FormGeolocation,
     FormContactPersons,
-    FormUsers,
     FormEntitiesSelect
   }
 };

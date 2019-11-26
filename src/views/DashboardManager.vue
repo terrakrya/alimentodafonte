@@ -1,140 +1,107 @@
 <template>
-  <div class="dashboard">
-    <div class="nav-buttons">
-      <router-link class="btn btn-default" to="/organizacoes" v-if="isAdmin"><span>Organizações</span></router-link>
+<div class="dashboard">
+  <div class="row">
+    <div class="col-lg-4 col-md-6 col-sm-6" v-if="isAdmin">
+      <div class="card card-stats">
+        <div class="card-header card-header-warning card-header-icon">
+          <router-link to="/organizacoes">
+            <div class="card-icon">
+              <i class="material-icons">device_hub</i>
+            </div>
+            <p class="card-category">
+              Organizações
+            </p>
+            <h3 class="card-title">{{organizations.length}}</h3>
+          </router-link>
+        </div>
+        <div class="card-footer">
+          <div class="stats">
+            <router-link class="btn btn-success btn-icon" to="/cadastrar-organizacao">
+              Cadastrar organização
+            </router-link>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="nav-buttons">
-      <router-link class="btn btn-default" to="/fornecedores"><span>Fornecedores</span></router-link>
+    <div class="col-lg-4 col-md-6 col-sm-6">
+      <div class="card card-stats">
+        <div class="card-header card-header-rose card-header-icon">
+          <router-link to="/fornecedores">
+            <div class="card-icon">
+              <i class="material-icons">people</i>
+            </div>
+            <p class="card-category">
+              Fornecedores
+            </p>
+            <h3 class="card-title">{{suppliers.length}}</h3>
+          </router-link>
+        </div>
+        <div class="card-footer">
+          <div class="stats">
+            <router-link class="btn btn-success btn-icon" to="/cadastrar-fornecedor">
+              Cadastrar fornecedor
+            </router-link>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="nav-buttons">
-      <router-link class="btn btn-default" to="/produtos"><span>Produtos</span></router-link>
-    </div>
-    <div class="nav-buttons">
-      <router-link class="btn btn-default" to="/usuarios" v-if="isAdmin"><span>Usuários</span></router-link>
+    <div class="col-lg-4 col-md-6 col-sm-6">
+      <div class="card card-stats">
+        <div class="card-header card-header-success card-header-icon">
+          <router-link to="/produtos">
+            <div class="card-icon">
+              <i class="material-icons">shopping_cart</i>
+            </div>
+            <p class="card-category">
+              Produtos
+            </p>
+            <h3 class="card-title">{{products.length}}</h3>
+          </router-link>
+        </div>
+        <div class="card-footer">
+          <div class="stats">
+            <router-link class="btn btn-success btn-icon" to="/cadastrar-produto">
+              Cadastrar produto
+            </router-link>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
 import axios from 'axios'
 export default {
-  name: 'Dashboard',
+  name: 'DashboardManager',
 
   data() {
     return {
-      potential_lists: null,
-      collectors_requests: null,
-      orders: null
+      organizations: null,
+      suppliers: null,
+      products: null
     }
   },
-  computed: {
-    total_potential() {
-      if (this.potential_lists) {
-        var values = this.potential_lists.map(potential_list => {
-          return potential_list.seed_items.map(seed_item => seed_item.qtd * seed_item.compensation_collect).reduce((a, b) => a + b)
-        })
-        return values && values.length ? values.reduce((a, b) => a + b) : 0
-      }
-      return 0
-    },
-    total_potential_qtd() {
-      if (this.potential_lists) {
-        var values = this.potential_lists.map(potential_list => {
-          return potential_list.seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b)
-        })
-        return values && values.length ? values.reduce((a, b) => a + b) : 0
-      }
-      return 0
-    },
-    total_potential_species() {
-      if (this.potential_lists) {
-        var seeds = []
-        this.potential_lists.forEach(potential_list => {
-          potential_list.seed_items.forEach(seed_item => {
-            if (!seeds.includes(seed_item.seed)) {
-              seeds.push(seed_item.seed)
-            }
-          })
-        })
-        return seeds.length
-      }
-      return 0
-    },
-    total_collectors_request() {
-      if (this.collectors_requests) {
-        var values = this.collectors_requests.map(collectors_request => {
-          return collectors_request.seed_items.map(seed_item => this.sumQtd(seed_item.qtd) * seed_item.compensation_collect).reduce((a, b) => a + b)
-        })
-        return values && values.length ? values.reduce((a, b) => a + b) : 0
-      }
-      return 0
-    },
-    total_collectors_request_qtd() {
-      if (this.collectors_requests) {
-        var values = this.collectors_requests.map(collectors_request => {
-          return collectors_request.seed_items.map(seed_item => this.sumQtd(seed_item.qtd)).reduce((a, b) => a + b)
-        })
-        return values && values.length ? values.reduce((a, b) => a + b) : 0
-      }
-      return 0
-    },
-    total_collectors_request_species() {
-      if (this.collectors_requests) {
-        var seeds = []
-        this.collectors_requests.forEach(collectors_request => {
-          collectors_request.seed_items.forEach(seed_item => {
-            if (!seeds.includes(seed_item.seed)) {
-              seeds.push(seed_item.seed)
-            }
-          })
-        })
-        return seeds.length
-      }
-      return 0
-    },
-    total_order() {
-      if (this.orders) {
-        var values = this.orders.map(order => {
-          return order.seed_items.map(seed_item => seed_item.qtd * (order.purchase_type == 'Atacado' ? seed_item.wholesale_price : seed_item.price)).reduce((a, b) => a + b)
-        })
-        return values && values.length ? values.reduce((a, b) => a + b) : 0
-      }
-      return 0
-    },
-    total_order_qtd() {
-      if (this.orders) {
-        var values = this.orders.map(order => {
-          return order.seed_items.map(seed_item => seed_item.qtd).reduce((a, b) => a + b)
-        })
-        return values && values.length ? values.reduce((a, b) => a + b) : 0
-      }
-      return 0
-    },
-    total_order_species() {
-      if (this.orders) {
-        var seeds = []
-        this.orders.forEach(order => {
-          order.seed_items.forEach(seed_item => {
-            if (!seeds.includes(seed_item.seed)) {
-              seeds.push(seed_item.seed)
-            }
-          })
-        })
-        return seeds.length
-      }
-      return 0
-    }
-  },
-  created () {
-    axios.get('potential_lists').then(response => {
-      this.potential_lists = response.data
+  created() {
+    axios.get('organizations').then(response => {
+      this.organizations = response.data
     }).catch(this.showError)
-    axios.get('collectors_requests').then(response => {
-      this.collectors_requests = response.data
+    axios.get('suppliers').then(response => {
+      this.suppliers = response.data
     }).catch(this.showError)
-    axios.get('orders').then(response => {
-      this.orders = response.data
+    axios.get('products').then(response => {
+      this.products = response.data
+    }).catch(this.showError)
+    axios.get('users').then(response => {
+      this.users = response.data
     }).catch(this.showError)
   }
 }
 </script>
+
+<style lang="sass">
+  .card-header
+    a
+      color: #fff
+</style>

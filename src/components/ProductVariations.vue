@@ -19,7 +19,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(product_variation, index) in product.product_variations">
+                <tr v-for="(product_variation, index) in product.product_variations" :key="index">
                   <td>
                     <product-image :product="product" :product_variation="product_variation" />
                   </td>
@@ -168,20 +168,10 @@
 
 <script>
 import axios from 'axios'
-import FormAddress from '@/components/FormAddress'
-import FormBankAccount from '@/components/FormBankAccount'
 import FormSubmit from '@/components/FormSubmit'
-import FormLinks from '@/components/FormLinks'
-import FormPhones from '@/components/FormPhones'
-import FormGeolocation from '@/components/FormGeolocation'
-import FormContactPersons from '@/components/FormContactPersons'
-import FormUsers from '@/components/FormUsers'
-import FormEntitySelect from '@/components/FormEntitySelect'
 import FieldError from '@/components/FieldError'
 import PicturesUpload from '@/components/PicturesUpload'
-import FormEditor from '@/components/FormEditor';
 import FormTags from '@/components/FormTags';
-import FormMonths from '@/components/FormMonths';
 import FormValueWithUnit from '@/components/FormValueWithUnit';
 import ProductImage from '@/components/ProductImage';
 
@@ -276,8 +266,7 @@ export default {
   },
   methods: {
     list () {
-      console.log(list);
-      axios.get('products/' + id, {
+      axios.get('products/' + this.product._id, {
         params: {
           populate: 'users product_variations'
         }
@@ -305,7 +294,6 @@ export default {
             data: this.form
           }).then(resp => {
             var product_variation = resp.data
-            console.log(resp.data);
             if (product_variation && product_variation._id) {
               this.notify("Os dados foram salvos!")
               window.scrollTo(0, 0);
@@ -334,20 +322,10 @@ export default {
     },
   },
   components: {
-    FormAddress,
-    FormBankAccount,
     FormSubmit,
-    FormLinks,
-    FormPhones,
-    FormGeolocation,
-    FormContactPersons,
-    FormUsers,
-    FormEntitySelect,
     FieldError,
     PicturesUpload,
-    FormEditor,
     FormTags,
-    FormMonths,
     FormValueWithUnit,
     ProductImage
   }

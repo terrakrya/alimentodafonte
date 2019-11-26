@@ -28,7 +28,7 @@
               <span>{{data.value | city}}</span>
             </template>
             <template slot="organization_types" slot-scope="data">
-              <span class="badge badge-primary" v-for="(type, index) in data.value" :ref="index">{{tipos_de_organizacao.find(t => t.value == type).text}}</span>
+              <span class="badge badge-primary" v-for="(type, index) in data.value" :key="index">{{tipos_de_organizacao.find(t => t.value == type).text}}</span>
             </template>
             <template slot="actions" slot-scope="data">
               <router-link :to="'/editar-organizacao/'+ data.item._id" class="btn btn-link btn-success">
@@ -49,8 +49,6 @@
 import axios from 'axios'
 import Loading from '@/components/Loading'
 import NoItem from '@/components/NoItem'
-import ListHeadline from '@/components/ListHeadline'
-import Breadcrumb from '@/components/Breadcrumb'
 import tipos_de_organizacao from '@/data/tipos-de-organizacao.json'
 
 export default {
@@ -111,8 +109,6 @@ export default {
   components: {
     Loading,
     NoItem,
-    ListHeadline,
-    Breadcrumb
   }
 
 };
