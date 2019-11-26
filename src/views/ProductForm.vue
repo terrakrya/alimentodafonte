@@ -3,13 +3,23 @@
   <div class="col-md-12 mr-auto ml-auto">
     <div class="wizard-container">
       <div class="card card-wizard active" data-color="rose" id="wizardProfile">
-        <div class="card-header text-center" v-if="product">
+        <div class="card-header card-header-icon card-header-rose text-center" v-if="product">
+          <div class="card-icon">
+            <router-link to="/produtos">
+              <i class="material-icons">shopping_cart</i></a>
+            </router-link>
+          </div>
           <h3 class="card-title">
             {{product.name}}
           </h3>
           <h5 class="card-description">{{product.description}}</h5>
         </div>
-        <div class="card-header text-center" v-else>
+        <div class="card-header card-header-icon card-header-rose text-center" v-else>
+          <div class="card-icon">
+            <router-link to="/produtos">
+              <i class="material-icons">shopping_cart</i></a>
+            </router-link>
+          </div>
           <h3 class="card-title">
             Cadastro de produtos
           </h3>
