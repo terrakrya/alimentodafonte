@@ -45,6 +45,12 @@
                 <h5 class="info-text">Insira os dados do responsável e o CNPJ da organização</h5>
                 <div class="row justify-content-center">
                   <div class="col-lg-10">
+                    <b-form-group label="Tipo de organização *" class="form-check">
+                      <b-form-checkbox-group  v-model="form.organization_types" :options="tipos_de_organizacao" v-validate="'required'" name="organization_types"  />
+                      <field-error :msg="veeErrors" field="organization_types" />
+                    </b-form-group>
+                  </div>
+                  <div class="col-lg-10">
                     <b-form-group label="CNPJ *" class="bmd-form-group">
                       <b-form-input v-model="form.cnpj" v-validate="'required'" name="cnpj" v-mask="['##.###.###/####-##']" />
                       <field-error :msg="veeErrors" field="cnpj" />
@@ -79,22 +85,27 @@
       </div>
     </div>
   </div>
+  <pre>{{form.organization_types}}</pre>
 </div>
 </template>
 
 <script>
 import axios from 'axios'
 import FormSubmit from '@/components/FormSubmit'
+import FieldError from '@/components/FieldError'
+import tipos_de_organizacao from '@/data/tipos-de-organizacao.json'
 
 export default {
 
   name: 'OrganizationRegisterForm',
   data() {
     return {
+      tipos_de_organizacao: tipos_de_organizacao,
       form: {
         cnpj: '',
         email: '',
         password: '',
+        organization_types: [],
       }
     }
   },
@@ -122,6 +133,7 @@ export default {
   },
   components: {
     FormSubmit,
+    FieldError
   }
 };
 </script>

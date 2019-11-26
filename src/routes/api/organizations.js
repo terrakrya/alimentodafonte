@@ -55,6 +55,8 @@ router.post('/', auth.manager, function(req, res) {
       res.status(422).send('Ocorreu um erro ao cadastrar: ' + err.message);
     } else if (body.status == 'ERROR') {
       res.status(422).send(body.message);
+    } else if (!body.nome) {
+      res.status(422).send('Ocorreu um erro ao validar o CNPJ');
     } else {
       newOrganization.name = body.fantasia
       if (!newOrganization.name) {
@@ -143,31 +145,19 @@ router.delete('/:id', auth.manager, function(req, res) {
 
   Organization.findOne({
     _id: req.params.id
-  }).populate('users').exec(function(err, organization) {
+  }).populate('users suppliers').exec(function(err, organization) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
-      organization.users.forEach(user => {
-        user.remove();
-      })
-      // if (organization.collections && organization.collections.length) {
-      //   res.status(422).send('Não é possível excluír! Existem coletas cadastradas para este grupo');
-      // } else if (organization.collection_areas && organization.collection_areas.length) {
-      //   res.status(422).send('Não é possível excluír! Existem áreas de coleta cadastradas para este grupo');
-      // } else if (organization.stock_ins && organization.stock_ins.length) {
-      //   res.status(422).send('Não é possível excluír! Existem entradas no estoque cadastradas para este grupo');
-      // } else if (organization.collectors_requests && organization.collectors_requests.length) {
-      //   res.status(422).send('Não é possível excluír! Existem pedidos para coletores cadastrados para este grupo: ('+organization.collectors_requests.map(c => 'Pedido '+ c.code).join(', ') +')');
-      // } else if (organization.potential_lists && organization.potential_lists.length) {
-      //   res.status(422).send('Não é possível excluír! Existem listas de potencial cadastradas para este grupo: ('+organization.potential_lists.map(p => 'Lista '+ p.code).join(', ') +')');
-      // } else if (organization.seeds_matrixes && organization.seeds_matrixes.length) {
-      //   res.status(422).send('Não é possível excluír! Existem matrixes de semente relacionadas a este grupo');
-      // } else if (organization.seeds_houses && organization.seeds_houses.length) {
-      //   res.status(422).send('Não é possível excluír! Existem grupos de coletores relacionados a este grupo: ('+organization.seeds_houses.map(p => p.name).join(', ') +')');
-      // } else {
-      organization.remove();
-      res.send(organization);
-      // }
+      if (organization.suppliers && organization.suppliers.length) {
+        res.status(422).send('Não é possível excluír! Existem fornecedores cadastrados nesta organização');
+      } else {
+        organization.users.forEach(user => {
+          user.remove();
+        })
+        organization.remove();
+        res.send(organization);
+      }
     }
   })
 

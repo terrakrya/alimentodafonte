@@ -71,11 +71,14 @@ router.post('/', auth.manager, function(req, res) {
       res.status(422).send('Ocorreu um erro ao cadastrar: ' + err.message);
     } else if (body.status == 'ERROR') {
       res.status(422).send(body.message);
+    } else if (!body.nome) {
+      res.status(422).send('Ocorreu um erro ao validar o CNPJ');
     } else {
       newSupplier.name = body.fantasia
       if (!newSupplier.name) {
         newSupplier.name = body.nome
       }
+      console.log(body);
       newSupplier.slug = slugify(newSupplier.name).toLowerCase()
       newSupplier.corporate_name = body.nome
       if (body.atividade_principal && body.atividade_principal.length) {
@@ -143,31 +146,16 @@ router.delete('/:id', auth.manager, function(req, res) {
 
   Supplier.findOne({
     _id: req.params.id
-  }).populate('users').exec(function(err, supplier) {
+  }).populate('products').exec(function(err, supplier) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
-      supplier.users.forEach(user => {
-        user.remove();
-      })
-      // if (supplier.collections && supplier.collections.length) {
-      //   res.status(422).send('Não é possível excluír! Existem coletas cadastradas para este grupo');
-      // } else if (supplier.collection_areas && supplier.collection_areas.length) {
-      //   res.status(422).send('Não é possível excluír! Existem áreas de coleta cadastradas para este grupo');
-      // } else if (supplier.stock_ins && supplier.stock_ins.length) {
-      //   res.status(422).send('Não é possível excluír! Existem entradas no estoque cadastradas para este grupo');
-      // } else if (supplier.collectors_requests && supplier.collectors_requests.length) {
-      //   res.status(422).send('Não é possível excluír! Existem pedidos para coletores cadastrados para este grupo: ('+supplier.collectors_requests.map(c => 'Pedido '+ c.code).join(', ') +')');
-      // } else if (supplier.potential_lists && supplier.potential_lists.length) {
-      //   res.status(422).send('Não é possível excluír! Existem listas de potencial cadastradas para este grupo: ('+supplier.potential_lists.map(p => 'Lista '+ p.code).join(', ') +')');
-      // } else if (supplier.seeds_matrixes && supplier.seeds_matrixes.length) {
-      //   res.status(422).send('Não é possível excluír! Existem matrixes de semente relacionadas a este grupo');
-      // } else if (supplier.seeds_houses && supplier.seeds_houses.length) {
-      //   res.status(422).send('Não é possível excluír! Existem grupos de coletores relacionados a este grupo: ('+supplier.seeds_houses.map(p => p.name).join(', ') +')');
-      // } else {
-      supplier.remove();
-      res.send(supplier);
-      // }
+      if (supplier.products && supplier.products.length) {
+        res.status(422).send('Não é possível excluír! Existem produtos cadastrados para este fornecedor');
+      } else {
+        supplier.remove();
+        res.send(supplier);
+      }
     }
   })
 

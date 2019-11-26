@@ -44,12 +44,6 @@ const SupplierSchema = mongoose.Schema({
   toJSON: { virtuals: true }
 });
 
-SupplierSchema.virtual('users', {
-  ref: 'User',
-  localField: '_id',
-  foreignField: 'organization'
-});
-
 SupplierSchema.virtual('products', {
   ref: 'Product',
   localField: '_id',
