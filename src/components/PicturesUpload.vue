@@ -1,7 +1,7 @@
 <template>
 <div class="pictures-upload fileinput">
   <b-form-group :label="'Foto' + (multiple ? 's' : '')" :description="'Selecione um '+ (multiple ? 'ou mais arquivos' : 'arquivo') +' no formato PNG, GIF, JPG ou JPEG, com no máximo 32 MB.'" v-show="!isLoading">
-    <span class="btn btn-rose btn-round btn-file" @click="selectFile()">
+    <span class="btn btn-primary btn-round btn-file" @click="selectFile()">
       <span class="fileinput-new"><i class="material-icons">add_a_photo</i> Selecionar fotos</span>
       <b-form-file class="hidden" ref="files" id="files" :multiple="multiple" accept="image/*" v-on:change="uploadImages"></b-form-file>
     </span>
