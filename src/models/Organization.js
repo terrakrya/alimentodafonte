@@ -35,6 +35,7 @@ const OrganizationSchema = mongoose.Schema({
   legal_format: String,
   tax_regime: String,
   subscription: String,
+  organization_types: [String]
 }, {
   timestamps: true,
   toJSON: { virtuals: true }
@@ -44,6 +45,12 @@ OrganizationSchema.virtual('users', {
   ref: 'User',
   localField: '_id',
   foreignField: 'organization'
+});
+
+OrganizationSchema.virtual('suppliers', {
+  ref: 'Supplier',
+  localField: '_id',
+  foreignField: 'organizations'
 });
 
 mongoose.model('Organization', OrganizationSchema);

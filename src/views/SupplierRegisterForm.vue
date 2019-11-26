@@ -75,6 +75,7 @@
 import axios from 'axios'
 import FormEntitiesSelect from '@/components/FormEntitiesSelect'
 import FormSubmit from '@/components/FormSubmit'
+import FieldError from '@/components/FieldError'
 
 export default {
 
@@ -113,7 +114,8 @@ export default {
   },
   components: {
     FormSubmit,
-    FormEntitiesSelect
+    FormEntitiesSelect,
+    FieldError
   }
 };
 </script>

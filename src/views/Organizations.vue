@@ -1,6 +1,6 @@
 <template>
 <div>
-  <router-link class="btn btn-success btn-round btn-add" to="/cadastrar-organizacao"><i class="material-icons">add</i>Cadastrar</router-link>
+  <router-link class="btn btn-success btn-round btn-add" to="/cadastrar-organizacao"><i class="material-icons">add</i>Cadastrar organização</router-link>
   <div class="card">
     <div class="card-header card-header-icon card-header-rose">
       <div class="card-icon">
@@ -27,6 +27,9 @@
             <template slot="address" slot-scope="data">
               <span>{{data.value | city}}</span>
             </template>
+            <template slot="organization_types" slot-scope="data">
+              <span class="badge badge-primary" v-for="(type, index) in data.value" :ref="index">{{tipos_de_organizacao.find(t => t.value == type).text}}</span>
+            </template>
             <template slot="actions" slot-scope="data">
               <router-link :to="'/editar-organizacao/'+ data.item._id" class="btn btn-link btn-success">
                 <i class="material-icons">edit</i>
@@ -48,6 +51,7 @@ import Loading from '@/components/Loading'
 import NoItem from '@/components/NoItem'
 import ListHeadline from '@/components/ListHeadline'
 import Breadcrumb from '@/components/Breadcrumb'
+import tipos_de_organizacao from '@/data/tipos-de-organizacao.json'
 
 export default {
 
@@ -55,7 +59,7 @@ export default {
 
   data() {
     return {
-
+      tipos_de_organizacao: tipos_de_organizacao,
       filters: {
         search: null
       },
@@ -67,6 +71,11 @@ export default {
         {
           key: 'address',
           label: 'Localidade',
+          sortable: true
+        },
+        {
+          key: 'organization_types',
+          label: 'Tipo de organização',
           sortable: true
         },
         {

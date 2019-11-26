@@ -1,6 +1,6 @@
 <template>
 <div>
-  <router-link class="btn btn-success btn-round btn-add" to="/cadastrar-fornecedor"><i class="material-icons">add</i>Cadastrar</router-link>
+  <router-link class="btn btn-success btn-round btn-add" to="/cadastrar-fornecedor"><i class="material-icons">add</i>Cadastrar fornecedor</router-link>
   <div class="card">
     <div class="card-header card-header-icon card-header-rose">
       <div class="card-icon">
