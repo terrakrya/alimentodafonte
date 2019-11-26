@@ -78,7 +78,6 @@ router.post('/', auth.manager, function(req, res) {
       if (!newSupplier.name) {
         newSupplier.name = body.nome
       }
-      console.log(body);
       newSupplier.slug = slugify(newSupplier.name).toLowerCase()
       newSupplier.corporate_name = body.nome
       if (body.atividade_principal && body.atividade_principal.length) {
@@ -143,7 +142,6 @@ router.put('/:id', auth.manager, function(req, res) {
 });
 
 router.delete('/:id', auth.manager, function(req, res) {
-
   Supplier.findOne({
     _id: req.params.id
   }).populate('products').exec(function(err, supplier) {

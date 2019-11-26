@@ -6,7 +6,7 @@
         <div class="card-header card-header-icon card-header-rose text-center" v-if="product">
           <div class="card-icon">
             <router-link to="/produtos">
-              <i class="material-icons">shopping_cart</i></a>
+              <i class="material-icons">shopping_cart</i>
             </router-link>
           </div>
           <h3 class="card-title">
@@ -17,7 +17,7 @@
         <div class="card-header card-header-icon card-header-rose text-center" v-else>
           <div class="card-icon">
             <router-link to="/produtos">
-              <i class="material-icons">shopping_cart</i></a>
+              <i class="material-icons">shopping_cart</i>
             </router-link>
           </div>
           <h3 class="card-title">
@@ -47,7 +47,7 @@
                 <div class="row justify-content-center">
                   <div class="col-md-10">
                     <div class="row">
-                      <div v-for="(category, index) in categorias_de_produtos" class="col-sm-4">
+                      <div v-for="(category, index) in categorias_de_produtos" :key="index" class="col-sm-4">
                         <label class="choice" :class="{ active: form.category == category.value }">
                           <input type="radio" v-model="form.category" :value="category.value" v-validate="'required'" name="category">
                           <div class="icon">
@@ -101,21 +101,13 @@
 
 <script>
 import axios from 'axios'
-import FormAddress from '@/components/FormAddress'
-import FormBankAccount from '@/components/FormBankAccount'
 import FormSubmit from '@/components/FormSubmit'
-import FormLinks from '@/components/FormLinks'
-import FormPhones from '@/components/FormPhones'
-import FormGeolocation from '@/components/FormGeolocation'
-import FormContactPersons from '@/components/FormContactPersons'
-import FormUsers from '@/components/FormUsers'
 import FormEntitySelect from '@/components/FormEntitySelect'
 import FieldError from '@/components/FieldError'
 import PicturesUpload from '@/components/PicturesUpload'
 import FormEditor from '@/components/FormEditor';
 import FormTags from '@/components/FormTags';
 import FormMonths from '@/components/FormMonths';
-import FormValueWithUnit from '@/components/FormValueWithUnit';
 import ProductVariations from '@/components/ProductVariations';
 import categorias_de_produtos from '@/data/categorias-de-produtos.json'
 
@@ -209,21 +201,13 @@ export default {
     },
   },
   components: {
-    FormAddress,
-    FormBankAccount,
     FormSubmit,
-    FormLinks,
-    FormPhones,
-    FormGeolocation,
-    FormContactPersons,
-    FormUsers,
     FormEntitySelect,
     FieldError,
     PicturesUpload,
     FormEditor,
     FormTags,
     FormMonths,
-    FormValueWithUnit,
     ProductVariations
   }
 };

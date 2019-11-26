@@ -19,8 +19,6 @@ module.exports = {
     } else {
       select = ''
     }
-    console.log('select');
-    console.log(select);
     return select
   },
   sumQtd(seed_item, request_collector, collector) {

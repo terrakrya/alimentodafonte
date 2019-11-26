@@ -1,4 +1,4 @@
-# Plataforma SocioBio
+# Biobá Plataforma SocioBio
 
 ## Development
 

@@ -139,7 +139,6 @@ router.post('/users/login', function(req, res, next) {
       return next(err);
     }
 
-    console.log(user);
     if (user) {
       user.token = user.generateJWT();
       return res.json(user.toAuthJSON());
@@ -179,7 +178,7 @@ router.get('/init', function(req, res) {
 });
 
 router.get('/is_alive', function(req, res) {
-  User.count().exec(function(err, users) {
+  User.count().exec(function(err) {
     if (!err) {
       res.send('yep')
     }

@@ -61,8 +61,6 @@ import axios from 'axios'
 import Breadcrumb from '@/components/Breadcrumb'
 import Loading from '@/components/Loading'
 import FormHeadline from '@/components/FormHeadline'
-import FormAddress from '@/components/FormAddress'
-import FormBankAccount from '@/components/FormBankAccount'
 import FormSubmit from '@/components/FormSubmit'
 import PicturesUpload from '@/components/PicturesUpload'
 import FieldError from '@/components/FieldError'
@@ -138,8 +136,6 @@ export default {
     Breadcrumb,
     Loading,
     FormHeadline,
-    FormAddress,
-    FormBankAccount,
     FormSubmit,
     FieldError,
     PicturesUpload

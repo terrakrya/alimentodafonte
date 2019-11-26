@@ -6,7 +6,7 @@
         <div class="card-header card-header-icon card-header-rose text-center">
           <div class="card-icon">
             <router-link to="/organizacoes">
-              <i class="material-icons">device_hub</i></a>
+              <i class="material-icons">device_hub</i>
             </router-link>
           </div>
           <h3 class="card-title">
