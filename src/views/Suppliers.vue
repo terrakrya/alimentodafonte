@@ -17,6 +17,7 @@
           <b-table stacked="md" :fields="table_fields" :items="suppliers" :sort-by="'name'" :filter="filters.search">
             <template slot="name" slot-scope="data">
               <router-link :to="'/editar-fornecedor/'+ data.item._id">
+                <img :src="defaultThumb(data.item.images)" class="thumb">
                 <strong>{{data.item.name}}</strong>
                 <small v-if="data.item.collectors">
                   <br>
@@ -28,12 +29,14 @@
               <span>{{data.value | city}}</span>
             </template>
             <template slot="actions" slot-scope="data">
-              <router-link :to="'/editar-fornecedor/'+ data.item._id" class="btn btn-link btn-success">
-                <i class="material-icons">edit</i>
-              </router-link>
-              <a @click="remove(data.item._id)" class="btn btn-link btn-danger">
-                <i class="material-icons">close</i>
-              </a>
+              <div class="btn-group btn-group-sm">
+                <router-link :to="'/editar-fornecedor/'+ data.item._id" class="btn btn-success">
+                  <i class="material-icons">edit</i>
+                </router-link>
+                <a @click="remove(data.item._id)" class="btn btn-danger">
+                  <i class="material-icons">close</i>
+                </a>
+              </div>
             </template>
           </b-table>
         </div>

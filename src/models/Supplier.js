@@ -34,11 +34,13 @@ const SupplierSchema = mongoose.Schema({
   geolocation: GeolocationSchema,
   email: String,
   phones: [String],
+  whatsapp: [String],
   contact_persons: [ContactPersonSchema],
   bank_account: BankAccountSchema,
   legal_format: String,
   tax_regime: String,
   subscription: String,
+  state_registration: String,
 }, {
   timestamps: true,
   toJSON: { virtuals: true }

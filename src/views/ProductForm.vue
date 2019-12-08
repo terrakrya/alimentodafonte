@@ -2,17 +2,16 @@
 <div class="product-form">
   <div class="col-md-12 mr-auto ml-auto">
     <div class="wizard-container">
-      <div class="card card-wizard active" data-color="rose" id="wizardProfile">
-        <div class="card-header card-header-icon card-header-rose text-center" v-if="product">
+      <div class="card card-wizard active" data-color="purple" id="wizardProfile">
+        <div class="card-header card-header-rose card-header-icon" v-if="product">
           <div class="card-icon">
             <router-link to="/produtos">
               <i class="material-icons">shopping_cart</i>
             </router-link>
           </div>
-          <h3 class="card-title">
+          <h4 class="card-title">
             {{product.name}}
-          </h3>
-          <h5 class="card-description">{{product.description}}</h5>
+          </h4>
         </div>
         <div class="card-header card-header-icon card-header-rose text-center" v-else>
           <div class="card-icon">
@@ -25,7 +24,11 @@
           </h3>
           <h5 class="card-description">Preencha os dados abaixo para continuar</h5>
         </div>
+        <br>
+        <br>
         <div class="wizard-navigation">
+          <br>
+          <br>
           <ul class="nav nav-pills product-form">
             <li class="nav-item">
               <a class="nav-link" :class="tab == 0 ? 'active' : ''" @click="setTab(0)">
@@ -82,14 +85,62 @@
                 <b-form-group label="Período de oferta" class="bmd-form-group">
                   <form-months :form="form" field="seasonality" />
                 </b-form-group>
-                <pictures-upload :form="form" :preview="this.images_preview" :error="error" field="images" url="uploads/images" :multiple="true" />
+                <pictures-upload :form="form" field="images" url="uploads/images" :multiple="true" />
                 <div class="card-footer justify-content-center" v-if="tab == 0">
                   <form-submit :errors="error" :sending="isSending" label="Continuar" icon="arrow_forward" />
                 </div>
               </b-form>
             </div>
             <div class="tab-pane" :class="tab == 1 ? 'active' : ''" v-if="product">
-              <product-variations :product="product" />
+              <div>
+                <div class="text-center">
+                  <router-link class="btn btn-success" :to="'/cadastrar-variacao-de-produto/?product=' + product._id">
+                    Cadastrar nova variação
+                  </router-link>
+                  <br>
+                  <br>
+                </div>
+                <div class="table-responsive" v-if="product.product_variations && product.product_variations.length">
+                  <table class="table table-shopping">
+                    <thead>
+                      <tr>
+                        <th class="text-center"></th>
+                        <th>Variação</th>
+                        <th class="text-right">Preço</th>
+                        <th class="text-right">Publicado</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(product_variation, index) in product.product_variations" :key="index">
+                        <td>
+                          <router-link :to="'/editar-variacao-de-produto/' + product_variation._id + '?product=' + product._id">
+                            <product-image :product="product" :product_variation="product_variation" />
+                          </router-link>
+                        </td>
+                        <td class="td-name">
+                          <router-link :to="'/editar-variacao-de-produto/' + product_variation._id + '?product=' + product._id">
+                            {{product_variation.name}}
+                          </router-link>
+                          <br />
+                          <small>{{product_variation.description}}</small>
+                        </td>
+                        <td class="td-number text-right">
+                          {{product_variation.final_price | moeda}}
+                        </td>
+                        <td class="text-right" :class="{'text-success': product_variation.published, 'text-danger': !product_variation.published }">
+                          {{product_variation.published ? 'Sim' : 'Não'}}
+                        </td>
+                        <td class="td-number">
+                          <div class="btn-group btn-group-sm">
+                            <button class="btn btn-danger" @click="removeVariation(product_variation._id)"> <i class="material-icons">close</i> </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -108,7 +159,7 @@ import PicturesUpload from '@/components/PicturesUpload'
 import FormEditor from '@/components/FormEditor';
 import FormTags from '@/components/FormTags';
 import FormMonths from '@/components/FormMonths';
-import ProductVariations from '@/components/ProductVariations';
+import ProductImage from '@/components/ProductImage';
 import categorias_de_produtos from '@/data/categorias-de-produtos.json'
 
 
@@ -130,13 +181,15 @@ export default {
         seasonality: [],
       },
       product: null,
-      images_preview: [],
       certifications: [],
     }
   },
   created() {
+    if (this.$route.query.tab) {
+      this.tab = this.$route.query.tab
+    }
     if (this.isEditing()) {
-      this.edit(this.$route.params.id)
+      this.edit()
     }
     axios.get('products', {
       params: {
@@ -152,9 +205,9 @@ export default {
     }).catch(this.showError);
   },
   methods: {
-    edit(id) {
+    edit() {
       this.isLoading = true
-      axios.get('products/' + id, {
+      axios.get('products/' + this.$route.params.id, {
         params: {
           populate: 'users product_variations'
         }
@@ -177,13 +230,12 @@ export default {
             var product = resp.data
             if (product && product._id) {
               this.notify("Os dados foram salvos!")
-              if (this.tab == 1) {
-                this.$router.replace('/produtos')
-              } else {
-                this.$router.replace('/editar-produto/' + product._id)
-                this.edit(product._id)
+              if (this.isEditing()) {
                 window.scrollTo(0, 0);
                 this.tab += 1
+              } else {
+                window.scrollTo(0, 0);
+                this.$router.replace('/cadastrar-variacao-de-produto?product=' + product._id)
               }
             }
             this.isSending = false
@@ -199,6 +251,13 @@ export default {
     isEditingProductVariation() {
       this.product_variation && this.product_variation._id
     },
+    removeVariation(id) {
+      if (confirm("Tem certeza que deseja excluír?")) {
+        axios.delete('product_variations/' + id).then(() => {
+          this.edit()
+        }).catch(this.showError)
+      }
+    }
   },
   components: {
     FormSubmit,
@@ -208,7 +267,7 @@ export default {
     FormEditor,
     FormTags,
     FormMonths,
-    ProductVariations
+    ProductImage
   }
 };
 </script>

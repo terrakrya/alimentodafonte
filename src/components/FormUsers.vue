@@ -10,7 +10,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(user, index) in organization.users">
+        <tr v-for="(user, index) in organization.users" :key="index">
           <td>
             {{user.name}}
           </td>
@@ -18,9 +18,11 @@
             {{user.email}}
           </td>
           <td class="text-right">
-            <a v-if="organization.users.length > 1" @click="remove(data.item._id)" class="btn btn-link btn-danger">
-              <i class="material-icons">close</i>
-            </a>
+            <div class="btn-group btn-group-sm">
+              <a v-if="organization.users.length > 1" @click="remove(data.item._id)" class="btn btn-danger">
+                <i class="material-icons">close</i>
+              </a>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -54,7 +56,6 @@
 
 <script>
 import axios from 'axios'
-import Loading from './Loading'
 
 export default {
 
@@ -94,15 +95,14 @@ export default {
           this.notify('Usuário cadastrado com sucesso!')
           this.form = null
         }
-        console.log(user);
       }).catch(this.showError)
     },
     remove(user) {
+      // eslint-disable-next-line
       console.log(user);
     }
   },
   components: {
-    Loading
   }
 };
 </script>

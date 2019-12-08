@@ -1,7 +1,13 @@
 @import "material-dashboard"
 
 a
-  cursor: pointer
+  cursor: pointer !important
+  color: $black-color
+  &:hover
+    color: $black-color
+.btn-success
+  cursor: pointer !important
+
 .photo
   .fa-user
     font-size: 47px
@@ -65,7 +71,7 @@ form
     margin-right: 10px
     border: 1px solid $gray-color
   &:hover
-    background-color: $pink
+    background-color: $purple
     color: $white
   &:first-child
     border-bottom: 0
@@ -96,3 +102,19 @@ label, .col-form-label
     color: $white
 .router-link-active
   background-color: $green
+
+td
+  .img-container
+    max-width: 55px
+    float: left
+    margin-right: 15px
+.card [class*="card-header-"] .card-title a, .card [class*="card-header-"] .card-description
+  color: $black-color
+
+.table-shopping .td-name
+  font-size: 1.2em
+
+.thumb
+  border-radius: 3px
+  margin-right: 15px
+  max-height: 46px

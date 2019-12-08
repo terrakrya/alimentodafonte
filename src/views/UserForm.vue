@@ -39,7 +39,7 @@
         </div>
         <div class="row">
           <div class="col-md-12">
-            <pictures-upload :form="form" :preview="images_preview" :error="error" field="image" url="uploads/images" />
+            <pictures-upload :form="form" :error="error" field="image" url="uploads/images" />
           </div>
         </div>
         <div class="row" v-if="isAdmin">
@@ -76,7 +76,6 @@ export default {
   },
   data() {
     return {
-      images_preview: [],
       show_password: false,
       tipos_de_usuario: tipos_de_usuario,
       form: {
@@ -99,9 +98,6 @@ export default {
       this.isLoading = true
       axios.get('users/' + id).then(response => {
         this.apiDataToForm(this.form, response.data)
-        if (response.data.image) {
-          this.images_preview = [response.data.image]
-        }
         this.isLoading = false
       }).catch(this.showError);
     },

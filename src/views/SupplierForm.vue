@@ -67,7 +67,7 @@
                     <form-links :form="form" field="links" />
                   </div>
                   <div class="col-lg-12">
-                    <pictures-upload :form="form" :preview="this.images_preview" :error="error" field="images" url="uploads/images" :multiple="true"  />
+                    <pictures-upload :form="form" :error="error" field="images" url="uploads/images" :multiple="true"  />
                   </div>
                 </div>
               </div>
@@ -75,6 +75,7 @@
                 <form-address :form="form" />
                 <form-geolocation :form="form" />
                 <form-phones :form="form" field="phones" />
+                <form-whats-app :form="form" field="whatsapp" />
                 <b-form-group label="Email" class="bmd-form-group">
                   <b-form-input v-model="form.email" name="email" />
                 </b-form-group>
@@ -86,6 +87,9 @@
                 </b-form-group>
                 <b-form-group label="Regime tributário" class="bmd-form-group">
                   <b-form-input v-model="form.tax_regime" name="tax_regime" />
+                </b-form-group>
+                <b-form-group label="Inscrição estadual" class="bmd-form-group">
+                  <b-form-input v-model="form.state_registration" name="state_registration" />
                 </b-form-group>
                 <b-form-group label="Inscrição" class="bmd-form-group">
                   <b-form-input v-model="form.subscription" name="subscription" />
@@ -111,9 +115,12 @@ import FormBankAccount from '@/components/FormBankAccount'
 import FormSubmit from '@/components/FormSubmit'
 import FormLinks from '@/components/FormLinks'
 import FormPhones from '@/components/FormPhones'
+import FormWhatsApp from '@/components/FormWhatsApp'
 import FormGeolocation from '@/components/FormGeolocation'
 import FormContactPersons from '@/components/FormContactPersons'
 import FormEntitiesSelect from '@/components/FormEntitiesSelect'
+import FieldError from '@/components/FieldError'
+import PicturesUpload from '@/components/PicturesUpload'
 
 export default {
 
@@ -142,10 +149,12 @@ export default {
         images: [],
         links: [],
         phones: [],
+        whatsapp: [],
         contact_persons: [],
         legal_format: "",
         tax_regime: "",
         subscription: "",
+        state_registration: "",
         bank_account: {
           bank_number: '',
           agency: '',
@@ -154,7 +163,6 @@ export default {
         }
       },
       supplier: null,
-      images_preview: [],
     }
   },
   created() {
@@ -208,9 +216,12 @@ export default {
     FormSubmit,
     FormLinks,
     FormPhones,
+    FormWhatsApp,
     FormGeolocation,
     FormContactPersons,
-    FormEntitiesSelect
+    FormEntitiesSelect,
+    FieldError,
+    PicturesUpload
   }
 };
 </script>

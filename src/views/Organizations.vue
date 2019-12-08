@@ -17,6 +17,7 @@
           <b-table stacked="md" :fields="table_fields" :items="organizations" :sort-by="'name'" :filter="filters.search">
             <template slot="name" slot-scope="data">
               <router-link :to="'/editar-organizacao/'+ data.item._id">
+                <img :src="defaultThumb(data.item.images)" class="thumb">
                 <strong>{{data.item.name}}</strong>
                 <small v-if="data.item.collectors">
                   <br>
@@ -31,12 +32,14 @@
               <span class="badge badge-primary" v-for="(type, index) in data.value" :key="index">{{tipos_de_organizacao.find(t => t.value == type).text}}</span>
             </template>
             <template slot="actions" slot-scope="data">
-              <router-link :to="'/editar-organizacao/'+ data.item._id" class="btn btn-link btn-success">
-                <i class="material-icons">edit</i>
-              </router-link>
-              <a @click="remove(data.item._id)" class="btn btn-link btn-danger">
-                <i class="material-icons">close</i>
-              </a>
+              <div class="btn-group btn-group-sm">
+                <router-link :to="'/editar-organizacao/'+ data.item._id" class="btn btn-success">
+                  <i class="material-icons">edit</i>
+                </router-link>
+                <a @click="remove(data.item._id)" class="btn btn-danger">
+                  <i class="material-icons">close</i>
+                </a>
+              </div>
             </template>
           </b-table>
         </div>
