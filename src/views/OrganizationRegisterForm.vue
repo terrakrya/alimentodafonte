@@ -19,7 +19,7 @@
             <ul class="nav nav-pills organization-form">
               <li class="nav-item active">
                 <span class="nav-link active">
-                  Acesso
+                  Registro
                 </span>
               </li>
               <li class="nav-item">
@@ -85,7 +85,6 @@
       </div>
     </div>
   </div>
-  <pre>{{form.organization_types}}</pre>
 </div>
 </template>
 

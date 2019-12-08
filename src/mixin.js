@@ -93,7 +93,6 @@ export default {
       this.isSending = false
     },
     notify(msg, type = "success") {
-      console.log(msg);
       Vue.notify({
         group: 'a',
         text: msg,
@@ -126,6 +125,13 @@ export default {
         return 0
       }
     },
+    defaultThumb(images) {
+      if (images && images.length) {
+        return this.baseUrl + (images.find(image => image.default) || images[0]).thumb
+      } else {
+        return this.baseUrl + 'images/image_placeholder.jpg'
+      }
+    }
   },
   filters: {
     cpf: function(value) {

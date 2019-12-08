@@ -68,7 +68,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-12">
-							<pictures-upload :form="form" :preview="images_preview" :error="error" field="image" url="uploads/images" />
+							<pictures-upload :form="form" :error="error" field="image" url="uploads/images" />
 						</div>
 					</div>
 					<form-submit :errors="error" :sending="isSending" />
@@ -99,7 +99,6 @@ export default {
 	},
 	data () {
 		return {
-			images_preview: [],
 			log: false,
 			show_password: false,
 			tipos_de_usuario: tipos_de_usuario,
@@ -139,9 +138,6 @@ export default {
 			this.isLoading = true
 			axios.get('users/' + id).then(response => {
 				this.apiDataToForm(this.form, response.data)
-				if (response.data.image) {
-					this.images_preview = [response.data.image]
-				}
 				this.isLoading = false
 			}).catch(this.showError);
 		},

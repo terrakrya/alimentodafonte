@@ -28,9 +28,11 @@
             <td><img class="table-image" v-if="item_preview && item_preview.picture" :src="baseUrl + item_preview.picture" /></td>
             <td><span v-if="item_preview">{{item_preview.title}}</span></td>
             <td>
-              <a v-if="item_preview" @click="removeItem(item_preview.id)" class="btn btn-link btn-danger pull-right">
-                <i class="material-icons">close</i>
-              </a>
+              <div class="btn-group btn-group-sm">
+                <a v-if="item_preview" @click="removeItem(item_preview.id)" class="btn btn-danger pull-right">
+                  <i class="material-icons">close</i>
+                </a>
+              </div>
             </td>
           </tr>
         </tbody>

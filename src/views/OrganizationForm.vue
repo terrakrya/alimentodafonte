@@ -44,6 +44,12 @@
               <div class="tab-pane" :class="tab == 0 ? 'active' : ''">
                 <div class="row justify-content-center">
                   <div class="col-lg-12">
+                    <b-form-group label="Tipo de organização *" class="form-check">
+                      <b-form-checkbox-group  v-model="form.organization_types" :options="tipos_de_organizacao" v-validate="'required'" name="organization_types"  />
+                      <field-error :msg="veeErrors" field="organization_types" />
+                    </b-form-group>
+                  </div>
+                  <div class="col-lg-12">
                     <b-form-group label="Histórico da organização" description="Escreva um breve resumo da história da organização" class="bmd-form-group">
                       <b-form-textarea v-model="form.history" name="history" />
                     </b-form-group>
@@ -52,7 +58,7 @@
                     <form-links :form="form" field="links" />
                   </div>
                   <div class="col-lg-12">
-                    <pictures-upload :form="form" :preview="this.images_preview" :error="error" field="images" url="uploads/images" :multiple="true"  />
+                    <pictures-upload :form="form" :error="error" field="images" url="uploads/images" :multiple="true"  />
                   </div>
                 </div>
               </div>
@@ -63,6 +69,7 @@
                 <form-address :form="form" />
                 <form-geolocation :form="form" />
                 <form-phones :form="form" field="phones" />
+                <form-whats-app :form="form" field="whatsapp" />
                 <form-contact-persons :form="form" field="contact_persons" />
               </div>
               <div class="tab-pane" :class="tab == 2 ? 'active' : ''">
@@ -72,7 +79,10 @@
                 <b-form-group label="Regime tributário" class="bmd-form-group">
                   <b-form-input v-model="form.tax_regime" name="tax_regime" />
                 </b-form-group>
-                <b-form-group label="Inscrição" class="bmd-form-group">
+                <b-form-group label="Inscrição estadual" class="bmd-form-group">
+                  <b-form-input v-model="form.state_registration" name="state_registration" />
+                </b-form-group>
+                <b-form-group label="Data da inscrição" class="bmd-form-group">
                   <b-form-input v-model="form.subscription" name="subscription" />
                 </b-form-group>
                 <form-bank-account :form="form" />
@@ -100,15 +110,18 @@ import FormSubmit from '@/components/FormSubmit'
 import PicturesUpload from '@/components/PicturesUpload'
 import FormLinks from '@/components/FormLinks'
 import FormPhones from '@/components/FormPhones'
+import FormWhatsApp from '@/components/FormWhatsApp'
 import FormGeolocation from '@/components/FormGeolocation'
 import FormContactPersons from '@/components/FormContactPersons'
 import FormUsers from '@/components/FormUsers'
+import tipos_de_organizacao from '@/data/tipos-de-organizacao.json'
 
 export default {
 
   name: 'OrganizationForm',
   data() {
     return {
+      tipos_de_organizacao: tipos_de_organizacao,
       tab: 0,
       form: {
         cnpj: '',
@@ -128,10 +141,12 @@ export default {
         images: [],
         links: [],
         phones: [],
+        whatsapp: [],
         contact_persons: [],
         legal_format: "",
         tax_regime: "",
         subscription: "",
+        state_registration: "",
         bank_account: {
           bank_number: '',
           agency: '',
@@ -140,7 +155,6 @@ export default {
         }
       },
       organization: null,
-      images_preview: [],
     }
   },
   created() {
@@ -194,6 +208,7 @@ export default {
     FormSubmit,
     FormLinks,
     FormPhones,
+    FormWhatsApp,
     FormGeolocation,
     FormContactPersons,
     FormUsers,

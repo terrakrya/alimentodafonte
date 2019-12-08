@@ -67,6 +67,7 @@ import SupplierRegisterForm from '@/views/SupplierRegisterForm.vue'
 
 import Products from '@/views/Products.vue'
 import ProductForm from '@/views/ProductForm.vue'
+import ProductVariationForm from '@/views/ProductVariationForm.vue'
 
 Vue.use(Router)
 
@@ -184,6 +185,9 @@ export default new Router({
     { path: '/produtos', component: Products, beforeEnter: requireAuth },
     { path: '/cadastrar-produto', component: ProductForm, beforeEnter: requireAuth },
     { path: '/editar-produto/:id', component: ProductForm, beforeEnter: requireAuth },
+
+    { path: '/editar-variacao-de-produto/:id', component: ProductVariationForm, beforeEnter: requireAuth }, 
+    { path: '/cadastrar-variacao-de-produto', component: ProductVariationForm, beforeEnter: requireAuth },
 
   ]
 })

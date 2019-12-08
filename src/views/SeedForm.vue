@@ -89,7 +89,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-12">
-							<pictures-upload :form="form" :preview="this.images_preview" :error="error" field="images" url="uploads/images" :multiple="true"  />
+							<pictures-upload :form="form" :error="error" field="images" url="uploads/images" :multiple="true"  />
 						</div>
 					</div>
 					<form-submit :errors="error" :sending="isSending"/>
@@ -134,7 +134,6 @@ export default {
 				fruiting_season: [],
 				images: []
 			},
-			images_preview: [],
 		}
 	},
 
@@ -150,7 +149,6 @@ export default {
 			axios.get('seeds/' + id).then(response => {
 				var data = response.data
 				this.apiDataToForm(this.form, data)
-				Object.assign(this.images_preview, data.images)
 				this.isLoading = false
 			}).catch(this.showError);
 		},
