@@ -22,9 +22,10 @@
               </router-link>
             </template>
             <template slot="manufacturing_date" slot-scope="data">
-              <div v-if="data.item.product_variation && data.item.product_variation.duration && data.item.product_variation.duration.value && data.value">
+              <div v-if="data.value">
                 {{data.value | moment("DD/MM/YYYY")}}
-                <br>
+              </div>
+              <div v-if="data.item.product_variation && data.item.product_variation.duration && data.item.product_variation.duration.value && data.value">
                 <small>Vence {{data.value | moment("add", data.item.product_variation.duration.value + ' ' + date_unit[data.item.product_variation.duration.unit]) | moment('from', 'now')}}</small>
               </div>
             </template>
