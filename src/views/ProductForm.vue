@@ -99,6 +99,9 @@
                   </router-link>
                   <br>
                   <br>
+                  <div class="alert alert-danger" v-if="error">
+                    {{error}}
+                  </div>
                 </div>
                 <div class="table-responsive" v-if="product.product_variations && product.product_variations.length">
                   <table class="table table-shopping">
@@ -106,8 +109,7 @@
                       <tr>
                         <th class="text-center"></th>
                         <th>Variação</th>
-                        <th class="text-right">Preço</th>
-                        <th class="text-right">Publicado</th>
+                        <th class="text-right">Preço final</th>
                         <th></th>
                       </tr>
                     </thead>
@@ -128,11 +130,14 @@
                         <td class="td-number text-right">
                           {{product_variation.final_price | moeda}}
                         </td>
-                        <td class="text-right" :class="{'text-success': product_variation.published, 'text-danger': !product_variation.published }">
-                          {{product_variation.published ? 'Sim' : 'Não'}}
-                        </td>
-                        <td class="td-number">
+                        <td class="td-actions text-right">
                           <div class="btn-group btn-group-sm">
+                            <router-link class="btn btn-success" :to="'/cadastrar-oferta?product_variation=' + product_variation._id">
+                              <i class="material-icons">add</i> Oferta
+                            </router-link>
+                            <router-link class="btn btn-info" :to="'/editar-variacao-de-produto/' + product_variation._id + '?product=' + product._id">
+                              <i class="material-icons">edit</i>
+                            </router-link>
                             <button class="btn btn-danger" @click="removeVariation(product_variation._id)"> <i class="material-icons">close</i> </button>
                           </div>
                         </td>
@@ -209,11 +214,14 @@ export default {
       this.isLoading = true
       axios.get('products/' + this.$route.params.id, {
         params: {
-          populate: 'users product_variations'
+          populate: 'users product_variations product_variations offers'
         }
       }).then(response => {
         this.apiDataToForm(this.form, response.data)
         this.product = response.data
+        if (this.product.product_variations && this.product.product_variations.length > 0) {
+          this.tab = 1
+        }
         this.isLoading = false
       }).catch(this.showError);
     },
@@ -254,6 +262,7 @@ export default {
     removeVariation(id) {
       if (confirm("Tem certeza que deseja excluír?")) {
         axios.delete('product_variations/' + id).then(() => {
+          console.log('aqui');
           this.edit()
         }).catch(this.showError)
       }

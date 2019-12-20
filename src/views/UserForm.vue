@@ -1,57 +1,69 @@
 <template>
 <div class="user-form">
-  <breadcrumb :links="[['Usuários', '/usuarios']]" :active="isEditing() ? form.name : 'Cadastrar'" />
-  <div class="panel panel-headline data-list">
-    <div class="panel-body">
-      <form-headline name="usuário" />
-      <loading :loading="isLoading" />
-      <b-form @submit.prevent="save" v-if="!isLoading">
-        <div class="row">
-          <div class="col-sm-6">
-            <b-form-group label="Nome *">
-              <b-form-input v-model="form.name" v-validate="'required'" name="name" />
-              <field-error :msg="veeErrors" field="name" />
-            </b-form-group>
+  <div class="col-md-12 mr-auto ml-auto">
+    <div class="wizard-container">
+      <div class="card card-wizard active" data-color="purple" id="wizardProfile">
+        <div class="card-header card-header-icon card-header-rose">
+          <div class="card-icon">
+            <router-link to="/usuarios">
+              <i class="material-icons">person</i>
+            </router-link>
           </div>
-          <div class="col-sm-6">
-            <b-form-group label="Email">
-              <b-form-input v-model="form.email" v-validate="'email'" name="email" />
-              <field-error :msg="veeErrors" field="email" />
-              <div class="text-right" v-if="isEditing()">
-                <a class="pointer" @click="changePassword">Alterar senha</a>
+          <h4 class="card-title">
+            {{isEditing() ? 'Editar usuário' : 'Cadastrar usuário'}}
+          </h4>
+        </div>
+        <div class="card-body">
+          <loading :loading="isLoading" />
+          <b-form @submit.prevent="save" v-if="!isLoading">
+            <div class="row">
+              <div class="col-sm-6">
+                <b-form-group label="Nome *">
+                  <b-form-input v-model="form.name" v-validate="'required'" name="name" />
+                  <field-error :msg="veeErrors" field="name" />
+                </b-form-group>
               </div>
-            </b-form-group>
-          </div>
+              <div class="col-sm-6">
+                <b-form-group label="Email">
+                  <b-form-input v-model="form.email" v-validate="'email'" name="email" />
+                  <field-error :msg="veeErrors" field="email" />
+                  <div class="text-right" v-if="isEditing()">
+                    <a class="pointer" @click="changePassword">Alterar senha</a>
+                  </div>
+                </b-form-group>
+              </div>
+            </div>
+            <div class="row gray" v-if="showPasswordFields">
+              <div class="col-sm-6">
+                <b-form-group label="Senha *">
+                  <b-form-input v-model="form.password" type="password" v-validate="'required'" name="pass" />
+                  <field-error :msg="veeErrors" field="pass" />
+                </b-form-group>
+              </div>
+              <div class="col-sm-6">
+                <b-form-group label="Confirmar senha *">
+                  <b-form-input v-model="form.password_confirmation" type="password" v-validate="'required'" name="pass_confirmation" />
+                  <field-error :msg="veeErrors" field="pass_confirmation" />
+                </b-form-group>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <pictures-upload :form="form" :error="error" field="image" url="uploads/images" />
+              </div>
+            </div>
+            <div class="row" v-if="isAdmin">
+              <div class="col-sm-6">
+                <b-form-group label="Perfis de usuário *">
+                  <b-form-radio-group v-model="form.roles[0]" :options="tipos_de_usuario" v-validate="'required'" name="roles" />
+                  <field-error :msg="veeErrors" field="roles" />
+                </b-form-group>
+              </div>
+            </div>
+            <form-submit :errors="error" :sending="isSending" />
+          </b-form>
         </div>
-        <div class="row gray" v-if="showPasswordFields">
-          <div class="col-sm-6">
-            <b-form-group label="Senha *">
-              <b-form-input v-model="form.password" type="password" v-validate="'required'" name="pass" />
-              <field-error :msg="veeErrors" field="pass" />
-            </b-form-group>
-          </div>
-          <div class="col-sm-6">
-            <b-form-group label="Confirmar senha *">
-              <b-form-input v-model="form.password_confirmation" type="password" v-validate="'required'" name="pass_confirmation" />
-              <field-error :msg="veeErrors" field="pass_confirmation" />
-            </b-form-group>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <pictures-upload :form="form" :error="error" field="image" url="uploads/images" />
-          </div>
-        </div>
-        <div class="row" v-if="isAdmin">
-          <div class="col-sm-6">
-            <b-form-group label="Perfis de usuário *">
-              <b-form-radio-group v-model="form.roles[0]" :options="tipos_de_usuario" v-validate="'required'" name="roles" />
-              <field-error :msg="veeErrors" field="roles" />
-            </b-form-group>
-          </div>
-        </div>
-        <form-submit :errors="error" :sending="isSending" />
-      </b-form>
+      </div>
     </div>
   </div>
 </div>
@@ -117,7 +129,7 @@ export default {
               if (user._id == this.currentUser._id) {
                 this.$store.dispatch('login', user)
               }
-              this.$router.replace('/usuario/' + user._id)
+              this.$router.replace('/usuarios')
             }
             this.isSending = false
           }).catch(this.showError)

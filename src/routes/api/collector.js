@@ -6,7 +6,7 @@ var express = require('express'),
   CollectorsRequest = mongoose.model('CollectorsRequest'),
   StockIn = mongoose.model('StockIn');
 
-router.get('/requests', auth.collector, function(req, res) {
+router.get('/requests', auth.manager, function(req, res) {
   var seed_items = {}
 
   CollectorsRequest.find({
@@ -60,7 +60,7 @@ router.get('/requests', auth.collector, function(req, res) {
   });
 });
 
-router.get('/stock_ins', auth.collector, function(req, res) {
+router.get('/stock_ins', auth.manager, function(req, res) {
   StockIn.find({
     collector: req.payload.id
   }, utils.select(req)).populate(utils.populate(req)).exec(function(err, stock_ins) {

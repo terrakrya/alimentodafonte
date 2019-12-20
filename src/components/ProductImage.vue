@@ -17,7 +17,7 @@ export default {
       } else if (this.product && this.product.images && this.product.images.length) {
         return this.defaultThumb(this.product.images)
       }
-      return ""
+      return this.defaultThumb([])
     },
     product_alt() {
       if (this.product_variation && this.product_variation.name) {

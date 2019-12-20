@@ -20,18 +20,15 @@
                 <product-image :product="data.item" css_class="thumbnail"/>
                 <h4>{{data.item.name}}</h4>
               </router-link>
-              <span>
-                {{data.item.description}}
-              </span>
             </template>
             <template slot="supplier" slot-scope="data">
               <router-link :to="'/editar-fornecedor/'+ data.value._id">
-                <h4>{{data.value.name}}</h4>
+                {{data.value.name}}
               </router-link>
             </template>
             <template slot="actions" slot-scope="data">
               <div class="btn-group btn-group-sm">
-                <router-link :to="'/editar-produto/'+ data.item._id" class="btn btn-success">
+                <router-link :to="'/editar-produto/'+ data.item._id" class="btn btn-info">
                   <i class="material-icons">edit</i>
                 </router-link>
                 <a @click="remove(data.item._id)" class="btn btn-danger">

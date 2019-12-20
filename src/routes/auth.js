@@ -13,15 +13,15 @@ function getTokenFromHeader(req){
 function isManager(req) {
   if (req.payload && req.payload.roles) {
     var roles = req.payload.roles
-    return roles && (roles.includes('manager') || roles.includes('admin'))
+    return roles && (roles.includes('manager') || roles.includes('link') || roles.includes('admin'))
   }
   return false
 }
 
-function isCollector(req) {
+function isLink(req) {
   if (req.payload && req.payload.roles) {
     var roles = req.payload.roles
-    return roles && (roles.includes('collector') || roles.includes('manager') || roles.includes('admin'))
+    return roles && (roles.includes('link') || roles.includes('admin'))
   }
   return false
 }
@@ -32,18 +32,18 @@ function authenticatedManager(req, res, next) {
   } else {
     return res.status(403).json({
       status: 403,
-      message: 'A permissão de gestor ou administrador é necessária para acessar este recurso.'
+      message: 'A permissão de gestor, elo ou administrador é necessária para acessar este recurso.'
     })
   }
 }
 
-function authenticatedCollector(req, res, next) {
-  if (isCollector(req)) {
+function authenticatedLink(req, res, next) {
+  if (isLink(req)) {
     next()
   } else {
     return res.status(403).json({
       status: 403,
-      message: 'A permissão de coletor, gestor ou administrador é necessária para acessar este recurso.'
+      message: 'A permissão de elo ou administrador é necessária para acessar este recurso.'
     })
   }
 }
@@ -59,18 +59,18 @@ var auth = {
     userProperty: 'payload',
     getToken: getTokenFromHeader
   }), authenticatedManager],
-  collector: [jwt({
+  link: [jwt({
     secret: secret,
     userProperty: 'payload',
     getToken: getTokenFromHeader
-  }), authenticatedCollector],
+  }), authenticatedLink],
   optional: jwt({
     secret: secret,
     userProperty: 'payload',
     credentialsRequired: false,
     getToken: getTokenFromHeader
   }),
-  isCollector: isCollector,
+  isLink: isLink,
   isManager: isManager
 };
 

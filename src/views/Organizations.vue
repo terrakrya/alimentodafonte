@@ -33,7 +33,7 @@
             </template>
             <template slot="actions" slot-scope="data">
               <div class="btn-group btn-group-sm">
-                <router-link :to="'/editar-organizacao/'+ data.item._id" class="btn btn-success">
+                <router-link :to="'/editar-organizacao/'+ data.item._id" class="btn btn-info">
                   <i class="material-icons">edit</i>
                 </router-link>
                 <a @click="remove(data.item._id)" class="btn btn-danger">

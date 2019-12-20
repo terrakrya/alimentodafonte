@@ -4,7 +4,9 @@ import money from 'v-money'
 import Vue2Filters from 'vue2-filters'
 import VeeValidate, { Validator } from 'vee-validate'
 import VueTheMask from 'vue-the-mask'
-import moment from 'vue-moment'
+import moment from 'moment'
+import moment_br from 'moment/locale/pt-br'
+import VueMoment from 'vue-moment'
 import BootstrapVue from 'bootstrap-vue'
 import Notifications from 'vue-notification'
 import CKEditor from '@ckeditor/ckeditor5-vue';
@@ -32,7 +34,10 @@ Vue.use(money, { prefix: 'R$ ', decimal: ',', thousands: '', masked: false })
 Vue.use(Vue2Filters)
 Vue.use(VeeValidate, { locale: 'pt_BR', fieldsBagName: 'veeFields',  errorBagName: 'veeErrors' })
 Vue.use(VueTheMask)
-Vue.use(moment);
+console.log(moment);
+Vue.use(VueMoment, {
+    moment,
+})
 Vue.use(CKEditor);
 
 Validator.localize('pt_BR', ptBR)

@@ -43,7 +43,7 @@ router.get('/:id', auth.manager, function(req, res) {
   });
 });
 
-router.post('/', auth.manager, function(req, res) {
+router.post('/', auth.link, function(req, res) {
   var params = req.body
   var newOrganization = new Organization(params);
   newOrganization.cnpj = newOrganization.cnpj.replace(/\D/g, '')
@@ -124,7 +124,7 @@ router.post('/', auth.manager, function(req, res) {
 
 });
 
-router.put('/:id', auth.manager, function(req, res) {
+router.put('/:id', auth.link, function(req, res) {
   params = req.body
   Organization.findOneAndUpdate({
     _id: req.params.id
@@ -141,7 +141,7 @@ router.put('/:id', auth.manager, function(req, res) {
   });
 });
 
-router.delete('/:id', auth.manager, function(req, res) {
+router.delete('/:id', auth.link, function(req, res) {
 
   Organization.findOne({
     _id: req.params.id

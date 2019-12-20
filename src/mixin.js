@@ -35,7 +35,10 @@ export default {
       return this.isA('admin')
     },
     isManager() {
-      return this.isA('manager') || this.isA('admin')
+      return this.isA('manager') || this.isA('link') || this.isA('admin')
+    },
+    isLink() {
+      return this.isA('link') || this.isA('admin')
     },
     isCollector() {
       return this.isA('collector') || this.isA('manager') || this.isA('admin')

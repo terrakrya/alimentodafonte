@@ -39,7 +39,7 @@
         </router-link>
       </li>
       <li class="nav-item" @click="toggleMenu">
-        <router-link class="nav-link" to="/organizacoes" v-if="isAdmin">
+        <router-link class="nav-link" to="/organizacoes" v-if="isLink">
           <i class="material-icons">device_hub</i>
           <p>Organizações</p>
         </router-link>
@@ -54,6 +54,12 @@
         <router-link class="nav-link" to="/produtos">
           <i class="material-icons">shopping_cart</i>
           <p>Produtos</p>
+        </router-link>
+      </li>
+      <li class="nav-item" @click="toggleMenu">
+        <router-link class="nav-link" to="/ofertas">
+          <i class="material-icons">local_offer</i>
+          <p>Ofertas</p>
         </router-link>
       </li>
       <li class="nav-item" @click="toggleMenu" v-if="isAdmin">

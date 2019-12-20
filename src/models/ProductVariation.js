@@ -2,6 +2,11 @@ const mongoose = require('mongoose'),
   ObjectId = mongoose.Schema.Types.ObjectId;
 
 const ProductVariationSchema = mongoose.Schema({
+  organization: {
+    type: ObjectId,
+    ref: 'Organization',
+    required: true
+  },
   product: {
     type: ObjectId,
     ref: 'Product',
@@ -17,7 +22,6 @@ const ProductVariationSchema = mongoose.Schema({
   description: String,
   images: [Object],
 
-  manufacturing_date: Date,
   duration: Object,
   tags: [Object],
 
@@ -34,13 +38,20 @@ const ProductVariationSchema = mongoose.Schema({
   box_weight: Object,
   box_height: Object,
   box_width: Object,
-  box_gross_weight:Object,
+  box_gross_weight: Object,
   box_max_stack: Number,
-
-  published: Boolean,
 
 }, {
   timestamps: true,
+  toJSON: {
+    virtuals: true
+  }
+});
+
+ProductVariationSchema.virtual('offers', {
+  ref: 'Offer',
+  localField: '_id',
+  foreignField: 'product_variation'
 });
 
 mongoose.model('ProductVariation', ProductVariationSchema);

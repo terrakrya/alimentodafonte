@@ -55,6 +55,16 @@ export default {
             return a.title.localeCompare(b.title);
           })
           break;
+        case 'product_variations':
+          this.list = (await this.loadList('product_variations')).map(product_variation => ({
+            id: product_variation._id,
+            title: product_variation.name,
+            description: product_variation.description,
+            picture: product_variation.images && product_variation.images.length ? product_variation.images[0].thumb : '',
+          })).sort(function(a, b) {
+            return a.title.localeCompare(b.title);
+          })
+          break;
         case 'seeds':
           this.list = (await this.loadList('seeds')).map(seed => ({
             id: seed._id,
