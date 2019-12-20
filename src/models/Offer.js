@@ -2,14 +2,24 @@ const mongoose = require('mongoose'),
   ObjectId = mongoose.Schema.Types.ObjectId;
 
 const OfferSchema = mongoose.Schema({
-  product_variation: {
-    type: ObjectId,
-    ref: 'ProductVariation',
-    required: true
-  },
   organization: {
     type: ObjectId,
     ref: 'Organization',
+    required: true
+  },
+  supplier: {
+    type: ObjectId,
+    ref: 'Supplier',
+    required: true
+  },
+  product: {
+    type: ObjectId,
+    ref: 'Product',
+    required: true
+  },
+  product_variation: {
+    type: ObjectId,
+    ref: 'ProductVariation',
     required: true
   },
   lot: String,

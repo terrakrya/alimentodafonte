@@ -39,12 +39,14 @@ router.post('/', auth.manager, function(req, res) {
   var newOffer = new Offer(req.body);
   ProductVariation.findOne({
     _id: newOffer.product_variation
-  }).exec(function(err, product_variation) {
+  }).populate('product').exec(function(err, product_variation) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
       console.log(product_variation);
       newOffer.organization = product_variation.organization
+      newOffer.product = product_variation.product._id
+      newOffer.supplier = product_variation.product.supplier
       newOffer.save(function(err, offer) {
         if (err) {
           res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
