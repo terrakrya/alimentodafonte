@@ -3,7 +3,8 @@ var mongoose = require('mongoose'),
   passport = require('passport'),
   auth = require('../auth'),
   populate = require('../utils').populate,
-  User = mongoose.model('User');
+  User = mongoose.model('User'),
+  Product = mongoose.model('Product');
 
 router.get('/users', auth.manager, function(req, res) {
   var filters = {}
@@ -183,6 +184,37 @@ router.get('/is_alive', function(req, res) {
       res.send('yep')
     }
   });
+
+});
+
+router.get('/fix_data', function(req, res) {
+  Product.find().populate('supplier product_variations').exec(function(err, products) {
+    if (err) {
+      res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
+    } else {
+      products.forEach(product => {
+        var org = product.supplier.organizations[0]
+        product.organization = org
+        product.save(function(err, r) {
+          if (err) {
+            res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
+          } else {
+            product.product_variations.forEach(product_variation => {
+              product_variation.organization = org
+              product_variation.save(function(err, r) {
+                if (err) {
+                  res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
+                } else {
+                  console.log('salvo');
+                }
+              });
+            })
+          }
+        });
+
+      })
+    }
+  })
 
 });
 
