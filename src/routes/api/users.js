@@ -201,6 +201,9 @@ router.get('/fix_data', function(req, res) {
           } else {
             product.product_variations.forEach(product_variation => {
               product_variation.organization = org
+              if (!product_variation.images || product_variation.images.length == 0) {
+                product_variation.images = product.images
+              }
               product_variation.save(function(err, r) {
                 if (err) {
                   res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
