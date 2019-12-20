@@ -31,6 +31,11 @@
             </template>
             <template slot="final_price" slot-scope="data">
               {{data.value | moeda}}
+              <div v-if="data.item.supplier && data.item.organization">
+                <small v-if="data.item.supplier.issue_invoice">Nota emitida pelo fornecedor</small>
+                <small v-else-if="data.item.organization.issue_invoice">Nota emitida pela organização</small>
+                <small v-else="data.item.organization.issue_invoice">Nota emitida pela rede</small>
+              </div>
             </template>
             <template slot="actions" slot-scope="data">
               <div class="btn-group btn-group-sm">
@@ -112,7 +117,7 @@ export default {
     async list() {
       axios.get('offers', {
         params: {
-          populate: 'product_variation'
+          populate: 'product_variation supplier organization'
         }
       }).then(response => {
         this.offers = response.data

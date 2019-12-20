@@ -41,6 +41,7 @@ const SupplierSchema = mongoose.Schema({
   tax_regime: String,
   subscription: String,
   state_registration: String,
+  issue_invoice: Boolean
 }, {
   timestamps: true,
   toJSON: { virtuals: true }
