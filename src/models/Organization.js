@@ -37,7 +37,8 @@ const OrganizationSchema = mongoose.Schema({
   tax_regime: String,
   subscription: String,
   state_registration: String,
-  organization_types: [String]
+  organization_types: [String],
+  issue_invoice: Boolean
 }, {
   timestamps: true,
   toJSON: { virtuals: true }

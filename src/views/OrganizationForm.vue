@@ -86,6 +86,9 @@
                   <b-form-input v-model="form.subscription" name="subscription" />
                 </b-form-group>
                 <form-bank-account :form="form" />
+                <b-form-group label="Emite nota fiscal?" class="bmd-form-group">
+                  <b-form-checkbox v-model="form.issue_invoice" name="issue_invoice" />
+                </b-form-group>
               </div>
               <div class="tab-pane" :class="tab == 3 ? 'active' : ''">
                 <form-users :organization="organization" />
@@ -152,7 +155,8 @@ export default {
           agency: '',
           account: '',
           type: 'corrente',
-        }
+        },
+        issue_invoice: false
       },
       organization: null,
     }
