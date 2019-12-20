@@ -6,7 +6,7 @@
       <div class="btn-group">
         <button v-if="sending" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Enviando dados...</button>
         <button v-if="!sending && onCancel" @click="onCancel()" type="button" class="btn btn-warning btn-lg" >Cancelar</button>
-        <button v-if="!sending" role="button" class="btn btn-success btn-lg"><i class="material-icons">{{icon ? icon : 'save'}}</i> {{label ? label : 'Salvar'}}</button>
+        <button v-if="!sending" role="button" class="btn btn-success btn-lg"><i class="material-icons" v-if="icon">{{icon}}</i> {{label ? label : 'Salvar'}}</button>
       </div>
     </div>
   </div>

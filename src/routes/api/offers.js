@@ -4,105 +4,89 @@ var express = require('express'),
   slugify = require('slugify')
   auth = require('../auth'),
   select = require('../utils').select,
-  Product = mongoose.model('Product');
+  populate = require('../utils').populate,
   ProductVariation = mongoose.model('ProductVariation');
-
+  Offer = mongoose.model('Offer');
 
 router.get('/', auth.manager, function(req, res) {
   var query = {}
   if (req.payload.roles.includes('manager')) {
     query.organization = req.payload.organization
   }
-  ProductVariation.find(query, select(req)).exec(function(err, product_variations) {
+  Offer.find(query, select(req)).populate(populate(req)).exec(function(err, offers) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
     } else {
-      res.json(product_variations);
-    }
-  });
-});
-
-router.get('/slug', auth.manager, function(req, res) {
-  ProductVariation.findOne({
-    slug: slugify(req.query.name).toLowerCase()
-  }).exec(function(err, product_variation) {
-    if (err) {
-      res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
-    } else {
-      res.json(product_variation);
+      res.json(offers);
     }
   });
 });
 
 router.get('/:id', auth.manager, function(req, res) {
-  ProductVariation.findOne({
+  Offer.findOne({
     _id: req.params.id
-  }).exec(function(err, product_variation) {
+  }).populate(populate(req)).exec(function(err, offer) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
-      res.json(product_variation);
+      res.json(offer);
     }
   });
 });
 
 
 router.post('/', auth.manager, function(req, res) {
-  var newProductVariation = new ProductVariation(req.body);
-  newProductVariation.slug = slugify(newProductVariation.name).toLowerCase()
-
-  Product.findOne({
-    _id: newProductVariation.product
-  }).exec(function(err, product) {
+  var newOffer = new Offer(req.body);
+  ProductVariation.findOne({
+    _id: newOffer.product_variation
+  }).exec(function(err, product_variation) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
-      newProductVariation.organization = product.organization
-      newProductVariation.save(function(err, product_variation) {
+      console.log(product_variation);
+      newOffer.organization = product_variation.organization
+      newOffer.save(function(err, offer) {
         if (err) {
           res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
         } else {
-          res.send(product_variation);
+          res.send(offer);
         }
       });
     }
   });
-
-
 });
 
 router.put('/:id', auth.manager, function(req, res) {
   params = req.body
-  params.slug = slugify(params.name).toLowerCase()
-  ProductVariation.findOneAndUpdate({
+  Offer.findOneAndUpdate({
     _id: req.params.id
   }, {
     $set: params
   }, {
     upsert: true
-  }, function(err, newProductVariation) {
+  }, function(err, newOffer) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao atualizar: ' + err.message);
     } else {
-      res.send(newProductVariation);
+      res.send(newOffer);
     }
   });
 });
 
 router.delete('/:id', auth.manager, function(req, res) {
 
-  ProductVariation.findOne({
+  Offer.findOne({
     _id: req.params.id
-  }).populate('offers').exec(function(err, product_variation) {
+  }).populate('').exec(function(err, offer) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
-      if (product_variation.offers && product_variation.offers.length) {
-        res.status(422).send('Não é possível excluír! Existem ofertas cadastradas para este produto');
-      } else {
-        product_variation.remove();
-        res.send(product_variation);
-      }
+      // if (offer.stock_outs && offer.stock_outs.length) {
+      //   res.status(422).send('Não é possível excluír! Existem saídas de estoque desta semente');
+      // } else {
+        offer.remove();
+        res.send(offer);
+      // }
     }
   })
 

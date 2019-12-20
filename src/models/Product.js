@@ -2,6 +2,11 @@ const mongoose = require('mongoose'),
   ObjectId = mongoose.Schema.Types.ObjectId;
 
 const ProductSchema = mongoose.Schema({
+  organization: {
+    type: ObjectId,
+    ref: 'Organization', 
+    required: true
+  },
   supplier: {
     type: ObjectId,
     ref: 'Supplier',

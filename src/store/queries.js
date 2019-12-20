@@ -12,6 +12,12 @@ var getSuppliers = async function() {
   })
 }
 
+var getProductVariations = async function() {
+  return await axios.get('product_variations').then(async response => {
+    return response.data
+  })
+}
+
 var getSeeds = async function() {
   return await axios.get('seeds').then(async response => {
     return response.data
@@ -75,6 +81,8 @@ var loadList = async function(type) {
     return await getOrganizations()
   } else if (type == 'suppliers') {
     return await getSuppliers()
+  } else if (type == 'product_variations') {
+    return await getProductVariations()
   } else if (type == 'collectors') {
     return await getCollectors()
   } else if (type == 'collectors_groups') {

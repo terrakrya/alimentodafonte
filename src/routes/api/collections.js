@@ -5,7 +5,7 @@ var express = require('express'),
   populate = require('../utils').populate,
   Collection = mongoose.model('Collection');
 
-router.get('/', auth.collector, function(req, res) {
+router.get('/', auth.manager, function(req, res) {
   var filters = {}
   if (auth.isCollector(req) && !auth.isManager(req)) {
     filters['collector'] = req.payload.id
@@ -19,7 +19,7 @@ router.get('/', auth.collector, function(req, res) {
   });
 });
 
-router.get('/:id', auth.collector, function(req, res) {
+router.get('/:id', auth.manager, function(req, res) {
   Collection.findOne({
     _id: req.params.id
   }).populate(populate(req)).exec(function(err, collection) {
@@ -31,7 +31,7 @@ router.get('/:id', auth.collector, function(req, res) {
   });
 });
 
-router.post('/', auth.collector, function(req, res) {
+router.post('/', auth.manager, function(req, res) {
   var newCollection = new Collection(req.body);
   if (auth.isCollector(req) && !auth.isManager(req)) {
     newCollection['collector'] = req.payload.id
@@ -45,7 +45,7 @@ router.post('/', auth.collector, function(req, res) {
   });
 });
 
-router.put('/:id', auth.collector, function(req, res) {
+router.put('/:id', auth.manager, function(req, res) {
   var filters = {
     _id: req.params.id
   }
@@ -67,7 +67,7 @@ router.put('/:id', auth.collector, function(req, res) {
   });
 });
 
-router.delete('/:id', auth.collector, function(req, res) {
+router.delete('/:id', auth.manager, function(req, res) {
   var filters = {
     _id: req.params.id
   }

@@ -5,6 +5,7 @@ router.use('/organizations', require('./organizations'));
 router.use('/suppliers', require('./suppliers'));
 router.use('/products', require('./products'));
 router.use('/product_variations', require('./product_variations'));
+router.use('/offers', require('./offers'));
 
 router.use('/seeds', require('./seeds'));
 router.use('/collectors_groups', require('./collectors_groups'));

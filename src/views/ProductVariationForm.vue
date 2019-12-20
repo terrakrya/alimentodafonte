@@ -18,7 +18,6 @@
           <b-form @submit.prevent="save" v-if="!isLoading">
             <div class="col-md-12 mr-auto ml-auto">
               <div class="tab-pane" :class="tab == 1 ? 'active' : ''">
-
                 <div>
                   <h5 class="info-text" v-if="!product.product_variations || !product.product_variations.length"> A partir daqui vamos criar uma primeira variação deste produto. <br />Após o cadastro podemos criar variações a partir desta.</h5>
                   <b-form-group label="Nome da variação deste produto *" class="bmd-form-group" description="Ex: Yuka mandioca com gergelim">
@@ -33,12 +32,7 @@
                   <br>
                   <br>
                   <h5> CARACTERÍSTICAS DO PRODUTO </h5>
-                  <div class="row justify-content-center">
-                    <div class="col-md-6">
-                      <b-form-group label="Data de fabricação" class="bmd-form-group">
-                        <b-form-input v-model="form.manufacturing_date" name="manufacturing_date" type="date" />
-                      </b-form-group>
-                    </div>
+                  <div class="row">
                     <div class="col-md-6">
                       <b-form-group label="Tempo de duração" class="bmd-form-group">
                         <form-value-with-unit :form="form" field="duration" />
@@ -128,9 +122,6 @@
                       </b-form-group>
                     </div>
                   </div>
-                  <b-form-group label="Disponível para venda?" class="bmd-form-group" description="Se esta opção estiver marcada esta variação de produto aparecerá na lista de produtos à venda.">
-                    <b-form-checkbox v-model="form.published" />
-                  </b-form-group>
                   <div class="card-footer justify-content-center">
                     <form-submit :errors="error" :sending="isSending" />
                   </div>
@@ -208,8 +199,7 @@ export default {
           value: '',
           unit: 'Kg',
         },
-        box_max_stack: '',
-        published: false
+        box_max_stack: ''
       },
       product_variation: null,
       product: null,
@@ -267,6 +257,9 @@ export default {
         if (isValid) {
           this.isSending = true
           this.error = false
+          if (!this.form.images || this.form.images.length == 0) {
+            this.form.images = this.product.images
+          }
           axios({
             method: (this.isEditing() ? 'PUT' : 'POST'),
             url: (this.isEditing() ? 'product_variations/' + this.product_variation._id : 'product_variations'),

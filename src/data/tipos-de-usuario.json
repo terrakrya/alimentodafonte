@@ -1,6 +1,6 @@
 [
 	{ "text": "Administrador", "value": "admin" },
 	{ "text": "Gestor", "value": "manager" },
-	{ "text": "Coletor", "value": "collector" },
+	{ "text": "Elo", "value": "link" },
 	{ "text": "Cliente", "value": "client" }
 ]
