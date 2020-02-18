@@ -73,35 +73,6 @@ export default {
             return a.title.localeCompare(b.title);
           })
           break;
-        case 'seeds':
-          this.list = (await this.loadList('seeds')).map(seed => ({
-            id: seed._id,
-            title: seed.name,
-            description: seed.scientific_name,
-            picture: seed.images && seed.images.length ? seed.images[0].thumb : '',
-          })).sort(function(a, b) {
-            return a.title.localeCompare(b.title);
-          })
-          break;
-        case 'collectors':
-          this.list = (await this.loadList('collectors')).map(collector => ({
-            id: collector._id,
-            title: collector.name,
-            description: collector.nickname,
-            picture: collector.image ? collector.image.thumb : '',
-          })).sort(function(a, b) {
-            return a.title.localeCompare(b.title);
-          })
-          break;
-        case 'collectors_groups':
-          this.list = (await this.loadList('collectors_groups')).map(collectors_group => ({
-            id: collectors_group._id,
-            title: collectors_group.name,
-            description: this.formatCity(collectors_group.address)
-          })).sort(function(a, b) {
-            return a.title.localeCompare(b.title);
-          })
-          break;
       }
     }
   },

@@ -24,10 +24,6 @@ export default {
         return tipos_de_usuario.find(e => e.value == 'admin')
       } else if (this.isManager) {
         return tipos_de_usuario.find(e => e.value == 'manager')
-      } else if (this.isCollector) {
-        return tipos_de_usuario.find(e => e.value == 'collector')
-      } else if (this.isClient) {
-        return tipos_de_usuario.find(e => e.value == 'client')
       }
       return { "text": "Usuário", "value": "user" }
     },
@@ -39,12 +35,6 @@ export default {
     },
     isLink() {
       return this.isA('link') || this.isA('admin')
-    },
-    isCollector() {
-      return this.isA('collector') || this.isA('manager') || this.isA('admin')
-    },
-    isClient() {
-      return this.isA('client') || this.isA('manager') || this.isA('admin')
     },
     baseUrl() {
       return axios.defaults.baseURL.replace('/api', '')
@@ -108,25 +98,6 @@ export default {
           address.uf,
         ].filter(Boolean).join(' - ') :
         '';
-    },
-    sumQtd(qtd) {
-      if (typeof qtd == 'object') {
-        return qtd.map(q => parseFloat(q.qtd || 0)).reduce((a, b) => a + b)
-      }
-      return qtd || 0
-    },
-    sumArray(arr, prop, prop_to_multiply) {
-      var values = []
-      if (prop_to_multiply != null) {
-        values = arr.map(item => parseFloat(item[prop] * item[prop_to_multiply] || 0))
-      } else {
-        values = arr.map(item => parseFloat(item[prop] || 0))
-      }
-      if (values && values.length) {
-        return values.reduce((a, b) => a + b)
-      } else {
-        return 0
-      }
     },
     defaultThumb(images) {
       if (images && images.length) {

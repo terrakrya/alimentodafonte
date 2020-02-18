@@ -1,5 +1,5 @@
 <template>
-<div class="collectors-group-form">
+<div class="organization-form">
   <div class="col-md-12 mr-auto ml-auto">
     <div class="wizard-container">
       <div class="card card-wizard active" data-color="rose" id="wizardProfile">

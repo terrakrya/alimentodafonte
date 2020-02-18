@@ -14,11 +14,11 @@ router.get('/users', auth.manager, function(req, res) {
     }
   }
 
-  User.find(filters).populate(populate(req)).exec(function(err, seeds) {
+  User.find(filters).populate(populate(req)).exec(function(err, users) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err);
     } else {
-      res.json(seeds);
+      res.json(users);
     }
   });
 });
@@ -80,34 +80,12 @@ router.put('/users/:id', auth.manager, function(req, res, next) {
 router.delete('/users/:id', auth.manager, function(req, res) {
   User.findOne({
     _id: req.params.id
-  }).populate('collectors_group collections collection_areas collectors_requests orders potential_lists seeds_matrixes stock_ins stock_outs seeds_houses seeds_houses_collector').exec(function(err, user) {
+  }).exec(function(err, user) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
       if (req.payload.id == req.params.id) {
         res.status(422).send('Não é possível excluír você mesmo!');
-      } else if (user.collectors_group && user.collectors_group) {
-        res.status(422).send('Não é possível excluír! Este coletor está relacionado ao grupo: ' + user.collectors_group.name);
-      } else if (user.collections && user.collections.length) {
-        res.status(422).send('Não é possível excluír! Existem coletas cadastradas para este coletor');
-      } else if (user.collection_areas && user.collection_areas.length) {
-        res.status(422).send('Não é possível excluír! Existem áreas de coleta cadastradas para este coletor');
-      } else if (user.stock_ins && user.stock_ins.length) {
-        res.status(422).send('Não é possível excluír! Existem entradas no estoque cadastradas para este coletor');
-      } else if (user.stock_outs && user.stock_outs.length) {
-        res.status(422).send('Não é possível excluír! Existem saídas do estoque cadastradas para este cliente');
-      } else if (user.collectors_requests && user.collectors_requests.length) {
-        res.status(422).send('Não é possível excluír! Existem pedidos cadastrados para este coletor: (' + user.collectors_requests.map(c => 'Pedido ' + c.code).join(', ') + ')');
-      } else if (user.potential_lists && user.potential_lists.length) {
-        res.status(422).send('Não é possível excluír! Existem listas de potencial cadastradas para este coletor: (' + user.potential_lists.map(p => 'Lista ' + p.code).join(', ') + ')');
-      } else if (user.orders && user.orders.length) {
-        res.status(422).send('Não é possível excluír! Existem encomendas cadastradas para este coletor: (' + user.orders.map(p => 'Encomenda ' + p.code).join(', ') + ')');
-      } else if (user.seeds_matrixes && user.seeds_matrixes.length) {
-        res.status(422).send('Não é possível excluír! Existem matrixes de semente relacionadas a este coletor');
-      } else if (user.seeds_houses && user.seeds_houses.length) {
-        res.status(422).send('Não é possível excluír! Existem casas de semente relacionados a este proprietário: (' + user.seeds_houses.map(p => p.name).join(', ') + ')');
-      } else if (user.seeds_houses_collector && user.seeds_houses_collector.length) {
-        res.status(422).send('Não é possível excluír! Existem casas de sementes relacionadas a este coletor: (' + user.seeds_houses_collector.map(p => p.name).join(', ') + ')');
       } else {
         user.remove();
         res.send(user);

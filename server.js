@@ -42,18 +42,6 @@ require('./src/models/Product');
 require('./src/models/ProductVariation');
 require('./src/models/Offer');
 
-require('./src/models/Seed');
-require('./src/models/CollectorsGroup');
-require('./src/models/SeedsHouse');
-require('./src/models/CollectionArea');
-require('./src/models/SeedsMatrix');
-require('./src/models/PotentialList');
-require('./src/models/CollectorsRequest');
-require('./src/models/Order');
-require('./src/models/Collection');
-require('./src/models/Lot');
-require('./src/models/StockIn');
-require('./src/models/StockOut');
 require('./src/config/passport');
 
 app.use(require('./src/routes'));

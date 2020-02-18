@@ -19,10 +19,6 @@
               <router-link :to="'/editar-organizacao/'+ data.item._id">
                 <img :src="defaultThumb(data.item.images)" class="thumb">
                 <strong>{{data.item.name}}</strong>
-                <small v-if="data.item.collectors">
-                  <br>
-                  {{data.item.collectors.length}} {{data.item.collectors.length | pluralize('coletor', 'coletores')}}
-                </small>
               </router-link>
             </template>
             <template slot="address" slot-scope="data">

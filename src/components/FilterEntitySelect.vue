@@ -38,16 +38,6 @@ export default {
       })
     } else {
       switch (this.type) {
-        case 'seeds':
-          this.list = (await this.loadList('seeds')).map(seed => ({
-            id: seed._id,
-            title: seed.name,
-            description: seed.scientific_name,
-            picture: seed.images && seed.images.length ? seed.images[0].thumb : '',
-          })).sort(function(a, b) {
-            return a.title.localeCompare(b.title);
-          })
-          break;
         case 'users':
           this.list = (await this.loadList('users')).map(user => ({
             id: user._id,
@@ -55,44 +45,6 @@ export default {
             email: user.email,
             description: user.nickname,
             picture: user.image ? user.image.thumb : '',
-          })).sort(function(a, b) {
-            return a.title.localeCompare(b.title);
-          })
-          break;
-        case 'collectors_groups':
-          this.list = (await this.loadList('collectors_groups')).map(collectors_group => ({
-            id: collectors_group._id,
-            title: collectors_group.name,
-            description: this.formatCity(collectors_group.address)
-          })).sort(function(a, b) {
-            return a.title.localeCompare(b.title);
-          })
-          break;
-        case 'collectors':
-          this.list = (await this.loadList('collectors')).map(collector => ({
-            id: collector._id,
-            title: collector.name,
-            description: collector.nickname,
-            picture: collector.image ? collector.image.thumb : '',
-          })).sort(function(a, b) {
-            return a.title.localeCompare(b.title);
-          })
-          break;
-        case 'clients':
-          this.list = (await this.loadList('clients')).map(client => ({
-            id: client._id,
-            title: client.name,
-            description: client.nickname,
-            picture: client.image ? client.image.thumb : '',
-          })).sort(function(a, b) {
-            return a.title.localeCompare(b.title);
-          })
-          break;
-        case 'seeds_houses':
-          this.list = (await this.loadList('seeds_houses')).map(seeds_house => ({
-            id: seeds_house._id,
-            title: seeds_house.name,
-            description: this.formatCity(seeds_house.address)
           })).sort(function(a, b) {
             return a.title.localeCompare(b.title);
           })

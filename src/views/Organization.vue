@@ -1,18 +1,18 @@
 <template>
-	<div class="collectors-group">
-		<breadcrumb :links="[['Grupos de coletores', '/grupos-de-coletores']]" active="Dados do grupo" />
+	<div class="organization">
+		<breadcrumb :links="[['Organizações', '/organizacoes']]" active="Dados da organização" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>
 				<loading :loading="isLoading" />
-				<div v-if="collectors_group && !isLoading">
+				<div v-if="organization && !isLoading">
 					<div class="row item-title">
 						<div class="col-md-10">
 							<h1>
-								{{ collectors_group.name }}
+								{{ organization.name }}
 							</h1>
-							<p v-if="collectors_group.cnpj">
-								<span>CNPJ: {{ collectors_group.cnpj | cnpj }}</span>
+							<p v-if="organization.cnpj">
+								<span>CNPJ: {{ organization.cnpj | cnpj }}</span>
 							</p>
 						</div>
 					</div>
@@ -25,54 +25,26 @@
 									<i @click="edit" class="pull-right fa fa-pencil"></i>
 								</div>
 								<div class="list-group-item">
-									<div class="row" v-if="collectors_group.description">
+									<div class="row" v-if="organization.description">
 										<div class="col-sm-12">
-											<p class="details" colspan="2" v-html="collectors_group.description"></p>
+											<p class="details" colspan="2" v-html="organization.description"></p>
 										</div>
 									</div>
 									<div class="row">
 										<div class="col-sm-6">
-											<dl v-if="collectors_group.contact">
+											<dl v-if="organization.contact">
 												<dt>Contatos</dt>
-												<dd>{{ collectors_group.contact }}</dd>
+												<dd>{{ organization.contact }}</dd>
 											</dl>
-											<dl v-if="collectors_group.address">
+											<dl v-if="organization.address">
 												<dt>Endereço</dt>
-												<dd>{{ collectors_group.address | address }}</dd>
+												<dd>{{ organization.address | address }}</dd>
 											</dl>
 										</div>
 										<div class="col-sm-6">
-											<bank-account :bank_account="collectors_group.bank_account" />
+											<bank-account :bank_account="organization.bank_account" />
 										</div>
 									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-6" v-if="collectors_group.collectors && collectors_group.collectors.length">
-							<div class="list-group entity-select-preview">
-								<div class="list-group-item active">
-									<strong>Coletores</strong>
-								</div>
-								<div class="list-group-item" v-for="(collector, index) in collectors_group.collectors" :key="index" >
-									<router-link :to="'/coletor/'+collector._id">
-										<img v-if="collector.image" :src="baseUrl + collector.image.thumb" />
-										<span v-if="collector.name">{{collector.name}}</span>
-									</router-link>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-6" v-if="collectors_group.seeds && collectors_group.seeds.length">
-							<div class="list-group entity-select-preview">
-								<div class="list-group-item active">
-									<strong>Sementes</strong>
-								</div>
-								<div class="list-group-item" v-for="(seed, index) in collectors_group.seeds" :key="index" >
-									<router-link :to="'/semente/'+seed._id">
-										<img v-if="seed.images && seed.images.length" :src="baseUrl + seed.images[0].thumb" />
-										<span v-if="seed.name">{{seed.name}}</span>
-									</router-link>
 								</div>
 							</div>
 						</div>
@@ -86,36 +58,34 @@
 import axios from 'axios'
 import Loading from '@/components/Loading'
 import Breadcrumb from '@/components/Breadcrumb'
-import BankAccount from '@/components/BankAccount'
 
 export default {
 
-	name: 'CollectorsGroup',
+	name: 'Organization',
 
 	data () {
 		return {
-			collectors_group: null,
+			organization: null,
 		}
 	},
 
 	created () {
 		this.isLoading = true
-		axios.get('collectors_groups/' + this.$route.params.id, { params: { populate: 'collectors seeds'} }).then(collectors_group => {
-			this.collectors_group = collectors_group.data
+		axios.get('organizations/' + this.$route.params.id).then(organization => {
+			this.organization = organization.data
 			this.isLoading = false
 		}).catch(this.showError);
 	},
 
 	methods: {
 		edit () {
-			this.$router.replace('/editar-grupo-de-coletores/'+this.collectors_group._id)
+			this.$router.replace('/editar-organizacao/'+this.organization._id)
 		}
 	},
 
 	components: {
 		Loading,
-		Breadcrumb,
-		BankAccount
+		Breadcrumb
 	}
 
 };
