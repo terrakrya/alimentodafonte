@@ -1,12 +1,11 @@
 var express = require('express'),
   mongoose = require('mongoose'),
   router = express.Router(),
-  slugify = require('slugify')
+  slugify = require('slugify'),
   auth = require('../auth'),
   populate = require('../utils').populate,
   request = require('request'),
-  Supplier = mongoose.model('Supplier'),
-  User = mongoose.model('User');
+  Supplier = mongoose.model('Supplier');
 
 router.get('/', auth.manager, function(req, res) {
 
@@ -125,7 +124,7 @@ router.post('/', auth.manager, function(req, res) {
 });
 
 router.put('/:id', auth.manager, function(req, res) {
-  params = req.body
+  var params = req.body
   Supplier.findOneAndUpdate({
     _id: req.params.id
   }, {

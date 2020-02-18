@@ -5,6 +5,7 @@ import Vue2Filters from 'vue2-filters'
 import VeeValidate, { Validator } from 'vee-validate'
 import VueTheMask from 'vue-the-mask'
 import moment from 'moment'
+// eslint-disable-next-line
 import moment_br from 'moment/locale/pt-br'
 import VueMoment from 'vue-moment'
 import BootstrapVue from 'bootstrap-vue'
@@ -34,7 +35,6 @@ Vue.use(money, { prefix: 'R$ ', decimal: ',', thousands: '', masked: false })
 Vue.use(Vue2Filters)
 Vue.use(VeeValidate, { locale: 'pt_BR', fieldsBagName: 'veeFields',  errorBagName: 'veeErrors' })
 Vue.use(VueTheMask)
-console.log(moment);
 Vue.use(VueMoment, {
     moment,
 })

@@ -173,7 +173,7 @@ router.get('/fix_data', function(req, res) {
       products.forEach(product => {
         var org = product.supplier.organizations[0]
         product.organization = org
-        product.save(function(err, r) {
+        product.save(function(err) {
           if (err) {
             res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
           } else {
@@ -182,11 +182,11 @@ router.get('/fix_data', function(req, res) {
               if (!product_variation.images || product_variation.images.length == 0) {
                 product_variation.images = product.images
               }
-              product_variation.save(function(err, r) {
+              product_variation.save(function(err) {
                 if (err) {
                   res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
                 } else {
-                  console.log('salvo');
+                  res.send('Salvo' + err.message);
                 }
               });
             })

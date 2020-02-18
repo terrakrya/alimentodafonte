@@ -262,7 +262,6 @@ export default {
     removeVariation(id) {
       if (confirm("Tem certeza que deseja excluír?")) {
         axios.delete('product_variations/' + id).then(() => {
-          console.log('aqui');
           this.edit()
         }).catch(this.showError)
       }

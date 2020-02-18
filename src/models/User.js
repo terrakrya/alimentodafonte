@@ -3,10 +3,7 @@ var mongoose = require('mongoose'),
   crypto = require('crypto'),
   jwt = require('jsonwebtoken'),
   secret = require('../config').secret,
-  ObjectId = mongoose.Schema.Types.ObjectId,
-  AddressSchema = require('./Address'),
-  BankAccountSchema = require('./BankAccount');
-
+  ObjectId = mongoose.Schema.Types.ObjectId;
 mongoose.set('useCreateIndex', true)
 
 var UserSchema = new mongoose.Schema({

@@ -1,5 +1,4 @@
 const mongoose = require('mongoose'),
-  ObjectId = mongoose.Schema.Types.ObjectId,
   AddressSchema = require('./Address'),
   GeolocationSchema = require('./Geolocation'),
   ContactPersonSchema = require('./ContactPerson'),

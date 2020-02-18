@@ -1,8 +1,9 @@
 var express = require('express'),
   mongoose = require('mongoose'),
   router = express.Router(),
-  slugify = require('slugify')
+  slugify = require('slugify'),
   auth = require('../auth'),
+  populate = require('../utils').populate,
   select = require('../utils').select,
   Supplier = mongoose.model('Supplier'),
   Product = mongoose.model('Product');
@@ -69,7 +70,7 @@ router.post('/', auth.manager, function(req, res) {
 });
 
 router.put('/:id', auth.manager, function(req, res) {
-  params = req.body
+  var params = req.body
   params.slug = slugify(params.name).toLowerCase()
   Product.findOneAndUpdate({
     _id: req.params.id

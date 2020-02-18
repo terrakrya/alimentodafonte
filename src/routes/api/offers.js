@@ -1,11 +1,10 @@
 var express = require('express'),
   mongoose = require('mongoose'),
   router = express.Router(),
-  slugify = require('slugify')
   auth = require('../auth'),
   select = require('../utils').select,
   populate = require('../utils').populate,
-  ProductVariation = mongoose.model('ProductVariation');
+  ProductVariation = mongoose.model('ProductVariation'),
   Offer = mongoose.model('Offer');
 
 router.get('/', auth.manager, function(req, res) {
@@ -43,7 +42,6 @@ router.post('/', auth.manager, function(req, res) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
-      console.log(product_variation);
       newOffer.organization = product_variation.organization
       newOffer.product = product_variation.product._id
       newOffer.supplier = product_variation.product.supplier
@@ -59,7 +57,7 @@ router.post('/', auth.manager, function(req, res) {
 });
 
 router.put('/:id', auth.manager, function(req, res) {
-  params = req.body
+  var params = req.body
   Offer.findOneAndUpdate({
     _id: req.params.id
   }, {

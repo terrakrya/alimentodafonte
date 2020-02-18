@@ -3,7 +3,7 @@
   <b-form-group>
     Contatos:
   </b-form-group>
-  <div class="row" v-for="(link, index) in form[field]">
+  <div class="row" v-for="(link, index) in form[field]" :key="index">
     <div class="col-md-2 col-sm-6">
       <b-form-group>
         <b-form-input v-model="form[field][index].position" type="text" placeholder="Cargo" />
@@ -31,8 +31,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-import Loading from './Loading'
 
 export default {
 
@@ -53,7 +51,6 @@ export default {
       this.form[this.field] = this.contact_persons
 
     }
-    console.log(this.form[this.field]);
   },
   methods: {
     addLink() {
@@ -62,9 +59,6 @@ export default {
         value: ""
       })
     }
-  },
-  components: {
-    Loading
   }
 };
 </script>
