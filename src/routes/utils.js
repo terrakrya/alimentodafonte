@@ -21,43 +21,4 @@ module.exports = {
     }
     return select
   },
-  sumQtd(seed_item, request_collector, collector) {
-    if (typeof seed_item.qtd == 'object') {
-      if (collector) {
-        return seed_item.qtd.map(q => {
-          return parseFloat(((q.collector == collector) ? q.qtd : 0))
-        }).reduce((a, b) => a + b)
-
-      } else {
-        return seed_item.qtd.map(q => parseFloat(q.qtd || 0)).reduce((a, b) => a + b)
-      }
-    } else {
-      if (request_collector && request_collector == collector) {
-        return seed_item.qtd || 0
-      } else {
-        return 0
-      }
-    }
-  },
-  fixQtdToNumber(obj) {
-    obj.seed_items = obj.seed_items.map(seed_item => {
-      if (typeof seed_item.qtd == 'string') {
-        seed_item.qtd = parseFloat(seed_item.qtd)
-      }
-      return seed_item
-    })
-  },
-  sumArray(arr, prop, prop_to_multiply) {
-    var values = []
-    if (prop_to_multiply != null) {
-      values = arr.map(item => parseFloat(item[prop] * item[prop_to_multiply] || 0))
-    } else {
-      values = arr.map(item => parseFloat(item[prop] || 0))
-    }
-    if (values && values.length) {
-      return values.reduce((a, b) => a + b)
-    } else {
-      return 0
-    }
-  }
 }

@@ -83,12 +83,8 @@ router.delete('/:id', auth.manager, function(req, res) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
-      // if (offer.stock_outs && offer.stock_outs.length) {
-      //   res.status(422).send('Não é possível excluír! Existem saídas de estoque desta semente');
-      // } else {
-        offer.remove();
-        res.send(offer);
-      // }
+      offer.remove();
+      res.send(offer);
     }
   })
 

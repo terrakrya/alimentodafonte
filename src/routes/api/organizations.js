@@ -9,11 +9,11 @@ var express = require('express'),
   User = mongoose.model('User');
 
 router.get('/', auth.manager, function(req, res) {
-  Organization.find({}).exec(function(err, seeds) {
+  Organization.find({}).exec(function(err, organizations) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
     } else {
-      res.json(seeds);
+      res.json(organizations);
     }
   });
 });
@@ -22,11 +22,11 @@ router.get('/', auth.manager, function(req, res) {
 router.get('/search', auth.manager, function(req, res) {
   Organization.findOne({
     name: req.query.name
-  }).exec(function(err, seed) {
+  }).exec(function(err, organization) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
-      res.json(seed);
+      res.json(organization);
     }
   });
 });
@@ -34,11 +34,11 @@ router.get('/search', auth.manager, function(req, res) {
 router.get('/:id', auth.manager, function(req, res) {
   Organization.findOne({
     _id: req.params.id
-  }).populate(populate(req)).exec(function(err, seed) {
+  }).populate(populate(req)).exec(function(err, organization) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
-      res.json(seed);
+      res.json(organization);
     }
   });
 });

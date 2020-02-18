@@ -15,11 +15,11 @@ router.get('/', auth.manager, function(req, res) {
     query.organizations = req.payload.organization
   }
 
-  Supplier.find(query).exec(function(err, seeds) {
+  Supplier.find(query).exec(function(err, suppliers) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
     } else {
-      res.json(seeds);
+      res.json(suppliers);
     }
   });
 });
@@ -34,11 +34,11 @@ router.get('/search', auth.manager, function(req, res) {
     query.organizations = req.payload.organization
   }
 
-  Supplier.findOne(query).exec(function(err, seed) {
+  Supplier.findOne(query).exec(function(err, supplier) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
-      res.json(seed);
+      res.json(supplier);
     }
   });
 });
@@ -46,11 +46,11 @@ router.get('/search', auth.manager, function(req, res) {
 router.get('/:id', auth.manager, function(req, res) {
   Supplier.findOne({
     _id: req.params.id
-  }).populate(populate(req)).exec(function(err, seed) {
+  }).populate(populate(req)).exec(function(err, supplier) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
-      res.json(seed);
+      res.json(supplier);
     }
   });
 });
