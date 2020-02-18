@@ -34,7 +34,7 @@
               <div v-if="data.item.supplier && data.item.organization">
                 <small v-if="data.item.supplier.issue_invoice">Nota emitida pelo fornecedor</small>
                 <small v-else-if="data.item.organization.issue_invoice">Nota emitida pela organização</small>
-                <small v-else="data.item.organization.issue_invoice">Nota emitida pela rede</small>
+                <small v-else>Nota emitida pela rede</small>
               </div>
             </template>
             <template slot="actions" slot-scope="data">

@@ -1,7 +1,7 @@
 var express = require('express'),
   mongoose = require('mongoose'),
   router = express.Router(),
-  slugify = require('slugify')
+  slugify = require('slugify'),
   auth = require('../auth'),
   populate = require('../utils').populate,
   request = require('request'),
@@ -109,6 +109,7 @@ router.post('/', auth.link, function(req, res) {
             organization: organization._id,
           });
           newUser.setPassword(params.password);
+          // eslint-disable-next-line
           newUser.save(function(err, user) {
             if (err) {
               organization.remove()
@@ -125,7 +126,7 @@ router.post('/', auth.link, function(req, res) {
 });
 
 router.put('/:id', auth.link, function(req, res) {
-  params = req.body
+  var params = req.body
   Organization.findOneAndUpdate({
     _id: req.params.id
   }, {

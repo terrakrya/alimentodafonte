@@ -1,6 +1,6 @@
 <template>
 <div class="form-phones">
-  <div class="row" v-for="(link, index) in form[field]">
+  <div class="row" v-for="(link, index) in form[field]" :key="index">
     <div class="col-md-3">
       <b-form-group v-if="index == 0">
         Telefones:
@@ -18,9 +18,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-import Loading from './Loading'
-
 export default {
 
   name: 'form-phones',
@@ -34,15 +31,11 @@ export default {
     if (!this.form[this.field] || !this.form[this.field].length) {
       this.form[this.field] = this.phones
     }
-    console.log(this.form[this.field]);
   },
   methods: {
     addLink() {
       this.form[this.field].push("")
     }
-  },
-  components: {
-    Loading
   }
 };
 </script>

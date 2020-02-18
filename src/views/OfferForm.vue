@@ -74,10 +74,6 @@
 <script>
 import axios from 'axios'
 import FormSubmit from '@/components/FormSubmit'
-import FieldError from '@/components/FieldError'
-import PicturesUpload from '@/components/PicturesUpload'
-import FormTags from '@/components/FormTags';
-import FormValueWithUnit from '@/components/FormValueWithUnit';
 import ProductImage from '@/components/ProductImage';
 import FormEntitySelect from '@/components/FormEntitySelect';
 import Tags from '@/components/Tags';
@@ -115,7 +111,6 @@ export default {
   },
   methods: {
     edit(id) {
-      console.log('edit');
       this.isLoading = true
       axios.get('offers/' + id, {
         params: {
@@ -172,10 +167,6 @@ export default {
   },
   components: {
     FormSubmit,
-    FieldError,
-    PicturesUpload,
-    FormTags,
-    FormValueWithUnit,
     ProductImage,
     FormEntitySelect,
     Tags

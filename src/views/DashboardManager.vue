@@ -136,7 +136,7 @@
   <h3>Últimos produtos cadastrados</h3>
   <br>
   <div class="row">
-    <div class="col-md-3" v-for="(product, index) in products">
+    <div class="col-md-3" v-for="(product, index) in products" :key="index">
       <div class="card card-product">
         <div class="card-header card-header-image" data-header-animation="true">
           <router-link :to="'/editar-produto/'+product._id">
