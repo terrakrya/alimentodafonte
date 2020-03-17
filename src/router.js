@@ -5,6 +5,7 @@ import store from '@/store/'
 
 import About from '@/views/About.vue'
 import Login from '@/views/Login.vue'
+import Panel from '@/views/Panel.vue'
 import Dashboard from '@/views/Dashboard.vue'
 import Users from '@/views/Users.vue'
 import UserForm from '@/views/UserForm.vue'
@@ -25,6 +26,11 @@ import ProductVariationForm from '@/views/ProductVariationForm.vue'
 
 import Offers from '@/views/Offers.vue'
 import OfferForm from '@/views/OfferForm.vue'
+
+import Ecommerce from '@/views/Ecommerce.vue'
+import Shop from '@/views/Shop.vue'
+import Offer from '@/views/Offer.vue'
+import Cart from '@/views/Cart.vue'
 
 Vue.use(Router)
 
@@ -52,32 +58,45 @@ export default new Router({
         })
       }
     },
-    { path: '/painel', component: Dashboard, beforeEnter: requireAuth },
+    { path: '/panel',
+      component: Panel,
+      beforeEnter: requireAuth,
+      children: [
+        { path: '/painel', component: Dashboard, beforeEnter: requireAuth },
+        { path: '/usuarios', component: Users, beforeEnter: requireAuth },
+        { path: '/cadastrar-usuario', component: UserForm, beforeEnter: requireAuth },
+        { path: '/editar-usuario/:id', component: UserForm, beforeEnter: requireAuth },
+        { path: '/usuario/:id', component: User, beforeEnter: requireAuth },
 
-    { path: '/usuarios', component: Users, beforeEnter: requireAuth },
-    { path: '/cadastrar-usuario', component: UserForm, beforeEnter: requireAuth },
-    { path: '/editar-usuario/:id', component: UserForm, beforeEnter: requireAuth },
-    { path: '/usuario/:id', component: User, beforeEnter: requireAuth },
+        { path: '/organizacoes', component: Organizations, beforeEnter: requireAuth },
+        { path: '/cadastrar-organizacao', component: OrganizationRegisterForm, beforeEnter: requireAuth },
+        { path: '/editar-organizacao/:id', component: OrganizationForm, beforeEnter: requireAuth },
+        { path: '/organizacao/:id', component: Organization, beforeEnter: requireAuth },
 
-    { path: '/organizacoes', component: Organizations, beforeEnter: requireAuth },
-    { path: '/cadastrar-organizacao', component: OrganizationRegisterForm, beforeEnter: requireAuth },
-    { path: '/editar-organizacao/:id', component: OrganizationForm, beforeEnter: requireAuth },
-    { path: '/organizacao/:id', component: Organization, beforeEnter: requireAuth },
+        { path: '/fornecedores', component: Suppliers, beforeEnter: requireAuth },
+        { path: '/cadastrar-fornecedor', component: SupplierRegisterForm, beforeEnter: requireAuth },
+        { path: '/editar-fornecedor/:id', component: SupplierForm, beforeEnter: requireAuth },
 
-    { path: '/fornecedores', component: Suppliers, beforeEnter: requireAuth },
-    { path: '/cadastrar-fornecedor', component: SupplierRegisterForm, beforeEnter: requireAuth },
-    { path: '/editar-fornecedor/:id', component: SupplierForm, beforeEnter: requireAuth },
+        { path: '/produtos', component: Products, beforeEnter: requireAuth },
+        { path: '/cadastrar-produto', component: ProductForm, beforeEnter: requireAuth },
+        { path: '/editar-produto/:id', component: ProductForm, beforeEnter: requireAuth },
 
-    { path: '/produtos', component: Products, beforeEnter: requireAuth },
-    { path: '/cadastrar-produto', component: ProductForm, beforeEnter: requireAuth },
-    { path: '/editar-produto/:id', component: ProductForm, beforeEnter: requireAuth },
+        { path: '/cadastrar-variacao-de-produto', component: ProductVariationForm, beforeEnter: requireAuth },
+        { path: '/editar-variacao-de-produto/:id', component: ProductVariationForm, beforeEnter: requireAuth },
 
-    { path: '/cadastrar-variacao-de-produto', component: ProductVariationForm, beforeEnter: requireAuth },
-    { path: '/editar-variacao-de-produto/:id', component: ProductVariationForm, beforeEnter: requireAuth },
-
-    { path: '/ofertas', component: Offers, beforeEnter: requireAuth },
-    { path: '/cadastrar-oferta', component: OfferForm, beforeEnter: requireAuth },
-    { path: '/editar-oferta/:id', component: OfferForm, beforeEnter: requireAuth },
+        { path: '/ofertas', component: Offers, beforeEnter: requireAuth },
+        { path: '/cadastrar-oferta', component: OfferForm, beforeEnter: requireAuth },
+        { path: '/editar-oferta/:id', component: OfferForm, beforeEnter: requireAuth },
+      ]
+    },
+    { path: '/ecommerce',
+      component: Ecommerce,
+      children: [
+        { path: '/loja', component: Shop },
+        { path: '/oferta/:id', component: Offer },
+        { path: '/carrinho', component: Cart },
+      ]
+    },
 
   ]
 })

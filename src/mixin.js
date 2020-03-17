@@ -12,7 +12,12 @@ export default {
       error: false,
       isLoading: false,
       isSending: false,
-      tipos_de_usuario: tipos_de_usuario
+      tipos_de_usuario: tipos_de_usuario,
+      date_unit: {
+        'Dias': 'days',
+        'Meses': 'months',
+        'Anos': 'years'
+      }
     }
   },
   computed: {

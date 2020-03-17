@@ -21,5 +21,18 @@ export const mutations = {
       document.documentElement.className = '';
     }
   },
+  addToCart (state, item) {
+    state.cart.push(item)
+    localStorage.setItem('cart', JSON.stringify(state.cart))
+  },
+  removeFromCart (state, index) {
+    delete state.cart[index]
+    state.cart.splice(index, 1)
+    localStorage.setItem('cart', JSON.stringify(state.cart))
+  },
+  clearCart (state) {
+    state.cart = []
+    localStorage.setItem('cart', JSON.stringify(state.cart))
+  },
 
 }
