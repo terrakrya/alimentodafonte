@@ -66,11 +66,6 @@ export default {
 
   data() {
     return {
-      date_unit: {
-        'Dias': 'days',
-        'Meses': 'months',
-        'Anos': 'years'
-      },
       filters: {
         search: null
       },
