@@ -6,8 +6,7 @@ var express = require('express'),
   populate = require('../utils').populate,
   ProductVariation = mongoose.model('ProductVariation'),
   Offer = mongoose.model('Offer'),
-  Order = mongoose.model('Order'),
-  OrderItem = mongoose.model('OrderItem');
+  Order = mongoose.model('Order');
 
 router.get('/offers', function(req, res) {
   var query = {}
@@ -49,32 +48,82 @@ router.get('/offer/:id', function(req, res) {
   });
 });
 
-
-router.post('/order', auth.client, function(req, res) {
-  console.log(req.body);
-  var newOrder = new Order({
+router.get('/orders', auth.client, function(req, res) {
+  var query = {
     client: req.payload.id
-  });
-
-  newOrder.save(async function(err, order) {
+  }
+  Order.find(query, select(req)).populate(populate(req)).exec(function(err, orders) {
     if (err) {
-      res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
+      res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
     } else {
-      for (const item of req.body) {
-        var newOrderItem = new OrderItem({
-          order: order._id,
-          offer: item.offer._id,
-          qtd: item.qtd,
-          price: item.offer.final_price,
-          total: item.qtd * item.offer.final_price,
-        });
-
-        await newOrderItem.save();
-      }
-      res.send(order);
+      res.json(orders);
     }
   });
 });
 
+router.get('/order/:id', auth.client, function(req, res) {
+  var query = {
+    _id: req.params.id,
+    client: req.payload.id
+  }
+  Order.findOne(query, select(req)).populate(
+    {
+      path: 'items.offer',
+      model: 'Offer',
+      populate: {
+        path: 'product_variation',
+        model: 'ProductVariation'
+      }
+    }
+  ).exec(function(err, order) {
+    if (err) {
+      res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
+    } else {
+      res.json(order);
+    }
+  });
+});
+
+router.post('/order', auth.client, function(req, res) {
+  console.log(req.body.cart);
+
+  Order.find().sort({ code: -1 }).limit(1).exec(function(err, latest) {
+    if (!err) {
+      var newOrder = new Order({
+        client: req.payload.id,
+        items: [],
+        status: 'created',
+        name: req.body.name,
+        email: req.body.email,
+        cnpj: req.body.cnpj,
+        phone: req.body.phone,
+        address: req.body.address,
+      });
+
+      if (latest && latest.length) {
+        newOrder.code = latest[0].code+1
+      } else {
+        newOrder.code = 1
+      }
+
+      req.body.cart.forEach(item => {
+        newOrder.items.push({
+          offer: item.offer._id,
+          qtd: item.qtd,
+          price: item.offer.final_price,
+          total: item.qtd * item.offer.final_price,
+        })
+      })
+
+      newOrder.save(function(err, order) {
+        if (err) {
+          res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
+        } else {
+          res.send(order);
+        }
+      });
+    }
+  })
+});
 
 module.exports = router;

@@ -27,6 +27,7 @@ var UserSchema = new mongoose.Schema({
   hash: String,
   salt: String,
   name: String,
+  phone: String,
   address: String,
   roles: [String],
   image: Object,
@@ -62,6 +63,9 @@ UserSchema.methods.generateJWT = function() {
     id: this._id,
     cnpj: this.cnpj,
     name: this.name,
+    phone: this.phone,
+    email: this.email,
+    address: this.address,
     organization: this.organization,
     roles: this.roles,
     exp: parseInt(exp.getTime() / 1000),
@@ -76,6 +80,8 @@ UserSchema.methods.toAuthJSON = function() {
     token: this.generateJWT(),
     roles: this.roles,
     name: this.name,
+    phone: this.phone,
+    address: this.address,
   };
 };
 

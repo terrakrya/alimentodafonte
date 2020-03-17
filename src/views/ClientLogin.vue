@@ -69,6 +69,12 @@
               </b-form-group>
             </div>
             <div class="col-sm-6">
+              <b-form-group label="Telefone">
+                <b-form-input v-model="form.phone" v-validate="'required'" name="phone" placeholder="(99) 99999-9999" v-mask="['(##) ####-####', '(##) #####-####']" />
+                <field-error :msg="veeErrors" field="phone" />
+              </b-form-group>
+            </div>
+            <div class="col-sm-6">
               <b-form-group label="Email">
                 <b-form-input v-model="form.email" v-validate="'email'" name="email" />
                 <field-error :msg="veeErrors" field="email" />
@@ -129,7 +135,8 @@ export default {
         password_confirmation: '',
         name: '',
         cnpj: '',
-        address: ''
+        address: '',
+        phone: ''
       }
     }
   },

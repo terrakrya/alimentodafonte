@@ -63,6 +63,7 @@ router.post('/register', function(req, res, next) {
   user.address = req.body.address
   user.email = req.body.email
   user.name = req.body.name
+  user.phone = req.body.phone
   user.roles = ['client']
 
   user.setPassword(req.body.password);

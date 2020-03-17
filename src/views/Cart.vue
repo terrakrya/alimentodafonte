@@ -63,23 +63,85 @@
           </table>
         </div>
         <br>
+        <div v-if="client">
+          <h4 class="text-center">Confirme os dados abaixo para finalizar a compra</h4>
+          <hr>
+          <div class="row">
+            <div class="col-sm-6">
+              <b-form-group label="Nome *">
+                <b-form-input v-model="form.name" v-validate="'required'" name="name" />
+                <field-error :msg="veeErrors" field="name" />
+              </b-form-group>
+            </div>
+            <div class="col-sm-6">
+              <b-form-group label="CPF/CNPJ *">
+                <b-form-input v-model="form.cnpj" v-validate="'required'" name="cnpj" v-mask="['##.###.###/####-##']" />
+                <field-error :msg="veeErrors" field="cnpj" />
+              </b-form-group>
+            </div>
+            <div class="col-sm-12">
+              <b-form-group label="Endereço *">
+                <b-form-textarea v-model="form.address" v-validate="'required'" name="address" />
+                <field-error :msg="veeErrors" field="address" />
+              </b-form-group>
+            </div>
+            <div class="col-sm-6">
+              <b-form-group label="Telefone">
+                <b-form-input v-model="form.phone" v-validate="'required'" name="phone" placeholder="(99) 99999-9999" v-mask="['(##) ####-####', '(##) #####-####']" />
+                <field-error :msg="veeErrors" field="phone" />
+              </b-form-group>
+            </div>
+            <div class="col-sm-6">
+              <b-form-group label="Email">
+                <b-form-input v-model="form.email" v-validate="'email'" name="email" />
+                <field-error :msg="veeErrors" field="email" />
+                <div class="text-right" v-if="isEditing()">
+                  <a class="pointer" @click="changePassword">Alterar senha</a>
+                </div>
+              </b-form-group>
+            </div>
+          </div>
+        </div>
+        <br>
         <button type="button" class="btn btn-info btn-round pull-right" @click="saveOrder">Finalizar compra <i class="material-icons">keyboard_arrow_right</i></button>
-        <a @click="clearCart" class="btn btn-warning btn-round pull-right">Limpar carrinho</a>
+        <!-- <a @click="clearCart" class="btn btn-warning btn-round pull-right">Limpar carrinho</a> -->
       </div>
     </div>
   </div>
 </template>
 <script>
 import axios from 'axios'
+import slugify from 'slugify'
 import Loading from '@/components/Loading'
 import NoItem from '@/components/NoItem'
 import ProductImage from '@/components/ProductImage'
-import slugify from 'slugify'
+import FieldError from '@/components/FieldError'
 
 export default {
 
   name: 'Cart',
-
+  data() {
+    var client = this.$store.state.currentUser
+    var form = {
+      name: '',
+      email: '',
+      address: '',
+      phone: '',
+      cnpj: '',
+      cart: []
+    }
+    if (client) {
+      form.name = client.name
+      form.cnpj = client.cnpj
+      form.email = client.email
+      form.address = client.address
+      form.phone = client.phone
+    }
+    return {
+      client: client,
+      form: form
+    }
+  },
   computed: {
     cart() {
       return this.$store.state.cart
@@ -101,10 +163,11 @@ export default {
     },
     saveOrder() {
       this.isSending = true
+      this.form.cart = this.cart
       axios({
         method: 'POST',
         url: 'shop/order',
-        data: this.cart
+        data: this.form
       }).then(resp => {
         console.log(resp);
         var order = resp.data
@@ -122,7 +185,8 @@ export default {
   components: {
     Loading,
     NoItem,
-    ProductImage
+    ProductImage,
+    FieldError
   }
 };
 </script>
