@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import auth from '@/auth.js'
 import store from '@/store/'
 
+import Home from '@/views/Home.vue'
 import About from '@/views/About.vue'
 import Login from '@/views/Login.vue'
 import Panel from '@/views/Panel.vue'
@@ -31,6 +32,7 @@ import Ecommerce from '@/views/Ecommerce.vue'
 import Shop from '@/views/Shop.vue'
 import Offer from '@/views/Offer.vue'
 import Cart from '@/views/Cart.vue'
+import ClientLogin from '@/views/ClientLogin.vue'
 
 Vue.use(Router)
 
@@ -47,7 +49,7 @@ function requireAuth (to, from, next) {
 
 export default new Router({
   routes: [
-    { path: '/', name: 'home', component: Login },
+    { path: '/', name: 'home', component: Home },
     { path: '/about', component: About },
     { path: '/login', component: Login },
     { path: '/logout',
@@ -95,6 +97,7 @@ export default new Router({
         { path: '/loja', component: Shop },
         { path: '/oferta/:id', component: Offer },
         { path: '/carrinho', component: Cart },
+        { path: '/entrar', component: ClientLogin },
       ]
     },
 

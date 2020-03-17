@@ -41,6 +41,8 @@ require('./src/models/Supplier');
 require('./src/models/Product');
 require('./src/models/ProductVariation');
 require('./src/models/Offer');
+require('./src/models/Order');
+require('./src/models/OrderItem');
 
 require('./src/config/passport');
 

@@ -26,6 +26,14 @@ function isLink(req) {
   return false
 }
 
+function isClient(req) {
+  if (req.payload && req.payload.roles) {
+    var roles = req.payload.roles
+    return roles && (roles.includes('client') || roles.includes('admin'))
+  }
+  return false
+}
+
 function authenticatedManager(req, res, next) {
   if (isManager(req)) {
     next()
@@ -48,6 +56,17 @@ function authenticatedLink(req, res, next) {
   }
 }
 
+function authenticatedClient(req, res, next) {
+  if (isClient(req)) {
+    next()
+  } else {
+    return res.status(403).json({
+      status: 403,
+      message: 'A permissão de cliente é necessária para acessar este recurso.'
+    })
+  }
+}
+
 var auth = {
   authenticated: jwt({
     secret: secret,
@@ -64,6 +83,11 @@ var auth = {
     userProperty: 'payload',
     getToken: getTokenFromHeader
   }), authenticatedLink],
+  client: [jwt({
+    secret: secret,
+    userProperty: 'payload',
+    getToken: getTokenFromHeader
+  }), authenticatedClient],
   optional: jwt({
     secret: secret,
     userProperty: 'payload',
@@ -71,7 +95,8 @@ var auth = {
     getToken: getTokenFromHeader
   }),
   isLink: isLink,
-  isManager: isManager
+  isManager: isManager,
+  isClient: isClient
 };
 
 module.exports = auth;
