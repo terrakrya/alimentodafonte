@@ -2,7 +2,7 @@
   <div class="row">
     <div class="card card-plain">
       <div class="card-body">
-        <h3 class="card-title">Carrinho de compras</h3>
+        <h3 class="card-title">Meus pedidos</h3>
         <br/>
         <div class="table-responsive">
           <table class="table table-shopping">
@@ -73,56 +73,19 @@
 import axios from 'axios'
 import Loading from '@/components/Loading'
 import NoItem from '@/components/NoItem'
-import ProductImage from '@/components/ProductImage'
-import slugify from 'slugify'
 
 export default {
 
   name: 'Cart',
 
-  computed: {
-    cart() {
-      return this.$store.state.cart
-    },
-    total() {
-      return this.$store.state.cart.reduce(function(a,item){
-        return a + (Number(item.qtd) * Number(item.offer.final_price))
-      }, 0);
-    }
-  },
-  methods: {
-    removeFromCart(index) {
-      this.$store.dispatch('removeFromCart', index)
-    },
-    clearCart() {
-      this.$store.dispatch('clearCart')
-      this.notify("Carrinho limpo!")
-      this.$router.replace('/loja')
-    },
-    saveOrder() {
-      this.isSending = true
-      axios({
-        method: 'POST',
-        url: 'shop/order',
-        data: this.cart
-      }).then(resp => {
-        console.log(resp);
-        var order = resp.data
-        if (order && order._id) {
-          this.notify("Seu pedido de compra foi realizado com o sucesso!")
-          this.$router.replace('/meus_pedidos')
-        }
-        this.isSending = false
-      }).catch((e, status, x) => {
-        this.$router.replace('/entrar')
-      })
-    }
-
+  created() {
+    axios.get('shop/orders').then(response => {
+      this.orders = response.data
+    }).catch(this.showError)
   },
   components: {
     Loading,
     NoItem,
-    ProductImage
   }
 };
 </script>

@@ -27,6 +27,7 @@ var UserSchema = new mongoose.Schema({
   hash: String,
   salt: String,
   name: String,
+  address: String,
   roles: [String],
   image: Object,
   organization: {

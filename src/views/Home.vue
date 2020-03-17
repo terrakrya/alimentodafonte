@@ -1,13 +1,16 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    Home
+
   </div>
 </template>
 
 <script>
 
 export default {
-  name: 'home'
+  name: 'home',
+  created() {
+    this.$router.replace('/loja')
+  }
+
 }
 </script>

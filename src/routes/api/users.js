@@ -56,6 +56,23 @@ router.post('/users', auth.manager, function(req, res, next) {
   }).catch(next);
 });
 
+router.post('/register', function(req, res, next) {
+  var user = new User();
+
+  user.cnpj = req.body.cnpj.replace(/\D/g, '')
+  user.address = req.body.address
+  user.email = req.body.email
+  user.name = req.body.name
+  user.roles = ['client']
+
+  user.setPassword(req.body.password);
+
+  console.log(user);
+  user.save().then(function() {
+    return res.send(user);
+  }).catch(next);
+});
+
 router.put('/users/:id', auth.manager, function(req, res, next) {
   User.findById(req.params.id).then(function(user) {
 
@@ -125,6 +142,10 @@ router.post('/users/login', function(req, res, next) {
       return res.status(422).json(info);
     }
   })(req, res, next);
+});
+
+router.get('/painel', function(req, res, next) {
+  res.redirect('/#/painel')
 });
 
 router.get('/init', function(req, res) {

@@ -5,7 +5,9 @@ var express = require('express'),
   select = require('../utils').select,
   populate = require('../utils').populate,
   ProductVariation = mongoose.model('ProductVariation'),
-  Offer = mongoose.model('Offer');
+  Offer = mongoose.model('Offer'),
+  Order = mongoose.model('Order'),
+  OrderItem = mongoose.model('OrderItem');
 
 router.get('/offers', function(req, res) {
   var query = {}
@@ -46,5 +48,33 @@ router.get('/offer/:id', function(req, res) {
     }
   });
 });
+
+
+router.post('/order', auth.client, function(req, res) {
+  console.log(req.body);
+  var newOrder = new Order({
+    client: req.payload.id
+  });
+
+  newOrder.save(async function(err, order) {
+    if (err) {
+      res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
+    } else {
+      for (const item of req.body) {
+        var newOrderItem = new OrderItem({
+          order: order._id,
+          offer: item.offer._id,
+          qtd: item.qtd,
+          price: item.offer.final_price,
+          total: item.qtd * item.offer.final_price,
+        });
+
+        await newOrderItem.save();
+      }
+      res.send(order);
+    }
+  });
+});
+
 
 module.exports = router;
