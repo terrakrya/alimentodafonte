@@ -120,7 +120,7 @@ export default {
       return cnpj.format(value);
     },
     data: function(value) {
-      return value.toLocaleDateString('pt-BR');
+      return new Date(value).toLocaleDateString('pt-BR');
     },
     address: function(address) {
       return address ? [

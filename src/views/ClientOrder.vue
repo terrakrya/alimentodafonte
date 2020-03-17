@@ -1,30 +1,26 @@
 <template>
-  <div class="row">
+  <div class="row" v-if="order">
     <div class="card card-plain">
       <div class="card-body">
-        <h3 class="card-title">Meus pedidos</h3>
+        <h3 class="card-title">Pedido {{order.code}} - <small>{{status_do_pedido[order.status]}}</small></h3>
         <br/>
         <div class="table-responsive">
           <table class="table table-shopping">
             <thead>
               <tr>
-                <th class="text-center"></th>
                 <th>Oferta</th>
                 <th class="th-description">Origem</th>
                 <th class="text-center">Valor</th>
                 <th class="text-center">Qtd</th>
                 <th class="text-left">Total</th>
-                <th></th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, index) in cart">
+              <tr v-for="(item, index) in order.items">
                 <td>
                   <div class="img-container">
                     <product-image :product="item.offer.product" :product_variation="item.offer.product_variation" />
                   </div>
-                </td>
-                <td class="td-name">
                   <router-link :to="'/oferta/'+item.offer._id">
                     {{item.offer.product_variation.name}}
                   </router-link>
@@ -43,14 +39,9 @@
                 <td>
                   {{item.offer.final_price * item.qtd | moeda}}
                 </td>
-                <td class="td-actions">
-                  <button type="button" rel="tooltip" data-placement="left" title="Remove item" class="btn btn-link" @click="removeFromCart(index)">
-                    <i class="material-icons">close</i>
-                  </button>
-                </td>
               </tr>
               <tr>
-                <td colspan="4"></td>
+                <td colspan="3"></td>
                 <td>
                   Total
                 </td>
@@ -61,31 +52,69 @@
               </tr>
             </tbody>
           </table>
+          <table>
+            <tbody>
+              <tr v-if="order.name">
+                <td>Nome:</td>
+                <th class="text-right">{{order.name}}</th>
+              </tr>
+              <tr v-if="order.cnpj">
+                <td>CNPJ:</td>
+                <th class="text-right">{{order.cnpj}}</th>
+              </tr>
+              <tr v-if="order.email">
+                <td>Email:</td>
+                <th class="text-right">{{order.email}}</th>
+              </tr>
+              <tr v-if="order.phone">
+                <td>Telefone:</td>
+                <th class="text-right">{{order.phone}}</th>
+              </tr>
+              <tr v-if="order.address">
+                <td>Endereço:</td>
+                <th class="text-right">{{order.address}}</th>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <br>
-        <button type="button" class="btn btn-info btn-round pull-right" @click="saveOrder">Finalizar compra <i class="material-icons">keyboard_arrow_right</i></button>
-        <a @click="clearCart" class="btn btn-warning btn-round pull-right">Limpar carrinho</a>
       </div>
     </div>
   </div>
 </template>
 <script>
 import axios from 'axios'
+import slugify from 'slugify'
 import Loading from '@/components/Loading'
 import NoItem from '@/components/NoItem'
+import ProductImage from '@/components/ProductImage'
+import status_do_pedido from '@/data/status-do-pedido.json';
 
 export default {
 
-  name: 'Cart',
-
+  name: 'ClientOrder',
+  computed: {
+    total() {
+      return this.order.items.reduce(function(a,item){
+        return a + Number(item.total)
+      }, 0);
+    }
+  },
   created() {
-    axios.get('shop/orders').then(response => {
-      this.orders = response.data
+    axios.get('shop/order/' + this.$route.params.id).then(response => {
+      this.order = response.data
     }).catch(this.showError)
+  },
+  data() {
+    return {
+      status_do_pedido: status_do_pedido,
+      order: null
+    }
   },
   components: {
     Loading,
     NoItem,
+    ProductImage
   }
 };
 </script>

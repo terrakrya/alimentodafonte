@@ -1,12 +1,7 @@
-const mongoose = require('mongoose'),
+var mongoose = require('mongoose'),
   ObjectId = mongoose.Schema.Types.ObjectId;
 
-const OrderItemSchema = mongoose.Schema({
-  order: {
-    type: ObjectId,
-    ref: 'Order',
-    required: true
-  },
+var OrderItemSchema = new mongoose.Schema({
   offer: {
     type: ObjectId,
     ref: 'Offer',
@@ -15,8 +10,6 @@ const OrderItemSchema = mongoose.Schema({
   qtd: Number,
   price: Number,
   total: Number,
-}, {
-  timestamps: true,
 });
 
-mongoose.model('OrderItem', OrderItemSchema);
+module.exports = OrderItemSchema;

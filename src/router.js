@@ -29,10 +29,12 @@ import Offers from '@/views/Offers.vue'
 import OfferForm from '@/views/OfferForm.vue'
 
 import Ecommerce from '@/views/Ecommerce.vue'
+import ClientLogin from '@/views/ClientLogin.vue'
 import Shop from '@/views/Shop.vue'
 import Offer from '@/views/Offer.vue'
 import Cart from '@/views/Cart.vue'
-import ClientLogin from '@/views/ClientLogin.vue'
+import ClientOrders from '@/views/ClientOrders.vue'
+import ClientOrder from '@/views/ClientOrder.vue'
 
 Vue.use(Router)
 
@@ -94,10 +96,12 @@ export default new Router({
     { path: '/ecommerce',
       component: Ecommerce,
       children: [
+        { path: '/entrar', component: ClientLogin },
         { path: '/loja', component: Shop },
         { path: '/oferta/:id', component: Offer },
         { path: '/carrinho', component: Cart },
-        { path: '/entrar', component: ClientLogin },
+        { path: '/meus_pedidos', component: ClientOrders },
+        { path: '/meu_pedido/:id', component: ClientOrder },
       ]
     },
 

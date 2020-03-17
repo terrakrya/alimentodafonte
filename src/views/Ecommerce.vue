@@ -9,8 +9,11 @@
           </router-link>
           <ul class="navbar-nav ml-auto pull-right">
             <li class="dropdown nav-item">
-              <router-link :to="'/meus_pedidos'" class="nav-link" style="color: #fff">
+              <router-link :to="'/meus_pedidos'" class="nav-link" style="color: #fff" v-if="client">
                 Meus pedidos
+              </router-link>
+              <router-link :to="'/entrar'" class="nav-link" style="color: #fff" v-else>
+                Entrar
               </router-link>
             </li>
           </ul>
@@ -59,6 +62,9 @@ export default {
   computed: {
     cart() {
       return this.$store.state.cart
+    },
+    client() {
+      return this.$store.state.currentUser
     }
   }
 }
