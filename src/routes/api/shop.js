@@ -14,6 +14,9 @@ router.get('/offers', function(req, res) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
     } else {
+      offers = offers.filter(offer => {
+        return (offer.qtd - offer.qtd_ordered) > 0
+      })
       res.json(offers);
     }
   });
@@ -21,13 +24,14 @@ router.get('/offers', function(req, res) {
 
 router.get('/tags', function(req, res) {
   var query = {}
-  ProductVariation.find(query, 'tags').exec(function(err, resp) {
+  Offer.find(query, 'product_variation').populate('product_variation', 'tags').exec(function(err, resp) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
     } else {
+      console.log(resp);
       var tags = {}
       resp.forEach(tag_list => {
-        tag_list.tags.forEach(tag => {
+        tag_list.product_variation.tags.forEach(tag => {
           tags[tag.text] = true
         })
       })
@@ -66,16 +70,20 @@ router.get('/order/:id', auth.client, function(req, res) {
     _id: req.params.id,
     client: req.payload.id
   }
-  Order.findOne(query, select(req)).populate(
-    {
-      path: 'items.offer',
-      model: 'Offer',
-      populate: {
-        path: 'product_variation',
-        model: 'ProductVariation'
-      }
-    }
-  ).exec(function(err, order) {
+  Order.findOne(query, select(req)).populate({
+    path: 'items.offer',
+    model: 'Offer',
+    populate: [{
+      path: 'product',
+      model: 'Product'
+    }, {
+      path: 'product_variation',
+      model: 'ProductVariation'
+    }, {
+      path: 'supplier',
+      model: 'Supplier'
+    }]
+  }).exec(function(err, order) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
     } else {
@@ -87,7 +95,9 @@ router.get('/order/:id', auth.client, function(req, res) {
 router.post('/order', auth.client, function(req, res) {
   console.log(req.body.cart);
 
-  Order.find().sort({ code: -1 }).limit(1).exec(function(err, latest) {
+  Order.find().sort({
+    code: -1
+  }).limit(1).exec(function(err, latest) {
     if (!err) {
       var newOrder = new Order({
         client: req.payload.id,
@@ -101,7 +111,7 @@ router.post('/order', auth.client, function(req, res) {
       });
 
       if (latest && latest.length) {
-        newOrder.code = latest[0].code+1
+        newOrder.code = latest[0].code + 1
       } else {
         newOrder.code = 1
       }
@@ -119,6 +129,9 @@ router.post('/order', auth.client, function(req, res) {
         if (err) {
           res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
         } else {
+          updateQtdOrdered(order.items)
+          console.log('order._id');
+          console.log(order._id);
           res.send(order);
         }
       });
@@ -126,4 +139,31 @@ router.post('/order', auth.client, function(req, res) {
   })
 });
 
+var updateQtdOrdered = (order_items) => {
+  order_items.forEach(item => {
+    Offer.findOne({_id: item.offer}).exec(function(err, offer) {
+      console.log('items.offer');
+      console.log(offer._id);
+      Order.find({ "items.offer": offer._id }).exec(function(err, orders) {
+        console.log('orders');
+        console.log(orders);
+        var items_qtd = 0
+        orders.forEach(o => {
+
+          o.items.forEach(i => {
+            if (String(i.offer) == String(offer._id)) {
+              items_qtd += i.qtd
+            }
+          })
+          console.log(items_qtd);
+        })
+
+        console.log('items_qtd');
+        console.log(items_qtd);
+        offer.qtd_ordered = items_qtd
+        offer.save()
+      });
+    });
+  })
+}
 module.exports = router;

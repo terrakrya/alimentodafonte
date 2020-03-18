@@ -1,15 +1,21 @@
 <template>
+<div class="client-order">
+  <router-link class="btn btn-warning logout" v-if="currentUser" to="/logout">
+    Sair
+  </router-link>
   <div class="row" v-if="order">
     <div class="card card-plain">
       <div class="card-body">
         <h3 class="card-title">Pedido {{order.code}} - <small>{{status_do_pedido[order.status]}}</small></h3>
-        <br/>
+        <br />
         <div class="table-responsive">
           <table class="table table-shopping">
             <thead>
               <tr>
                 <th>Oferta</th>
                 <th class="th-description">Origem</th>
+                <th class="th-description">Fornecedor</th>
+                <th class="th-description">Emissor da NF</th>
                 <th class="text-center">Valor</th>
                 <th class="text-center">Qtd</th>
                 <th class="text-left">Total</th>
@@ -24,11 +30,15 @@
                   <router-link :to="'/oferta/'+item.offer._id">
                     {{item.offer.product_variation.name}}
                   </router-link>
-                  <small v-if="item.offer.supplier"><br />{{item.offer.supplier.name}}</small>
-                  <!-- <small v-if="item.offer.organization"><br />{{item.offer.organization.name}}</small> -->
                 </td>
                 <td>
                   <small>{{item.offer.source_of_shipment}}</small>
+                </td>
+                <td>
+                  <small v-if="item.offer.supplier">{{item.offer.supplier.name}}</small>
+                </td>
+                <td>
+                  <small>{{invoiceIssuer(item.offer.invoice_issuer)}}</small>
                 </td>
                 <td class="text-center">
                   {{item.offer.final_price | moeda}}
@@ -81,6 +91,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 <script>
 import axios from 'axios'
@@ -95,7 +106,7 @@ export default {
   name: 'ClientOrder',
   computed: {
     total() {
-      return this.order.items.reduce(function(a,item){
+      return this.order.items.reduce(function(a, item) {
         return a + Number(item.total)
       }, 0);
     }

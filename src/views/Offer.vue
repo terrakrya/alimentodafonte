@@ -27,6 +27,10 @@
             <div class="card-body">
               <table class="product-info">
                 <tbody>
+                  <tr v-if="offer.invoice_issuer">
+                    <td>Emissor da nota fiscal:</td>
+                    <th class="text-right">{{invoiceIssuer(offer.invoice_issuer)}}</th>
+                  </tr>
                   <tr v-if="offer.source_of_shipment">
                     <td>Origem do envio:</td>
                     <th class="text-right">{{offer.source_of_shipment}}</th>
@@ -44,19 +48,19 @@
                       </div>
                     </th>
                   </tr>
-                  <tr v-if="offer.product_variation.duration">
+                  <tr v-if="offer.product_variation.duration && offer.product_variation.duration.value">
                     <td>Validade:</td>
                     <th class="text-right">{{offer.product_variation.duration.value}} {{offer.product_variation.duration.unit}}</th>
                   </tr>
-                  <tr v-if="offer.product_variation.minimum_quantity_for_shipping">
+                  <tr v-if="offer.product_variation.minimum_quantity_for_shipping && offer.product_variation.minimum_quantity_for_shipping.value">
                     <td>Quantidade mínima para envio:</td>
                     <th class="text-right">{{offer.product_variation.minimum_quantity_for_shipping.value}} {{offer.product_variation.minimum_quantity_for_shipping.unit}}</th>
                   </tr>
-                  <tr v-if="offer.product_variation.gross_weight">
+                  <tr v-if="offer.product_variation.gross_weight && offer.product_variation.gross_weight.value">
                     <td>Peso bruto por unidade:</td>
                     <th class="text-right">{{offer.product_variation.gross_weight.value}} {{offer.product_variation.gross_weight.unit}}</th>
                   </tr>
-                  <tr v-if="offer.product_variation.net_weight">
+                  <tr v-if="offer.product_variation.net_weight && offer.product_variation.net_weight.value">
                     <td>Peso liquido por unidade:</td>
                     <th class="text-right">{{offer.product_variation.net_weight.value}} {{offer.product_variation.net_weight.unit}}</th>
                   </tr>
@@ -83,19 +87,19 @@
             <div class="card-body">
               <table class="product-info">
                 <tbody>
-                  <tr v-if="offer.product_variation.box_weight">
+                  <tr v-if="offer.product_variation.box_weight && offer.product_variation.box_weight.value">
                     <td>Peso da embalagem:</td>
                     <th class="text-right">{{offer.product_variation.box_weight.value}} {{offer.product_variation.box_weight.unit}}</th>
                   </tr>
-                  <tr v-if="offer.product_variation.box_height">
+                  <tr v-if="offer.product_variation.box_height && offer.product_variation.box_height.value">
                     <td>Altura:</td>
                     <th class="text-right">{{offer.product_variation.box_height.value}} {{offer.product_variation.box_height.unit}}</th>
                   </tr>
-                  <tr v-if="offer.product_variation.box_width">
+                  <tr v-if="offer.product_variation.box_width && offer.product_variation.box_width.value">
                     <td>Comprimento:</td>
                     <th class="text-right">{{offer.product_variation.box_width.value}} {{offer.product_variation.box_width.unit}}</th>
                   </tr>
-                  <tr v-if="offer.product_variation.box_gross_weight">
+                  <tr v-if="offer.product_variation.box_gross_weight && offer.product_variation.box_gross_weight.value">
                     <td>Peso bruto:</td>
                     <th class="text-right">{{offer.product_variation.box_gross_weight.value}} {{offer.product_variation.box_gross_weight.unit}}</th>
                   </tr>
@@ -150,8 +154,9 @@
         </div>
       </div>
       <div class="add_to_cart text-right">
-        <input type="number" class="form-control" v-model="qtd">
+        <input type="number" class="form-control" v-model="qtd" :max="offer.qtd - offer.qtd_ordered">
         <button class="btn btn-rose btn-round" @click="addToCart">Adicionar ao carrinho &#xA0;<i class="material-icons">shopping_cart</i></button>
+        <small><br>{{offer.qtd - offer.qtd_ordered}} disponíveis</small>
       </div>
     </div>
   </div>
@@ -179,7 +184,7 @@ export default {
   created() {
     axios.get('shop/offer/' + this.$route.params.id, {
       params: {
-        populate: 'product_variation supplier organization'
+        populate: 'product_variation supplier organization orders'
       }
     }).then(response => {
       this.offer = response.data

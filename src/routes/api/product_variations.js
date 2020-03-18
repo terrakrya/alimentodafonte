@@ -3,6 +3,7 @@ var express = require('express'),
   router = express.Router(),
   slugify = require('slugify'),
   auth = require('../auth'),
+  populate = require('../utils').populate,
   select = require('../utils').select,
   Product = mongoose.model('Product'),
   ProductVariation = mongoose.model('ProductVariation');
@@ -13,7 +14,7 @@ router.get('/', auth.manager, function(req, res) {
   if (req.payload.roles.includes('manager')) {
     query.organization = req.payload.organization
   }
-  ProductVariation.find(query, select(req)).exec(function(err, product_variations) {
+  ProductVariation.find(query, select(req)).populate(populate(req)).exec(function(err, product_variations) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
     } else {
@@ -37,7 +38,7 @@ router.get('/slug', auth.manager, function(req, res) {
 router.get('/:id', auth.manager, function(req, res) {
   ProductVariation.findOne({
     _id: req.params.id
-  }).exec(function(err, product_variation) {
+  }).populate(populate(req)).exec(function(err, product_variation) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
@@ -58,6 +59,7 @@ router.post('/', auth.manager, function(req, res) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
       newProductVariation.organization = product.organization
+      newProductVariation.supplier = product.supplier
       newProductVariation.save(function(err, product_variation) {
         if (err) {
           res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);

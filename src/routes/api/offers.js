@@ -42,8 +42,8 @@ router.post('/', auth.manager, function(req, res) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
-      newOffer.organization = product_variation.organization
       newOffer.product = product_variation.product._id
+      newOffer.organization = product_variation.organization
       newOffer.supplier = product_variation.product.supplier
       newOffer.save(function(err, offer) {
         if (err) {

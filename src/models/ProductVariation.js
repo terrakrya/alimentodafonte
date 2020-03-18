@@ -7,6 +7,11 @@ const ProductVariationSchema = mongoose.Schema({
     ref: 'Organization',
     required: true
   },
+  supplier: {
+    type: ObjectId,
+    ref: 'Supplier',
+    required: true
+  },
   product: {
     type: ObjectId,
     ref: 'Product',

@@ -68,6 +68,12 @@
           <p>Usuários</p>
         </router-link>
       </li>
+      <li class="nav-item" @click="toggleMenu">
+        <router-link class="nav-link" to="/loja">
+          <i class="material-icons">shopping_cart</i>
+          <p>Loja</p>
+        </router-link>
+      </li>
     </ul>
   </div>
   <div class="sidebar-background">

@@ -1,9 +1,13 @@
 <template>
+<div class="client-orders">
+  <router-link class="btn btn-warning logout" v-if="currentUser" to="/logout">
+    Sair
+  </router-link>
   <div class="row">
     <div class="card card-plain">
       <div class="card-body">
         <h3 class="card-title">Meus pedidos</h3>
-        <br/>
+        <br />
         <div class="table-responsive">
           <table class="table table-shopping">
             <thead>
@@ -46,6 +50,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 <script>
 import axios from 'axios'
@@ -69,7 +74,9 @@ export default {
   },
   methods: {
     orderTotal(order) {
-      return order.items.reduce((a, b) => { return a + b.total }, 0)
+      return order.items.reduce((a, b) => {
+        return a + b.total
+      }, 0)
     }
   },
   components: {

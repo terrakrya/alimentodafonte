@@ -29,7 +29,7 @@ function isLink(req) {
 function isClient(req) {
   if (req.payload && req.payload.roles) {
     var roles = req.payload.roles
-    return roles && (roles.includes('client') || roles.includes('admin'))
+    return roles && (roles.includes('client'))
   }
   return false
 }

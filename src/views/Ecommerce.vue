@@ -10,7 +10,7 @@
           <ul class="navbar-nav ml-auto pull-right">
             <li class="dropdown nav-item">
               <router-link :to="'/meus_pedidos'" class="nav-link" style="color: #fff" v-if="client">
-                Meus pedidos
+                Minha conta
               </router-link>
               <router-link :to="'/entrar'" class="nav-link" style="color: #fff" v-else>
                 Entrar
@@ -34,7 +34,11 @@
         <div class="row align-middle">
           <div class="col-md-8 ml-auto mr-auto text-center">
             <div class="brand">
-              <h1 class="title">Loja Biobá</h1>
+              <h1 class="title">
+                <router-link :to="'/loja'" class="navbar-brand">
+                  Loja Biobá
+                </router-link>
+              </h1>
               <h4>O seu Marketplace de <b>Produtos da Floresta</b></h4>
             </div>
           </div>

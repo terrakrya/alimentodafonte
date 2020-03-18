@@ -26,6 +26,9 @@ const OfferSchema = mongoose.Schema({
   manufacturing_date: Date,
   source_of_shipment: String,
   final_price: Number,
+  qtd: Number,
+  qtd_ordered: Number,
+  invoice_issuer: String
 }, {
   timestamps: true,
 });
