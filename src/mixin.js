@@ -6,11 +6,15 @@ import auth from '@/auth'
 import * as cpf from "@fnando/cpf"
 import * as cnpj from "@fnando/cnpj"
 import emissores_da_nota from '@/data/emissores-da-nota.json';
+import status_do_pedido from '@/data/status-do-pedido.json';
+import status_do_item from '@/data/status-do-item.json';
 
 export default {
   data() {
     return {
       emissores_da_nota: emissores_da_nota,
+      status_do_pedido: status_do_pedido,
+      status_do_item: status_do_item,
       error: false,
       isLoading: false,
       isSending: false,
@@ -124,6 +128,24 @@ export default {
       }
       if (invoice_issuer) {
         return invoice_issuer.text
+      }
+    },
+    orderStatus(status) {
+      var order_status = null
+      if (status) {
+        order_status = this.status_do_pedido.find(e => status == e.value)
+      }
+      if (order_status) {
+        return order_status.text
+      }
+    },
+    itemStatus(status) {
+      var item_status = null
+      if (status) {
+        item_status = this.status_do_item.find(e => status == e.value)
+      }
+      if (item_status) {
+        return item_status.text
       }
     },
   },

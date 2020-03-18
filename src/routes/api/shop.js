@@ -122,6 +122,7 @@ router.post('/order', auth.client, function(req, res) {
           qtd: item.qtd,
           price: item.offer.final_price,
           total: item.qtd * item.offer.final_price,
+          status: 'created',
         })
       })
 
