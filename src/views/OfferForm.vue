@@ -32,23 +32,40 @@
               <div>
                 <div class="row justify-content-center">
                   <div class="col-md-6">
-                    <b-form-group label="Lote" class="bmd-form-group">
-                      <b-form-input v-model="form.lot" />
+                    <b-form-group label="Origem do envio *" description="Lugar onde o produto está estocado aguardando para envio" class="bmd-form-group">
+                      <b-form-input v-model="form.source_of_shipment" v-validate="'required'" name="source_of_shipment" />
+                      <field-error :msg="veeErrors" field="source_of_shipment" />
                     </b-form-group>
                   </div>
                   <div class="col-md-6">
-                    <b-form-group label="Data de fabricação" class="bmd-form-group">
-                      <b-form-input v-model="form.manufacturing_date" name="manufacturing_date" type="date" />
+                    <b-form-group label="Data de fabricação *" class="bmd-form-group">
+                      <b-form-input v-model="form.manufacturing_date" type="date" v-validate="'required'" name="manufacturing_date" />
+                      <field-error :msg="veeErrors" field="manufacturing_date" />
                     </b-form-group>
                   </div>
-                  <div class="col-md-6">
-                    <b-form-group label="Origem do envio" description="Lugar onde o produto está estocado aguardando para envio" class="bmd-form-group">
-                      <b-form-input v-model="form.source_of_shipment" />
+                  <div class="col-md-4">
+                    <b-form-group label="Preço final *" description="Valor do produto + impostos + frete" class="bmd-form-group">
+                      <money v-model="form.final_price" class="form-control" v-validate="'required'" name="final_price"></money>
+                      <field-error :msg="veeErrors" field="final_price" />
                     </b-form-group>
                   </div>
-                  <div class="col-md-6">
-                    <b-form-group label="Preço final" description="Valor do produto + impostos + frete" class="bmd-form-group">
-                      <money v-model="form.final_price" class="form-control"></money>
+                  <div class="col-md-4">
+                    <b-form-group label="Lote *" class="bmd-form-group">
+                      <b-form-input v-model="form.lot" v-validate="'required'" name="lot" />
+                      <field-error :msg="veeErrors" field="lot" />
+                    </b-form-group>
+                  </div>
+                  <div class="col-md-4">
+                    <b-form-group label="Quantidade disponível *" class="bmd-form-group">
+                      <b-form-input v-model="form.qtd" type="number" v-validate="'required'" name="qtd" :min="form.qtd_ordered" :disabled="isEditing()" />
+                      <small v-if="isEditing() && form.qtd_ordered > 0">Já vendidos: {{form.qtd_ordered}}</small>
+                      <field-error :msg="veeErrors" field="qtd" />
+                    </b-form-group>
+                  </div>
+                  <div class="col-md-4">
+                    <b-form-group label="Emissor da nota fiscal *" class="bmd-form-group">
+                      <b-form-select class="form-control" v-model="form.invoice_issuer" :options="emissores_da_nota" v-validate="'required'" name="invoice_issuer" />
+                      <field-error :msg="veeErrors" field="invoice_issuer" />
                     </b-form-group>
                   </div>
                 </div>
@@ -77,18 +94,24 @@ import FormSubmit from '@/components/FormSubmit'
 import ProductImage from '@/components/ProductImage';
 import FormEntitySelect from '@/components/FormEntitySelect';
 import Tags from '@/components/Tags';
+import emissores_da_nota from '@/data/emissores-da-nota.json';
+import FieldError from '@/components/FieldError'
 
 export default {
 
   name: 'OfferForm',
   data() {
     return {
+      emissores_da_nota: emissores_da_nota,
       form: {
         product_variation: null,
         manufacturing_date: '',
         final_price: 0,
         lot: '',
         source_of_shipment: '',
+        qtd: '',
+        qtd_ordered: 0,
+        invoice_issuer: '',
       },
       product_variation: null,
       offer: null,
@@ -101,7 +124,7 @@ export default {
     } else if (this.$route.query.product_variation) {
       axios.get('product_variations/' + this.$route.query.product_variation, {
         params: {
-          populate: 'product'
+          populate: 'product supplier organization'
         }
       }).then(response => {
         this.setProductVariation(response.data)
@@ -135,7 +158,7 @@ export default {
           }).then(resp => {
             var offer = resp.data
             if (offer && offer._id) {
-              this.notify("Os dados foram salvos!")
+              this.notify("Oferta publicada com sucesso!")
               window.scrollTo(0, 0);
               this.$router.replace('/ofertas')
             }
@@ -153,11 +176,19 @@ export default {
         this.form.final_price = product_variation.final_price
       }
       this.product_variation = product_variation
+
+      if (this.product_variation.supplier && this.product_variation.supplier.issue_invoice) {
+        this.form.invoice_issuer = 'supplier'
+      } else if (this.product_variation.organization && this.product_variation.organization.issue_invoice) {
+        this.form.invoice_issuer = 'organization'
+      } else {
+        this.form.invoice_issuer = 'platform'
+      }
     },
     loadProductVariation(product_variation) {
       axios.get('product_variations/' + product_variation.id, {
         params: {
-          populate: 'product'
+          populate: 'product supplier organization'
         }
       }).then(response => {
         this.setProductVariation(response.data)
@@ -169,7 +200,8 @@ export default {
     FormSubmit,
     ProductImage,
     FormEntitySelect,
-    Tags
+    Tags,
+    FieldError
   }
 };
 </script>

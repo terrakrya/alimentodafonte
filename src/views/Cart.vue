@@ -2,7 +2,7 @@
   <div class="row">
     <div class="card card-plain">
       <div class="card-body">
-        <h3 class="card-title">Carrinho de compras</h3>
+        <h3 class="card-title">Resumo da compra</h3>
         <br/>
         <div class="table-responsive">
           <table class="table table-shopping">
@@ -11,6 +11,7 @@
                 <th class="text-center"></th>
                 <th>Oferta</th>
                 <th class="th-description">Origem</th>
+                <th class="th-description">Emissor da NF</th>
                 <th class="text-center">Valor</th>
                 <th class="text-center">Qtd</th>
                 <th class="text-left">Total</th>
@@ -33,6 +34,9 @@
                 </td>
                 <td>
                   <small>{{item.offer.source_of_shipment}}</small>
+                </td>
+                <td>
+                  <small>{{invoiceIssuer(item.offer.invoice_issuer)}}</small>
                 </td>
                 <td class="text-center">
                   {{item.offer.final_price | moeda}}
@@ -79,25 +83,25 @@
                 <field-error :msg="veeErrors" field="cnpj" />
               </b-form-group>
             </div>
-            <div class="col-sm-12">
-              <b-form-group label="Endereço *">
-                <b-form-textarea v-model="form.address" v-validate="'required'" name="address" />
-                <field-error :msg="veeErrors" field="address" />
-              </b-form-group>
-            </div>
             <div class="col-sm-6">
-              <b-form-group label="Telefone">
+              <b-form-group label="Telefone *">
                 <b-form-input v-model="form.phone" v-validate="'required'" name="phone" placeholder="(99) 99999-9999" v-mask="['(##) ####-####', '(##) #####-####']" />
                 <field-error :msg="veeErrors" field="phone" />
               </b-form-group>
             </div>
             <div class="col-sm-6">
-              <b-form-group label="Email">
+              <b-form-group label="Email *">
                 <b-form-input v-model="form.email" v-validate="'email'" name="email" />
                 <field-error :msg="veeErrors" field="email" />
                 <div class="text-right" v-if="isEditing()">
                   <a class="pointer" @click="changePassword">Alterar senha</a>
                 </div>
+              </b-form-group>
+            </div>
+            <div class="col-sm-12">
+              <b-form-group label="Endereço *">
+                <b-form-textarea v-model="form.address" v-validate="'required'" name="address" />
+                <field-error :msg="veeErrors" field="address" />
               </b-form-group>
             </div>
           </div>
@@ -162,22 +166,26 @@ export default {
       this.$router.replace('/loja')
     },
     saveOrder() {
-      this.isSending = true
-      this.form.cart = this.cart
-      axios({
-        method: 'POST',
-        url: 'shop/order',
-        data: this.form
-      }).then(resp => {
-        console.log(resp);
-        var order = resp.data
-        if (order && order._id) {
-          this.notify("Seu pedido de compra foi realizado com o sucesso!")
-          this.$router.replace('/meus_pedidos')
+      this.$validator.validate().then(isValid => {
+        if (isValid) {
+          this.isSending = true
+          this.form.cart = this.cart
+          axios({
+            method: 'POST',
+            url: 'shop/order',
+            data: this.form
+          }).then(resp => {
+            console.log(resp);
+            var order = resp.data
+            if (order && order._id) {
+              this.notify("Seu pedido de compra foi realizado com o sucesso!")
+              this.$router.replace('/meus_pedidos')
+            }
+            this.isSending = false
+          }).catch((e, status, x) => {
+            this.$router.replace('/entrar')
+          })
         }
-        this.isSending = false
-      }).catch((e, status, x) => {
-        this.$router.replace('/entrar')
       })
     }
 

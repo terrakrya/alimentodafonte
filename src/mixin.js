@@ -5,10 +5,12 @@ import tipos_de_usuario from '@/data/tipos-de-usuario.json'
 import auth from '@/auth'
 import * as cpf from "@fnando/cpf"
 import * as cnpj from "@fnando/cnpj"
+import emissores_da_nota from '@/data/emissores-da-nota.json';
 
 export default {
   data() {
     return {
+      emissores_da_nota: emissores_da_nota,
       error: false,
       isLoading: false,
       isSending: false,
@@ -71,21 +73,25 @@ export default {
       return await queries.loadList(type).catch(this.showError)
     },
     showError(error) {
+      console.log(error);
       if (error.response) {
+        console.log('herre');
         if (error.response.data) {
           if (error.response.status == 401 && error.response.data.indexOf('invalid signature') > -1) {
-            this.error = 'Sessão expirada!'
+            this.notify('Sessão expirada!', 'error')
             auth.logout(function() {
               this.$router.replace('/')
             })
           } else if (error.response.data.message) {
-            this.error = error.response.data.message
+            this.notify(error.response.data.message, 'error')
           } else {
-            this.error = error.response.data
+            this.notify(error.response.data, 'error')
           }
         } else {
-          this.error = error.response
+          this.notify(error.response, 'error')
         }
+      } else {
+        this.notify(error, 'error')
       }
       this.isLoading = false
       this.isSending = false
@@ -110,7 +116,16 @@ export default {
       } else {
         return this.baseUrl + 'images/image_placeholder.jpg'
       }
-    }
+    },
+    invoiceIssuer(issuer) {
+      var invoice_issuer = null
+      if (issuer) {
+        invoice_issuer = this.emissores_da_nota.find(e => issuer == e.value)
+      }
+      if (invoice_issuer) {
+        return invoice_issuer.text
+      }
+    },
   },
   filters: {
     cpf: function(value) {

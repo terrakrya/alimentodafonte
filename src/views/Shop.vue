@@ -31,9 +31,6 @@
               <router-link :to="'/oferta/'+offer._id">
                 <h4 class="card-title">{{offer.product_variation.name}}</h4>
               </router-link>
-              <p class="description">
-                {{offer.product_variation.description}}
-              </p>
             </div>
             <div class="card-footer justify-content-between">
               <div class="price-container">

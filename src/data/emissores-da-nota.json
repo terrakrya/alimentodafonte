@@ -1,0 +1,14 @@
+[
+  {
+    "value": "supplier",
+    "text": "Nota emitida pelo fornecedor"
+  },
+  {
+    "value": "organization",
+    "text": "Nota emitida pela rede"
+  },
+  {
+    "value": "platform",
+    "text": "Nota emitida pela plataforma"
+  }
+]
