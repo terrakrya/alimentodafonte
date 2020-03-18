@@ -2,7 +2,7 @@
 <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
   <div class="container-fluid">
     <div class="navbar-wrapper">
-      <a class="navbar-brand" href="/">Plataforma <strong>SocioBio</strong></a>
+      <a class="navbar-brand" href="/#/painel"><strong>Biobá</strong> Plataforma SocioBio</a>
     </div>
     <button @click="toggleMenu" class="navbar-toggler" :class="showMenu ? 'toggled' : ''" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Menu">
       <span class="sr-only">Menu</span>
@@ -10,7 +10,7 @@
       <span class="navbar-toggler-icon icon-bar"></span>
       <span class="navbar-toggler-icon icon-bar"></span>
     </button>
-    
+
   </div>
   <!-- <div class="brand">
       <h1 class="logo">

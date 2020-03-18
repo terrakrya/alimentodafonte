@@ -33,7 +33,6 @@
               {{data.value}}
               <br>
               {{invoiceIssuer(data.item.invoice_issuer)}}
-
             </template>
             <template slot="final_price" slot-scope="data">
               {{data.value | moeda}}
