@@ -178,8 +178,9 @@ export default {
             console.log(resp);
             var order = resp.data
             if (order && order._id) {
-              this.notify("Seu pedido de compra foi realizado com o sucesso!")
-              this.$router.replace('/meus_pedidos')
+              this.notify("Seu pedido de compra foi realizado com o sucesso! Em breve entraremos em contato.")
+              this.$store.dispatch('clearCart')
+              this.$router.replace('/meu_pedido/'+order._id)
             }
             this.isSending = false
           }).catch((e, status, x) => {
