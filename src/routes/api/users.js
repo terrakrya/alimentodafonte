@@ -145,10 +145,6 @@ router.post('/users/login', function(req, res, next) {
   })(req, res, next);
 });
 
-router.get('/painel', function(req, res, next) {
-  res.redirect('/#/painel')
-});
-
 router.get('/init', function(req, res) {
   User.find({
     roles: 'admin'
