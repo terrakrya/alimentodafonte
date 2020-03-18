@@ -6,7 +6,7 @@
   <div class="row" v-if="order">
     <div class="card card-plain">
       <div class="card-body">
-        <h3 class="card-title">Pedido {{order.code}} - <small>{{status_do_pedido[order.status]}}</small></h3>
+        <h3 class="card-title">Pedido {{order.code}} - <small>{{orderStatus(order.status)}}</small></h3>
         <br />
         <div class="table-responsive">
           <table class="table table-shopping">
@@ -19,6 +19,7 @@
                 <th class="text-center">Valor</th>
                 <th class="text-center">Qtd</th>
                 <th class="text-left">Total</th>
+                <th class="text-left">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -49,9 +50,12 @@
                 <td>
                   {{item.offer.final_price * item.qtd | moeda}}
                 </td>
+                <td>
+                  {{itemStatus(item.status)}}
+                </td>
               </tr>
               <tr>
-                <td colspan="3"></td>
+                <td colspan="5"></td>
                 <td>
                   Total
                 </td>
@@ -99,7 +103,6 @@ import slugify from 'slugify'
 import Loading from '@/components/Loading'
 import NoItem from '@/components/NoItem'
 import ProductImage from '@/components/ProductImage'
-import status_do_pedido from '@/data/status-do-pedido.json';
 
 export default {
 
@@ -118,7 +121,6 @@ export default {
   },
   data() {
     return {
-      status_do_pedido: status_do_pedido,
       order: null
     }
   },

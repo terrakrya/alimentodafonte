@@ -28,6 +28,9 @@ import ProductVariationForm from '@/views/ProductVariationForm.vue'
 import Offers from '@/views/Offers.vue'
 import OfferForm from '@/views/OfferForm.vue'
 
+import Orders from '@/views/Orders.vue'
+import Order from '@/views/Order.vue'
+
 import Ecommerce from '@/views/Ecommerce.vue'
 import ClientLogin from '@/views/ClientLogin.vue'
 import Shop from '@/views/Shop.vue'
@@ -91,6 +94,9 @@ export default new Router({
         { path: '/ofertas', component: Offers, beforeEnter: requireAuth },
         { path: '/cadastrar-oferta', component: OfferForm, beforeEnter: requireAuth },
         { path: '/editar-oferta/:id', component: OfferForm, beforeEnter: requireAuth },
+
+        { path: '/pedidos', component: Orders, beforeEnter: requireAuth },
+        { path: '/pedido/:id', component: Order, beforeEnter: requireAuth },
       ]
     },
     { path: '/ecommerce',

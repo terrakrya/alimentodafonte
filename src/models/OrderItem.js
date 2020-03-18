@@ -10,6 +10,7 @@ var OrderItemSchema = new mongoose.Schema({
   qtd: Number,
   price: Number,
   total: Number,
+  status: String,
 });
 
 module.exports = OrderItemSchema;

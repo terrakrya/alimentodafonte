@@ -62,6 +62,12 @@
           <p>Ofertas</p>
         </router-link>
       </li>
+      <li class="nav-item" @click="toggleMenu">
+        <router-link class="nav-link" to="/pedidos">
+          <i class="material-icons">list_alt</i>
+          <p>Pedidos</p>
+        </router-link>
+      </li>
       <li class="nav-item" @click="toggleMenu" v-if="isAdmin">
         <router-link class="nav-link" to="/usuarios">
           <i class="material-icons">person</i>

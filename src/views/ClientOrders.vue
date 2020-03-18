@@ -37,9 +37,12 @@
                   {{orderTotal(order) | moeda}}
                 </td>
                 <td>
-                  {{status_do_pedido[order.status]}}
+                  {{orderStatus(order.status)}}
                   <p v-if="order.status == 'created'">
                     <small>Nossa equipe entrará em contato para proceder com o pedido</small>
+                  </p>
+                  <p v-if="order.status == 'processing'">
+                    <small>Nossa equipe está processando seu pedido</small>
                   </p>
                 </td>
               </tr>
@@ -56,14 +59,12 @@
 import axios from 'axios'
 import Loading from '@/components/Loading'
 import NoItem from '@/components/NoItem'
-import status_do_pedido from '@/data/status-do-pedido.json';
 
 export default {
 
   name: 'ClientOrders',
   data() {
     return {
-      status_do_pedido: status_do_pedido,
       orders: null
     }
   },

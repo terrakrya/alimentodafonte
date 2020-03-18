@@ -8,7 +8,7 @@
     "text": "Em processamento"
   },
   {
-    "value": "completed",
-    "text": "Pedido finalizado"
+    "value": "sent",
+    "text": "Produto enviado"
   }
 ]
