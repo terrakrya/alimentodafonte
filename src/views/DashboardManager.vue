@@ -1,23 +1,23 @@
 <template>
 <div class="dashboard">
   <div class="row">
-    <div class="col-lg-4 col-md-6 col-sm-6" v-if="isLink">
+    <div class="col-lg-4 col-md-6 col-sm-6">
       <div class="card card-stats">
-        <div class="card-header card-header-warning card-header-icon">
-          <router-link to="/organizacoes">
+        <div class="card-header card-header-success card-header-icon">
+          <router-link to="/pedidos">
             <div class="card-icon">
-              <i class="material-icons">device_hub</i>
+              <i class="material-icons">list_alt</i>
             </div>
             <p class="card-category">
-              Organizações
+              Pedidos
             </p>
-            <h3 class="card-title">{{organizations.length}}</h3>
+            <h3 class="card-title">{{orders.length}}</h3>
           </router-link>
         </div>
         <div class="card-footer">
           <div class="stats">
-            <router-link class="btn btn-success btn-icon" to="/cadastrar-organizacao">
-              Cadastrar organização
+            <router-link class="btn btn-success btn-icon" to="/pedidos">
+              Visualizar pedidos
             </router-link>
           </div>
         </div>
@@ -25,21 +25,21 @@
     </div>
     <div class="col-lg-4 col-md-6 col-sm-6">
       <div class="card card-stats">
-        <div class="card-header card-header-rose card-header-icon">
-          <router-link to="/fornecedores">
+        <div class="card-header card-header-success card-header-icon">
+          <router-link to="/ofertas">
             <div class="card-icon">
-              <i class="material-icons">people</i>
+              <i class="material-icons">local_offer</i>
             </div>
             <p class="card-category">
-              Fornecedores
+              Ofertas
             </p>
-            <h3 class="card-title">{{suppliers.length}}</h3>
+            <h3 class="card-title">{{offers.length}}</h3>
           </router-link>
         </div>
         <div class="card-footer">
           <div class="stats">
-            <router-link class="btn btn-success btn-icon" to="/cadastrar-fornecedor">
-              Cadastrar fornecedor
+            <router-link class="btn btn-success btn-icon" to="/cadastrar-oferta">
+              Cadastrar oferta
             </router-link>
           </div>
         </div>
@@ -69,21 +69,43 @@
     </div>
     <div class="col-lg-4 col-md-6 col-sm-6">
       <div class="card card-stats">
-        <div class="card-header card-header-success card-header-icon">
-          <router-link to="/ofertas">
+        <div class="card-header card-header-rose card-header-icon">
+          <router-link to="/fornecedores">
             <div class="card-icon">
-              <i class="material-icons">local_offer</i>
+              <i class="material-icons">people</i>
             </div>
             <p class="card-category">
-              Ofertas
+              Fornecedores
             </p>
-            <h3 class="card-title">{{offers.length}}</h3>
+            <h3 class="card-title">{{suppliers.length}}</h3>
           </router-link>
         </div>
         <div class="card-footer">
           <div class="stats">
-            <router-link class="btn btn-success btn-icon" to="/cadastrar-oferta">
-              Cadastrar oferta
+            <router-link class="btn btn-success btn-icon" to="/cadastrar-fornecedor">
+              Cadastrar fornecedor
+            </router-link>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-6" v-if="isLink">
+      <div class="card card-stats">
+        <div class="card-header card-header-warning card-header-icon">
+          <router-link to="/organizacoes">
+            <div class="card-icon">
+              <i class="material-icons">device_hub</i>
+            </div>
+            <p class="card-category">
+              Organizações
+            </p>
+            <h3 class="card-title">{{organizations.length}}</h3>
+          </router-link>
+        </div>
+        <div class="card-footer">
+          <div class="stats">
+            <router-link class="btn btn-success btn-icon" to="/cadastrar-organizacao">
+              Cadastrar organização
             </router-link>
           </div>
         </div>
@@ -113,6 +135,9 @@
                 <br>
                 <small>Vence {{data.value | moment("add", data.item.product_variation.duration.value + ' ' + date_unit[data.item.product_variation.duration.unit]) | moment('from', 'now')}}</small>
               </div>
+            </template>
+            <template slot="qtd" slot-scope="data">
+              {{data.value - data.item.qtd_ordered}} unidades
             </template>
             <template slot="final_price" slot-scope="data">
               {{data.value | moeda}}
@@ -177,6 +202,7 @@ export default {
       suppliers: [],
       products: [],
       offers: [],
+      orders: [],
       date_unit: {
         'Dias': 'days',
         'Meses': 'months',
@@ -202,6 +228,11 @@ export default {
           label: 'Preço final',
           sortable: true
         },
+        {
+          key: 'qtd',
+          label: 'Disponível',
+          sortable: true
+        },
       ]
     }
   },
@@ -209,9 +240,11 @@ export default {
     axios.get('organizations').then(response => {
       this.organizations = response.data
     }).catch(this.showError)
+
     axios.get('suppliers').then(response => {
       this.suppliers = response.data
     }).catch(this.showError)
+
     axios.get('products', {
       params: {
         populate: 'product_variations'
@@ -219,12 +252,21 @@ export default {
     }).then(response => {
       this.products = response.data
     }).catch(this.showError)
+
     axios.get('offers', {
       params: {
         populate: 'product_variation'
       }
     }).then(response => {
       this.offers = response.data
+    }).catch(this.showError)
+
+    axios.get('orders', {
+      params: {
+        populate: 'items.offer'
+      }
+    }).then(response => {
+      this.orders = response.data
     }).catch(this.showError)
   },
   components: {
