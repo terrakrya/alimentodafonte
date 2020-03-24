@@ -1,5 +1,6 @@
 <template>
   <div class="test">
+      <!-- O id vai definir o workspace com o alias padrão de 'room_ID' -->
       <dorothy-community
 
         id="2"
