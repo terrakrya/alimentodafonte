@@ -9,13 +9,7 @@ const MessageSchema = mongoose.Schema({
   },
   type: String,
   content: Mixed,
-  /*
-  user: {
-    type: ObjectId,
-    ref: 'User',
-    required: true
-  },
-  */
+  userId: ObjectId,
 }, {
   timestamps: true,
 });
