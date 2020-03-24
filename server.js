@@ -89,4 +89,6 @@ var server = app.listen( process.env.PORT || 3000, function(){
   console.log('Listening on port ' + server.address().port);
 });
 
-require('./src/msg-service').initSocket(server);
+const MessageService = require('./src/msg-service')
+MessageService.setAdapter(require('./src/msg-service/mongodb-adapter'));
+MessageService.initSocket(server);

@@ -1,64 +1,36 @@
 const events = require('events');
 const eventEmitter = new events.EventEmitter();
-const mongoose = require('mongoose');
-const Message = mongoose.model('Message');
-
 const moment = require('moment');
 
 const debug = process.env.DEBUG_SOCKET || 0;
 
 class MessageService {
+    setAdapter(adapter) {
+        this.adapter = adapter;
+    }
     initSocket(server) {
         this.instantServer = new InstantMessageServer(server);
         eventEmitter.on('onMessage', (content) => this.onMessage(content));
     }
-    async onMessage({ room, type, content /*, userId*/ }) {
-        // Persistence
+    async onMessage({ room, type, content, userId }) {
 
-        const newMessage = new Message({
+        if(!this.adapter) throw 'No adapter configured!';
+
+        await this.adapter.addMessage({
             room,
             type,
             content,
-            // userId,
-        });
-
-        try {
-            await newMessage.save();
-
-            return true;
-        } catch (err) {
-            console.log(err.message);
-
-            return false;
-        }
+            userId,
+        });        
+        
     }
     async getRoomMessages(room, threshold) {
 
+        if(!this.adapter) throw 'No adapter configured!';
+
         const limit = 10; // TODO: config
 
-        const filter = { room };
-
-        if(threshold) { // Does it work?
-            filter._id = {$lt: mongoose.Types.ObjectId(threshold)};
-        }
-        
-        const messages = await Message.find(filter, null, { limit: limit + 1, sort: { 'createdAt': 'desc' } }).exec();
-
-        messages.reverse();
-
-        let hasMore = false;
-        let messageRef = null;
-        if (messages.length > 10) {
-            messages.shift();
-            messageRef = messages[0]._id;
-            hasMore = true;
-        }
-
-        return {
-            messages,
-            hasMore,
-            messageRef,
-        };
+        return await this.adapter.getRoomMessages(room, threshold, limit);
     }
 }
 
