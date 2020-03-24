@@ -1,5 +1,4 @@
 const express = require('express'),
-    mongoose = require('mongoose'),
     router = express.Router(),
     messageService = require('./index');
 
