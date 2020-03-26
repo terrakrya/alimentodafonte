@@ -146,6 +146,8 @@ export default {
       this.isLoading = true
       auth.login(this.email, this.password, response => {
         if (response.authenticated) {
+          const { _id: id, name, token } = response.currentUser;
+          window.Dorothy.connectUser({ id, name }, token);
           this.$router.replace(this.$route.query.redirect || '/carrinho')
         } else {
           this.error = response.error

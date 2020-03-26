@@ -39,6 +39,9 @@ import Cart from '@/views/Cart.vue'
 import ClientOrders from '@/views/ClientOrders.vue'
 import ClientOrder from '@/views/ClientOrder.vue'
 
+import Test from '@/views/Test.vue';
+import Test2 from '@/views/Test2.vue';
+
 Vue.use(Router)
 
 function requireAuth (to, from, next) {
@@ -58,18 +61,20 @@ export default new Router({
     { path: '/about', component: About },
     { path: '/login', component: Login },
     { path: '/logout',
-      beforeEnter (to, from, next) {
-        auth.logout(() => {
-            store.dispatch('logout')
-            next('/')
-        })
-      }
-    },
-    { path: '/panel',
-      component: Panel,
-      beforeEnter: requireAuth,
-      children: [
+    beforeEnter (to, from, next) {
+      auth.logout(() => {
+        store.dispatch('logout')
+        next('/')
+      })
+    }
+  },
+  { path: '/panel',
+  component: Panel,
+  beforeEnter: requireAuth,
+  children: [
         { path: '/painel', component: Dashboard, beforeEnter: requireAuth },
+        { path: '/test', name: 'test', component: Test, beforeEnter: requireAuth },
+        { path: '/test2', name: 'test2', component: Test2, beforeEnter: requireAuth },
         { path: '/usuarios', component: Users, beforeEnter: requireAuth },
         { path: '/cadastrar-usuario', component: UserForm, beforeEnter: requireAuth },
         { path: '/editar-usuario/:id', component: UserForm, beforeEnter: requireAuth },
