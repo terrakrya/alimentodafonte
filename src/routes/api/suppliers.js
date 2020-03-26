@@ -16,7 +16,7 @@ router.get('/', auth.manager, function(req, res) {
 
   Supplier.find(query).exec(function(err, suppliers) {
     if (err) {
-      res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
+      res.status(422).send('Erro:: ' + err.message);
     } else {
       res.json(suppliers);
     }

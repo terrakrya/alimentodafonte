@@ -14,7 +14,7 @@ router.get('/', auth.manager, function(req, res) {
   }
   Offer.find(query, select(req)).populate(populate(req)).exec(function(err, offers) {
     if (err) {
-      res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
+      res.status(422).send('Erro:: ' + err.message);
     } else {
       res.json(offers);
     }

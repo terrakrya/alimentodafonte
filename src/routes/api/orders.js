@@ -13,7 +13,7 @@ router.get('/', auth.manager, function(req, res) {
   }
   Order.find(query, select(req)).populate('items.offer').populate(populate(req)).exec(function(err, orders) {
     if (err) {
-      res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
+      res.status(422).send('Erro:: ' + err.message);
     } else {
       if (req.payload.roles.includes('manager')) {
         orders = orders.filter(order => {
@@ -53,7 +53,7 @@ router.get('/:id', auth.manager, function(req, res) {
     }]
   }).exec(function(err, order) {
     if (err) {
-      res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
+      res.status(422).send('Erro:: ' + err.message);
     } else {
       if (req.payload.roles.includes('manager')) {
         order.items = order.items.filter(item => {

@@ -15,7 +15,7 @@ router.get('/', auth.manager, function(req, res) {
   }
   Product.find(query, select(req)).populate(populate(req)).exec(function(err, products) {
     if (err) {
-      res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
+      res.status(422).send('Erro:: ' + err.message);
     } else {
       res.json(products);
     }

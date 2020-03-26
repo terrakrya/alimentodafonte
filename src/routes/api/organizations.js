@@ -11,7 +11,7 @@ var express = require('express'),
 router.get('/', auth.manager, function(req, res) {
   Organization.find({}).exec(function(err, organizations) {
     if (err) {
-      res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
+      res.status(422).send('Erro:: ' + err.message);
     } else {
       res.json(organizations);
     }

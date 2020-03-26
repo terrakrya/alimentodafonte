@@ -12,7 +12,7 @@ router.get('/offers', function(req, res) {
   var query = {}
   Offer.find(query, select(req)).populate(populate(req)).exec(function(err, offers) {
     if (err) {
-      res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
+      res.status(422).send('Erro:: ' + err.message);
     } else {
       offers = offers.filter(offer => {
         return (offer.qtd - offer.qtd_ordered) > 0
@@ -26,7 +26,7 @@ router.get('/tags', function(req, res) {
   var query = {}
   Offer.find(query, 'product_variation').populate('product_variation', 'tags').exec(function(err, resp) {
     if (err) {
-      res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
+      res.status(422).send('Erro:: ' + err.message);
     } else {
       console.log(resp);
       var tags = {}
@@ -58,7 +58,7 @@ router.get('/orders', auth.client, function(req, res) {
   }
   Order.find(query, select(req)).populate(populate(req)).exec(function(err, orders) {
     if (err) {
-      res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
+      res.status(422).send('Erro:: ' + err.message);
     } else {
       res.json(orders);
     }
@@ -85,7 +85,7 @@ router.get('/order/:id', auth.client, function(req, res) {
     }]
   }).exec(function(err, order) {
     if (err) {
-      res.status(422).send('Ocorreu um erro ao carregar a lista: ' + err.message);
+      res.status(422).send('Erro:: ' + err.message);
     } else {
       res.json(order);
     }
