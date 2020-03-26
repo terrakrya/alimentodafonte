@@ -15,7 +15,7 @@
           <tr>
             <th>Oferta</th>
             <th class="th-description">Origem</th>
-            <th class="th-description">Fornecedor</th>
+            <th class="th-description">Produtor</th>
             <th class="th-description">Emissor da NF</th>
             <th class="text-center">Valor</th>
             <th class="text-center">Qtd</th>
@@ -37,7 +37,7 @@
               <small>{{item.offer.source_of_shipment}}</small>
             </td>
             <td>
-              <small v-if="item.offer.supplier">{{item.offer.supplier.name}}</small>
+              <small v-if="item.offer.producer">{{item.offer.producer.name}}</small>
             </td>
             <td>
               <small>{{invoiceIssuer(item.offer.invoice_issuer)}}</small>

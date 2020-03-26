@@ -124,7 +124,7 @@ export default {
     } else if (this.$route.query.product_variation) {
       axios.get('product_variations/' + this.$route.query.product_variation, {
         params: {
-          populate: 'product supplier organization'
+          populate: 'product producer organization'
         }
       }).then(response => {
         this.setProductVariation(response.data)
@@ -177,8 +177,8 @@ export default {
       }
       this.product_variation = product_variation
 
-      if (this.product_variation.supplier && this.product_variation.supplier.issue_invoice) {
-        this.form.invoice_issuer = 'supplier'
+      if (this.product_variation.producer && this.product_variation.producer.issue_invoice) {
+        this.form.invoice_issuer = 'producer'
       } else if (this.product_variation.organization && this.product_variation.organization.issue_invoice) {
         this.form.invoice_issuer = 'organization'
       } else {
@@ -188,7 +188,7 @@ export default {
     loadProductVariation(product_variation) {
       axios.get('product_variations/' + product_variation.id, {
         params: {
-          populate: 'product supplier organization'
+          populate: 'product producer organization'
         }
       }).then(response => {
         this.setProductVariation(response.data)

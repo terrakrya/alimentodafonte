@@ -1,22 +1,22 @@
 <template>
-<div class="supplier-form">
+<div class="producer-form">
   <div class="col-md-8 col-12 mr-auto ml-auto">
     <div class="wizard-container">
       <div class="card card-wizard active" data-color="rose" id="wizardProfile">
         <b-form @submit.prevent="save" v-if="!isLoading">
           <div class="card-header card-header-icon card-header-rose text-center">
             <div class="card-icon">
-              <router-link to="/fornecedores">
+              <router-link to="/produtores">
                 <i class="material-icons">people</i>
               </router-link>
             </div>
             <h3 class="card-title">
-              Cadastrar fornecedor
+              Cadastrar produtor
             </h3>
             <h5 class="card-description">Preencha os dados abaixo para continuar</h5>
           </div>
           <div class="wizard-navigation">
-            <ul class="nav nav-pills supplier-form">
+            <ul class="nav nav-pills producer-form">
               <li class="nav-item active">
                 <span class="nav-link active">
                   Registro
@@ -42,16 +42,16 @@
           <div class="card-body">
             <div class="tab-content">
               <div class="tab-pane active">
-                <h5 class="info-text">Insira os dados da organização fornecedora</h5>
+                <h5 class="info-text">Insira os dados da rede produtora</h5>
                 <div class="row justify-content-center">
                   <div class="col-lg-10">
-                    <b-form-group label="CNPJ da organização *" class="bmd-form-group">
+                    <b-form-group label="CNPJ da rede *" class="bmd-form-group">
                       <b-form-input v-model="form.cnpj" v-validate="'required'" name="cnpj" v-mask="['##.###.###/####-##']" />
                       <field-error :msg="veeErrors" field="cnpj" />
                     </b-form-group>
                   </div>
                   <div class="col-lg-10" v-if="isAdmin">
-                    <b-form-group label="Redes que englobam esta organização *" class="bmd-form-group">
+                    <b-form-group label="Redes que englobam esta rede *" class="bmd-form-group">
                       <form-entities-select type="organizations" :form="form" field="organizations" />
                       <field-error :msg="veeErrors" field="organizations" />
                     </b-form-group>
@@ -79,7 +79,7 @@ import FieldError from '@/components/FieldError'
 
 export default {
 
-  name: 'SupplierRegisterForm',
+  name: 'ProducerRegisterForm',
   data() {
     return {
       form: {
@@ -98,13 +98,13 @@ export default {
           this.error = false
           axios({
             method: 'POST',
-            url: 'suppliers',
+            url: 'producers',
             data: this.form
           }).then(resp => {
-            var supplier = resp.data
-            if (supplier && supplier._id) {
+            var producer = resp.data
+            if (producer && producer._id) {
               this.notify("Cadastro realizado com sucesso!")
-              this.$router.replace('/editar-fornecedor/' + supplier._id)
+              this.$router.replace('/editar-produtor/' + producer._id)
             }
             this.isSending = false
           }).catch(this.showError)

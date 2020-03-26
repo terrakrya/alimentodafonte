@@ -48,8 +48,8 @@ router.get('/:id', auth.manager, function(req, res) {
       path: 'product_variation',
       model: 'ProductVariation'
     }, {
-      path: 'supplier',
-      model: 'Supplier'
+      path: 'producer',
+      model: 'Producer'
     }]
   }).exec(function(err, order) {
     if (err) {

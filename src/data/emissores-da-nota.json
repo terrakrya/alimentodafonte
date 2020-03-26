@@ -1,7 +1,7 @@
 [
   {
-    "value": "supplier",
-    "text": "Nota emitida pelo fornecedor"
+    "value": "producer",
+    "text": "Nota emitida pelo produtor"
   },
   {
     "value": "organization",

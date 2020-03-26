@@ -49,8 +49,8 @@ OrganizationSchema.virtual('users', {
   foreignField: 'organization'
 });
 
-OrganizationSchema.virtual('suppliers', {
-  ref: 'Supplier',
+OrganizationSchema.virtual('producers', {
+  ref: 'Producer',
   localField: '_id',
   foreignField: 'organizations'
 });

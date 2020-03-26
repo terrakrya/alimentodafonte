@@ -2,7 +2,7 @@ var router = require('express').Router();
 
 router.use('/', require('./users'));
 router.use('/organizations', require('./organizations'));
-router.use('/suppliers', require('./suppliers'));
+router.use('/producers', require('./producers'));
 router.use('/products', require('./products'));
 router.use('/product_variations', require('./product_variations'));
 router.use('/offers', require('./offers'));

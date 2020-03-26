@@ -96,7 +96,7 @@ router.post('/', auth.link, function(req, res) {
       newOrganization.save(function(err, organization) {
         if (err) {
           if (err.message.includes('duplicate')) {
-            res.status(422).send('Esta organização já está cadastrada');
+            res.status(422).send('Esta rede já está cadastrada');
           } else {
             res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
           }
@@ -146,12 +146,12 @@ router.delete('/:id', auth.link, function(req, res) {
 
   Organization.findOne({
     _id: req.params.id
-  }).populate('users suppliers').exec(function(err, organization) {
+  }).populate('users producers').exec(function(err, organization) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
-      if (organization.suppliers && organization.suppliers.length) {
-        res.status(422).send('Não é possível excluír! Existem fornecedores cadastrados nesta organização');
+      if (organization.producers && organization.producers.length) {
+        res.status(422).send('Não é possível excluír! Existem produtores cadastrados nesta rede');
       } else {
         organization.users.forEach(user => {
           user.remove();

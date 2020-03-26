@@ -44,13 +44,13 @@
               <div class="tab-pane" :class="tab == 0 ? 'active' : ''">
                 <div class="row justify-content-center">
                   <div class="col-lg-12">
-                    <b-form-group label="Tipo de organização *" class="form-check">
+                    <b-form-group label="Tipo de rede *" class="form-check">
                       <b-form-checkbox-group  v-model="form.organization_types" :options="tipos_de_organizacao" v-validate="'required'" name="organization_types"  />
                       <field-error :msg="veeErrors" field="organization_types" />
                     </b-form-group>
                   </div>
                   <div class="col-lg-12">
-                    <b-form-group label="Histórico da organização" description="Escreva um breve resumo da história da organização" class="bmd-form-group">
+                    <b-form-group label="Histórico da rede" description="Escreva um breve resumo da história da rede" class="bmd-form-group">
                       <b-form-textarea v-model="form.history" name="history" />
                     </b-form-group>
                   </div>

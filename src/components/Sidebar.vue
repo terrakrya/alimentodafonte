@@ -41,13 +41,13 @@
       <li class="nav-item" @click="toggleMenu">
         <router-link class="nav-link" to="/organizacoes" v-if="isLink">
           <i class="material-icons">device_hub</i>
-          <p>Organizações</p>
+          <p>Redes</p>
         </router-link>
       </li>
       <li class="nav-item" @click="toggleMenu">
-        <router-link class="nav-link" to="/fornecedores">
+        <router-link class="nav-link" to="/produtores">
           <i class="material-icons">people</i>
-          <p>Fornecedores</p>
+          <p>Produtores</p>
         </router-link>
       </li>
       <li class="nav-item" @click="toggleMenu">

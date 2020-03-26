@@ -80,8 +80,8 @@ router.get('/order/:id', auth.client, function(req, res) {
       path: 'product_variation',
       model: 'ProductVariation'
     }, {
-      path: 'supplier',
-      model: 'Supplier'
+      path: 'producer',
+      model: 'Producer'
     }]
   }).exec(function(err, order) {
     if (err) {

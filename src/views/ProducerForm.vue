@@ -1,22 +1,22 @@
 <template>
-<div class="supplier-form">
+<div class="producer-form">
   <div class="col-md-12 mr-auto ml-auto">
     <div class="wizard-container">
       <div class="card card-wizard active" data-color="rose" id="wizardProfile">
         <b-form @submit.prevent="save" v-if="!isLoading">
           <div class="card-header card-header-icon card-header-rose text-center">
             <div class="card-icon">
-              <router-link to="/fornecedores">
+              <router-link to="/produtores">
                 <i class="material-icons">people</i>
               </router-link>
             </div>
             <h3 class="card-title">
-              {{supplier.name}}
+              {{producer.name}}
             </h3>
-            <h5 class="card-description">{{supplier.description}}</h5>
+            <h5 class="card-description">{{producer.description}}</h5>
           </div>
           <div class="wizard-navigation">
-            <ul class="nav nav-pills supplier-form">
+            <ul class="nav nav-pills producer-form">
               <li class="nav-item">
                 <a class="nav-link" :class="tab == 0 ? 'active' : ''" @click="setTab(0)">
                   Registro
@@ -45,13 +45,13 @@
                 <b-form-group label="CNPJ" class="bmd-form-group">
                   {{form.cnpj | cnpj}}
                 </b-form-group>
-                <b-form-group label="Nome da organização" class="bmd-form-group">
+                <b-form-group label="Nome da rede" class="bmd-form-group">
                   <b-form-input v-model="form.name" name="name" />
                 </b-form-group>
                 <b-form-group label="Atividade principal" class="bmd-form-group">
                   <b-form-input v-model="form.description" name="description" />
                 </b-form-group>
-                <b-form-group label="Redes que englobam esta organização *" class="bmd-form-group" v-if="isAdmin">
+                <b-form-group label="Redes que englobam esta rede *" class="bmd-form-group" v-if="isAdmin">
                   <form-entities-select type="organizations" :form="form" field="organizations" />
                   <field-error :msg="veeErrors" field="organizations" />
                 </b-form-group>
@@ -59,7 +59,7 @@
               <div class="tab-pane" :class="tab == 1 ? 'active' : ''">
                 <div class="row justify-content-center">
                   <div class="col-lg-12">
-                    <b-form-group label="Histórico do fornecedor" description="Escreva um breve resumo da história do fornecedor" class="bmd-form-group">
+                    <b-form-group label="Histórico do produtor" description="Escreva um breve resumo da história do produtor" class="bmd-form-group">
                       <b-form-textarea v-model="form.history" name="history" />
                     </b-form-group>
                   </div>
@@ -127,7 +127,7 @@ import PicturesUpload from '@/components/PicturesUpload'
 
 export default {
 
-  name: 'SupplierForm',
+  name: 'ProducerForm',
   data() {
     return {
       tab: 1,
@@ -166,7 +166,7 @@ export default {
         },
         issue_invoice: false
       },
-      supplier: null,
+      producer: null,
     }
   },
   created() {
@@ -175,13 +175,13 @@ export default {
   methods: {
     edit(id) {
       this.isLoading = true
-      axios.get('suppliers/' + id, {
+      axios.get('producers/' + id, {
         params: {
           populate: 'users'
         }
       }).then(response => {
         this.apiDataToForm(this.form, response.data)
-        this.supplier = response.data
+        this.producer = response.data
         this.isLoading = false
       }).catch(this.showError);
     },
@@ -192,14 +192,14 @@ export default {
           this.error = false
           axios({
             method: 'PUT',
-            url: 'suppliers/' + this.$route.params.id,
+            url: 'producers/' + this.$route.params.id,
             data: this.form
           }).then(resp => {
-            var supplier = resp.data
-            if (supplier && supplier._id) {
+            var producer = resp.data
+            if (producer && producer._id) {
               this.notify("Os dados foram salvos!")
               if (this.tab == 3) {
-                this.$router.replace('/fornecedores')
+                this.$router.replace('/produtores')
               } else {
                 window.scrollTo(0,0);
                 this.tab += 1

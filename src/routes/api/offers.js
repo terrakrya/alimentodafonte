@@ -44,7 +44,7 @@ router.post('/', auth.manager, function(req, res) {
     } else {
       newOffer.product = product_variation.product._id
       newOffer.organization = product_variation.organization
-      newOffer.supplier = product_variation.product.supplier
+      newOffer.producer = product_variation.product.producer
       newOffer.save(function(err, offer) {
         if (err) {
           res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);

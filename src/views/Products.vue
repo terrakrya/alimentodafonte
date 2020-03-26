@@ -21,8 +21,8 @@
                 <h4>{{data.item.name}}</h4>
               </router-link>
             </template>
-            <template slot="supplier" slot-scope="data">
-              <router-link :to="'/editar-fornecedor/'+ data.value._id">
+            <template slot="producer" slot-scope="data">
+              <router-link :to="'/editar-produtor/'+ data.value._id">
                 {{data.value.name}}
               </router-link>
             </template>
@@ -73,8 +73,8 @@ export default {
     this.list()
     if (this.isAdmin) {
       this.table_fields.push({
-        key: 'supplier',
-        label: 'Fornecedor'
+        key: 'producer',
+        label: 'Produtor'
       })
     }
     this.table_fields.push({
@@ -88,7 +88,7 @@ export default {
     async list() {
       axios.get('products', {
         params: {
-          populate: 'supplier product_variations'
+          populate: 'producer product_variations'
         }
       }).then(response => {
         this.products = response.data

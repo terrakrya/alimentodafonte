@@ -65,8 +65,8 @@
                 </div>
                 <br>
                 <br>
-                <b-form-group label="Fornecedor *" class="bmd-form-group">
-                  <form-entity-select type="suppliers" :form="form" field="supplier" :validate="'required'" />
+                <b-form-group label="Produtor *" class="bmd-form-group">
+                  <form-entity-select type="producers" :form="form" field="producer" :validate="'required'" />
                 </b-form-group>
                 <b-form-group label="Nome do produto *" class="bmd-form-group">
                   <b-form-input v-model="form.name" v-validate="'required'" name="name" description="Yuka" />
@@ -176,7 +176,7 @@ export default {
       categorias_de_produtos: categorias_de_produtos,
       tab: 0,
       form: {
-        supplier: null,
+        producer: null,
         category: '',
         name: '',
         images: [],

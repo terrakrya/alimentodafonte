@@ -5,7 +5,7 @@ const mongoose = require('mongoose'),
   ContactPersonSchema = require('./ContactPerson'),
   BankAccountSchema = require('./BankAccount');
 
-const SupplierSchema = mongoose.Schema({
+const ProducerSchema = mongoose.Schema({
   organizations: [{
     type: ObjectId,
     ref: 'Organization'
@@ -47,10 +47,10 @@ const SupplierSchema = mongoose.Schema({
   toJSON: { virtuals: true }
 });
 
-SupplierSchema.virtual('products', {
+ProducerSchema.virtual('products', {
   ref: 'Product',
   localField: '_id',
-  foreignField: 'supplier'
+  foreignField: 'producer'
 });
 
-mongoose.model('Supplier', SupplierSchema);
+mongoose.model('Producer', ProducerSchema);

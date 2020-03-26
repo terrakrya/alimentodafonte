@@ -7,19 +7,14 @@ const OfferSchema = mongoose.Schema({
     ref: 'Organization',
     required: true
   },
-  supplier: {
+  producer: {
     type: ObjectId,
-    ref: 'Supplier',
+    ref: 'Producer',
     required: true
   },
   product: {
     type: ObjectId,
     ref: 'Product',
-    required: true
-  },
-  product_variation: {
-    type: ObjectId,
-    ref: 'ProductVariation',
     required: true
   },
   lot: String,

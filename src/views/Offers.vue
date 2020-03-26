@@ -120,7 +120,7 @@ export default {
     async list() {
       axios.get('offers', {
         params: {
-          populate: 'product_variation supplier organization'
+          populate: 'product_variation producer organization'
         }
       }).then(response => {
         this.offers = response.data

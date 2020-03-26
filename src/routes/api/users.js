@@ -192,12 +192,12 @@ router.get('/is_alive', function(req, res) {
 });
 
 router.get('/fix_data', function(req, res) {
-  Product.find().populate('supplier product_variations').exec(function(err, products) {
+  Product.find().populate('producer product_variations').exec(function(err, products) {
     if (err) {
       res.status(422).send('Erro:: ' + err.message);
     } else {
       products.forEach(product => {
-        var org = product.supplier.organizations[0]
+        var org = product.producer.organizations[0]
         product.organization = org
         product.save(function(err) {
           if (err) {

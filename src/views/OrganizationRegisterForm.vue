@@ -10,7 +10,7 @@
             </router-link>
           </div>
           <h3 class="card-title">
-            Cadastrar organização
+            Cadastrar rede
           </h3>
           <h5 class="card-description">Preencha os dados abaixo para continuar</h5>
         </div>
@@ -42,10 +42,10 @@
           <div class="card-body">
             <div class="tab-content">
               <div class="tab-pane active">
-                <h5 class="info-text">Insira os dados do responsável e o CNPJ da organização</h5>
+                <h5 class="info-text">Insira os dados do responsável e o CNPJ da rede</h5>
                 <div class="row justify-content-center">
                   <div class="col-lg-10">
-                    <b-form-group label="Tipo de organização *" class="form-check">
+                    <b-form-group label="Tipo de rede *" class="form-check">
                       <b-form-checkbox-group  v-model="form.organization_types" :options="tipos_de_organizacao" v-validate="'required'" name="organization_types"  />
                       <field-error :msg="veeErrors" field="organization_types" />
                     </b-form-group>

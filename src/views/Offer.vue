@@ -112,21 +112,21 @@
             </div>
           </div>
         </div>
-        <div class="card card-collapse" v-if="offer.supplier">
+        <div class="card card-collapse" v-if="offer.producer">
           <div class="card-header">
             <h5 class="mb-0">
-              Fornecedor
+              Produtor
             </h5>
           </div>
           <div>
             <div class="card-body">
               <div class="row">
                 <div class="col-md-3">
-                  <img class="img-thumbnail" :src="defaultThumb(offer.supplier.images)" :alt="offer.supplier.name">
+                  <img class="img-thumbnail" :src="defaultThumb(offer.producer.images)" :alt="offer.producer.name">
                 </div>
                 <div class="col-md-9">
-                  <h5><strong>{{offer.supplier.name}}</strong></h5>
-                  <p>{{offer.supplier.history}}</p>
+                  <h5><strong>{{offer.producer.name}}</strong></h5>
+                  <p>{{offer.producer.history}}</p>
                 </div>
               </div>
             </div>
@@ -184,7 +184,7 @@ export default {
   created() {
     axios.get('shop/offer/' + this.$route.params.id, {
       params: {
-        populate: 'product_variation supplier organization orders'
+        populate: 'product_variation producer organization orders'
       }
     }).then(response => {
       this.offer = response.data

@@ -45,12 +45,12 @@ export default {
       })
     } else {
       switch (this.type) {
-        case 'suppliers':
-          this.list = (await this.loadList('suppliers')).map(supplier => ({
-            id: supplier._id,
-            title: supplier.name,
-            description: supplier.description,
-            picture: supplier.images && supplier.images.length ? supplier.images[0].thumb : '',
+        case 'producers':
+          this.list = (await this.loadList('producers')).map(producer => ({
+            id: producer._id,
+            title: producer.name,
+            description: producer.description,
+            picture: producer.images && producer.images.length ? producer.images[0].thumb : '',
           })).sort(function(a, b) {
             return a.title.localeCompare(b.title);
           })

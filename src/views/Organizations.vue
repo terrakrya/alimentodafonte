@@ -1,16 +1,16 @@
 <template>
 <div>
-  <router-link class="btn btn-success btn-round btn-add" to="/cadastrar-organizacao"><i class="material-icons">add</i>Cadastrar organização</router-link>
+  <router-link class="btn btn-success btn-round btn-add" to="/cadastrar-organizacao"><i class="material-icons">add</i>Cadastrar rede</router-link>
   <div class="card">
     <div class="card-header card-header-icon card-header-rose">
       <div class="card-icon">
         <i class="material-icons">device_hub</i>
       </div>
-      <h4 class="card-title ">Organizações</h4>
+      <h4 class="card-title ">Redes</h4>
     </div>
     <div class="card-body">
       <b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-      <loading :loading="!organizations && !error" msg="Carregando lista de organizações" />
+      <loading :loading="!organizations && !error" msg="Carregando lista de redes" />
       <no-item :list="organizations" />
       <div class="table-responsive">
         <div v-if="organizations && organizations.length">
@@ -72,7 +72,7 @@ export default {
         },
         {
           key: 'organization_types',
-          label: 'Tipo de organização',
+          label: 'Tipo de rede',
           sortable: true
         },
         {

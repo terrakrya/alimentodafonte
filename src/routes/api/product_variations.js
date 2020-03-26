@@ -8,7 +8,6 @@ var express = require('express'),
   Product = mongoose.model('Product'),
   ProductVariation = mongoose.model('ProductVariation');
 
-
 router.get('/', auth.manager, function(req, res) {
   var query = {}
   if (req.payload.roles.includes('manager')) {
@@ -59,7 +58,7 @@ router.post('/', auth.manager, function(req, res) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
       newProductVariation.organization = product.organization
-      newProductVariation.supplier = product.supplier
+      newProductVariation.producer = product.producer
       newProductVariation.save(function(err, product_variation) {
         if (err) {
           res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);

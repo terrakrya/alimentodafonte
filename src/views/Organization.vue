@@ -1,6 +1,6 @@
 <template>
 	<div class="organization">
-		<breadcrumb :links="[['Organizações', '/organizacoes']]" active="Dados da organização" />
+		<breadcrumb :links="[['Redes', '/organizacoes']]" active="Dados da rede" />
 		<div class="panel panel-headline data-list">
 			<div class="panel-body">
 				<b-alert variant="danger" show v-if="error">{{error}}</b-alert>

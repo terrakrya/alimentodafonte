@@ -5,7 +5,7 @@ var express = require('express'),
   auth = require('../auth'),
   populate = require('../utils').populate,
   request = require('request'),
-  Supplier = mongoose.model('Supplier');
+  Producer = mongoose.model('Producer');
 
 router.get('/', auth.manager, function(req, res) {
 
@@ -14,11 +14,11 @@ router.get('/', auth.manager, function(req, res) {
     query.organizations = req.payload.organization
   }
 
-  Supplier.find(query).exec(function(err, suppliers) {
+  Producer.find(query).exec(function(err, producers) {
     if (err) {
       res.status(422).send('Erro:: ' + err.message);
     } else {
-      res.json(suppliers);
+      res.json(producers);
     }
   });
 });
@@ -33,23 +33,23 @@ router.get('/search', auth.manager, function(req, res) {
     query.organizations = req.payload.organization
   }
 
-  Supplier.findOne(query).exec(function(err, supplier) {
+  Producer.findOne(query).exec(function(err, producer) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
-      res.json(supplier);
+      res.json(producer);
     }
   });
 });
 
 router.get('/:id', auth.manager, function(req, res) {
-  Supplier.findOne({
+  Producer.findOne({
     _id: req.params.id
-  }).populate(populate(req)).exec(function(err, supplier) {
+  }).populate(populate(req)).exec(function(err, producer) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
-      res.json(supplier);
+      res.json(producer);
     }
   });
 });
@@ -60,10 +60,10 @@ router.post('/', auth.manager, function(req, res) {
     params.organizations = [req.payload.organization]
   }
 
-  var newSupplier = new Supplier(params);
-  newSupplier.cnpj = newSupplier.cnpj.replace(/\D/g, '')
+  var newProducer = new Producer(params);
+  newProducer.cnpj = newProducer.cnpj.replace(/\D/g, '')
 
-  request('https://www.receitaws.com.br/v1/cnpj/' + newSupplier.cnpj, {
+  request('https://www.receitaws.com.br/v1/cnpj/' + newProducer.cnpj, {
     json: true
   }, (err, resp, body) => {
     if (err) {
@@ -73,49 +73,49 @@ router.post('/', auth.manager, function(req, res) {
     } else if (!body.nome) {
       res.status(422).send('Ocorreu um erro ao validar o CNPJ');
     } else {
-      newSupplier.name = body.fantasia
-      if (!newSupplier.name) {
-        newSupplier.name = body.nome
+      newProducer.name = body.fantasia
+      if (!newProducer.name) {
+        newProducer.name = body.nome
       }
-      newSupplier.slug = slugify(newSupplier.name).toLowerCase()
-      newSupplier.corporate_name = body.nome
+      newProducer.slug = slugify(newProducer.name).toLowerCase()
+      newProducer.corporate_name = body.nome
       if (body.atividade_principal && body.atividade_principal.length) {
-        newSupplier.description = body.atividade_principal[0].text
+        newProducer.description = body.atividade_principal[0].text
       }
-      newSupplier.address = {
+      newProducer.address = {
         uf: body.uf,
         city: body.municipio,
         postal_code: body.cep,
         address: [body.logradouro, body.numero, body.bairro].join(', ')
       }
       if (body.email) {
-        newSupplier.email = body.email
+        newProducer.email = body.email
       }
       if (body.telefone) {
-        newSupplier.phones = body.telefone.split(' / ')
+        newProducer.phones = body.telefone.split(' / ')
       }
-      newSupplier.contact_persons = []
+      newProducer.contact_persons = []
       if (body.qsa && body.qsa.length) {
         body.qsa.forEach(contact_person => {
-            newSupplier.contact_persons.push({
+            newProducer.contact_persons.push({
               name: contact_person.nome,
               position: contact_person.qual.split('-')[1]
             })
         })
       }
 
-      newSupplier.legal_format = body.natureza_juridica
-      newSupplier.tax_regime = body.porte
-      newSupplier.subscription = body.abertura
-      newSupplier.save(function(err, supplier) {
+      newProducer.legal_format = body.natureza_juridica
+      newProducer.tax_regime = body.porte
+      newProducer.subscription = body.abertura
+      newProducer.save(function(err, producer) {
         if (err) {
           if (err.message.includes('duplicate')) {
-            res.status(422).send('Este fornecedor já está cadastrado');
+            res.status(422).send('Este produtor já está cadastrado');
           } else {
             res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
           }
         } else {
-          res.send(supplier);
+          res.send(producer);
         }
       });
     }
@@ -125,33 +125,33 @@ router.post('/', auth.manager, function(req, res) {
 
 router.put('/:id', auth.manager, function(req, res) {
   var params = req.body
-  Supplier.findOneAndUpdate({
+  Producer.findOneAndUpdate({
     _id: req.params.id
   }, {
     $set: params
   }, {
     upsert: true
-  }, function(err, newSupplier) {
+  }, function(err, newProducer) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao atualizar: ' + err.message);
     } else {
-      res.send(newSupplier);
+      res.send(newProducer);
     }
   });
 });
 
 router.delete('/:id', auth.manager, function(req, res) {
-  Supplier.findOne({
+  Producer.findOne({
     _id: req.params.id
-  }).populate('products').exec(function(err, supplier) {
+  }).populate('products').exec(function(err, producer) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
-      if (supplier.products && supplier.products.length) {
-        res.status(422).send('Não é possível excluír! Existem produtos cadastrados para este fornecedor');
+      if (producer.products && producer.products.length) {
+        res.status(422).send('Não é possível excluír! Existem produtos cadastrados para este produtor');
       } else {
-        supplier.remove();
-        res.send(supplier);
+        producer.remove();
+        res.send(producer);
       }
     }
   })

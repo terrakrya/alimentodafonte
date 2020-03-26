@@ -17,9 +17,9 @@ import Organization from '@/views/Organization.vue'
 import OrganizationForm from '@/views/OrganizationForm.vue'
 import OrganizationRegisterForm from '@/views/OrganizationRegisterForm.vue'
 
-import Suppliers from '@/views/Suppliers.vue'
-import SupplierForm from '@/views/SupplierForm.vue'
-import SupplierRegisterForm from '@/views/SupplierRegisterForm.vue'
+import Producers from '@/views/Producers.vue'
+import ProducerForm from '@/views/ProducerForm.vue'
+import ProducerRegisterForm from '@/views/ProducerRegisterForm.vue'
 
 import Products from '@/views/Products.vue'
 import ProductForm from '@/views/ProductForm.vue'
@@ -85,9 +85,9 @@ export default new Router({
         { path: '/editar-organizacao/:id', component: OrganizationForm, beforeEnter: requireAuth },
         { path: '/organizacao/:id', component: Organization, beforeEnter: requireAuth },
 
-        { path: '/fornecedores', component: Suppliers, beforeEnter: requireAuth },
-        { path: '/cadastrar-fornecedor', component: SupplierRegisterForm, beforeEnter: requireAuth },
-        { path: '/editar-fornecedor/:id', component: SupplierForm, beforeEnter: requireAuth },
+        { path: '/produtores', component: Producers, beforeEnter: requireAuth },
+        { path: '/cadastrar-produtor', component: ProducerRegisterForm, beforeEnter: requireAuth },
+        { path: '/editar-produtor/:id', component: ProducerForm, beforeEnter: requireAuth },
 
         { path: '/produtos', component: Products, beforeEnter: requireAuth },
         { path: '/cadastrar-produto', component: ProductForm, beforeEnter: requireAuth },

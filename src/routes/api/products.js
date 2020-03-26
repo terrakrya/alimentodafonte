@@ -5,7 +5,7 @@ var express = require('express'),
   auth = require('../auth'),
   populate = require('../utils').populate,
   select = require('../utils').select,
-  Supplier = mongoose.model('Supplier'),
+  Producer = mongoose.model('Producer'),
   Product = mongoose.model('Product');
 
 router.get('/', auth.manager, function(req, res) {
@@ -50,13 +50,13 @@ router.post('/', auth.manager, function(req, res) {
   var newProduct = new Product(req.body);
   newProduct.slug = slugify(newProduct.name).toLowerCase()
 
-  Supplier.findOne({
-    _id: newProduct.supplier
-  }).exec(function(err, supplier) {
+  Producer.findOne({
+    _id: newProduct.producer
+  }).exec(function(err, producer) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
-      newProduct.organization = supplier.organizations[0]
+      newProduct.organization = producer.organizations[0]
       newProduct.save(function(err, product) {
         if (err) {
           res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);

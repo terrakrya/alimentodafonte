@@ -70,20 +70,20 @@
     <div class="col-lg-4 col-md-6 col-sm-6">
       <div class="card card-stats">
         <div class="card-header card-header-rose card-header-icon">
-          <router-link to="/fornecedores">
+          <router-link to="/produtores">
             <div class="card-icon">
               <i class="material-icons">people</i>
             </div>
             <p class="card-category">
-              Fornecedores
+              Produtores
             </p>
-            <h3 class="card-title">{{suppliers.length}}</h3>
+            <h3 class="card-title">{{producers.length}}</h3>
           </router-link>
         </div>
         <div class="card-footer">
           <div class="stats">
-            <router-link class="btn btn-success btn-icon" to="/cadastrar-fornecedor">
-              Cadastrar fornecedor
+            <router-link class="btn btn-success btn-icon" to="/cadastrar-produtor">
+              Cadastrar produtor
             </router-link>
           </div>
         </div>
@@ -97,7 +97,7 @@
               <i class="material-icons">device_hub</i>
             </div>
             <p class="card-category">
-              Organizações
+              Redes
             </p>
             <h3 class="card-title">{{organizations.length}}</h3>
           </router-link>
@@ -105,7 +105,7 @@
         <div class="card-footer">
           <div class="stats">
             <router-link class="btn btn-success btn-icon" to="/cadastrar-organizacao">
-              Cadastrar organização
+              Cadastrar rede
             </router-link>
           </div>
         </div>
@@ -199,7 +199,7 @@ export default {
   data() {
     return {
       organizations: [],
-      suppliers: [],
+      producers: [],
       products: [],
       offers: [],
       orders: [],
@@ -241,8 +241,8 @@ export default {
       this.organizations = response.data
     }).catch(this.showError)
 
-    axios.get('suppliers').then(response => {
-      this.suppliers = response.data
+    axios.get('producers').then(response => {
+      this.producers = response.data
     }).catch(this.showError)
 
     axios.get('products', {
