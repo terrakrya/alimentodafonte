@@ -5,7 +5,7 @@
       <div class="container">
         <div class="navbar-translate">
           <router-link :to="'/loja'" class="navbar-brand">
-            Biobá
+            Alimento da fonte
           </router-link>
           <ul class="navbar-nav ml-auto pull-right">
             <li class="dropdown nav-item">
@@ -36,7 +36,7 @@
             <div class="brand">
               <h1 class="title">
                 <router-link :to="'/loja'" class="navbar-brand">
-                  Loja Biobá
+                  Loja Alimento da fonte
                 </router-link>
               </h1>
               <h4>O seu Marketplace de <b>Produtos da Floresta</b></h4>
