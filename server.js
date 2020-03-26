@@ -22,7 +22,7 @@ app.use(express.static(__dirname + '/dist'));
 app.use('/uploads', express.static(__dirname + '/uploads'));
 
 
-app.use(session({ secret: 'sociobio', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }));
+app.use(session({ secret: 'alimentodafonte', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }));
 
 if (!isProduction) {
   app.use(errorhandler());
@@ -31,7 +31,7 @@ if (!isProduction) {
 if(isProduction){
   mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
 } else {
-  mongoose.connect('mongodb://localhost/sociobio', { useNewUrlParser: true });
+  mongoose.connect('mongodb://localhost/alimentodafonte', { useNewUrlParser: true });
   mongoose.set('debug', true);
 }
 

@@ -4,7 +4,7 @@
     <a href="/" class="simple-text logo-mini">
     </a>
     <a href="/" class="simple-text logo-normal">
-      Biobá
+      Alimento da fonte
     </a>
   </div>
   <div class="sidebar-wrapper">

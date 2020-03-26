@@ -1,4 +1,6 @@
-# Biobá Plataforma SocioBio
+# Alimento da fonte
+
+## Plataforma de distribuição de alimentos e incentivo a iniciativas de ciclo curto
 
 ## Development
 
@@ -66,7 +68,7 @@ In the first time you run the app you will need to generate the first admin user
 
 It will generates an admin user with the the following credentials:
 
-User: admin@sociobio.com
+User: admin@alimentodafonte.com
 
 Pass: zyY5TeRl8k (this should be changed after the first access in production)
 Receita WS: 3e1d56e474c2d592286bbba78eac5700f87eea5641ba6206150df0e3572fe50e

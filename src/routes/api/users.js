@@ -156,7 +156,7 @@ router.get('/init', function(req, res) {
         var user = new User();
 
         user.name = 'Administrador do sistema'
-        user.email = 'admin@sociobio.com'
+        user.email = 'admin@alimentodafonte.com'
         user.cnpj = 'admin'
         user.roles = ['admin']
 

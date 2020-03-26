@@ -3,7 +3,7 @@
   <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top text-white">
     <div class="container">
       <div class="navbar-wrapper">
-        <a class="navbar-brand" href="#pablo">Plataforma <strong>SocioBio</strong></a>
+        <a class="navbar-brand" href="#pablo">Alimento da fonte <strong>Saúde perto de você</strong></a>
       </div>
       <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Mudar navegação">
         <span class="sr-only">Mudar navegação</span>
@@ -113,7 +113,7 @@
 <!-- <div class="left">
   <div class="content">
     <div class="brand">
-      <h1 class="logo"><a href="/"><span>Plataforma </span><strong>SocioBio</strong></a></h1>
+      <h1 class="logo"><a href="/"><span>Alimento da fonte </span><strong>Saúde perto de você</strong></a></h1>
     </div>
     <p v-if="$route.query.redirect">
       Você precisa entrar com seus dados para acessar.

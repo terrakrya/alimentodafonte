@@ -2,7 +2,7 @@
 <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
   <div class="container-fluid">
     <div class="navbar-wrapper">
-      <a class="navbar-brand" href="/#/painel"><strong>Biobá</strong> Plataforma SocioBio</a>
+      <a class="navbar-brand" href="/#/painel"><strong>Alimento da fonte</strong> Saúde perto de você</a>
     </div>
     <button @click="toggleMenu" class="navbar-toggler" :class="showMenu ? 'toggled' : ''" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Menu">
       <span class="sr-only">Menu</span>
@@ -15,7 +15,7 @@
   <!-- <div class="brand">
       <h1 class="logo">
         <i class="fa fa-bars menu-buttom" @click="toggleMenu"></i>
-        <a href="/"><span>Plataforma </span><strong>SocioBio</strong></a></h1>
+        <a href="/"><span>Alimento da fonte </span><strong>Saúde perto de você</strong></a></h1>
     </div>
     <div class="container-fluid">
       <div class="navbar-btn">
