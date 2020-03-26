@@ -42,6 +42,7 @@ require('./src/models/Product');
 require('./src/models/ProductVariation');
 require('./src/models/Offer');
 require('./src/models/Order');
+require('./src/models/Message');
 
 require('./src/config/passport');
 
@@ -87,3 +88,7 @@ var server = app.listen( process.env.PORT || 3000, function(){
   // eslint-disable-next-line no-console
   console.log('Listening on port ' + server.address().port);
 });
+
+const MessageService = require('./src/msg-service')
+MessageService.setAdapter(require('./src/msg-service/mongodb-adapter'));
+MessageService.initSocket(server);
