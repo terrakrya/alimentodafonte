@@ -42,7 +42,7 @@
           <div class="card-body">
             <div class="tab-content">
               <div class="tab-pane active">
-                <h5 class="info-text">Insira os dados da rede produtora</h5>
+                <h5 class="info-text">Insira os dados do produtor</h5>
                 <div class="row justify-content-center">
                   <div class="col-lg-10">
                     <b-form-group label="CNPJ da rede *" class="bmd-form-group">
