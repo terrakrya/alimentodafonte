@@ -79,7 +79,7 @@
             </div>
             <div class="col-sm-6">
               <b-form-group label="CPF/CNPJ *">
-                <b-form-input v-model="form.cnpj" v-validate="'required'" name="cnpj" v-mask="['##.###.###/####-##']" />
+                <b-form-input v-model="form.cnpj" v-validate="'required'" name="cnpj" v-mask="['###.###.###-##', '##.###.###/####-##']" />
                 <field-error :msg="veeErrors" field="cnpj" />
               </b-form-group>
             </div>

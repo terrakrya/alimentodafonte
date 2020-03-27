@@ -17,9 +17,6 @@
               </router-link>
             </li>
           </ul>
-          <router-link :to="'/carrinho'" class="btn btn-rose btn-round btn-block pull-right">
-            <i class="material-icons">shopping_cart</i> {{cart.length > 0 ? cart.length+' items' : 'VAZIO'}}
-          </router-link>
         </div>
         <div class="">
           <ul class="navbar-nav ml-auto">

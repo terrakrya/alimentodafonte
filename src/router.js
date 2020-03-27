@@ -31,7 +31,11 @@ import OfferForm from '@/views/OfferForm.vue'
 import Orders from '@/views/Orders.vue'
 import Order from '@/views/Order.vue'
 
+import Producer from '@/views/Producer.vue'
+import ProducerLogin from '@/views/ProducerLogin.vue'
+
 import Ecommerce from '@/views/Ecommerce.vue'
+
 import ClientLogin from '@/views/ClientLogin.vue'
 import Shop from '@/views/Shop.vue'
 import Offer from '@/views/Offer.vue'
@@ -102,6 +106,12 @@ export default new Router({
 
         { path: '/pedidos', component: Orders, beforeEnter: requireAuth },
         { path: '/pedido/:id', component: Order, beforeEnter: requireAuth },
+      ]
+    },
+    { path: '/producer',
+      component: Producer,
+      children: [
+        { path: '/produtor', component: ProducerLogin },
       ]
     },
     { path: '/ecommerce',

@@ -1,5 +1,5 @@
 <template>
-<div class="sidebar" data-color="green" data-background-color="black">
+<div class="sidebar" data-color="green" data-background-color="black" data-image="../assets/img/bg.jpg">
   <div class="logo">
     <a href="/" class="simple-text logo-mini">
     </a>

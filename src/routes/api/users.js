@@ -68,7 +68,23 @@ router.post('/register', function(req, res, next) {
 
   user.setPassword(req.body.password);
 
-  console.log(user);
+  user.save().then(function() {
+    return res.send(user);
+  }).catch(next);
+});
+
+router.post('/register_producer', function(req, res, next) {
+  var user = new User();
+
+  user.cnpj = req.body.cnpj.replace(/\D/g, '')
+  user.address = req.body.address
+  user.email = req.body.email
+  user.name = req.body.name
+  user.phone = req.body.phone
+  user.roles = ['producer']
+
+  user.setPassword(req.body.password);
+
   user.save().then(function() {
     return res.send(user);
   }).catch(next);

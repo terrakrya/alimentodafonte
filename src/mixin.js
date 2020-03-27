@@ -81,7 +81,10 @@ export default {
       if (error.response) {
         console.log('herre');
         if (error.response.data) {
-          if (error.response.status == 401 && error.response.data.indexOf('invalid signature') > -1) {
+          console.log("error.response.data");
+          console.log(typeof error.response.data);
+
+          if (error.response.status == 401 && (typeof error.response.data == 'string') && error.response.data.indexOf('invalid signature') > -1) {
             this.notify('Sessão expirada!', 'error')
             auth.logout(function() {
               this.$router.replace('/')
