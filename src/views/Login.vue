@@ -150,8 +150,7 @@ export default {
     return {
       email: '',
       password: '',
-      showForm: false,
-      year: new Date().getFullYear()
+      showForm: false
     }
   },
   methods: {

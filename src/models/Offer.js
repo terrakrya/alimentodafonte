@@ -1,5 +1,6 @@
 const mongoose = require('mongoose'),
-  ObjectId = mongoose.Schema.Types.ObjectId;
+  ObjectId = mongoose.Schema.Types.ObjectId,
+  OfferItemSchema = require('./OfferItem');
 
 const OfferSchema = mongoose.Schema({
   organization: {
@@ -15,8 +16,11 @@ const OfferSchema = mongoose.Schema({
   product: {
     type: ObjectId,
     ref: 'Product',
-    required: true
   },
+  basket: [OfferItemSchema],
+  name: String,
+  description: String,
+  images: [Object],
   lot: String,
   manufacturing_date: Date,
   source_of_shipment: String,

@@ -49,6 +49,9 @@ export default {
     },
     baseUrl() {
       return axios.defaults.baseURL.replace('/api', '')
+    },
+    year() {
+      return new Date().getFullYear()
     }
   },
   methods: {

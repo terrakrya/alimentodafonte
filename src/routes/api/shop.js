@@ -27,12 +27,22 @@ router.get('/tags', function(req, res) {
     if (err) {
       res.status(422).send('Erro:: ' + err.message);
     } else {
+      console.log("resp");
       console.log(resp);
       var tags = {}
-      resp.forEach(tag_list => {
-        tag_list.product.tags.forEach(tag => {
-          tags[tag.text] = true
-        })
+      resp.forEach(offer => {
+        if (offer.product) {
+          offer.product.tags.forEach(tag => {
+            tags[tag.text] = true
+          })
+        } else if (offer.basket && offer.basket.length) {
+          offer.basket.forEach(item => {
+            item.product.tags.forEach(tag => {
+              tags[tag.text] = true
+            })
+          })
+
+        }
       })
       res.json(Object.keys(tags));
     }

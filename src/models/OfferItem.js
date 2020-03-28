@@ -1,16 +1,15 @@
 var mongoose = require('mongoose'),
   ObjectId = mongoose.Schema.Types.ObjectId;
 
-var OrderItemSchema = new mongoose.Schema({
-  offer: {
+var OfferItemSchema = new mongoose.Schema({
+  product: {
     type: ObjectId,
-    ref: 'Offer',
+    ref: 'Product',
     required: true
   },
   qtd: Number,
   price: Number,
   total: Number,
-  status: String,
 });
 
-module.exports = OrderItemSchema;
+module.exports = OfferItemSchema;

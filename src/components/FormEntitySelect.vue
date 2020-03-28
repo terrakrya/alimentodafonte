@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import {
   CoolSelect
 } from 'vue-cool-select'
@@ -59,7 +60,7 @@ export default {
           this.list = (await this.loadList('products')).map(product => ({
             id: product._id,
             title: product.name,
-            description: product.description,
+            description: Vue.options.filters.currency(product.final_price, 'R$ ', 2, { decimalSeparator: ',', thousandsSeparator: '.' }),
             picture: product.images && product.images.length ? product.images[0].thumb : '',
           })).sort(function(a, b) {
             return a.title.localeCompare(b.title);

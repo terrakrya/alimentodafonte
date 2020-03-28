@@ -177,7 +177,6 @@ export default {
       email: '',
       password: '',
       showForm: false,
-      year: new Date().getFullYear(),
       active_view: 'register',
       // address: '',
       address_input: '',

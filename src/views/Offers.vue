@@ -1,7 +1,7 @@
 <template>
 <div>
   <router-link class="btn btn-success btn-round btn-add" to="/cadastrar-oferta"><i class="material-icons">add</i>Cadastrar oferta</router-link>
-  <div class="card" v-if="offers.find(offer => offer.published)">
+  <div class="card">
     <div class="card-header card-header-icon card-header-rose">
       <div class="card-icon">
         <i class="material-icons">local_offer</i>
@@ -10,17 +10,21 @@
     </div>
     <div class="card-body">
       <b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-      <loading :loading="!offers && !error" msg="Carregando lista de ofertas" />
-      <no-item :list="offers" />
+      <loading :loading="!active_offers && !error" msg="Carregando lista de ofertas" />
+      <no-item :list="active_offers" />
       <div class="table-responsive">
-        <div v-if="offers && offers.length">
-          <b-table stacked="md" :fields="table_fields" :items="offers.filter(offer => offer.published)" :sort-by="'name'" :filter="filters.search">
+        <div v-if="active_offers && active_offers.length">
+          <b-table stacked="md" :fields="table_fields" :items="active_offers" :sort-by="'name'" :filter="filters.search">
             <template slot="product" slot-scope="data">
               <router-link :to="'/editar-oferta/'+ data.item._id" class="product_td">
-                <product-image :product="data.value" css_class="thumbnail" />
-                <strong>{{data.value.name}}</strong>
-                <br>
-                <small v-if="data.item.offer_type">{{tipos_de_oferta.find(type => type.value == data.item.offer_type ).text}}</small>
+                <div v-if="data.item.offer_type == 'single_product'">
+                  <product-image :product="data.value"/>
+                  <strong>{{data.value.name}}</strong>
+                </div>
+                <div v-if="data.item.offer_type == 'product_basket'">
+                  <product-image :product="data.item"/>
+                  <strong>{{data.item.name}}</strong>
+                </div>
               </router-link>
             </template>
             <template slot="shipping_types" slot-scope="data">
@@ -47,7 +51,7 @@
       </div>
     </div>
   </div>
-  <div class="card" v-if="offers.find(offer => !offer.published)">
+  <div class="card" v-if="inactive_offers && inactive_offers.length">
     <div class="card-header card-header-icon card-header-rose">
       <div class="card-icon">
         <i class="material-icons">local_offer</i>
@@ -56,18 +60,23 @@
     </div>
     <div class="card-body">
       <b-alert variant="danger" show v-if="error">{{error}}</b-alert>
-      <loading :loading="!offers && !error" msg="Carregando lista de ofertas" />
-      <no-item :list="offers" />
+      <loading :loading="!inactive_offers && !error" msg="Carregando lista de ofertas" />
+      <no-item :list="inactive_offers" />
       <div class="table-responsive">
-        <div v-if="offers && offers.length">
-          <b-table stacked="md" :fields="table_fields" :items="offers.filter(offer => !offer.published)" :sort-by="'name'" :filter="filters.search">
+        <div v-if="inactive_offers && inactive_offers.length">
+          <b-table stacked="md" :fields="table_fields" :items="inactive_offers" :sort-by="'name'" :filter="filters.search">
             <template slot="product" slot-scope="data">
               <router-link :to="'/editar-oferta/'+ data.item._id" class="product_td">
-                <product-image :product="data.value" css_class="thumbnail" />
-                <strong>{{data.value.name}}</strong>
-                <br>
-                <small v-if="data.item.offer_type">{{tipos_de_oferta.find(type => type.value == data.item.offer_type ).text}}</small>
+                <div v-if="data.item.offer_type == 'single_product'">
+                  <product-image :product="data.value"/>
+                  <strong>{{data.value.name}}</strong>
+                </div>
+                <div v-if="data.item.offer_type == 'product_basket'">
+                  <product-image :product="data.item"/>
+                  <strong>{{data.item.name}}</strong>
+                </div>
               </router-link>
+
             </template>
             <template slot="shipping_types" slot-scope="data">
               <a v-for="(tag, index) in data.value" :key="index"> <span class="badge badge-default"> {{tipos_de_entrega.find(type => type.value == tag ).text}} </span> &nbsp;</a>
@@ -112,8 +121,7 @@ export default {
       tipos_de_oferta: tipos_de_oferta,
       tipos_de_entrega: tipos_de_entrega,
       filters: {
-        search: null,
-        radius: 50
+        search: null
       },
       table_fields: [{
           key: 'product',
@@ -141,7 +149,8 @@ export default {
           'class': 'td-actions text-right'
         }
       ],
-      offers: null
+      active_offers: null,
+      inactive_offers: null
     }
   },
 
@@ -161,7 +170,8 @@ export default {
           populate: 'product producer organization'
         }
       }).then(response => {
-        this.offers = response.data
+        this.active_offers = response.data.filter(offer => offer.published)
+        this.inactive_offers = response.data.filter(offer => !offer.published)
       }).catch(this.showError)
 
     },

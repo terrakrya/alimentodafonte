@@ -39,24 +39,24 @@ router.get('/:id', auth.producer, function(req, res) {
 
 router.post('/', auth.producer, function(req, res) {
   var newOffer = new Offer(req.body);
-  Product.findOne({
-    _id: newOffer.product
-  }).populate('product').exec(function(err, product) {
+
+  var query = {}
+  if (auth.isManager(req)) {
+    newOffer.organization = req.payload.organization
+  }
+  if (auth.isProducer(req)) {
+    newOffer.organization = req.payload.organization
+    newOffer.producer = req.payload.id
+  }
+  console.log(newOffer);
+  newOffer.save(function(err, offer) {
     if (err) {
-      res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
+      res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
     } else {
-      newOffer.product = product._id
-      newOffer.organization = product.organization
-      newOffer.producer = product.producer
-      newOffer.save(function(err, offer) {
-        if (err) {
-          res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
-        } else {
-          res.send(offer);
-        }
-      });
+      res.send(offer);
     }
   });
+
 });
 
 router.put('/:id', auth.producer, function(req, res) {

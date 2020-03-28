@@ -174,10 +174,8 @@ export default {
             var product = resp.data
             if (product && product._id) {
               this.notify("Os dados foram salvos!")
-              if (this.isEditing()) {
-                window.scrollTo(0, 0);
-                this.$router.replace('/produtos')
-              }
+              window.scrollTo(0, 0);
+              this.$router.replace('/produtos')
             }
             this.isSending = false
           }).catch(this.showError)

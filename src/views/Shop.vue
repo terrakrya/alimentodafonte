@@ -18,13 +18,17 @@
     </div>
   </div>
   <div class="col-md-9">
+    <br>
     <no-item :list="filtered_offers" />
+    <h5>
+      <b>{{filtered_offers.length}}</b> {{filtered_offers.length == 1 ? 'oferta encontrada' : 'ofertas encontradas'}}
+      em um raio de <b>{{filters.radius}}</b> km
+    </h5>
     <table class="table table-shopping">
       <thead>
         <tr>
-          <th colspan="2">Produto</th>
+          <th colspan="2" class="text-center">Produto</th>
           <th>Valor</th>
-          <th>Qtd</th>
           <th>Comprar</th>
           <th></th>
         </tr>
@@ -36,10 +40,11 @@
               <product-image :product="offer.product" />
             </router-link>
           </td>
-          <td>
+          <td class="td-name">
             <router-link :to="'/oferta/'+offer._id">
               <strong>{{offer.product.name}}</strong>
             </router-link>
+            <small v-if="offer.producer"><br />{{offer.producer.name}}</small>
           </td>
           <td>
             <div class="price-container">
@@ -47,12 +52,13 @@
             </div>
           </td>
           <td>
-          </td>
-          <td>
             <div v-if="qtd[offer._id]">
               <input type="number" class="form-control qtd" v-model="qtd[offer._id]" :min="1" :max="offer.qtd - offer.qtd_ordered">
               <small>&nbsp; &nbsp; {{offer.qtd - offer.qtd_ordered}} disponíveis</small>
               <br>
+              <!-- <b-form-group label="Cidade">
+                <b-form-select class="form-control" v-model="form." :options="cidades" />
+              </b-form-group> -->
               <button class="btn btn-rose btn-round btn-sm" @click="addToCart(offer)">Adicionar ao carrinho &#xA0;<i class="material-icons">shopping_cart</i></button>
             </div>
             <button v-else class="btn btn-rose btn-round btn-sm" @click="buy(offer)">Comprar &#xA0;<i class="material-icons">shopping_cart</i></button>
@@ -77,7 +83,8 @@ export default {
   data() {
     return {
       filters: {
-        tags: []
+        tags: [],
+        radius: 50
       },
       offers: null,
       filtered_offers: null,

@@ -18,10 +18,12 @@ import store from './store/'
 import mixin from './mixin'
 import App from './App.vue'
 
-window.Dorothy.init({
-  msg_service_url: "http://localhost:3000/", // TODO: env var
-  msg_service_api_url: "http://localhost:3000/api/msg-service/", // TODO: env var
-});
+if (window.Dorothy) {
+  window.Dorothy.init({
+    msg_service_url: "http://localhost:3000/", // TODO: env var
+    msg_service_api_url: "http://localhost:3000/api/msg-service/", // TODO: env var
+  });
+}
 
 Vue.config.productionTip = false
 
