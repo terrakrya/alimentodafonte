@@ -26,27 +26,9 @@
         </div>
         <br>
         <br>
-        <div class="wizard-navigation">
-          <br>
-          <br>
-          <ul class="nav nav-pills product-form">
-            <li class="nav-item">
-              <a class="nav-link" :class="tab == 0 ? 'active' : ''" @click="setTab(0)">
-                Apresentação
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" :class="tab == 1 ? 'active' : ''" @click="setTab(1)">
-                Variações do produto
-              </a>
-            </li>
-          </ul>
-        </div>
         <div class="card-body">
-          <div class="tab-content">
-            <div class="tab-pane" :class="tab == 0 ? 'active' : ''">
-              <b-form @submit.prevent="save" v-if="!isLoading">
-                <h5 class="info-text"> Em qual fase este produto está? </h5>
+          <b-form @submit.prevent="save" v-if="!isLoading">
+            <!-- <h5 class="info-text"> Em qual fase este produto está? </h5>
                 <div class="row justify-content-center">
                   <div class="col-md-10">
                     <div class="row">
@@ -64,90 +46,48 @@
                   <field-error :msg="veeErrors" field="category" />
                 </div>
                 <br>
-                <br>
-                <b-form-group label="Produtor *" class="bmd-form-group">
-                  <form-entity-select type="producers" :form="form" field="producer" :validate="'required'" />
+                <br> -->
+            <b-form-group label="Produtor *" class="bmd-form-group" v-if="isManager">
+              <form-entity-select type="producers" :form="form" field="producer" :validate="'required'" />
+            </b-form-group>
+            <b-form-group label="Nome do produto *" class="bmd-form-group">
+              <b-form-input v-model="form.name" v-validate="'required'" name="name" description="Yuka" />
+              <field-error :msg="veeErrors" field="name" />
+            </b-form-group>
+            <b-form-group label="Descrição *" description="Texto que irá aparecer na apresentação do produto." class="bmd-form-group">
+              <b-form-textarea v-model="form.description" v-validate="'required'" name="description" />
+              <field-error :msg="veeErrors" field="description" />
+            </b-form-group>
+            <b-form-group label="Categorias" class="bmd-form-group">
+              <form-tags :form="form" field="tags" :tags="tags" />
+            </b-form-group>
+            <b-form-group label="Período de oferta" class="bmd-form-group">
+              <form-months :form="form" field="seasonality" />
+            </b-form-group>
+            <h5> VALORES </h5>
+            <div class="row justify-content-center">
+              <div class="col-md-4">
+                <b-form-group label="Preço do produto / unidade" class="bmd-form-group">
+                  <money v-model="form.producer_price" class="form-control" @input="calcFinalPrice"></money>
                 </b-form-group>
-                <b-form-group label="Nome do produto *" class="bmd-form-group">
-                  <b-form-input v-model="form.name" v-validate="'required'" name="name" description="Yuka" />
-                  <field-error :msg="veeErrors" field="name" />
+              </div>
+              <div class="col-md-4">
+                <b-form-group label="Taxa de entrega" class="bmd-form-group">
+                  <money v-model="form.taxes" class="form-control" @input="calcFinalPrice"></money>
                 </b-form-group>
-                <b-form-group label="Descrição *" description="Texto que irá aparecer na apresentação do produto." class="bmd-form-group">
-                  <b-form-textarea v-model="form.description" v-validate="'required'" name="description" />
-                  <field-error :msg="veeErrors" field="description" />
+              </div>
+              <div class="col-md-4">
+                <b-form-group label="Preço final" class="bmd-form-group">
+                  <h4>{{form.final_price | moeda}}</h4>
                 </b-form-group>
-                <b-form-group label="História do produto" description="Descreva o histórico deste produto que aparecerá na apresentação" class="bmd-form-group">
-                  <form-editor :form="form" field="history" />
-                </b-form-group>
-                <b-form-group label="Certificações" class="bmd-form-group">
-                  <form-tags :form="form" field="certifications" :tags="certifications" />
-                </b-form-group>
-                <b-form-group label="Período de oferta" class="bmd-form-group">
-                  <form-months :form="form" field="seasonality" />
-                </b-form-group>
-                <pictures-upload :form="form" field="images" url="uploads/images" :multiple="true" />
-                <div class="card-footer justify-content-center" v-if="tab == 0">
-                  <form-submit :errors="error" :sending="isSending" label="Continuar" icon="arrow_forward" />
-                </div>
-              </b-form>
-            </div>
-            <div class="tab-pane" :class="tab == 1 ? 'active' : ''" v-if="product">
-              <div>
-                <div class="text-center">
-                  <router-link class="btn btn-success" :to="'/cadastrar-variacao-de-produto/?product=' + product._id">
-                    Cadastrar nova variação
-                  </router-link>
-                  <br>
-                  <br>
-                  <div class="alert alert-danger" v-if="error">
-                    {{error}}
-                  </div>
-                </div>
-                <div class="table-responsive" v-if="product.product_variations && product.product_variations.length">
-                  <table class="table table-shopping">
-                    <thead>
-                      <tr>
-                        <th class="text-center"></th>
-                        <th>Variação</th>
-                        <th class="text-right">Preço final</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="(product_variation, index) in product.product_variations" :key="index">
-                        <td>
-                          <router-link :to="'/editar-variacao-de-produto/' + product_variation._id + '?product=' + product._id">
-                            <product-image :product="product" :product_variation="product_variation" />
-                          </router-link>
-                        </td>
-                        <td class="td-name">
-                          <router-link :to="'/editar-variacao-de-produto/' + product_variation._id + '?product=' + product._id">
-                            {{product_variation.name}}
-                          </router-link>
-                          <br />
-                          <small>{{product_variation.description}}</small>
-                        </td>
-                        <td class="td-number text-right">
-                          {{product_variation.final_price | moeda}}
-                        </td>
-                        <td class="td-actions text-right">
-                          <div class="btn-group btn-group-sm">
-                            <router-link class="btn btn-success" :to="'/cadastrar-oferta?product_variation=' + product_variation._id">
-                              <i class="material-icons">add</i> Oferta
-                            </router-link>
-                            <router-link class="btn btn-info" :to="'/editar-variacao-de-produto/' + product_variation._id + '?product=' + product._id">
-                              <i class="material-icons">edit</i>
-                            </router-link>
-                            <button class="btn btn-danger" @click="removeVariation(product_variation._id)"> <i class="material-icons">close</i> </button>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
               </div>
             </div>
-          </div>
+
+            <pictures-upload :form="form" field="images" url="uploads/images" :multiple="true" />
+            <div class="card-footer justify-content-center" v-if="tab == 0">
+              <form-submit :errors="error" :sending="isSending" label="Continuar" icon="arrow_forward" />
+            </div>
+          </b-form>
         </div>
       </div>
     </div>
@@ -182,11 +122,14 @@ export default {
         images: [],
         description: '',
         history: '',
-        certifications: [],
+        tags: [],
         seasonality: [],
+        producer_price: '',
+        taxes: '',
+        final_price: 0
       },
       product: null,
-      certifications: [],
+      tags: [],
     }
   },
   created() {
@@ -198,30 +141,23 @@ export default {
     }
     axios.get('products', {
       params: {
-        select: 'certifications tags'
+        select: 'tags'
       }
     }).then(response => {
       response.data.forEach(product => {
-        product.certifications.forEach(certification => {
-          this.certifications.push(certification)
+        product.tags.forEach(tag => {
+          this.tags.push(tag)
         })
       });
-      this.certifications = this.certifications.filter((v, i, a) => a.findIndex(t => (t.text === v.text)) === i)
+      this.tags = this.tags.filter((v, i, a) => a.findIndex(t => (t.text === v.text)) === i)
     }).catch(this.showError);
   },
   methods: {
     edit() {
       this.isLoading = true
-      axios.get('products/' + this.$route.params.id, {
-        params: {
-          populate: 'users product_variations product_variations offers'
-        }
-      }).then(response => {
+      axios.get('products/' + this.$route.params.id).then(response => {
         this.apiDataToForm(this.form, response.data)
         this.product = response.data
-        if (this.product.product_variations && this.product.product_variations.length > 0) {
-          this.tab = 1
-        }
         this.isLoading = false
       }).catch(this.showError);
     },
@@ -240,10 +176,7 @@ export default {
               this.notify("Os dados foram salvos!")
               if (this.isEditing()) {
                 window.scrollTo(0, 0);
-                this.tab += 1
-              } else {
-                window.scrollTo(0, 0);
-                this.$router.replace('/cadastrar-variacao-de-produto?product=' + product._id)
+                this.$router.replace('/produtos')
               }
             }
             this.isSending = false
@@ -251,20 +184,8 @@ export default {
         }
       })
     },
-    setTab(tab) {
-      if (this.isEditing()) {
-        this.tab = tab
-      }
-    },
-    isEditingProductVariation() {
-      this.product_variation && this.product_variation._id
-    },
-    removeVariation(id) {
-      if (confirm("Tem certeza que deseja excluír?")) {
-        axios.delete('product_variations/' + id).then(() => {
-          this.edit()
-        }).catch(this.showError)
-      }
+    calcFinalPrice() {
+      this.form.final_price = this.form.producer_price + this.form.taxes
     }
   },
   components: {

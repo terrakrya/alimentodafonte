@@ -9,7 +9,6 @@ export default new Vuex.Store({
   state: {
     currentUser: JSON.parse(window.localStorage.getItem('currentUser')),
     showMenu: false,
-    product_variations: false,
     cart: JSON.parse(window.localStorage.getItem('cart')) || []
   },
   actions,

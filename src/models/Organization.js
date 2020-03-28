@@ -50,7 +50,7 @@ OrganizationSchema.virtual('users', {
 });
 
 OrganizationSchema.virtual('producers', {
-  ref: 'Producer',
+  ref: 'User',
   localField: '_id',
   foreignField: 'organizations'
 });

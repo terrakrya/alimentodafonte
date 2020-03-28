@@ -27,10 +27,10 @@
           <tr v-for="(item, index) in order.items">
             <td>
               <div class="img-container">
-                <product-image :product="item.offer.product" :product_variation="item.offer.product_variation" />
+                <product-image :product="item.offer.product" />
               </div>
               <router-link :to="'/oferta/'+item.offer._id">
-                {{item.offer.product_variation.name}}
+                {{item.offer.product.name}}
               </router-link>
             </td>
             <td>

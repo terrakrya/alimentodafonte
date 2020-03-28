@@ -4,13 +4,16 @@ var express = require('express'),
   auth = require('../auth'),
   select = require('../utils').select,
   populate = require('../utils').populate,
-  ProductVariation = mongoose.model('ProductVariation'),
+  Product = mongoose.model('Product'),
   Offer = mongoose.model('Offer');
 
-router.get('/', auth.manager, function(req, res) {
+router.get('/', auth.producer, function(req, res) {
   var query = {}
-  if (req.payload.roles.includes('manager')) {
+  if (auth.isManager(req)) {
     query.organization = req.payload.organization
+  }
+  if (auth.isProducer(req)) {
+    query.producer = req.payload.id
   }
   Offer.find(query, select(req)).populate(populate(req)).exec(function(err, offers) {
     if (err) {
@@ -21,7 +24,7 @@ router.get('/', auth.manager, function(req, res) {
   });
 });
 
-router.get('/:id', auth.manager, function(req, res) {
+router.get('/:id', auth.producer, function(req, res) {
   Offer.findOne({
     _id: req.params.id
   }).populate(populate(req)).exec(function(err, offer) {
@@ -34,17 +37,17 @@ router.get('/:id', auth.manager, function(req, res) {
 });
 
 
-router.post('/', auth.manager, function(req, res) {
+router.post('/', auth.producer, function(req, res) {
   var newOffer = new Offer(req.body);
-  ProductVariation.findOne({
-    _id: newOffer.product_variation
-  }).populate('product').exec(function(err, product_variation) {
+  Product.findOne({
+    _id: newOffer.product
+  }).populate('product').exec(function(err, product) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
-      newOffer.product = product_variation.product._id
-      newOffer.organization = product_variation.organization
-      newOffer.producer = product_variation.product.producer
+      newOffer.product = product._id
+      newOffer.organization = product.organization
+      newOffer.producer = product.producer
       newOffer.save(function(err, offer) {
         if (err) {
           res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
@@ -56,7 +59,7 @@ router.post('/', auth.manager, function(req, res) {
   });
 });
 
-router.put('/:id', auth.manager, function(req, res) {
+router.put('/:id', auth.producer, function(req, res) {
   var params = req.body
   Offer.findOneAndUpdate({
     _id: req.params.id
@@ -73,7 +76,7 @@ router.put('/:id', auth.manager, function(req, res) {
   });
 });
 
-router.delete('/:id', auth.manager, function(req, res) {
+router.delete('/:id', auth.producer, function(req, res) {
 
   Offer.findOne({
     _id: req.params.id

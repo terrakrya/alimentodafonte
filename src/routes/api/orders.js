@@ -4,7 +4,6 @@ var express = require('express'),
   auth = require('../auth'),
   select = require('../utils').select,
   populate = require('../utils').populate,
-  ProductVariation = mongoose.model('ProductVariation'),
   Offer = mongoose.model('Offer'),
   Order = mongoose.model('Order');
 
@@ -45,11 +44,8 @@ router.get('/:id', auth.manager, function(req, res) {
       path: 'product',
       model: 'Product'
     }, {
-      path: 'product_variation',
-      model: 'ProductVariation'
-    }, {
       path: 'producer',
-      model: 'Producer'
+      model: 'User'
     }]
   }).exec(function(err, order) {
     if (err) {

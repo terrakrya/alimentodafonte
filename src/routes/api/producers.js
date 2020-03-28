@@ -5,16 +5,16 @@ var express = require('express'),
   auth = require('../auth'),
   populate = require('../utils').populate,
   request = require('request'),
-  Producer = mongoose.model('Producer');
+  User = mongoose.model('User');
 
 router.get('/', auth.manager, function(req, res) {
 
-  var query = {}
+  var query = {roles: 'producer'}
   if (req.payload.roles.includes('manager')) {
     query.organizations = req.payload.organization
   }
 
-  Producer.find(query).exec(function(err, producers) {
+  User.find(query).exec(function(err, producers) {
     if (err) {
       res.status(422).send('Erro:: ' + err.message);
     } else {
@@ -33,7 +33,7 @@ router.get('/search', auth.manager, function(req, res) {
     query.organizations = req.payload.organization
   }
 
-  Producer.findOne(query).exec(function(err, producer) {
+  User.findOne(query).exec(function(err, producer) {
     if (err) {
       res.status(422).send('Ocorreu um erro ao carregar o item: ' + err.message);
     } else {
@@ -43,7 +43,7 @@ router.get('/search', auth.manager, function(req, res) {
 });
 
 router.get('/:id', auth.manager, function(req, res) {
-  Producer.findOne({
+  User.findOne({
     _id: req.params.id
   }).populate(populate(req)).exec(function(err, producer) {
     if (err) {
@@ -60,7 +60,7 @@ router.post('/', auth.manager, function(req, res) {
     params.organizations = [req.payload.organization]
   }
 
-  var newProducer = new Producer(params);
+  var newProducer = new User(params);
   newProducer.cnpj = newProducer.cnpj.replace(/\D/g, '')
 
   request('https://www.receitaws.com.br/v1/cnpj/' + newProducer.cnpj, {
@@ -125,7 +125,7 @@ router.post('/', auth.manager, function(req, res) {
 
 router.put('/:id', auth.manager, function(req, res) {
   var params = req.body
-  Producer.findOneAndUpdate({
+  User.findOneAndUpdate({
     _id: req.params.id
   }, {
     $set: params
@@ -141,7 +141,7 @@ router.put('/:id', auth.manager, function(req, res) {
 });
 
 router.delete('/:id', auth.manager, function(req, res) {
-  Producer.findOne({
+  User.findOne({
     _id: req.params.id
   }).populate('products').exec(function(err, producer) {
     if (err) {

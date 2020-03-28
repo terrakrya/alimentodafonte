@@ -4,18 +4,16 @@ const mongoose = require('mongoose'),
 const ProductSchema = mongoose.Schema({
   organization: {
     type: ObjectId,
-    ref: 'Organization', 
-    required: true
+    ref: 'Organization',
   },
   producer: {
     type: ObjectId,
-    ref: 'Producer',
+    ref: 'User',
     required: true
   },
   slug: {
     type: String
   },
-
   category: String,
   name: {
     type: String,
@@ -23,17 +21,19 @@ const ProductSchema = mongoose.Schema({
   },
   images: [Object],
   description: String,
-  history: String,
-  certifications: [Object],
+  tags: [Object],
   seasonality: [String],
+  producer_price: Number,
+  taxes: Number,
+  final_price: Number,
 
 }, {
   timestamps: true,
   toJSON: { virtuals: true }
 });
 
-ProductSchema.virtual('product_variations', {
-  ref: 'ProductVariation',
+ProductSchema.virtual('offers', {
+  ref: 'Offer',
   localField: '_id',
   foreignField: 'product'
 });

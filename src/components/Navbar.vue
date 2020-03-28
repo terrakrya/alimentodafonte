@@ -2,7 +2,7 @@
 <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
   <div class="container-fluid">
     <div class="navbar-wrapper">
-      <a class="navbar-brand" href="/#/painel"><strong>Alimento da fonte</strong> Saúde perto de você</a>
+      <a class="navbar-brand" href="/"><strong>Alimento da fonte</strong> Saúde perto de você</a>
     </div>
     <button @click="toggleMenu" class="navbar-toggler" :class="showMenu ? 'toggled' : ''" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Menu">
       <span class="sr-only">Menu</span>

@@ -23,7 +23,6 @@ import ProducerRegisterForm from '@/views/ProducerRegisterForm.vue'
 
 import Products from '@/views/Products.vue'
 import ProductForm from '@/views/ProductForm.vue'
-import ProductVariationForm from '@/views/ProductVariationForm.vue'
 
 import Offers from '@/views/Offers.vue'
 import OfferForm from '@/views/OfferForm.vue'
@@ -96,9 +95,6 @@ export default new Router({
         { path: '/produtos', component: Products, beforeEnter: requireAuth },
         { path: '/cadastrar-produto', component: ProductForm, beforeEnter: requireAuth },
         { path: '/editar-produto/:id', component: ProductForm, beforeEnter: requireAuth },
-
-        { path: '/cadastrar-variacao-de-produto', component: ProductVariationForm, beforeEnter: requireAuth },
-        { path: '/editar-variacao-de-produto/:id', component: ProductVariationForm, beforeEnter: requireAuth },
 
         { path: '/ofertas', component: Offers, beforeEnter: requireAuth },
         { path: '/cadastrar-oferta', component: OfferForm, beforeEnter: requireAuth },

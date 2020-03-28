@@ -12,8 +12,8 @@ var getProducers = async function() {
   })
 }
 
-var getProductVariations = async function() {
-  return await axios.get('product_variations').then(async response => {
+var getProducts = async function() {
+  return await axios.get('products').then(async response => {
     return response.data
   })
 }
@@ -30,8 +30,8 @@ var loadList = async function(type) {
     return await getOrganizations()
   } else if (type == 'producers') {
     return await getProducers()
-  } else if (type == 'product_variations') {
-    return await getProductVariations()
+  } else if (type == 'products') {
+    return await getProducts()
   } else if (type == 'users') {
     return await getUsers()
   }

@@ -4,12 +4,11 @@ var express = require('express'),
   auth = require('../auth'),
   select = require('../utils').select,
   populate = require('../utils').populate,
-  ProductVariation = mongoose.model('ProductVariation'),
   Offer = mongoose.model('Offer'),
   Order = mongoose.model('Order');
 
 router.get('/offers', function(req, res) {
-  var query = {}
+  var query = {published: true}
   Offer.find(query, select(req)).populate(populate(req)).exec(function(err, offers) {
     if (err) {
       res.status(422).send('Erro:: ' + err.message);
@@ -23,15 +22,15 @@ router.get('/offers', function(req, res) {
 });
 
 router.get('/tags', function(req, res) {
-  var query = {}
-  Offer.find(query, 'product_variation').populate('product_variation', 'tags').exec(function(err, resp) {
+  var query = {published: true}
+  Offer.find(query, 'product').populate('product', 'tags').exec(function(err, resp) {
     if (err) {
       res.status(422).send('Erro:: ' + err.message);
     } else {
       console.log(resp);
       var tags = {}
       resp.forEach(tag_list => {
-        tag_list.product_variation.tags.forEach(tag => {
+        tag_list.product.tags.forEach(tag => {
           tags[tag.text] = true
         })
       })
@@ -76,9 +75,6 @@ router.get('/order/:id', auth.client, function(req, res) {
     populate: [{
       path: 'product',
       model: 'Product'
-    }, {
-      path: 'product_variation',
-      model: 'ProductVariation'
     }, {
       path: 'producer',
       model: 'Producer'

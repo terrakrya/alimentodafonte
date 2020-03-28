@@ -28,7 +28,7 @@ var UserSchema = new mongoose.Schema({
   salt: String,
   name: String,
   phone: String,
-  address: String,
+  address: Object,
   roles: [String],
   image: Object,
   organization: {

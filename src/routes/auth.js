@@ -26,6 +26,16 @@ function isLink(req) {
   return false
 }
 
+function isProducer(req) {
+  if (req.payload && req.payload.roles) {
+    var roles = req.payload.roles
+    console.log('roles');
+    console.log(roles);
+    return roles && (roles.includes('producer') || roles.includes('admin'))
+  }
+  return false
+}
+
 function isClient(req) {
   if (req.payload && req.payload.roles) {
     var roles = req.payload.roles
@@ -33,6 +43,7 @@ function isClient(req) {
   }
   return false
 }
+
 
 function authenticatedManager(req, res, next) {
   if (isManager(req)) {
@@ -52,6 +63,17 @@ function authenticatedLink(req, res, next) {
     return res.status(403).json({
       status: 403,
       message: 'A permissão de elo ou administrador é necessária para acessar este recurso.'
+    })
+  }
+}
+
+function authenticatedProducer(req, res, next) {
+  if (isProducer(req)) {
+    next()
+  } else {
+    return res.status(403).json({
+      status: 403,
+      message: 'A permissão de produtor ou administrador é necessária para acessar este recurso.'
     })
   }
 }
@@ -83,6 +105,11 @@ var auth = {
     userProperty: 'payload',
     getToken: getTokenFromHeader
   }), authenticatedLink],
+  producer: [jwt({
+    secret: secret,
+    userProperty: 'payload',
+    getToken: getTokenFromHeader
+  }), authenticatedProducer],
   client: [jwt({
     secret: secret,
     userProperty: 'payload',
@@ -96,6 +123,7 @@ var auth = {
   }),
   isLink: isLink,
   isManager: isManager,
+  isProducer: isProducer,
   isClient: isClient
 };
 

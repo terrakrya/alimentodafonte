@@ -4,14 +4,14 @@ const mongoose = require('mongoose'),
 const OfferSchema = mongoose.Schema({
   organization: {
     type: ObjectId,
-    ref: 'Organization',
-    required: true
+    ref: 'Organization'
   },
   producer: {
     type: ObjectId,
-    ref: 'Producer',
+    ref: 'User',
     required: true
   },
+  offer_type: String,
   product: {
     type: ObjectId,
     ref: 'Product',
@@ -23,7 +23,8 @@ const OfferSchema = mongoose.Schema({
   final_price: Number,
   qtd: Number,
   qtd_ordered: Number,
-  invoice_issuer: String
+  shipping_types: [String],
+  published: Boolean
 }, {
   timestamps: true,
 });

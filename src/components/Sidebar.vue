@@ -38,13 +38,13 @@
           <p> Painel inicial </p>
         </router-link>
       </li>
-      <li class="nav-item" @click="toggleMenu">
-        <router-link class="nav-link" to="/organizacoes" v-if="isLink">
+      <li class="nav-item" @click="toggleMenu" v-if="isLink">
+        <router-link class="nav-link" to="/organizacoes">
           <i class="material-icons">device_hub</i>
           <p>Redes</p>
         </router-link>
       </li>
-      <li class="nav-item" @click="toggleMenu">
+      <li class="nav-item" @click="toggleMenu" v-if="isManager">
         <router-link class="nav-link" to="/produtores">
           <i class="material-icons">people</i>
           <p>Produtores</p>

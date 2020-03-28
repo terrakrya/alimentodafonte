@@ -17,9 +17,12 @@
           <b-table stacked="md" :fields="table_fields" :items="products" :sort-by="'name'" :filter="filters.search">
             <template slot="name" slot-scope="data">
               <router-link :to="'/editar-produto/'+ data.item._id">
-                <product-image :product="data.item" css_class="thumbnail"/>
+                <product-image :product="data.item" css_class="thumbnail" />
                 <h4>{{data.item.name}}</h4>
               </router-link>
+            </template>
+            <template slot="final_price" slot-scope="data">
+              {{data.value | moeda}}
             </template>
             <template slot="producer" slot-scope="data">
               <router-link :to="'/editar-produtor/'+ data.value._id">
@@ -60,11 +63,14 @@ export default {
         search: null
       },
       table_fields: [{
-          key: 'name',
-          label: 'Produto',
-          sortable: true
-        },
-      ],
+        key: 'name',
+        label: 'Produto',
+        sortable: true
+      }, {
+        key: 'final_price',
+        label: 'Preço final',
+        sortable: true
+      }, ],
       products: null
     }
   },
@@ -88,7 +94,7 @@ export default {
     async list() {
       axios.get('products', {
         params: {
-          populate: 'producer product_variations'
+          populate: 'producer offers'
         }
       }).then(response => {
         this.products = response.data

@@ -22,12 +22,12 @@
               <tr v-for="(item, index) in cart">
                 <td>
                   <div class="img-container">
-                    <product-image :product="item.offer.product" :product_variation="item.offer.product_variation" />
+                    <product-image :product="item.offer.product"/>
                   </div>
                 </td>
                 <td class="td-name">
                   <router-link :to="'/oferta/'+item.offer._id">
-                    {{item.offer.product_variation.name}}
+                    {{item.offer.product.name}}
                   </router-link>
                   <small v-if="item.offer.producer"><br />{{item.offer.producer.name}}</small>
                   <!-- <small v-if="item.offer.organization"><br />{{item.offer.organization.name}}</small> -->

@@ -24,12 +24,12 @@
           <div class="card card-product card-plain no-shadow" data-colored-shadow="false">
             <div class="card-header card-header-image">
               <router-link :to="'/oferta/'+offer._id">
-                <product-image :product="offer.product" :product_variation="offer.product_variation" />
+                <product-image :product="offer.product" />
               </router-link>
             </div>
             <div class="card-body">
               <router-link :to="'/oferta/'+offer._id">
-                <h4 class="card-title">{{offer.product_variation.name}}</h4>
+                <h4 class="card-title">{{offer.product.name}}</h4>
               </router-link>
             </div>
             <div class="card-footer justify-content-between">
@@ -74,7 +74,7 @@ export default {
     async list() {
       axios.get('shop/offers', {
         params: {
-          populate: 'product_variation producer organization'
+          populate: 'product producer organization'
         }
       }).then(response => {
         this.offers = response.data
@@ -91,7 +91,7 @@ export default {
       this.filtered_offers = this.offers
       if (this.filters.search) {
         this.filtered_offers = this.filtered_offers.filter(offer => {
-          var name = slugify(offer.product_variation.name).toLowerCase()
+          var name = slugify(offer.product.name).toLowerCase()
           var search = slugify(this.filters.search).toLowerCase()
           return name.search(search) >= 0
         })
@@ -100,7 +100,7 @@ export default {
       if (this.filters.tags && this.filters.tags.length) {
         this.filters.tags.forEach(tag => {
           this.filtered_offers = this.filtered_offers.filter(offer => {
-            return offer.product_variation.tags.find(offer_tag => {
+            return offer.product.tags.find(offer_tag => {
               console.log('offer_tag.text');
               console.log(offer_tag.text);
               console.log('tag');

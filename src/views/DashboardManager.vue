@@ -123,17 +123,17 @@
       <div class="table-responsive">
         <div v-if="offers && offers.length">
           <b-table stacked="md" :fields="table_fields" :items="offers" :sort-by="'name'">
-            <template slot="product_variation" slot-scope="data">
+            <template slot="product" slot-scope="data">
               <router-link :to="'/editar-oferta/'+ data.item._id" class="product_td">
-                <product-image :product="data.value" :product_variation="data.value" css_class="thumbnail"/>
+                <product-image :product="data.value" css_class="thumbnail"/>
                 <strong>{{data.value.name}}</strong>
               </router-link>
             </template>
             <template slot="manufacturing_date" slot-scope="data">
-              <div v-if="data.item.product_variation && data.item.product_variation.duration && data.item.product_variation.duration.value && data.value">
+              <div v-if="data.item.product && data.item.product.duration && data.item.product.duration.value && data.value">
                 {{data.value | moment("DD/MM/YYYY")}}
                 <br>
-                <small>Vence {{data.value | moment("add", data.item.product_variation.duration.value + ' ' + date_unit[data.item.product_variation.duration.unit]) | moment('from', 'now')}}</small>
+                <small>Vence {{data.value | moment("add", data.item.product.duration.value + ' ' + date_unit[data.item.product.duration.unit]) | moment('from', 'now')}}</small>
               </div>
             </template>
             <template slot="qtd" slot-scope="data">
@@ -209,7 +209,7 @@ export default {
         'Anos': 'years'
       },
       table_fields: [{
-          key: 'product_variation',
+          key: 'product',
           label: 'Oferta',
           sortable: true
         },
@@ -245,17 +245,13 @@ export default {
       this.producers = response.data
     }).catch(this.showError)
 
-    axios.get('products', {
-      params: {
-        populate: 'product_variations'
-      }
-    }).then(response => {
+    axios.get('products').then(response => {
       this.products = response.data
     }).catch(this.showError)
 
     axios.get('offers', {
       params: {
-        populate: 'product_variation'
+        populate: 'product'
       }
     }).then(response => {
       this.offers = response.data

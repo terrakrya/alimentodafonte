@@ -121,7 +121,7 @@ export default {
       if (images && images.length) {
         return this.baseUrl + (images.find(image => image.default) || images[0]).thumb
       } else {
-        return this.baseUrl + 'images/image_placeholder.jpg'
+        return this.baseUrl + 'img/image_placeholder.jpg'
       }
     },
     invoiceIssuer(issuer) {

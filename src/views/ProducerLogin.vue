@@ -81,6 +81,7 @@
             <b-form-group label="Digite seu endereço para buscar a localização.">
               <b-form-input v-model="address_input" class="input-lg" />
               <small>Ex: rua das nascentes, alto paraíso, goiás</small>
+              <a class="btn btn-sm pull-right" @click="getLocation()" >Usar GPS</a>
               <p class="text-center">
                 <button v-if="address_input" @click="autocompleteAddress" class="btn btn-rose btn-lg">Buscar endereço</button>
               </p>
@@ -93,13 +94,10 @@
           <div class="row">
             <div class="col-sm-12">
               <b-form-group label="Endereço *">
-                {{displayAddress(form.address)}}
-              </b-form-group>
-            </div>
-            <div class="col-sm-6">
-              <b-form-group label="Nome *">
-                <b-form-input v-model="form.name" v-validate="'required'" name="name" />
-                <field-error :msg="veeErrors" field="name" />
+                {{form.address}}
+                <a class="btn btn-sm pull-right" @click="showAutoComplete()" >Mudar endereço</a>
+                <br>
+                <br>
               </b-form-group>
             </div>
             <div class="col-sm-6">
@@ -109,7 +107,13 @@
               </b-form-group>
             </div>
             <div class="col-sm-6">
-              <b-form-group label="Telefone">
+              <b-form-group label="Nome *">
+                <b-form-input v-model="form.name" v-validate="'required'" name="name" />
+                <field-error :msg="veeErrors" field="name" />
+              </b-form-group>
+            </div>
+            <div class="col-sm-6">
+              <b-form-group label="Telefone / WhatsApp">
                 <b-form-input v-model="form.phone" v-validate="'required'" name="phone" placeholder="(99) 99999-9999" v-mask="['(##) ####-####', '(##) #####-####']" />
                 <field-error :msg="veeErrors" field="phone" />
               </b-form-group>
@@ -140,14 +144,14 @@
           </div>
         </div>
         <div class="card-footer justify-content-center">
-          <button type="submit" class="btn btn-rose btn-link btn-lg">Continuar</button>
+          <button type="submit" class="btn btn-rose btn-lg">Continuar</button>
           <button v-if="isLoading" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Fazendo login...</button>
           <b-alert variant="danger" show v-if="error">{{error}}</b-alert>
         </div>
       </form>
     </div>
   </div>
-  <pre>{{form}}</pre>
+  <!-- <pre>{{form}}</pre> -->
 </div>
 </template>
 
@@ -178,6 +182,7 @@ export default {
       // address: '',
       address_input: '',
       address: '',
+      geolocation: '',
       loading: false,
       form: {
         email: null,
@@ -217,7 +222,7 @@ export default {
     },
     setAddressForm(address) {
       this.form.address = address.address
-      this.form.address.display_name = address.display_name
+      this.form.address.display_name = displayAddress(address)
       this.form.geolocation = {
         latitude: address.lat,
         longitude: address.lon
@@ -225,11 +230,12 @@ export default {
     },
     showAutoComplete() {
       this.address = null
+      this.form.address = null
     },
     displayAddress(address) {
       return address.display_name
       .split(', ')
-      .filter(name => (name.indexOf('Microrregião') < 0 && name.indexOf('Mesorregião') < 0 && name != "Brasil"))
+      .filter(name => (name.indexOf('Região ') < 0 && name.indexOf('Microrregião ') < 0 && name.indexOf('Mesorregião ') < 0 && name != "Brasil"))
       .join(', ')
     },
 
@@ -262,7 +268,7 @@ export default {
 
           axios({
             method: 'POST',
-            url: '/register',
+            url: '/register_producer',
             data: this.form
           }).then(resp => {
             var user = resp.data

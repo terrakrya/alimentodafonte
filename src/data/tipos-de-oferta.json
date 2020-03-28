@@ -1,0 +1,12 @@
+[
+  {
+    "value": "single_product",
+    "text": "Produto",
+    "icon": "fa fa-leaf"
+  },
+  {
+    "value": "product_basket",
+    "text": "Cesta fechada de produtos",
+    "icon": "fa fa-shopping-basket"
+  }
+]

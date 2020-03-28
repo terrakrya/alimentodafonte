@@ -1,0 +1,10 @@
+[
+  {
+    "value": "no_deliver",
+    "text": "Buscar no local"
+  },
+  {
+    "value": "deliver",
+    "text": "Entrega em casa"
+  }
+]

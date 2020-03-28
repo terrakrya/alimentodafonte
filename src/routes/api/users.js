@@ -207,38 +207,5 @@ router.get('/is_alive', function(req, res) {
 
 });
 
-router.get('/fix_data', function(req, res) {
-  Product.find().populate('producer product_variations').exec(function(err, products) {
-    if (err) {
-      res.status(422).send('Erro:: ' + err.message);
-    } else {
-      products.forEach(product => {
-        var org = product.producer.organizations[0]
-        product.organization = org
-        product.save(function(err) {
-          if (err) {
-            res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
-          } else {
-            product.product_variations.forEach(product_variation => {
-              product_variation.organization = org
-              if (!product_variation.images || product_variation.images.length == 0) {
-                product_variation.images = product.images
-              }
-              product_variation.save(function(err) {
-                if (err) {
-                  res.status(422).send('Ocorreu um erro ao salvar: ' + err.message);
-                } else {
-                  res.send('Salvo' + err.message);
-                }
-              });
-            })
-          }
-        });
-
-      })
-    }
-  })
-
-});
 
 module.exports = router;

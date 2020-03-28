@@ -3,7 +3,7 @@
     <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top text-white">
       <div class="container">
         <div class="navbar-wrapper">
-          <a class="navbar-brand" href="#pablo">Alimento da fonte <strong>Saúde perto de você</strong></a>
+          <a class="navbar-brand" href="/#/">Alimento da fonte <strong>Saúde perto de você</strong></a>
         </div>
         <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Mudar navegação">
           <span class="sr-only">Mudar navegação</span>
@@ -29,7 +29,7 @@
     </nav>
     <!-- End Navbar -->
     <div class="wrapper wrapper-full-page">
-      <div class="page-header login-page header-filter" filter-color="black" style="background-image: url('../../assets/img/login.jpg'); background-size: cover; background-position: top center;">
+      <div class="page-header login-page header-filter" filter-color="black"  data-image="../assets/img/bg.jpg" style="background-size: cover; background-position: top center;">
         <!--   you can change the color of the filter page using: data-color="blue | purple | green | orange | red | rose " -->
         <div class="container">
           <div class="row">
@@ -50,13 +50,13 @@
             <div class="col-md-4">
               <div class="card card-profile text-center card-hidden">
                 <div class="card-body ">
-                  <h4 class="card-title">Painel de vendas</h4>
+                  <h4 class="card-title">Painel do produtor</h4>
                   <div class="form-group">
                     <label class="bmd-label-floating">Publique suas ofertas de produtos ou cestas e encontre seus clientes. </label>
                   </div>
                 </div>
                 <div class="card-footer justify-content-center">
-                  <router-link to="/produtor" class="btn btn-rose btn-round btn-large">Sou um produtor</router-link>
+                  <router-link to="/produtor" class="btn btn-rose btn-round btn-large">Quero vender</router-link>
                 </div>
               </div>
             </div>

@@ -3,39 +3,41 @@
   <div class="row">
     <div class="col-md-5 col-sm-5">
       <b-carousel id="carousel-fade" style="text-shadow: 0px 0px 2px #000" fade indicators img-width="1024" img-height="480" v-model="slide">
-        <b-carousel-slide v-for="(image, index) in offer.product_variation.images" :img-src="baseUrl+image.url"></b-carousel-slide>
+        <b-carousel-slide v-for="(image, index) in offer.product.images" :img-src="baseUrl+image.url"></b-carousel-slide>
       </b-carousel>
       <div class="offer_thumbs row">
-        <div class="col-sm-3" v-for="(image, index) in offer.product_variation.images" :key="index">
+        <div class="col-sm-3" v-for="(image, index) in offer.product.images" :key="index">
           <a @click="setSlide(index)"><img class="thumbnail" :src="baseUrl+image.url" :class="{active: (slide == index)}"></a>
         </div>
       </div>
     </div>
     <div class="col-md-7 col-sm-7">
-      <h2 class="title"> {{offer.product_variation.name}} </h2>
-      <tags :tags="offer.product_variation.tags" />
+      <h2 class="title"> {{offer.product.name}} </h2>
+      <tags :tags="offer.product.tags" />
       <h3 class="main-price">{{offer.final_price | moeda}}</h3>
       <div>
-        <p class="pre-line">{{offer.product_variation.description}}</p>
+        <p class="pre-line">{{offer.product.description}}</p>
         <div class="card card-collapse">
           <div class="card-header">
             <h5 class="mb-0">
-              Envio e estocagem
+              Entrega
             </h5>
           </div>
           <div>
             <div class="card-body">
               <table class="product-info">
                 <tbody>
-                  <tr v-if="offer.invoice_issuer">
-                    <td>Emissor da nota fiscal:</td>
-                    <th class="text-right">{{invoiceIssuer(offer.invoice_issuer)}}</th>
+                  <tr v-if="offer.shipping_types && offer.shipping_types.length > 0">
+                    <td>Tipos de entrega:</td>
+                    <th class="text-right">
+                      <a v-for="(shipping_type, index) in offer.shipping_types" :key="index"> <span class="badge badge-default" > {{tipos_de_entrega.find(type => type.value == shipping_type ).text}} </span> &nbsp;</a>
+                    </th>
                   </tr>
                   <tr v-if="offer.source_of_shipment">
                     <td>Origem do envio:</td>
                     <th class="text-right">{{offer.source_of_shipment}}</th>
                   </tr>
-                  <tr v-if="offer.product_variation.bar_code">
+                  <tr v-if="offer.product.bar_code">
                     <td>
                       Data de fabricação:
                     </td>
@@ -43,69 +45,7 @@
                       <div v-if="offer.manufacturing_date">
                         {{offer.manufacturing_date | moment("DD/MM/YYYY")}}
                       </div>
-                      <div v-if="offer.product_variation && offer.product_variation.duration && offer.product_variation.duration.value && offer.manufacturing_date">
-                        <small>Vence {{offer.manufacturing_date | moment("add", offer.product_variation.duration.value + ' ' + date_unit[offer.product_variation.duration.unit]) | moment('from', 'now')}}</small>
-                      </div>
                     </th>
-                  </tr>
-                  <tr v-if="offer.product_variation.duration && offer.product_variation.duration.value">
-                    <td>Validade:</td>
-                    <th class="text-right">{{offer.product_variation.duration.value}} {{offer.product_variation.duration.unit}}</th>
-                  </tr>
-                  <tr v-if="offer.product_variation.minimum_quantity_for_shipping && offer.product_variation.minimum_quantity_for_shipping.value">
-                    <td>Quantidade mínima para envio:</td>
-                    <th class="text-right">{{offer.product_variation.minimum_quantity_for_shipping.value}} {{offer.product_variation.minimum_quantity_for_shipping.unit}}</th>
-                  </tr>
-                  <tr v-if="offer.product_variation.gross_weight && offer.product_variation.gross_weight.value">
-                    <td>Peso bruto por unidade:</td>
-                    <th class="text-right">{{offer.product_variation.gross_weight.value}} {{offer.product_variation.gross_weight.unit}}</th>
-                  </tr>
-                  <tr v-if="offer.product_variation.net_weight && offer.product_variation.net_weight.value">
-                    <td>Peso liquido por unidade:</td>
-                    <th class="text-right">{{offer.product_variation.net_weight.value}} {{offer.product_variation.net_weight.unit}}</th>
-                  </tr>
-                  <tr v-if="offer.product_variation.ncm">
-                    <td>NCM:</td>
-                    <th class="text-right">{{offer.product_variation.ncm}}</th>
-                  </tr>
-                  <tr v-if="offer.product_variation.bar_code">
-                    <td>Código de barras:</td>
-                    <th class="text-right">{{offer.product_variation.bar_code}}</th>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div class="card card-collapse">
-          <div class="card-header">
-            <h5 class="mb-0">
-              Embalagem comercial
-            </h5>
-          </div>
-          <div>
-            <div class="card-body">
-              <table class="product-info">
-                <tbody>
-                  <tr v-if="offer.product_variation.box_weight && offer.product_variation.box_weight.value">
-                    <td>Peso da embalagem:</td>
-                    <th class="text-right">{{offer.product_variation.box_weight.value}} {{offer.product_variation.box_weight.unit}}</th>
-                  </tr>
-                  <tr v-if="offer.product_variation.box_height && offer.product_variation.box_height.value">
-                    <td>Altura:</td>
-                    <th class="text-right">{{offer.product_variation.box_height.value}} {{offer.product_variation.box_height.unit}}</th>
-                  </tr>
-                  <tr v-if="offer.product_variation.box_width && offer.product_variation.box_width.value">
-                    <td>Comprimento:</td>
-                    <th class="text-right">{{offer.product_variation.box_width.value}} {{offer.product_variation.box_width.unit}}</th>
-                  </tr>
-                  <tr v-if="offer.product_variation.box_gross_weight && offer.product_variation.box_gross_weight.value">
-                    <td>Peso bruto:</td>
-                    <th class="text-right">{{offer.product_variation.box_gross_weight.value}} {{offer.product_variation.box_gross_weight.unit}}</th>
-                  </tr>
-                  <tr v-if="offer.product_variation.box_max_stack">
-                    <td>Empilhamento máximo:</td>
-                    <th class="text-right">{{offer.product_variation.box_max_stack}}</th>
                   </tr>
                 </tbody>
               </table>
@@ -168,6 +108,7 @@ import Loading from '@/components/Loading'
 import NoItem from '@/components/NoItem'
 import ProductImage from '@/components/ProductImage'
 import Tags from '@/components/Tags'
+import tipos_de_entrega from '@/data/tipos-de-entrega.json'
 
 export default {
 
@@ -175,6 +116,7 @@ export default {
 
   data() {
     return {
+      tipos_de_entrega: tipos_de_entrega,
       offer: null,
       slide: 0,
       qtd: 1
@@ -184,7 +126,7 @@ export default {
   created() {
     axios.get('shop/offer/' + this.$route.params.id, {
       params: {
-        populate: 'product_variation producer organization orders'
+        populate: 'product producer organization orders'
       }
     }).then(response => {
       this.offer = response.data
@@ -197,7 +139,7 @@ export default {
     },
     addToCart() {
       this.$store.dispatch('addToCart', {offer: this.offer, qtd: this.qtd})
-      this.notify(this.offer.product_variation.name +" adicionado ao carrinho")
+      this.notify(this.offer.product.name +" adicionado ao carrinho")
     }
   },
   components: {
