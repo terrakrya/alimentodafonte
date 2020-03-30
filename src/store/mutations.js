@@ -26,7 +26,6 @@ export const mutations = {
     localStorage.setItem('cart', JSON.stringify(state.cart))
   },
   removeFromCart (state, index) {
-    delete state.cart[index]
     state.cart.splice(index, 1)
     localStorage.setItem('cart', JSON.stringify(state.cart))
   },

@@ -88,6 +88,7 @@
                     <th>Valor unitário</th>
                     <th>Quantidade</th>
                     <th>Total</th>
+                    <th></th>
                   </thead>
                   <tbody>
                     <tr v-for="(item, index) in form.basket" :key="index">
@@ -104,6 +105,11 @@
                       <td>
                         <strong>{{item.total | moeda}}</strong>
                       </td>
+                      <td>
+                        <button type="button" rel="tooltip" data-placement="left" title="Remove item" class="btn btn-danger btn-sm" @click="removeFromBasket(index)">
+                          <i class="material-icons">close</i>
+                        </button>
+                      </td>
                     </tr>
                     <tr>
                       <th colspan="3" class="text-right">
@@ -112,6 +118,7 @@
                       <th>
                         <strong>{{form.basket.reduce((a,b) => a + b.total, 0) | moeda}}</strong>
                       </th>
+                      <th></th>
                     </tr>
                   </tbody>
                 </table>
@@ -323,6 +330,9 @@ export default {
       .split(', ')
       .filter(name => (name.indexOf('Região ') < 0 && name.indexOf('Microrregião ') < 0 && name.indexOf('Mesorregião ') < 0 && name != "Brasil"))
       .join(', ')
+    },
+    removeFromBasket(index) {
+      this.form.basket.splice(index, 1)
     }
   },
   components: {

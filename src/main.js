@@ -17,6 +17,7 @@ import router from './router'
 import store from './store/'
 import mixin from './mixin'
 import App from './App.vue'
+import 'leaflet/dist/leaflet.css';
 
 if (window.Dorothy) {
   window.Dorothy.init({

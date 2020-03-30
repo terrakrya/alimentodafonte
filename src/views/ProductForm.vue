@@ -139,18 +139,12 @@ export default {
     if (this.isEditing()) {
       this.edit()
     }
-    axios.get('products', {
-      params: {
-        select: 'tags'
-      }
-    }).then(response => {
-      response.data.forEach(product => {
-        product.tags.forEach(tag => {
-          this.tags.push(tag)
-        })
-      });
-      this.tags = this.tags.filter((v, i, a) => a.findIndex(t => (t.text === v.text)) === i)
-    }).catch(this.showError);
+    axios.get('shop/tags').then(response => {
+      this.tags = response.data.map(tag => {
+        return {text: tag}
+      })
+      console.log(this.tags);
+    }).catch(this.showError)
   },
   methods: {
     edit() {

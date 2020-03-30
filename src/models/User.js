@@ -3,6 +3,7 @@ var mongoose = require('mongoose'),
   crypto = require('crypto'),
   jwt = require('jsonwebtoken'),
   secret = require('../config').secret,
+  AddressSchema = require('./Address'),
   ObjectId = mongoose.Schema.Types.ObjectId;
 mongoose.set('useCreateIndex', true)
 
@@ -26,11 +27,12 @@ var UserSchema = new mongoose.Schema({
   },
   hash: String,
   salt: String,
-  name: String,
-  phone: String,
-  address: Object,
   roles: [String],
+  name: String,
+  nickname: String,
+  phone: String,
   image: Object,
+  address: AddressSchema,
   organization: {
     type: ObjectId,
     ref: 'Organization'
@@ -63,6 +65,7 @@ UserSchema.methods.generateJWT = function() {
     id: this._id,
     cnpj: this.cnpj,
     name: this.name,
+    nickname: this.nickname,
     phone: this.phone,
     email: this.email,
     address: this.address,
@@ -80,6 +83,7 @@ UserSchema.methods.toAuthJSON = function() {
     token: this.generateJWT(),
     roles: this.roles,
     name: this.name,
+    nickname: this.nickname,
     phone: this.phone,
     address: this.address,
   };
