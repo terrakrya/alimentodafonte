@@ -69,22 +69,22 @@
                 <br>
               </b-form-group>
             </div>
-            <div class="col-sm-6">
-              <b-form-group label="CPF/CNPJ *">
-                <b-form-input v-model="form.cnpj" v-validate="'required'" name="cnpj" v-mask="['###.###.###-##', '##.###.###/####-##']" />
-                <field-error :msg="veeErrors" field="cnpj" />
-              </b-form-group>
-            </div>
-            <div class="col-sm-6">
+            <div class="col-sm-8">
               <b-form-group label="Nome *">
                 <b-form-input v-model="form.name" v-validate="'required'" name="name" />
                 <field-error :msg="veeErrors" field="name" />
               </b-form-group>
             </div>
             <div class="col-sm-4">
-              <b-form-group label="Apelido/Nome social" *>
+              <b-form-group label="Apelido/Nome social *">
                 <b-form-input v-model="form.nickname" v-validate="'required'" name="nickname" />
                 <field-error :msg="veeErrors" field="nickname" />
+              </b-form-group>
+            </div>
+            <div class="col-sm-4">
+              <b-form-group label="CPF/CNPJ *">
+                <b-form-input v-model="form.cnpj" v-validate="'required'" name="cnpj" v-mask="['###.###.###-##', '##.###.###/####-##']" />
+                <field-error :msg="veeErrors" field="cnpj" />
               </b-form-group>
             </div>
             <div class="col-sm-4">
