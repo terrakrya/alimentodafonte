@@ -63,6 +63,7 @@ router.post('/register', function(req, res, next) {
   user.address = req.body.address
   user.email = req.body.email
   user.name = req.body.name
+  user.nickname = req.body.nickname
   user.phone = req.body.phone
   user.roles = ['client']
 
@@ -80,6 +81,7 @@ router.post('/register_producer', function(req, res, next) {
   user.address = req.body.address
   user.email = req.body.email
   user.name = req.body.name
+  user.nickname = req.body.nickname
   user.phone = req.body.phone
   user.roles = ['producer']
 
@@ -96,6 +98,8 @@ router.put('/users/:id', auth.manager, function(req, res, next) {
     user.cnpj = req.body.cnpj
     user.email = req.body.email
     user.name = req.body.name
+    user.nickname = req.body.nickname
+    user.phone = req.body.phone
 
     if (req.payload.roles.includes('admin')) {
       user.roles = req.body.roles

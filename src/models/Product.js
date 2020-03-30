@@ -23,10 +23,8 @@ const ProductSchema = mongoose.Schema({
   description: String,
   tags: [Object],
   seasonality: [String],
-  producer_price: Number,
-  taxes: Number,
-  final_price: Number,
-
+  price: Number,
+  unit: String
 }, {
   timestamps: true,
   toJSON: { virtuals: true }

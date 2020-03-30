@@ -1,6 +1,6 @@
  <template>
 <div class="">
-  <div class="card" :class="showForm ? '' : 'card-hidden'">
+  <div class="card" :class="showForm ? '' : 'card-hidden'" v-if="showForm">
     <div class="row">
       <div class="col-sm-6">
         <div class="card-header card-header-rose text-center" @click="setView('login')" :class="{active: active_view == 'login'}">
@@ -51,9 +51,7 @@
     <div v-if="active_view == 'register'">
       <div class="card-body">
         <br>
-        <br>
         <p class="card-description text-center">Cadastre-se e comece agora mesmo a publicar suas ofertas.</p>
-        <br>
         <div class="text-center" v-if="!form.address">
           <location :cb="setAddress" />
         </div>

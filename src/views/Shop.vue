@@ -21,7 +21,7 @@
           <div class="form-check" v-for="producer in producers">
             <label class="form-check-label">
               <input class="form-check-input" type="radio" :value="producer._id" v-model="filters.producer">
-              {{producer.name}}
+              {{producer.nickname || producer.name}}
               <span class="form-check-sign">
                 <span class="check"></span>
               </span>
@@ -42,7 +42,7 @@
   <div class="col-md-9">
     <br>
     <no-item :list="filtered_offers" />
-    <h5>
+    <h5 v-if="filtered_offers">
       <b>{{filtered_offers.length}}</b> {{filtered_offers.length == 1 ? 'oferta encontrada' : 'ofertas encontradas'}}
       em um raio de <b>{{filters.radius}}</b> km
     </h5>
@@ -59,14 +59,16 @@
         <tr class="col-md-4" v-for="offer in filtered_offers">
           <td>
             <router-link :to="'/oferta/'+offer._id">
-              <product-image :product="offer.product || offer" />
+              <product-image v-if="offer.product" :product="offer.product" />
+              <product-image v-else :product="offer" />
             </router-link>
           </td>
           <td class="td-name">
             <router-link :to="'/oferta/'+offer._id">
-              <strong>{{offer.name || offer.product.name}}</strong>
+              <strong v-if="offer.product">{{offer.product.name}}</strong>
+              <strong v-else>{{offer.name}}</strong>
             </router-link>
-            <small v-if="offer.producer"><br />{{offer.producer.name}}</small>
+            <small v-if="offer.producer"><br />{{offer.producer.nickname || offer.producer.name}}</small>
           </td>
           <td>
             <div class="price-container">
@@ -112,6 +114,7 @@ export default {
       offers: null,
       filtered_offers: null,
       tags: [],
+      producers: null,
       qtd: {}
     }
   },
@@ -145,7 +148,7 @@ export default {
       this.filtered_offers = this.offers
       if (this.filters.search) {
         this.filtered_offers = this.filtered_offers.filter(offer => {
-          var name = slugify(offer.name || offer.product.name).toLowerCase()
+          var name = slugify(offer.product ? offer.product.name : offer.name).toLowerCase()
           var search = slugify(this.filters.search).toLowerCase()
           return name.search(search) >= 0
         })
@@ -160,9 +163,11 @@ export default {
               })
             } else {
               return offer.basket.find(item => {
-                return item.product.tags.find(offer_tag => {
-                  return offer_tag.text == tag
-                })
+                if (item.product.tags) {
+                  return item.product.tags.find(offer_tag => {
+                    return offer_tag.text == tag
+                  })                  
+                }
               })
             }
           })
@@ -185,7 +190,7 @@ export default {
         qtd: this.qtd[offer._id]
       })
       this.qtd = {}
-      this.notify(offer.product.name + " adicionado ao carrinho")
+      this.notify((offer.name ||offer.product.name) + " adicionado ao carrinho")
     }
   },
   watch: {

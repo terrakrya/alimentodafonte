@@ -29,8 +29,7 @@
                   <router-link :to="'/oferta/'+item.offer._id">
                     {{item.offer.product.name}}
                   </router-link>
-                  <small v-if="item.offer.producer"><br />{{item.offer.producer.name}}</small>
-                  <!-- <small v-if="item.offer.organization"><br />{{item.offer.organization.name}}</small> -->
+                  <small v-if="item.offer.producer"><br />{{item.offer.producer.nickname || item.offer.producer.name}}</small>
                 </td>
                 <td>
                   <small>{{item.offer.source_of_shipment}}</small>

@@ -36,7 +36,7 @@
                   <small>{{item.offer.source_of_shipment}}</small>
                 </td>
                 <td>
-                  <small v-if="item.offer.producer">{{item.offer.producer.name}}</small>
+                  <small v-if="item.offer.producer">{{item.offer.producer.nickname || item.offer.producer.name}}</small>
                 </td>
                 <td>
                   <small>{{invoiceIssuer(item.offer.invoice_issuer)}}</small>

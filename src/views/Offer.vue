@@ -5,7 +5,7 @@
       <b-carousel id="carousel-fade" style="text-shadow: 0px 0px 2px #000" fade indicators img-width="1024" img-height="480" v-model="slide">
         <b-carousel-slide v-for="(image, index) in offer.product.images" :img-src="baseUrl+image.url"></b-carousel-slide>
       </b-carousel>
-      <div class="offer_thumbs row">
+      <div class="offer_thumbs row" v-if="offer.product.images && offer.product.images.length > 1">
         <div class="col-sm-3" v-for="(image, index) in offer.product.images" :key="index">
           <a @click="setSlide(index)"><img class="thumbnail" :src="baseUrl+image.url" :class="{active: (slide == index)}"></a>
         </div>
@@ -27,17 +27,17 @@
             <div class="card-body">
               <table class="product-info">
                 <tbody>
+                  <tr v-if="offer.source_of_shipment">
+                    <td>Origem do envio:</td>
+                    <th class="text-right">{{offer.source_of_shipment.description}}</th>
+                  </tr>
                   <tr v-if="offer.shipping_types && offer.shipping_types.length > 0">
                     <td>Tipos de entrega:</td>
                     <th class="text-right">
                       <a v-for="(shipping_type, index) in offer.shipping_types" :key="index"> <span class="badge badge-default" > {{tipos_de_entrega.find(type => type.value == shipping_type ).text}} </span> &nbsp;</a>
                     </th>
                   </tr>
-                  <tr v-if="offer.source_of_shipment">
-                    <td>Origem do envio:</td>
-                    <th class="text-right">{{offer.source_of_shipment}}</th>
-                  </tr>
-                  <tr v-if="offer.product.bar_code">
+                  <tr v-if="offer.manufacturing_date">
                     <td>
                       Data de fabricação:
                     </td>
@@ -62,10 +62,11 @@
             <div class="card-body">
               <div class="row">
                 <div class="col-md-3">
-                  <img class="img-thumbnail" :src="defaultThumb(offer.producer.images)" :alt="offer.producer.name">
+                  <img class="img-thumbnail" :src="defaultThumb(offer.producer.images)" :alt="offer.producer.nickname || offer.producer.name">
                 </div>
                 <div class="col-md-9">
-                  <h5><strong>{{offer.producer.name}}</strong></h5>
+                  <h5><strong>{{offer.producer.nickname || offer.producer.name}}</strong></h5>
+                  <p v-if="offer.producer.nickname"><small>{{offer.producer.name}}</small></p>
                   <p>{{offer.producer.history}}</p>
                 </div>
               </div>

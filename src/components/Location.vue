@@ -123,6 +123,7 @@ export default {
   props: {
     current_address: null,
     cb: null,
+    autoload: true,
   },
   data() {
     return {
@@ -133,11 +134,12 @@ export default {
       address_input: '',
       form: null,
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+      token: axios.defaults.headers.common['Authorization']
     }
   },
   created() {
-    if (!this.current_address) {
+    if (!this.current_address && this.autoload) {
       this.show_modal = true
       this.getLocation()
     } else {
@@ -146,12 +148,12 @@ export default {
     }
   },
   computed: {
-		geolocation () {
-			if (this.address && this.address.location) {
+    geolocation() {
+      if (this.address && this.address.location) {
         return latLng(this.address.location.coordinates[0], this.address.location.coordinates[1])
       }
-		}
-	},
+    }
+  },
   methods: {
     getLocation() {
       if (navigator.geolocation) {
@@ -164,12 +166,15 @@ export default {
       }
     },
     searchByLocation(latitude, longitude) {
+      delete axios.defaults.headers.common['Authorization']
       axios.get("https://us1.locationiq.com/v1/reverse.php?key=81b80182fef784&lat=" + latitude + "&lon=" + longitude + "&accept-language=pt-BR&normalizecity=1&format=json").then(resp => {
         this.address = this.parseAddress(resp.data.address, latitude, longitude)
         this.loading_gps = false
+        axios.defaults.headers.common['Authorization'] = this.token
       }).catch(this.locationError)
     },
     searchByAddress() {
+      delete axios.defaults.headers.common['Authorization']
       axios.get("https://us1.locationiq.com/v1/search.php?key=81b80182fef784&q=" + encodeURI(this.address_input) + "&addressdetails=1&limit=10&countrycodes=BR&accept-language=pt-BR&normalizecity=1&format=json").then(resp => {
         var data = resp.data
         if (data.length == 1) {
@@ -180,7 +185,7 @@ export default {
             return this.parseAddress(address.address, address.lat, address.lon)
           })
         }
-
+        axios.defaults.headers.common['Authorization'] = this.token
       }).catch(this.showError)
     },
     updateMarker(location) {
@@ -233,6 +238,7 @@ export default {
       console.log(e);
       this.notify("Não foi possível encontrar seu endereço automaticamente.", "warn")
       this.loading_gps = false
+      axios.defaults.headers.common['Authorization'] = this.token
     }
   },
   components: {

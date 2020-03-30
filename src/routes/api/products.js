@@ -37,6 +37,22 @@ router.get('/slug', auth.producer, function(req, res) {
   });
 });
 
+router.get('/tags', function(req, res) {
+  Product.find({}, 'tags').exec(function(err, products) {
+    if (err) {
+      res.status(422).send('Erro:: ' + err.message);
+    } else {
+      var tags = {}
+      products.forEach(product => {
+        product.tags.forEach(tag => {
+          tags[tag.text] = {text: tag.text}
+        })
+      })
+      res.json(Object.values(tags));
+    }
+  });
+});
+
 router.get('/:id', auth.producer, function(req, res) {
   Product.findOne({
     _id: req.params.id

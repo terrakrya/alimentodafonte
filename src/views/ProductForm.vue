@@ -65,24 +65,18 @@
               <form-months :form="form" field="seasonality" />
             </b-form-group>
             <h5> VALORES </h5>
-            <div class="row justify-content-center">
+            <div class="row">
               <div class="col-md-4">
-                <b-form-group label="Preço do produto / unidade" class="bmd-form-group">
-                  <money v-model="form.producer_price" class="form-control" @input="calcFinalPrice"></money>
+                <b-form-group label="Preço do produto" class="bmd-form-group">
+                  <money v-model="form.price" class="form-control" @input="calcFinalPrice"></money>
                 </b-form-group>
               </div>
               <div class="col-md-4">
-                <b-form-group label="Taxa de entrega" class="bmd-form-group">
-                  <money v-model="form.taxes" class="form-control" @input="calcFinalPrice"></money>
-                </b-form-group>
-              </div>
-              <div class="col-md-4">
-                <b-form-group label="Preço final" class="bmd-form-group">
-                  <h4>{{form.final_price | moeda}}</h4>
+                <b-form-group label="Por" class="bmd-form-group">
+                  <b-form-select v-model="form.unit" :options="unit_options" class="form-control" />
                 </b-form-group>
               </div>
             </div>
-
             <pictures-upload :form="form" field="images" url="uploads/images" :multiple="true" />
             <div class="card-footer justify-content-center" v-if="tab == 0">
               <form-submit :errors="error" :sending="isSending" label="Continuar" icon="arrow_forward" />
@@ -124,12 +118,12 @@ export default {
         history: '',
         tags: [],
         seasonality: [],
-        producer_price: '',
-        taxes: '',
-        final_price: 0
+        price: '',
+        unit: 'unidade'
       },
       product: null,
       tags: [],
+      unit_options: ['unidade', 'dúzia', 'grama', 'kg', 'ton']
     }
   },
   created() {
@@ -139,10 +133,10 @@ export default {
     if (this.isEditing()) {
       this.edit()
     }
-    axios.get('shop/tags').then(response => {
-      this.tags = response.data.map(tag => {
-        return {text: tag}
-      })
+    axios.get('products/tags').then(response => {
+      console.log(response.data);
+
+      this.tags = response.data
       console.log(this.tags);
     }).catch(this.showError)
   },
@@ -177,7 +171,7 @@ export default {
       })
     },
     calcFinalPrice() {
-      this.form.final_price = this.form.producer_price + this.form.taxes
+      this.form.final_price = this.form.price + this.form.taxes
     }
   },
   components: {

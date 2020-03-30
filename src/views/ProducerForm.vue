@@ -11,7 +11,7 @@
               </router-link>
             </div>
             <h3 class="card-title">
-              {{producer.name}}
+              {{producer.nickname || producer.name}}
             </h3>
             <h5 class="card-description">{{producer.description}}</h5>
           </div>

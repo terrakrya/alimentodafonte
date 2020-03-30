@@ -1,5 +1,6 @@
 const mongoose = require('mongoose'),
   ObjectId = mongoose.Schema.Types.ObjectId,
+  AddressSchema = require('./Address'),
   OfferItemSchema = require('./OfferItem');
 
 const OfferSchema = mongoose.Schema({
@@ -23,7 +24,9 @@ const OfferSchema = mongoose.Schema({
   images: [Object],
   lot: String,
   manufacturing_date: Date,
-  source_of_shipment: String,
+  source_of_shipment: AddressSchema,
+  price: Number,
+  taxes: Number,
   final_price: Number,
   qtd: Number,
   qtd_ordered: Number,

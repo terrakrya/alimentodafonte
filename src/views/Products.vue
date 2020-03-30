@@ -21,8 +21,8 @@
                 <h4>{{data.item.name}}</h4>
               </router-link>
             </template>
-            <template slot="final_price" slot-scope="data">
-              {{data.value | moeda}}
+            <template slot="price" slot-scope="data">
+              {{data.value | moeda}} <small>por {{data.item.unit}}</small>
             </template>
             <template slot="producer" slot-scope="data">
               <router-link :to="'/editar-produtor/'+ data.value._id">
@@ -67,8 +67,8 @@ export default {
         label: 'Produto',
         sortable: true
       }, {
-        key: 'final_price',
-        label: 'Preço final',
+        key: 'price',
+        label: 'Preço',
         sortable: true
       }, ],
       products: null

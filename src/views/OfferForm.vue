@@ -74,10 +74,8 @@
                     <div class="col-sm-4">
                       <a class="btn btn-rose btn-round btn-sm" @click="addToBasket()">Adicionar na cesta &#xA0;<i class="material-icons">shopping_cart</i></a>
                     </div>
-
                   </div>
                   <br>
-
                 </div>
               </div>
               <div v-if="form.basket && form.basket.length > 0">
@@ -126,33 +124,49 @@
             </div>
             <div v-if="form.product || (form.basket && form.basket.length > 0) ">
               <div class="row justify-content-center">
+                <div class="col-md-12">
+                  <b-form-group label="Origem do envio *" description="Lugar onde o produto está aguardando para envio" class="bmd-form-group">
+                    {{form.source_of_shipment.description}}
+                    <div class="pull-right">
+                      <location :cb="setAddress" :current_address="this.form.source_of_shipment" :autoload="false"/>
+                    </div>
+                    <br>
+                    <br>
+                  </b-form-group>
+                </div>
                 <div class="col-md-12" v-if="form.offer_type == 'product_basket'">
-                  <b-form-group label="Nome da cesta" class="bmd-form-group">
-                    <b-form-input v-model="form.name" name="name" />
+                  <b-form-group label="Nome da cesta *" class="bmd-form-group">
+                    <b-form-input v-model="form.name" v-validate="'required'" name="name" />
+                    <field-error :msg="veeErrors" field="name" />
                   </b-form-group>
                 </div>
                 <div class="col-md-4">
-                  <b-form-group label="Preço final *" :description="'Valor '+(form.product ? 'do produto' : 'da cesta') +' (incluindo frete e impostos)'" class="bmd-form-group">
-                    <money v-model="form.final_price" class="form-control" v-validate="'required'" name="final_price"></money>
-                    <field-error :msg="veeErrors" field="final_price" />
+                  <b-form-group label="Preço *" :description="'Valor '+(form.product ? 'do produto' : 'da cesta')" class="bmd-form-group">
+                    <money v-model="form.price" class="form-control" v-validate="'required'" name="price" @input="calcFinalPrice"></money>
+                    <field-error :msg="veeErrors" field="price" />
                   </b-form-group>
                 </div>
                 <div class="col-md-4">
-                  <b-form-group label="Cod. de Referência" description="Código de referência do produtor" class="bmd-form-group">
-                    <b-form-input v-model="form.lot" name="lot" />
+                  <b-form-group label="Taxa de entrega" class="bmd-form-group">
+                    <money v-model="form.taxes" class="form-control" @input="calcFinalPrice"></money>
                   </b-form-group>
                 </div>
                 <div class="col-md-4">
+                  <b-form-group label="Preço final" class="bmd-form-group">
+                    <h4>{{form.final_price | moeda}}</h4>
+                  </b-form-group>
+                </div>
+                <div class="col-md-6">
                   <b-form-group label="Quantidade disponível *" class="bmd-form-group">
                     <b-form-input v-model="form.qtd" type="number" v-validate="'required'" name="qtd" :min="form.qtd_ordered" :disabled="isEditing()" />
                     <small v-if="isEditing() && form.qtd_ordered > 0">Já vendidos: {{form.qtd_ordered}}</small>
                     <field-error :msg="veeErrors" field="qtd" />
                   </b-form-group>
                 </div>
-                <div class="col-md-12">
-                  <b-form-group label="Origem do envio *" description="Lugar onde o produto está aguardando para envio" class="bmd-form-group">
-                    <b-form-input v-model="form.source_of_shipment" v-validate="'required'" name="source_of_shipment" />
-                    <field-error :msg="veeErrors" field="source_of_shipment" />
+                <div class="col-md-6">
+                  <b-form-group label="Tipos de entrega *" class="bmd-form-group">
+                    <b-form-checkbox-group v-model="form.shipping_types" :options="tipos_de_entrega" v-validate="'required'" name="shipping_types" />
+                    <field-error :msg="veeErrors" field="shipping_types" />
                   </b-form-group>
                 </div>
                 <div class="col-md-6">
@@ -162,12 +176,11 @@
                   </b-form-group>
                 </div>
                 <div class="col-md-6">
-                  <b-form-group label="Tipos de entrega *" class="bmd-form-group">
-                    <b-form-checkbox-group v-model="form.shipping_types" :options="tipos_de_entrega" v-validate="'required'" name="shipping_types" />
-                    <field-error :msg="veeErrors" field="shipping_types" />
+                  <b-form-group label="Cod. de Referência" description="Código de referência do produtor" class="bmd-form-group">
+                    <b-form-input v-model="form.lot" name="lot" />
                   </b-form-group>
                 </div>
-                <div class="col-md-12" v-if="form.offer_type == 'product_basket'">
+                <div class="col-md-12">
                   <b-form-group label="Observações" class="bmd-form-group">
                     <b-form-textarea v-model="form.description" name="description" />
                   </b-form-group>
@@ -203,6 +216,7 @@ import tipos_de_entrega from '@/data/tipos-de-entrega.json';
 import tipos_de_oferta from '@/data/tipos-de-oferta.json'
 import FieldError from '@/components/FieldError'
 import PicturesUpload from '@/components/PicturesUpload'
+import Location from '@/components/Location'
 
 export default {
 
@@ -223,6 +237,8 @@ export default {
         product: null,
         basket: [],
         manufacturing_date: '',
+        price: 0,
+        taxes: 0,
         final_price: 0,
         lot: '',
         source_of_shipment: '',
@@ -261,7 +277,9 @@ export default {
         this.offer = response.data
         this.apiDataToForm(this.form, this.offer)
         this.form.published = this.offer.published
-        this.setProduct(this.offer.product)
+        if (this.offer.product) {
+            this.setProduct(this.offer.product)
+        }
         this.isLoading = false
       }).catch(this.showError);
     },
@@ -287,17 +305,17 @@ export default {
       })
     },
     calcFinalPrice() {
-      this.form.final_price = this.form.producer_price + this.form.taxes
+      this.form.final_price = this.form.price + this.form.taxes
     },
     setProduct(product) {
+      if (product && product.producer && product.producer.address) {
+        this.form.source_of_shipment = product.producer.address
+      }
       this.form.product = product._id
-      if (!this.form.final_price) {
-        this.form.final_price = product.final_price
+      if (!this.form.price) {
+        this.form.price = product.price
       }
       this.product = product
-      if (product && product.producer && product.producer.address) {
-        this.form.source_of_shipment = this.displayAddress(product.producer.address)
-      }
     },
     loadProduct(product) {
       axios.get('products/' + product.id, {
@@ -318,21 +336,22 @@ export default {
         this.form.basket.push({
           product: product,
           qtd: this.product_form.qtd,
-          price: product.final_price,
-          total: product.final_price * this.product_form.qtd
+          price: product.price,
+          total: product.price * this.product_form.qtd
         })
-        this.form.final_price = this.form.basket.reduce((a,b) => a + b.total, 0)
-        this.form.source_of_shipment = product.producer.address.display_name
+        this.form.price = this.form.basket.reduce((a, b) => a + b.total, 0)
+        this.form.source_of_shipment = product.producer.address
+        this.product_form = {
+          product: null,
+          qtd: 1
+        }
       }).catch(this.showError);
-    },
-    displayAddress(address) {
-      return address.display_name
-      .split(', ')
-      .filter(name => (name.indexOf('Região ') < 0 && name.indexOf('Microrregião ') < 0 && name.indexOf('Mesorregião ') < 0 && name != "Brasil"))
-      .join(', ')
     },
     removeFromBasket(index) {
       this.form.basket.splice(index, 1)
+    },
+    setAddress(address) {
+      this.form.source_of_shipment = address
     }
   },
   components: {
@@ -341,7 +360,8 @@ export default {
     FormEntitySelect,
     Tags,
     FieldError,
-    PicturesUpload
+    PicturesUpload,
+    Location
   }
 };
 </script>
