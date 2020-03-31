@@ -8,6 +8,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     currentUser: JSON.parse(window.localStorage.getItem('currentUser')),
+    location: JSON.parse(window.localStorage.getItem('location')),
     showMenu: false,
     cart: JSON.parse(window.localStorage.getItem('cart')) || []
   },

@@ -4,15 +4,59 @@ var express = require('express'),
   auth = require('../auth'),
   select = require('../utils').select,
   populate = require('../utils').populate,
+  slugify = require('slugify'),
   Offer = mongoose.model('Offer'),
   Order = mongoose.model('Order');
 
 router.get('/offers', function(req, res) {
-  var query = {published: true}
-  Offer.find(query, select(req)).populate(populate(req)).exec(function(err, offers) {
+  var query = {
+    published: true
+  }
+  var filters = JSON.parse(req.query.filters)
+
+  query = setLocationFilters(query, filters)
+
+  if (filters.producer) {
+    query.producer = filters.producer
+  }
+
+  Offer.find(query, select(req)).populate("product producer organization").exec(function(err, offers) {
     if (err) {
       res.status(422).send('Erro:: ' + err.message);
     } else {
+      if (filters.search) {
+        offers = offers.filter(offer => {
+          var name = slugify(offer.product ? offer.product.name : offer.name).toLowerCase()
+          var search = slugify(filters.search).toLowerCase()
+          return name.search(search) >= 0
+        })
+      }
+
+      if (filters.tags && filters.tags.length) {
+        filters.tags.forEach(tag => {
+          offers = offers.filter(offer => {
+            if (offer.product) {
+              return offer.product.tags.find(offer_tag => {
+                return offer_tag.text == tag
+              })
+            } else {
+              return offer.basket.find(item => {
+                if (item.product.tags) {
+                  return item.product.tags.find(offer_tag => {
+                    return offer_tag.text == tag
+                  })
+                }
+              })
+            }
+          })
+        })
+      }
+      // if (filters.producer) {
+      //   offers = offers.filter(offer => {
+      //     return offer.producer._id == filters.producer
+      //   })
+      // }
+
       offers = offers.filter(offer => {
         return (offer.qtd - offer.qtd_ordered) > 0
       })
@@ -22,13 +66,18 @@ router.get('/offers', function(req, res) {
 });
 
 router.get('/tags', function(req, res) {
-  var query = {published: true}
+  var query = {
+    published: true
+  }
+
+  var filters = JSON.parse(req.query.filters)
+
+  query = setLocationFilters(query, filters)
+
   Offer.find(query, 'product').populate('product', 'tags').exec(function(err, resp) {
     if (err) {
       res.status(422).send('Erro:: ' + err.message);
     } else {
-      console.log("resp");
-      console.log(resp);
       var tags = {}
       resp.forEach(offer => {
         if (offer.product) {
@@ -45,6 +94,26 @@ router.get('/tags', function(req, res) {
         }
       })
       res.json(Object.keys(tags));
+    }
+  });
+});
+
+router.get('/producers', function(req, res) {
+  var query = {
+    published: true
+  }
+  var filters = JSON.parse(req.query.filters)
+  query = setLocationFilters(query, filters)
+
+  Offer.find(query, 'producer').populate('producer', 'name nickname').exec(function(err, resp) {
+    if (err) {
+      res.status(422).send('Erro:: ' + err.message);
+    } else {
+      var producers = {}
+      resp.forEach(offer => {
+        producers[offer.producer._id] = offer.producer
+      })
+      res.json(Object.values(producers));
     }
   });
 });
@@ -148,10 +217,14 @@ router.post('/order', auth.client, function(req, res) {
 
 var updateQtdOrdered = (order_items) => {
   order_items.forEach(item => {
-    Offer.findOne({_id: item.offer}).exec(function(err, offer) {
+    Offer.findOne({
+      _id: item.offer
+    }).exec(function(err, offer) {
       console.log('items.offer');
       console.log(offer._id);
-      Order.find({ "items.offer": offer._id }).exec(function(err, orders) {
+      Order.find({
+        "items.offer": offer._id
+      }).exec(function(err, orders) {
         console.log('orders');
         console.log(orders);
         var items_qtd = 0
@@ -172,5 +245,28 @@ var updateQtdOrdered = (order_items) => {
       });
     });
   })
+}
+
+var setLocationFilters = (query, filters) => {
+  if (filters.uf) {
+    query['source_of_shipment.uf'] = filters.uf
+  }
+  if (filters.city) {
+    query['source_of_shipment.city'] = filters.city
+  }
+
+  if (filters.distance && filters.coordinates && !filters.uf && !filters.city) {
+    query['source_of_shipment.location'] = {
+      $near: {
+        $maxDistance: filters.distance * 1000,
+        $geometry: {
+          type: "Point",
+          coordinates: filters.coordinates
+        }
+      }
+    }
+  }
+
+  return query
 }
 module.exports = router;

@@ -1,7 +1,7 @@
 <template>
 <div class="location">
   <b-button v-if="current_address" @click="show_modal = !show_modal" class="btn btn-default btn-sm">Mudar endereço</b-button>
-  <b-button v-else @click="show_modal = !show_modal" class="btn btn-default">Configurar endereço</b-button>
+  <b-button v-else @click="show_modal = !show_modal" class="btn btn-default">Configurar localização</b-button>
   <b-modal v-model="show_modal" title="Localização" hide-footer hide-header>
     <div v-if="!form">
       <div v-if="!address">
@@ -27,7 +27,6 @@
                 <strong>{{a.description}}</strong>
               </td>
               <td class="text-right">
-                {{a}}
                 <button @click="setAddressForm(a)" class="btn btn-success btn-sm">Selecionar</button>
               </td>
             </tr>
@@ -204,7 +203,7 @@ export default {
 
       a.location = {
         type: "Point",
-        coordinates: [latitude, longitude]
+        coordinates: [Number(latitude), Number(longitude)]
       }
 
       // a.source = address

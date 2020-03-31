@@ -1,4 +1,7 @@
 export default {
+  setLocation ({ commit }, location) {
+    commit('setLocation', location)
+  },
   login ({ commit }, currentUser) {
     commit('login', currentUser)
   },

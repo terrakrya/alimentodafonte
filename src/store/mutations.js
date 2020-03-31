@@ -5,6 +5,11 @@ if (navigator.userAgent.indexOf('PhantomJS') > -1) {
   window.localStorage.clear()
 }
 export const mutations = {
+  setLocation (state, location) {
+    state.location = location
+    localStorage.setItem('location', JSON.stringify(state.location))
+  },
+
   login (state, currentUser) {
     state.currentUser = currentUser
   },
