@@ -156,7 +156,7 @@ router.get('/order/:id', auth.client, function(req, res) {
       model: 'Product'
     }, {
       path: 'producer',
-      model: 'Producer'
+      model: 'User'
     }]
   }).exec(function(err, order) {
     if (err) {

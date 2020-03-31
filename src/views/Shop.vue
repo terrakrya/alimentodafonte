@@ -114,6 +114,9 @@
           <td>
             <div class="price-container">
               <span class="price">{{offer.final_price | moeda}}</span>
+              <div v-if="offer.product">
+                <small>por {{offer.product.unit}}</small>
+              </div>
             </div>
           </td>
           <td>

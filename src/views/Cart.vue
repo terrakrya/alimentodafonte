@@ -11,7 +11,6 @@
                 <th class="text-center"></th>
                 <th>Oferta</th>
                 <th class="th-description">Origem</th>
-                <th class="th-description">Emissor da NF</th>
                 <th class="text-center">Valor</th>
                 <th class="text-center">Qtd</th>
                 <th class="text-left">Total</th>
@@ -22,20 +21,18 @@
               <tr v-for="(item, index) in cart">
                 <td>
                   <div class="img-container">
-                    <product-image :product="item.offer.product"/>
+                    <product-image v-if="item.offer.product" :product="item.offer.product"/>
+                    <product-image v-else :product="item.offer"/>
                   </div>
                 </td>
                 <td class="td-name">
                   <router-link :to="'/oferta/'+item.offer._id">
-                    {{item.offer.product.name}}
+                    {{item.offer.product ? item.offer.product.name : item.offer.name}}
                   </router-link>
                   <small v-if="item.offer.producer"><br />{{item.offer.producer.nickname || item.offer.producer.name}}</small>
                 </td>
                 <td>
-                  <small>{{item.offer.source_of_shipment}}</small>
-                </td>
-                <td>
-                  <small>{{invoiceIssuer(item.offer.invoice_issuer)}}</small>
+                  <small>{{item.offer.source_of_shipment.description}}</small>
                 </td>
                 <td class="text-center">
                   {{item.offer.final_price | moeda}}
@@ -44,32 +41,41 @@
                   {{item.qtd}}
                 </td>
                 <td>
-                  {{item.offer.final_price * item.qtd | moeda}}
+                  <strong>{{item.offer.final_price * item.qtd | moeda}}</strong>
                 </td>
                 <td class="td-actions">
-                  <button type="button" rel="tooltip" data-placement="left" title="Remove item" class="btn btn-link" @click="removeFromCart(index)">
+                  <button type="button" rel="tooltip" data-placement="left" title="Remove item" class="btn btn-default btn-sm" @click="removeFromCart(index)">
                     <i class="material-icons">close</i>
                   </button>
                 </td>
               </tr>
               <tr>
-                <td colspan="4"></td>
+                <td colspan="5"></td>
                 <td>
                   Total
                 </td>
-                <td colspan="1">
+                <td>
                   <strong>{{total | moeda}}</strong>
                 </td>
-                <td colspan="1"></td>
+                <td></td>
               </tr>
             </tbody>
           </table>
         </div>
-        <br>
         <div v-if="client">
-          <h4 class="text-center">Confirme os dados abaixo para finalizar a compra</h4>
           <hr>
+          <br>
+          <h4 class="text-center">Confirme os dados abaixo para finalizar a compra</h4>
+          <br>
           <div class="row">
+            <div class="col-sm-12">
+              <b-form-group label="Endereço *">
+                {{form.address.description}}
+                <div class="pull-right"><location :cb="setAddress" :current_address="form.address" :autoload="false" /></div>
+                <br>
+                <br>
+              </b-form-group>
+            </div>
             <div class="col-sm-6">
               <b-form-group label="Nome *">
                 <b-form-input v-model="form.name" v-validate="'required'" name="name" />
@@ -97,12 +103,6 @@
                 </div>
               </b-form-group>
             </div>
-            <div class="col-sm-12">
-              <b-form-group label="Endereço *">
-                <b-form-textarea v-model="form.address" v-validate="'required'" name="address" />
-                <field-error :msg="veeErrors" field="address" />
-              </b-form-group>
-            </div>
           </div>
         </div>
         <br>
@@ -119,6 +119,7 @@ import Loading from '@/components/Loading'
 import NoItem from '@/components/NoItem'
 import ProductImage from '@/components/ProductImage'
 import FieldError from '@/components/FieldError'
+import Location from '@/components/Location'
 
 export default {
 
@@ -187,14 +188,17 @@ export default {
           })
         }
       })
+    },
+    setAddress(address) {
+      this.form.address = address
     }
-
   },
   components: {
     Loading,
     NoItem,
     ProductImage,
-    FieldError
+    FieldError,
+    Location
   }
 };
 </script>

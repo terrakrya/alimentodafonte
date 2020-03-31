@@ -49,10 +49,24 @@
       </form>
     </div>
     <div v-if="active_view == 'register'">
-      <form @submit.prevent="register" class="form-auth-small">
+      <div class="card-body">
+        <br>
+        <p class="card-description text-center">Cadastre-se para continuar.</p>
+        <div class="text-center" v-if="!form.address">
+          <location :cb="setAddress" :autoload="true" />
+        </div>
+      </div>
+      <form @submit.prevent="register" class="form-auth-small" v-if="form.address">
         <div class="card-body ">
-          <p class="card-description text-center">Cadastre-se para continuar</p>
           <div class="row">
+            <div class="col-sm-12">
+              <b-form-group label="Endereço *">
+                {{form.address.description}}
+                <div class="pull-right"><location :cb="setAddress" :current_address="form.address" :autoload="false" /></div>
+                <br>
+                <br>
+              </b-form-group>
+            </div>
             <div class="col-sm-6">
               <b-form-group label="Nome *">
                 <b-form-input v-model="form.name" v-validate="'required'" name="name" />
@@ -63,12 +77,6 @@
               <b-form-group label="CPF/CNPJ *">
                 <b-form-input v-model="form.cnpj" v-validate="'required'" name="cnpj" v-mask="['###.###.###-##', '##.###.###/####-##']" />
                 <field-error :msg="veeErrors" field="cnpj" />
-              </b-form-group>
-            </div>
-            <div class="col-sm-12">
-              <b-form-group label="Endereço *">
-                <b-form-textarea v-model="form.address" v-validate="'required'" name="address" />
-                <field-error :msg="veeErrors" field="address" />
               </b-form-group>
             </div>
             <div class="col-sm-6">
@@ -103,7 +111,7 @@
           </div>
         </div>
         <div class="card-footer justify-content-center">
-          <button type="submit" class="btn btn-rose btn-link btn-lg">Continuar</button>
+          <button type="submit" class="btn btn-rose btn-lg">Continuar</button>
           <button v-if="isLoading" type="button" class="btn btn-default btn-block"><i class="fa fa-spinner fa-spin"></i> Fazendo login...</button>
           <b-alert variant="danger" show v-if="error">{{error}}</b-alert>
         </div>
@@ -117,6 +125,7 @@
 import auth from '../auth'
 import axios from 'axios'
 import FieldError from '@/components/FieldError'
+import Location from '@/components/Location'
 
 export default {
   created() {
@@ -187,10 +196,14 @@ export default {
     },
     setView(view) {
       this.active_view = view
+    },
+    setAddress(address) {
+      this.form.address = address
     }
   },
   components: {
-    FieldError
+    FieldError,
+    Location
   }
 };
 </script>

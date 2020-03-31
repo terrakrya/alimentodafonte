@@ -53,7 +53,7 @@
         <br>
         <p class="card-description text-center">Cadastre-se e comece agora mesmo a publicar suas ofertas.</p>
         <div class="text-center" v-if="!form.address">
-          <location :cb="setAddress" />
+          <location :cb="setAddress" :autoload="true" />
         </div>
       </div>
       <form @submit.prevent="register" class="form-auth-small" v-if="form.address">
@@ -62,7 +62,7 @@
             <div class="col-sm-12">
               <b-form-group label="Endereço *">
                 {{form.address.description}}
-                <div class="pull-right"><location :cb="setAddress" :current_address="this.form.address" /></div>
+                <div class="pull-right"><location :cb="setAddress" :current_address="form.address" :autoload="false" /></div>
                 <br>
                 <br>
               </b-form-group>
@@ -151,8 +151,6 @@ export default {
       password: '',
       showForm: false,
       active_view: 'register',
-      address: '',
-      geolocation: '',
       loading: false,
       form: {
         email: null,
@@ -162,7 +160,6 @@ export default {
         nickname: '',
         cnpj: '',
         address: '',
-        geolocation: null,
         phone: ''
       }
     }
@@ -222,7 +219,6 @@ export default {
       this.active_view = view
     },
     setAddress(address) {
-      console.log(address);
       this.form.address = address
     },
   },

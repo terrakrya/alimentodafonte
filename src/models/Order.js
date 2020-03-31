@@ -1,5 +1,6 @@
 const mongoose = require('mongoose'),
   ObjectId = mongoose.Schema.Types.ObjectId,
+  AddressSchema = require('./Address'),
   OrderItemSchema = require('./OrderItem');
 
 const OrderSchema = mongoose.Schema({
@@ -18,7 +19,7 @@ const OrderSchema = mongoose.Schema({
   cnpj: String,
   email: String,
   phone: String,
-  address: String
+  address: AddressSchema
 }, {
   timestamps: true,
 });
