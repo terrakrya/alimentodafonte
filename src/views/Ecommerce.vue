@@ -4,7 +4,7 @@
     <nav class="navbar navbar-color-on-scroll navbar-transparent fixed-top navbar-expand-lg" color-on-scroll="100" id="sectionsNav">
       <div class="container">
         <div class="navbar-translate">
-          <router-link :to="'/loja'" class="navbar-brand">
+          <router-link :to="'/'" class="navbar-brand">
             Alimento da fonte
           </router-link>
           <ul class="navbar-nav ml-auto pull-right">

@@ -4,16 +4,13 @@
     <nav class="navbar navbar-color-on-scroll navbar-transparent fixed-top navbar-expand-lg" color-on-scroll="100" id="sectionsNav">
       <div class="container">
         <div class="navbar-translate">
-          <router-link :to="'/loja'" class="navbar-brand">
+          <router-link :to="'/'" class="navbar-brand">
             Alimento da fonte
           </router-link>
           <ul class="navbar-nav ml-auto pull-right">
             <li class="dropdown nav-item">
-              <router-link :to="'/meus_pedidos'" class="nav-link" style="color: #fff" v-if="client">
+              <router-link :to="'/painel'" class="nav-link" style="color: #fff">
                 Minha conta
-              </router-link>
-              <router-link :to="'/entrar'" class="nav-link" style="color: #fff" v-else>
-                Entrar
               </router-link>
             </li>
           </ul>

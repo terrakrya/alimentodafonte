@@ -7,14 +7,14 @@ var express = require('express'),
   Offer = mongoose.model('Offer'),
   Order = mongoose.model('Order');
 
-router.get('/', auth.manager, function(req, res) {
-  var query = {
-  }
+router.get('/', auth.producer, function(req, res) {
+  var query = {}
+
   Order.find(query, select(req)).populate('items.offer').populate(populate(req)).exec(function(err, orders) {
     if (err) {
       res.status(422).send('Erro:: ' + err.message);
     } else {
-      if (req.payload.roles.includes('manager')) {
+      if (auth.isManager(req)) {
         orders = orders.filter(order => {
           return order.items.find(item => {
             return item.offer.organization == req.payload.organization
@@ -27,13 +27,26 @@ router.get('/', auth.manager, function(req, res) {
           return order
         })
       }
+      if (auth.isProducer(req)) {
+        orders = orders.filter(order => {
+          return order.items.find(item => {
+            return item.offer.producer == req.payload.id
+          })
+        })
+        orders = orders.map(order => {
+          order.items = order.items.filter(item => {
+            return item.offer.producer == req.payload.id
+          })
+          return order
+        })
+      }
 
       res.json(orders);
     }
   });
 });
 
-router.get('/:id', auth.manager, function(req, res) {
+router.get('/:id', auth.producer, function(req, res) {
   var query = {
     _id: req.params.id
   }
@@ -51,9 +64,18 @@ router.get('/:id', auth.manager, function(req, res) {
     if (err) {
       res.status(422).send('Erro:: ' + err.message);
     } else {
-      if (req.payload.roles.includes('manager')) {
+      if (auth.isManager(req)) {
         order.items = order.items.filter(item => {
           return item.offer.organization == req.payload.organization
+        })
+      }
+      console.log("item.offer.producer");
+      if (auth.isProducer(req)) {
+        order.items = order.items.filter(item => {
+          console.log("item.offer.producer");
+          console.log(item.offer.producer);
+          console.log(req.payload.id);
+          return item.offer.producer._id == req.payload.id
         })
       }
 
@@ -62,7 +84,7 @@ router.get('/:id', auth.manager, function(req, res) {
   });
 });
 
-router.put('/:id', auth.manager, function(req, res) {
+router.put('/:id', auth.producer, function(req, res) {
   var params = req.body
   Order.findOneAndUpdate({
     _id: req.params.id

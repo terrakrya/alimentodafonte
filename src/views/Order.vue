@@ -16,7 +16,6 @@
             <th>Oferta</th>
             <th class="th-description">Origem</th>
             <th class="th-description">Produtor</th>
-            <th class="th-description">Emissor da NF</th>
             <th class="text-center">Valor</th>
             <th class="text-center">Qtd</th>
             <th class="text-left">Total</th>
@@ -27,20 +26,18 @@
           <tr v-for="(item, index) in order.items">
             <td>
               <div class="img-container">
-                <product-image :product="item.offer.product" />
+                <product-image v-if="item.offer.product" :product="item.offer.product" />
+                <product-image v-else :product="item.offer" />
               </div>
               <router-link :to="'/oferta/'+item.offer._id">
-                {{item.offer.product.name}}
+                {{item.offer.product ? item.offer.product.name : item.offer.name}}
               </router-link>
             </td>
             <td>
-              <small>{{item.offer.source_of_shipment}}</small>
+              <small>{{item.offer.source_of_shipment.description}}</small>
             </td>
             <td>
               <small v-if="item.offer.producer">{{item.offer.producer.nickname || item.offer.producer.name}}</small>
-            </td>
-            <td>
-              <small>{{invoiceIssuer(item.offer.invoice_issuer)}}</small>
             </td>
             <td class="text-center">
               {{item.offer.final_price | moeda}}
@@ -87,7 +84,7 @@
           </tr>
           <tr v-if="order.address">
             <td>Endereço:</td>
-            <th class="text-right">{{order.address}}</th>
+            <th class="text-right">{{order.address.description}}</th>
           </tr>
         </tbody>
       </table>
