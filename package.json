@@ -55,7 +55,7 @@
     "vue2-filters": "^0.4.1",
     "vue2-leaflet": "^2.5.2",
     "vuex": "^3.0.1",
-    "xlsx": "^0.15.1",
+    "xlsx": "^0.17.0",
     "yarn": "^1.22.4"
   },
   "devDependencies": {
